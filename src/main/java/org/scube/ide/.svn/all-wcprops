@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/10/trunk/application/src/org/scube/ide
+END
+Main.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/2/trunk/application/src/org/scube/ide/Main.java
+END
+ApplicationWindow.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/3/trunk/application/src/org/scube/ide/ApplicationWindow.java
+END
+ApplicationManager.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/3/trunk/application/src/org/scube/ide/ApplicationManager.java
+END

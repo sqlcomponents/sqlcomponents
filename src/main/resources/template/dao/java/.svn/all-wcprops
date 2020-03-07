@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/20/trunk/application/resources/template/dao/java
+END
+asbean.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/2/trunk/application/resources/template/dao/java/asbean.ftl
+END
+base.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/14/trunk/application/resources/template/dao/java/base.ftl
+END
+service.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/3/trunk/application/resources/template/dao/java/service.ftl
+END
+dao.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/14/trunk/application/resources/template/dao/java/dao.ftl
+END
+bean.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/4/trunk/application/resources/template/dao/java/bean.ftl
+END

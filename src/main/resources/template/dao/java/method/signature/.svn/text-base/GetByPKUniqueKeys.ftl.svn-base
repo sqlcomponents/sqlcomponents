@@ -1,0 +1,1 @@
+	public ${name} get${name}By${uniqueConstraintGroupName}(${getUniqueKeysAsParameterString(uniqueConstraintGroupName)}) throws SQLException 

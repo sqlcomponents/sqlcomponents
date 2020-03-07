@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/11/trunk/application/src/org/scube/scubedao/crawler/mysql
+END
+ProperyFileReader.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/11/trunk/application/src/org/scube/scubedao/crawler/mysql/ProperyFileReader.java
+END
+MySQLCrawler.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/11/trunk/application/src/org/scube/scubedao/crawler/mysql/MySQLCrawler.java
+END
+queries.properties
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/11/trunk/application/src/org/scube/scubedao/crawler/mysql/queries.properties
+END

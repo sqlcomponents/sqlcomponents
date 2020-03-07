@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/18/trunk/application/resources/template/dao/java/method/signature
+END
+InsertByEntiy.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/2/trunk/application/resources/template/dao/java/method/signature/InsertByEntiy.ftl
+END
+UpdateByPK.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/2/trunk/application/resources/template/dao/java/method/signature/UpdateByPK.ftl
+END
+GetAll.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/2/trunk/application/resources/template/dao/java/method/signature/GetAll.ftl
+END
+GetByEntity_Paginated.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/!svn/ver/2/trunk/application/resources/template/dao/java/method/signature/GetByEntity_Paginated.ftl
+END
+SaveByPK.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/2/trunk/application/resources/template/dao/java/method/signature/SaveByPK.ftl
+END
+UpdateByEntiy.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/2/trunk/application/resources/template/dao/java/method/signature/UpdateByEntiy.ftl
+END
+IsExisting.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/2/trunk/application/resources/template/dao/java/method/signature/IsExisting.ftl
+END
+GetByPKUniqueKeys.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/!svn/ver/2/trunk/application/resources/template/dao/java/method/signature/GetByPKUniqueKeys.ftl
+END
+DeleteByPK.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/2/trunk/application/resources/template/dao/java/method/signature/DeleteByPK.ftl
+END
+DeleteByEntity.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/!svn/ver/2/trunk/application/resources/template/dao/java/method/signature/DeleteByEntity.ftl
+END
+GetByPKExceptHighest.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/!svn/ver/2/trunk/application/resources/template/dao/java/method/signature/GetByPKExceptHighest.ftl
+END
+Without.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/16/trunk/application/resources/template/dao/java/method/signature/Without.ftl
+END
+GetByPK.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/18/trunk/application/resources/template/dao/java/method/signature/GetByPK.ftl
+END
+MViewRefresh.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/!svn/ver/2/trunk/application/resources/template/dao/java/method/signature/MViewRefresh.ftl
+END
+GetByEntity.ftl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/2/trunk/application/resources/template/dao/java/method/signature/GetByEntity.ftl
+END
