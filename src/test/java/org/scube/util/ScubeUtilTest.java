@@ -10,6 +10,6 @@ class ScubeUtilTest {
 
     @Test
     void writeCode() throws IOException, ClassNotFoundException {
-        ScubeUtil.generateCode("src/test/resources/mysql.dao","target/generated-sources/mydb/resources/mysql.dao");
+        ScubeUtil.generateCode("src/test/resources/mysql.dao","target/generated-sources/mydb");
     }
 }
