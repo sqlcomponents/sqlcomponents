@@ -1,26 +1,17 @@
 package org.scube.scubedao.ide.component;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.util.Vector;
-
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
-
 import org.scube.scubedao.constants.ScreenConstants;
 import org.scube.scubedao.mapper.Mapper;
 import org.scube.scubedao.model.DaoProject;
 import org.scube.scubedao.model.Method;
 import org.scube.scubedao.model.Property;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.Vector;
 
 public class MethodPane extends JPanel implements ScreenConstants,
 		ListSelectionListener {
@@ -54,7 +45,7 @@ public class MethodPane extends JPanel implements ScreenConstants,
 	protected JTable propertiesTbl;
 	protected JScrollPane propertiesSPane;
 
-	private JComboBox dataTypesCmb;
+	private JComboBox<String> dataTypesCmb;
 
 	private Method method;
 
@@ -206,7 +197,7 @@ public class MethodPane extends JPanel implements ScreenConstants,
 		};
 		propertiesSPane = new JScrollPane(propertiesTbl);
 
-		dataTypesCmb = new JComboBox();
+		dataTypesCmb = new JComboBox<>();
 
 	}
 

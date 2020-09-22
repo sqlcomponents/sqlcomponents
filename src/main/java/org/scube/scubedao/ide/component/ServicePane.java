@@ -1,17 +1,11 @@
 package org.scube.scubedao.ide.component;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-
 import org.scube.scubedao.constants.ScreenConstants;
 import org.scube.scubedao.model.DaoProject;
 import org.scube.scubedao.model.Service;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class ServicePane extends JPanel implements ScreenConstants {
 

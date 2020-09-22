@@ -1,23 +1,16 @@
 package org.scube.scubedao.specification.java;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import org.scube.scubedao.model.*;
+import org.scube.scubedao.specification.Specification;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.scube.scubedao.model.DaoProject;
-import org.scube.scubedao.model.Entity;
-import org.scube.scubedao.model.ForeignKey;
-import org.scube.scubedao.model.ORM;
-import org.scube.scubedao.model.Property;
-import org.scube.scubedao.model.Service;
-import org.scube.scubedao.model.Table;
-import org.scube.scubedao.specification.Specification;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 
 public class JavaSpecification extends Specification {
 

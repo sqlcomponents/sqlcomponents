@@ -1,18 +1,5 @@
 package org.scube.scubedao.ide.editor;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JToggleButton;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-
 import org.scube.ide.screen.BaseScreen;
 import org.scube.scubedao.ide.component.EntityPane;
 import org.scube.scubedao.ide.component.MethodPane;
@@ -21,6 +8,10 @@ import org.scube.scubedao.ide.editor.navigator.impl.RDBMSNavigator;
 import org.scube.scubedao.model.Entity;
 import org.scube.scubedao.model.Method;
 import org.scube.scubedao.model.Service;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.*;
 
 
 public abstract class AbstractSCubeDaoEditor extends BaseScreen {

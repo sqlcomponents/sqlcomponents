@@ -1,12 +1,12 @@
 package org.scube.scubedao.crawler;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
 import org.scube.exception.ScubeException;
 import org.scube.scubedao.model.DaoProject;
 import org.scube.scubedao.model.Schema;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public abstract class Crawler {
 

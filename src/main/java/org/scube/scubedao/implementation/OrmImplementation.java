@@ -1,9 +1,9 @@
 package org.scube.scubedao.implementation;
 
-import java.io.File;
-
 import org.scube.scubedao.implementation.ibatis.IBatisImplementation;
 import org.scube.scubedao.model.DaoProject;
+
+import java.io.File;
 
 public abstract class OrmImplementation {
 

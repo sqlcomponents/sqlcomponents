@@ -1,9 +1,9 @@
 package org.scube.scubedao.specification;
 
-import java.io.File;
-
 import org.scube.scubedao.model.DaoProject;
 import org.scube.scubedao.specification.java.JavaSpecification;
+
+import java.io.File;
 
 public abstract class Specification {
 	

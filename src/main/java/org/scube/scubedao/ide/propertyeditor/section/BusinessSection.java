@@ -1,20 +1,14 @@
 package org.scube.scubedao.ide.propertyeditor.section;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
 import org.scube.ide.ApplicationManager;
 import org.scube.scubedao.constants.ScreenConstants;
 import org.scube.scubedao.ide.propertyeditor.interfaces.IcgProjectSection;
 import org.scube.scubedao.model.DaoProject;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 public class BusinessSection extends JPanel implements IcgProjectSection,
 		ScreenConstants, ActionListener {
@@ -26,7 +20,7 @@ public class BusinessSection extends JPanel implements IcgProjectSection,
 
 	private JLabel businessLayerLbl;
 
-	private JComboBox businessLayerCmb;
+	private JComboBox<String> businessLayerCmb;
 
 	private JLabel rootPackageLbl;
 
@@ -75,7 +69,7 @@ public class BusinessSection extends JPanel implements IcgProjectSection,
 	private void createComponents() {
 
 		businessLayerLbl = new JLabel("Business Layer");
-		businessLayerCmb = new JComboBox();
+		businessLayerCmb = new JComboBox<>();
 
 		rootPackageLbl = new JLabel("Root Package");
 		rootPackageTxt = new JTextField();

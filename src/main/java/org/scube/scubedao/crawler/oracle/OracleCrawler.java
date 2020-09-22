@@ -1,5 +1,10 @@
 package org.scube.scubedao.crawler.oracle;
 
+import org.scube.exception.ScubeException;
+import org.scube.scubedao.crawler.Crawler;
+import org.scube.scubedao.model.Package;
+import org.scube.scubedao.model.*;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Connection;
@@ -8,16 +13,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.scube.exception.ScubeException;
-import org.scube.scubedao.crawler.Crawler;
-import org.scube.scubedao.model.Column;
-import org.scube.scubedao.model.DaoProject;
-import org.scube.scubedao.model.ForeignKey;
-import org.scube.scubedao.model.Function;
-import org.scube.scubedao.model.Package;
-import org.scube.scubedao.model.Schema;
-import org.scube.scubedao.model.Table;
 
 public class OracleCrawler extends Crawler {
 

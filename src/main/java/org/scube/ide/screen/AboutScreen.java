@@ -1,11 +1,10 @@
 package org.scube.ide.screen;
 
-import java.awt.Graphics;
-import java.awt.Image;
-
 import org.scube.ide.ApplicationManager;
 import org.scube.ide.annotation.Screen;
 import org.scube.ide.screen.model.SetupRequest;
+
+import java.awt.*;
 
 @Screen(
 		closeable=false,

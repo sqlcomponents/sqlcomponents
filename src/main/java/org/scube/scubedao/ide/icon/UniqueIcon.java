@@ -1,11 +1,7 @@
 package org.scube.scubedao.ide.icon;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-
-import javax.swing.Icon;
+import javax.swing.*;
+import java.awt.*;
 
 public class UniqueIcon implements Icon {
 

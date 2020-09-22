@@ -1,10 +1,10 @@
 package org.scube.scubedao.model;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.HashMap;
-
 import org.scube.ide.model.CrawlerConfig;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
 
 public class ORM implements Serializable {
 

@@ -1,26 +1,17 @@
 package org.scube.scubedao.ide.propertyeditor.section;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-
 import org.scube.ide.model.CrawlerConfig;
 import org.scube.ide.util.ConfigUtil;
 import org.scube.scubedao.constants.ScreenConstants;
 import org.scube.scubedao.ide.propertyeditor.interfaces.IcgProjectSection;
 import org.scube.scubedao.model.DaoProject;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SchemaSection extends JPanel implements IcgProjectSection,
 		ScreenConstants, ActionListener {
@@ -36,7 +27,7 @@ public class SchemaSection extends JPanel implements IcgProjectSection,
 
 	private JLabel driverLbl;
 
-	private JComboBox driverCmb;
+	private JComboBox<CrawlerConfig> driverCmb;
 
 	private JLabel urlLbl;
 
@@ -103,7 +94,7 @@ public class SchemaSection extends JPanel implements IcgProjectSection,
 		nameTxt = new JTextField();
 
 		driverLbl = new JLabel("Driver");
-		driverCmb = new JComboBox();
+		driverCmb = new JComboBox<>();
 
 		urlLbl = new JLabel("URL");
 		urlTxt = new JTextField();

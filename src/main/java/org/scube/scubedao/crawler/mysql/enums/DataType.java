@@ -5,7 +5,25 @@ import java.util.List;
 
 public enum DataType {
 
-	VARCHAR("varchar"),BIGINT("bigint"),LONGTEXT("longtext"),DATETIME("datetime"),INT("int"),DECIMAL("decimal"),TIMESTAMP("timestamp"),DATE("date"),TINYINT("tinyint"),BIT("bit"),CHAR("char"),SET("set"),ENUM("enum"),LONGBLOB("longblob"),MEDIUMTEXT("mediumtext"),SMALLINT("smallint"),TEXT("text"),BLOB("blob"),TIME("time");
+	VARCHAR("varchar"),
+	BIGINT("bigint"),
+	LONGTEXT("longtext"),
+	DATETIME("datetime"),
+	INT("int"),
+	DECIMAL("decimal"),
+	TIMESTAMP("timestamp"),
+	DATE("date"),
+	TINYINT("tinyint"),
+	BIT("bit"),
+	CHAR("char"),
+	SET("set"),
+	ENUM("enum"),
+	LONGBLOB("longblob"),
+	MEDIUMTEXT("mediumtext"),
+	SMALLINT("smallint"),
+	TEXT("text"),
+	BLOB("blob"),
+	TIME("time");
 
 	private String dataType; 
 	

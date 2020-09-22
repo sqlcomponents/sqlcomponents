@@ -1,35 +1,19 @@
 package org.scube.scubedao.ide.component;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.util.List;
-import java.util.Vector;
-
-import javax.swing.Icon;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-
 import org.scube.ide.ApplicationManager;
 import org.scube.scubedao.constants.ScreenConstants;
 import org.scube.scubedao.ide.icon.UniqueIcon;
 import org.scube.scubedao.mapper.Mapper;
-import org.scube.scubedao.model.DaoProject;
-import org.scube.scubedao.model.Entity;
-import org.scube.scubedao.model.ForeignKey;
-import org.scube.scubedao.model.Property;
-import org.scube.scubedao.model.Table;
+import org.scube.scubedao.model.*;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.List;
+import java.util.Vector;
 
 public class EntityPane extends JPanel implements ScreenConstants,
 		ListSelectionListener {
@@ -86,9 +70,9 @@ public class EntityPane extends JPanel implements ScreenConstants,
 	protected JScrollPane propertiesSPane;
 
 	private JLabel sequenceLbl;
-	private JComboBox sequenceCmb;
+	private JComboBox<String> sequenceCmb;
 
-	private JComboBox dataTypesCmb;
+	private JComboBox<String> dataTypesCmb;
 
 	private Entity entity;
 
@@ -346,10 +330,10 @@ public class EntityPane extends JPanel implements ScreenConstants,
 		};
 		propertiesSPane = new JScrollPane(propertiesTbl);
 
-		dataTypesCmb = new JComboBox();
+		dataTypesCmb = new JComboBox<>();
 
 		sequenceLbl = new JLabel("Sequence Name");
-		sequenceCmb = new JComboBox();
+		sequenceCmb = new JComboBox<String>();
 	}
 
 	private void addComponents() {

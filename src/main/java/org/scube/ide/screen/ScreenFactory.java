@@ -1,8 +1,8 @@
 package org.scube.ide.screen;
 
-import java.util.HashMap;
-
 import org.scube.ide.annotation.Screen;
+
+import java.util.HashMap;
 
 public final class ScreenFactory {
 

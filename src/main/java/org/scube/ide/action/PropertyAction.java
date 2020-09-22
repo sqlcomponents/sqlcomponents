@@ -1,11 +1,10 @@
 package org.scube.ide.action;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-
 import org.scube.ide.ApplicationManager;
 import org.scube.ide.screen.BaseScreen;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 final class PropertyAction extends AbstractAction {
 

@@ -1,10 +1,10 @@
 package org.scube.scubedao.model;
 
+import org.scube.ide.model.CrawlerConfig;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
-
-import org.scube.ide.model.CrawlerConfig;
 
 public class DaoProject implements Serializable {
 

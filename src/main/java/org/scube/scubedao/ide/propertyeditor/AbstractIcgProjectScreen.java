@@ -1,24 +1,11 @@
 package org.scube.scubedao.ide.propertyeditor;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-
 import org.scube.ide.screen.BaseScreen;
-import org.scube.scubedao.ide.propertyeditor.section.BusinessSection;
-import org.scube.scubedao.ide.propertyeditor.section.DefaultsSection;
-import org.scube.scubedao.ide.propertyeditor.section.MSRSection;
-import org.scube.scubedao.ide.propertyeditor.section.ModulesSection;
-import org.scube.scubedao.ide.propertyeditor.section.PluralSection;
-import org.scube.scubedao.ide.propertyeditor.section.SchemaSection;
-import org.scube.scubedao.ide.propertyeditor.section.AbbrevationsSection;
-import org.scube.scubedao.ide.propertyeditor.section.ValidationsSection;
+import org.scube.scubedao.ide.propertyeditor.section.*;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.*;
 
 public abstract class AbstractIcgProjectScreen extends BaseScreen {
 

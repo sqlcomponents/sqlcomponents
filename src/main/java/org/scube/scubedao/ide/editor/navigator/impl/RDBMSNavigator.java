@@ -1,21 +1,16 @@
 package org.scube.scubedao.ide.editor.navigator.impl;
 
-import java.util.List;
+import org.scube.scubedao.ide.editor.AbstractSCubeDaoEditor;
+import org.scube.scubedao.ide.editor.navigator.DaoProjectNavigator;
+import org.scube.scubedao.model.*;
 
-import javax.swing.JTree;
+import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
-
-import org.scube.scubedao.ide.editor.AbstractSCubeDaoEditor;
-import org.scube.scubedao.ide.editor.navigator.DaoProjectNavigator;
-import org.scube.scubedao.model.DaoProject;
-import org.scube.scubedao.model.Entity;
-import org.scube.scubedao.model.Method;
-import org.scube.scubedao.model.Service;
-import org.scube.scubedao.model.Table;
+import java.util.List;
 
 public class RDBMSNavigator extends JTree implements DaoProjectNavigator,
 		TreeSelectionListener {

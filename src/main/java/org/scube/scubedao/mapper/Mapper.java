@@ -1,24 +1,15 @@
 package org.scube.scubedao.mapper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import org.scube.exception.ScubeException;
 import org.scube.scubedao.constants.ApplicationConstants;
 import org.scube.scubedao.crawler.Crawler;
 import org.scube.scubedao.mapper.java.JavaOrmMapper;
-import org.scube.scubedao.model.Column;
-import org.scube.scubedao.model.DaoProject;
-import org.scube.scubedao.model.Entity;
-import org.scube.scubedao.model.Function;
-import org.scube.scubedao.model.Method;
-import org.scube.scubedao.model.ORM;
 import org.scube.scubedao.model.Package;
-import org.scube.scubedao.model.Property;
-import org.scube.scubedao.model.Schema;
-import org.scube.scubedao.model.Service;
-import org.scube.scubedao.model.Table;
+import org.scube.scubedao.model.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public abstract class Mapper {
 

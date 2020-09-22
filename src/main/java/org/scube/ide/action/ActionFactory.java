@@ -1,6 +1,6 @@
 package org.scube.ide.action;
 
-import javax.swing.Action;
+import javax.swing.*;
 
 public final class ActionFactory {
 	

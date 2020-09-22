@@ -1,14 +1,10 @@
 package org.scube.ide.screen;
 
-import java.awt.Container;
-
-import javax.swing.JDialog;
-import javax.swing.JInternalFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
 import org.scube.ide.ApplicationManager;
 import org.scube.ide.screen.model.SetupRequest;
+
+import javax.swing.*;
+import java.awt.*;
 
 public abstract class BaseScreen extends JPanel {
 

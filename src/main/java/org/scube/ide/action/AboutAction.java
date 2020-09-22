@@ -1,10 +1,9 @@
 package org.scube.ide.action;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-
 import org.scube.ide.ApplicationManager;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 final class AboutAction extends AbstractAction {
 

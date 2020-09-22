@@ -1,24 +1,18 @@
 package org.scube.scubedao.ide.propertyeditor.section;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import org.scube.scubedao.constants.ScreenConstants;
+import org.scube.scubedao.ide.propertyeditor.interfaces.IcgProjectSection;
+import org.scube.scubedao.model.DaoProject;
+import org.scube.scubedao.model.Default;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.table.DefaultTableModel;
-
-import org.scube.scubedao.constants.ScreenConstants;
-import org.scube.scubedao.ide.propertyeditor.interfaces.IcgProjectSection;
-import org.scube.scubedao.model.DaoProject;
-import org.scube.scubedao.model.Default;
 
 public class DefaultsSection extends JPanel implements IcgProjectSection,
 		ScreenConstants, ActionListener {

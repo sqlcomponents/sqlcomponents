@@ -1,13 +1,12 @@
 package org.scube.ide.util;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.scube.ide.model.CrawlerConfig;
+import org.scube.ide.model.Method;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
-
-import org.scube.ide.model.CrawlerConfig;
-import org.scube.ide.model.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConfigUtil {
 

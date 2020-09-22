@@ -1,13 +1,12 @@
 package org.scube.ide.action;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-
 import org.scube.ide.ApplicationManager;
 import org.scube.ide.screen.model.SetupRequest;
 import org.scube.scubedao.constants.RequestContants;
 import org.scube.scubedao.model.DaoProject;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 final class NewAction extends AbstractAction {
 

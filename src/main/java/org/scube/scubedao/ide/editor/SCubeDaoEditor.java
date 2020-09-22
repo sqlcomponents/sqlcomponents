@@ -1,25 +1,22 @@
 package org.scube.scubedao.ide.editor;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-
-import javax.swing.tree.DefaultMutableTreeNode;
-
 import org.scube.ide.ApplicationWindow;
 import org.scube.ide.annotation.Screen;
 import org.scube.ide.screen.interfaces.FileHandler;
 import org.scube.ide.screen.model.SetupRequest;
 import org.scube.scubedao.constants.RequestContants;
 import org.scube.scubedao.ide.editor.navigator.DaoProjectNavigator;
-import org.scube.scubedao.implementation.OrmImplementation;
 import org.scube.scubedao.model.DaoProject;
 import org.scube.scubedao.model.Entity;
-import org.scube.scubedao.specification.Specification;
 import org.scube.util.FileUtil;
 import org.scube.util.ScubeUtil;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 
 @Screen(width = 650, height = 600)
 public class SCubeDaoEditor extends AbstractSCubeDaoEditor implements

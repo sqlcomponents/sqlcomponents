@@ -9,7 +9,6 @@ public class Schema implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
 	
 	private List<Table> tables ;
 	
@@ -34,7 +33,6 @@ public class Schema implements Serializable {
 	}
 
 	private List<String> sequences ;
-
 
 	public List<Table> getTables() {
 		return tables;

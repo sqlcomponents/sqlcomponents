@@ -1,12 +1,5 @@
 package org.scube.scubedao.ide.propertyeditor;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-
 import org.scube.exception.ScubeException;
 import org.scube.ide.ApplicationManager;
 import org.scube.ide.annotation.Screen;
@@ -16,6 +9,12 @@ import org.scube.scubedao.ide.editor.SCubeDaoEditor;
 import org.scube.scubedao.ide.propertyeditor.interfaces.IcgProjectSection;
 import org.scube.scubedao.mapper.Mapper;
 import org.scube.scubedao.model.DaoProject;
+
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 @Screen(closeable = false, width = 650, height = 600, singleInstance = true)
 public class IcgProjectScreen extends AbstractIcgProjectScreen implements

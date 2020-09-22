@@ -1,10 +1,10 @@
 package org.scube.util;
 
-import java.io.IOException;
-
 import org.scube.scubedao.implementation.OrmImplementation;
 import org.scube.scubedao.model.DaoProject;
 import org.scube.scubedao.specification.Specification;
+
+import java.io.IOException;
 
 public class ScubeUtil {
 

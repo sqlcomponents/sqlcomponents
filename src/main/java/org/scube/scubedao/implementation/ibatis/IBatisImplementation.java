@@ -1,21 +1,16 @@
 package org.scube.scubedao.implementation.ibatis;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import org.scube.scubedao.implementation.OrmImplementation;
+import org.scube.scubedao.model.*;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.scube.scubedao.implementation.OrmImplementation;
-import org.scube.scubedao.model.DaoProject;
-import org.scube.scubedao.model.Entity;
-import org.scube.scubedao.model.ORM;
-import org.scube.scubedao.model.Property;
-import org.scube.scubedao.model.Table;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 
 public class IBatisImplementation extends OrmImplementation {
 

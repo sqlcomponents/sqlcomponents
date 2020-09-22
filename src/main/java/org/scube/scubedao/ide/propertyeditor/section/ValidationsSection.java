@@ -1,23 +1,17 @@
 package org.scube.scubedao.ide.propertyeditor.section;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.Vector;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
 import org.scube.scubedao.constants.ScreenConstants;
 import org.scube.scubedao.ide.component.SCubeCellEditor;
 import org.scube.scubedao.ide.propertyeditor.interfaces.IcgProjectSection;
 import org.scube.scubedao.model.DaoProject;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Vector;
 
 public class ValidationsSection extends JPanel implements IcgProjectSection,
 		ScreenConstants, ActionListener {
@@ -34,7 +28,7 @@ public class ValidationsSection extends JPanel implements IcgProjectSection,
 	protected JTable mapTbl;
 	protected JScrollPane mapSPane;
 	
-	private JComboBox dataTypesCmb;
+	private JComboBox<String> dataTypesCmb;
 
 	public ValidationsSection() {
 		createComponents();
@@ -71,7 +65,7 @@ public class ValidationsSection extends JPanel implements IcgProjectSection,
 		mapTbl = new JTable(mapTblMdl);
 		mapSPane = new JScrollPane(mapTbl);
 
-		dataTypesCmb = new JComboBox();
+		dataTypesCmb = new JComboBox<>();
 	}
 
 	private void addComponents() {

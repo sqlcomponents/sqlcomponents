@@ -1,21 +1,12 @@
 package org.scube.scubedao.ide.component;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.io.Serializable;
-import java.util.EventObject;
-
-import javax.swing.AbstractCellEditor;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JTable;
-import javax.swing.JTree;
+import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.tree.TreeCellEditor;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.Serializable;
+import java.util.EventObject;
 
 /**
  * The default editor for table and tree cells.
@@ -70,7 +61,7 @@ public class SCubeCellEditor
      *
      * @param comboBox  a <code>JComboBox</code> object
      */
-    public SCubeCellEditor(final JComboBox comboBox) {
+    public SCubeCellEditor(final JComboBox<String> comboBox) {
         editorComponent = comboBox;
 	comboBox.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
         delegate = new EditorDelegate() {

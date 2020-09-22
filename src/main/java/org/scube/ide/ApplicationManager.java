@@ -1,22 +1,19 @@
 package org.scube.ide;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.ResourceBundle;
-
-import javax.swing.ImageIcon;
-import javax.swing.JDesktopPane;
-import javax.swing.JInternalFrame;
-import javax.swing.event.InternalFrameEvent;
-import javax.swing.event.InternalFrameListener;
-
 import org.scube.ide.screen.BaseScreen;
 import org.scube.ide.screen.ScreenContext;
 import org.scube.ide.screen.ScreenFactory;
 import org.scube.ide.screen.interfaces.FileHandler;
 import org.scube.ide.screen.model.SetupRequest;
+
+import javax.swing.*;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.ResourceBundle;
 
 public final class ApplicationManager implements InternalFrameListener {
 

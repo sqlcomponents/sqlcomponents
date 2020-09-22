@@ -1,20 +1,15 @@
 package org.scube.scubedao.ide.propertyeditor.section;
 
-import java.awt.BorderLayout;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JCheckBox;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-
 import org.scube.ide.model.Method;
 import org.scube.ide.util.ConfigUtil;
 import org.scube.scubedao.constants.ScreenConstants;
 import org.scube.scubedao.ide.propertyeditor.interfaces.IcgProjectSection;
 import org.scube.scubedao.model.DaoProject;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MSRSection extends JPanel implements IcgProjectSection,
 		ScreenConstants {
@@ -22,8 +17,8 @@ public class MSRSection extends JPanel implements IcgProjectSection,
 	private DaoProject icgProject;
 
 	private JScrollPane methodSpecPane;
-	private DefaultListModel methodSpecLstMdl;
-	private JList methodSpecLst;
+	private DefaultListModel<Method> methodSpecLstMdl;
+	private JList<Method> methodSpecLst;
 	private JCheckBox paginationChkBox;
 
 	public MSRSection() {
@@ -43,8 +38,8 @@ public class MSRSection extends JPanel implements IcgProjectSection,
 
 	private void createComponents() {
 
-		methodSpecLstMdl = new DefaultListModel();
-		methodSpecLst = new JList(methodSpecLstMdl);
+		methodSpecLstMdl = new DefaultListModel<Method>();
+		methodSpecLst = new JList<Method>(methodSpecLstMdl);
 		methodSpecPane = new JScrollPane(methodSpecLst);
 		paginationChkBox = new JCheckBox("Pagination Support");
 	}
@@ -83,7 +78,7 @@ public class MSRSection extends JPanel implements IcgProjectSection,
 				int[] selectedIndices = new int[size];
 				int si = 0;
 				for (int i = 0; i < size; i++) {
-					if (msrs.contains(((Method) methodSpecLstMdl
+					if (msrs.contains((methodSpecLstMdl
 							.getElementAt(i)).getId())) {
 						selectedIndices[si++] = i;
 					}
