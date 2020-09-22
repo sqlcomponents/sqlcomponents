@@ -245,42 +245,6 @@ public final class ApplicationWindow {
 		mainMenuBar.add(helpMenu);
 	}
 
-	public static void main(String[] a) {
-		try {
-			XMLStreamReader xmlStreamReader = XMLInputFactory
-					.newInstance()
-					.createXMLStreamReader(
-							ApplicationWindow.class
-									.getResourceAsStream("/config/application-files.xml"));
-
-			int applicationfilesCount = 0;
-
-			while (xmlStreamReader.hasNext()) {
-				int eventCode = xmlStreamReader.next();
-
-				if (eventCode == XMLStreamReader.START_ELEMENT
-						&& xmlStreamReader.getLocalName().equals(
-								"appplication-file")) {
-					for (int i = 0; i < xmlStreamReader.getAttributeCount(); i++) {
-						System.out.println(xmlStreamReader.getAttributeName(i));
-						System.out
-								.println(xmlStreamReader.getAttributeValue(i));
-					}
-
-				}
-
-				applicationfilesCount++;
-			}
-			xmlStreamReader.close();
-		} catch (XMLStreamException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FactoryConfigurationError e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
 	File showOpenFileFolderDialog() {
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		if (fileChooser.showOpenDialog(mainFrame) == JFileChooser.APPROVE_OPTION) {
