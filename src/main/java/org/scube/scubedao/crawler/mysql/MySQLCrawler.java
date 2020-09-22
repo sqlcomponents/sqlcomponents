@@ -87,7 +87,7 @@ public class MySQLCrawler extends Crawler {
     private Column mapColumn(ResultSet rs) throws SQLException {
         Column column = new Column();
         column.setColumnName(rs.getString(TableColumn.COLUMN_NAME.name()));
-        column.setDecimalDigits(rs.getInt(TableColumn.NUMERIC_PRECISION.name()));
+        column.setDecimalDigits(rs.getInt(TableColumn.NUMERIC_SCALE.name()));
         column.setForeignKeys(null);
         column.setNullable(YesNo.YES.name().equals(rs.getString(TableColumn.IS_NULLABLE.name())) ? Boolean.TRUE : Boolean.FALSE);
         if (rs.getString(TableColumn.COLUMN_KEY.name()).equals(PRIMARY_KEY)) {
@@ -97,7 +97,7 @@ public class MySQLCrawler extends Crawler {
         column.setSqlDataType(rs.getString(TableColumn.DATA_TYPE.name()));
 
         if (DataType.isNumericDataType(column.getSqlDataType())) {
-            column.setSize(rs.getInt(TableColumn.NUMERIC_SCALE.name()));
+            column.setSize(rs.getInt(TableColumn.NUMERIC_PRECISION.name()));
         } else {
             column.setSize(rs.getInt(TableColumn.CHARACTER_MAXIMUM_LENGTH.name()));
         }
