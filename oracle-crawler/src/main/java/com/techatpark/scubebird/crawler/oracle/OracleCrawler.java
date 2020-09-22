@@ -1,7 +1,7 @@
-package com.techatpark.scubebird.oracle;
+package com.techatpark.scubebird.crawler.oracle;
 
-import com.techatpark.scubebird.core.exception.ScubeException;
 import com.techatpark.scubebird.core.crawler.Crawler;
+import com.techatpark.scubebird.core.exception.ScubeException;
 import com.techatpark.scubebird.core.model.Package;
 import com.techatpark.scubebird.core.model.*;
 

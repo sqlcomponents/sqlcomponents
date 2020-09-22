@@ -1,4 +1,4 @@
-package com.techatpark.scubebird.mysql;
+package com.techatpark.scubebird.crawler.mysql;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

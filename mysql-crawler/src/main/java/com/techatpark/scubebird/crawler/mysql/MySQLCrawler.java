@@ -1,11 +1,10 @@
-package com.techatpark.scubebird.mysql;
+package com.techatpark.scubebird.crawler.mysql;
 
-import com.techatpark.scubebird.core.exception.ScubeException;
 import com.techatpark.scubebird.core.crawler.Crawler;
-import com.techatpark.scubebird.mysql.enums.DataType;
-import com.techatpark.scubebird.mysql.enums.TableColumn;
-import com.techatpark.scubebird.mysql.enums.YesNo;
+import com.techatpark.scubebird.core.exception.ScubeException;
 import com.techatpark.scubebird.core.model.*;
+import com.techatpark.scubebird.crawler.mysql.enums.*;
+
 
 import java.sql.Connection;
 import java.sql.ResultSet;

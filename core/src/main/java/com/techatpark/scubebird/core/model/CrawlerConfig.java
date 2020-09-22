@@ -1,4 +1,4 @@
-package com.techatpark.scubebird.ide.model;
+package com.techatpark.scubebird.core.model;
 
 import java.io.Serializable;
 

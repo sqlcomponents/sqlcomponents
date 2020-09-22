@@ -1,4 +1,4 @@
-package com.techatpark.scubebird.mysql.enums;
+package com.techatpark.scubebird.crawler.mysql.enums;
 
 public enum TableColumn {
 

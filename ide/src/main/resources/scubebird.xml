@@ -83,12 +83,12 @@
 	<crawlers>
 		<crawler>
 			<name>Oracle</name>
-			<classname>com.techatpark.scubebird.oracle.OracleCrawler</classname>						\
+			<classname>com.techatpark.scubebird.crawler.oracle.OracleCrawler</classname>						\
 			<drivername>oracle.jdbc.OracleDriver</drivername>
 		</crawler>
 		<crawler>
 			<name>MySQL</name>
-			<classname>com.techatpark.scubebird.mysql.MySQLCrawler</classname>
+			<classname>com.techatpark.scubebird.crawler.mysql.MySQLCrawler</classname>
 			<drivername>com.mysql.jdbc.Driver</drivername>		
 		</crawler>
 	</crawlers>

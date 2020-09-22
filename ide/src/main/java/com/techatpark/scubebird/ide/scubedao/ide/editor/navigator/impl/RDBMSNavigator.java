@@ -1,8 +1,8 @@
 package com.techatpark.scubebird.ide.scubedao.ide.editor.navigator.impl;
 
+import com.techatpark.scubebird.core.model.*;
 import com.techatpark.scubebird.ide.scubedao.ide.editor.AbstractSCubeDaoEditor;
 import com.techatpark.scubebird.ide.scubedao.ide.editor.navigator.DaoProjectNavigator;
-import com.techatpark.scubebird.core.model.*;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;

@@ -1,4 +1,4 @@
-package com.techatpark.scubebird.mysql.enums;
+package com.techatpark.scubebird.crawler.mysql.enums;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -15,6 +15,7 @@ public abstract class Crawler {
 		try {
 			Class<? extends Object> crawlerClass = Class.forName(project.getCrawlerConfig()
 					.getClassName());
+
 			crawlerInstance = crawlerClass.newInstance();
 			if (!(crawlerInstance instanceof Crawler)) {
 				throw new ScubeException(
@@ -22,15 +23,7 @@ public abstract class Crawler {
 								+ project.getCrawlerConfig().getClassName()
 								+ " has to be subclass of  com.techatpark.scubebird.core.crawler.Crawler");
 			}
-		} catch (ClassNotFoundException e) {
-			throw new ScubeException("crawlerClass "
-					+ project.getCrawlerConfig().getClassName() + " not found",
-					e);
-		} catch (InstantiationException e) {
-			throw new ScubeException("crawlerClass "
-					+ project.getCrawlerConfig().getClassName()
-					+ " can not be intiated", e);
-		} catch (IllegalAccessException e) {
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 			throw new ScubeException("crawlerClass "
 					+ project.getCrawlerConfig().getClassName()
 					+ " can not be accessed", e);

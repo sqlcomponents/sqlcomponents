@@ -1,6 +1,5 @@
 package com.techatpark.scubebird.core.model;
 
-import com.techatpark.scubebird.ide.model.CrawlerConfig;
 
 import java.io.Serializable;
 import java.util.HashMap;
