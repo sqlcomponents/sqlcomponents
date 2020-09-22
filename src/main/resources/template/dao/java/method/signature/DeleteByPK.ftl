@@ -1,1 +1,0 @@
-	public int delete${name}(${getPrimaryKeysAsParameterString()}) throws SQLException 
