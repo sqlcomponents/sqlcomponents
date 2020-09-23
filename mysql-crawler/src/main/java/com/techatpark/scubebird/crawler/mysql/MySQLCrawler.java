@@ -51,7 +51,7 @@ public class MySQLCrawler extends Crawler {
             String tableName = "";
             Table table = null;
             while (rs.next()) {
-                String currentTable = rs.getString(TableColumn.TABLE_NAME.name());
+                String currentTable = rs.getString("TABLE_NAME");
                 if (!currentTable.equals(tableName)) {
                     tableName = currentTable;
                     table = new Table();
@@ -85,21 +85,21 @@ public class MySQLCrawler extends Crawler {
 
     private Column mapColumn(ResultSet rs) throws SQLException {
         Column column = new Column();
-        column.setColumnName(rs.getString(TableColumn.COLUMN_NAME.name()));
-        column.setDecimalDigits(rs.getInt(TableColumn.NUMERIC_SCALE.name()));
+        column.setColumnName(rs.getString("COLUMN_NAME"));
+        column.setDecimalDigits(rs.getInt("NUMERIC_SCALE"));
         column.setForeignKeys(null);
-        column.setNullable(YesNo.YES.name().equals(rs.getString(TableColumn.IS_NULLABLE.name())) ? Boolean.TRUE : Boolean.FALSE);
-        if (rs.getString(TableColumn.COLUMN_KEY.name()).equals(PRIMARY_KEY)) {
-            column.setPrimaryKeyIndex(rs.getInt(TableColumn.ORDINAL_POSITION.name()));
+        column.setNullable("Y".equals(rs.getString("IS_NULLABLE")));
+        if (rs.getString("COLUMN_KEY").equals(PRIMARY_KEY)) {
+            column.setPrimaryKeyIndex(rs.getInt("ORDINAL_POSITION"));
         }
-        column.setRemarks(rs.getString(TableColumn.COLUMN_COMMENT.name()));
-        column.setSqlDataType(rs.getString(TableColumn.DATA_TYPE.name()));
+        column.setRemarks(rs.getString("COLUMN_COMMENT"));
+        column.setSqlDataType(rs.getString("DATA_TYPE"));
         if (DataType.isNumericDataType(column.getSqlDataType())) {
-            column.setSize(rs.getInt(TableColumn.NUMERIC_PRECISION.name()));
+            column.setSize(rs.getInt("NUMERIC_PRECISION"));
         } else {
-            column.setSize(rs.getInt(TableColumn.CHARACTER_MAXIMUM_LENGTH.name()));
+            column.setSize(rs.getInt("CHARACTER_MAXIMUM_LENGTH"));
         }
-        column.setTableName(rs.getString(TableColumn.COLLATION_NAME.name()));
+        column.setTableName(rs.getString("COLLATION_NAME"));
         column.setUniqueConstraintName(null);
         return column;
     }
