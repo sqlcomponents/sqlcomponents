@@ -1,7 +1,5 @@
 package com.techatpark.scubebird.crawler.mysql;
 
-
-import com.mysql.cj.jdbc.Driver;
 import com.techatpark.scubebird.core.exception.ScubeException;
 import com.techatpark.scubebird.core.model.CrawlerConfig;
 import com.techatpark.scubebird.core.model.DaoProject;

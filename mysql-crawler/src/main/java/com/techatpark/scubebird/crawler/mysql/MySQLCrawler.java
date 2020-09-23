@@ -23,7 +23,6 @@ public class MySQLCrawler extends Crawler {
         Schema schema = new Schema();
         schema.setTables(getTables(project));
         schema.setFunctions(new ArrayList<Function>());
-        schema.setSequences(new ArrayList<String>());
         schema.setPackages(new ArrayList<com.techatpark.scubebird.core.model.Package>());
         return schema;
     }
