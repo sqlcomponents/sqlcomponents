@@ -1,10 +1,10 @@
 package com.techatpark.scubebird.ide.scubedao.ide.propertyeditor.section;
 
+import com.techatpark.scubebird.core.model.DaoProject;
 import com.techatpark.scubebird.ide.model.Method;
-import com.techatpark.scubebird.ide.util.ConfigUtil;
 import com.techatpark.scubebird.ide.scubedao.constants.ScreenConstants;
 import com.techatpark.scubebird.ide.scubedao.ide.propertyeditor.interfaces.IcgProjectSection;
-import com.techatpark.scubebird.core.model.DaoProject;
+import com.techatpark.scubebird.ide.util.ConfigUtil;
 
 import javax.swing.*;
 import java.awt.*;

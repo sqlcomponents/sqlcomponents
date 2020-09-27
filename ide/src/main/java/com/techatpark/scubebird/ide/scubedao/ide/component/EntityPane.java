@@ -1,10 +1,10 @@
 package com.techatpark.scubebird.ide.scubedao.ide.component;
 
+import com.techatpark.scubebird.core.mapper.Mapper;
 import com.techatpark.scubebird.core.model.*;
 import com.techatpark.scubebird.ide.ApplicationManager;
 import com.techatpark.scubebird.ide.scubedao.constants.ScreenConstants;
 import com.techatpark.scubebird.ide.scubedao.ide.icon.UniqueIcon;
-import com.techatpark.scubebird.core.mapper.Mapper;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

@@ -3,8 +3,7 @@ package com.techatpark.scubebird.crawler.mysql;
 import com.techatpark.scubebird.core.crawler.Crawler;
 import com.techatpark.scubebird.core.exception.ScubeException;
 import com.techatpark.scubebird.core.model.*;
-import com.techatpark.scubebird.crawler.mysql.enums.*;
-
+import com.techatpark.scubebird.crawler.mysql.enums.DataType;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

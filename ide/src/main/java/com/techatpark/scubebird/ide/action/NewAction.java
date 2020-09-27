@@ -1,9 +1,9 @@
 package com.techatpark.scubebird.ide.action;
 
+import com.techatpark.scubebird.core.model.DaoProject;
 import com.techatpark.scubebird.ide.ApplicationManager;
 import com.techatpark.scubebird.ide.screen.model.SetupRequest;
 import com.techatpark.scubebird.ide.scubedao.constants.RequestContants;
-import com.techatpark.scubebird.core.model.DaoProject;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

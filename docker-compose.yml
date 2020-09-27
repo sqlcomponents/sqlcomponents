@@ -13,3 +13,14 @@ services:
       - ./init.db/mysql:/docker-entrypoint-initdb.d
     ports:
       - 3306:3306
+  postgresdb:
+    image: postgres:11
+    container_name: postgresdb
+    environment:
+      POSTGRES_DB: sakila
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init.db/postgres:/docker-entrypoint-initdb.d

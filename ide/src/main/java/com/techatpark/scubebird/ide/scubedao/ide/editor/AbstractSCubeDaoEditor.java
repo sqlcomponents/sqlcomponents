@@ -1,13 +1,13 @@
 package com.techatpark.scubebird.ide.scubedao.ide.editor;
 
+import com.techatpark.scubebird.core.model.Entity;
+import com.techatpark.scubebird.core.model.Method;
+import com.techatpark.scubebird.core.model.Service;
 import com.techatpark.scubebird.ide.screen.BaseScreen;
 import com.techatpark.scubebird.ide.scubedao.ide.component.EntityPane;
 import com.techatpark.scubebird.ide.scubedao.ide.component.MethodPane;
 import com.techatpark.scubebird.ide.scubedao.ide.component.ServicePane;
 import com.techatpark.scubebird.ide.scubedao.ide.editor.navigator.impl.RDBMSNavigator;
-import com.techatpark.scubebird.core.model.Entity;
-import com.techatpark.scubebird.core.model.Method;
-import com.techatpark.scubebird.core.model.Service;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

@@ -1,10 +1,10 @@
 package com.techatpark.scubebird.core.specification.java;
 
+import com.techatpark.scubebird.core.model.*;
+import com.techatpark.scubebird.core.specification.Specification;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import com.techatpark.scubebird.core.model.*;
-import com.techatpark.scubebird.core.specification.Specification;
 
 import java.io.File;
 import java.io.FileWriter;

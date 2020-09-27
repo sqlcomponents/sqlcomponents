@@ -1,15 +1,15 @@
 package com.techatpark.scubebird.ide.scubedao.ide.editor;
 
+import com.techatpark.scubebird.core.implementation.util.FileUtil;
+import com.techatpark.scubebird.core.implementation.util.ScubeUtil;
+import com.techatpark.scubebird.core.model.DaoProject;
+import com.techatpark.scubebird.core.model.Entity;
 import com.techatpark.scubebird.ide.ApplicationWindow;
 import com.techatpark.scubebird.ide.annotation.Screen;
 import com.techatpark.scubebird.ide.screen.interfaces.FileHandler;
 import com.techatpark.scubebird.ide.screen.model.SetupRequest;
 import com.techatpark.scubebird.ide.scubedao.constants.RequestContants;
 import com.techatpark.scubebird.ide.scubedao.ide.editor.navigator.DaoProjectNavigator;
-import com.techatpark.scubebird.core.model.DaoProject;
-import com.techatpark.scubebird.core.model.Entity;
-import com.techatpark.scubebird.ide.util.FileUtil;
-import com.techatpark.scubebird.ide.util.ScubeUtil;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.event.ActionEvent;

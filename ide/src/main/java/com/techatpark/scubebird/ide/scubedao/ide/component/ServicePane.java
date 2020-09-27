@@ -1,8 +1,8 @@
 package com.techatpark.scubebird.ide.scubedao.ide.component;
 
-import com.techatpark.scubebird.ide.scubedao.constants.ScreenConstants;
 import com.techatpark.scubebird.core.model.DaoProject;
 import com.techatpark.scubebird.core.model.Service;
+import com.techatpark.scubebird.ide.scubedao.constants.ScreenConstants;
 
 import javax.swing.*;
 import java.awt.*;
