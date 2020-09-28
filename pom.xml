@@ -15,12 +15,11 @@
     </properties>
     <modules>
         <module>core</module>
-        <module>java-compiler</module>
         <module>mysql-crawler</module>
         <module>oracle-crawler</module>
         <module>postgres-crawler</module>
+        <module>java-compiler</module>
         <module>ide</module>
-
     </modules>
 
     <dependencies>
