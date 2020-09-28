@@ -5,8 +5,8 @@ import java.io.File;
 
 public class ApplicationFileFilter extends FileFilter {
 
-	private String extension;
-	private String description;
+	private final String extension;
+	private final String description;
 
 	public ApplicationFileFilter(String extension, String description) {
 		this.extension = extension;

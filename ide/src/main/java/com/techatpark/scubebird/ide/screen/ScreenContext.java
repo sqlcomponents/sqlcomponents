@@ -19,7 +19,7 @@ public class ScreenContext {
 		labelBundle = ResourceBundle.getBundle(id);
 	}
 
-	private ResourceBundle labelBundle;
+	private final ResourceBundle labelBundle;
 
 	public String getLabel(String key) {
 		return labelBundle.getString(key);

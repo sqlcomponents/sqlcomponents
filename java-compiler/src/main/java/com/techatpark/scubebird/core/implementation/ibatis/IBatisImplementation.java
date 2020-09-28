@@ -96,7 +96,7 @@ public class IBatisImplementation extends OrmImplementation {
 
 	}
 
-	private Configuration freeMarkerConfiguration;
+	private final Configuration freeMarkerConfiguration;
 	private Template daoTemplate;
 	private Template sqlMapTemplate;
 	private Template springiBatisTemplate;

@@ -4,7 +4,7 @@ import com.techatpark.scubebird.core.model.DaoProject;
 
 public interface IcgProjectSection {
 
-	public DaoProject getIcgProject() ;
+	DaoProject getIcgProject() ;
 
-	public void setIcgProject(DaoProject icgProject) ;
+	void setIcgProject(DaoProject icgProject) ;
 }

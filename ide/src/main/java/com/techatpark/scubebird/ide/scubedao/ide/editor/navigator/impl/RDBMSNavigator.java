@@ -15,15 +15,15 @@ import java.util.List;
 public class RDBMSNavigator extends JTree implements DaoProjectNavigator,
 		TreeSelectionListener {
 
-	private DefaultMutableTreeNode parentNode;
-	private DefaultMutableTreeNode tablesNode;
-	private DefaultMutableTreeNode viewsNode;
-	private DefaultMutableTreeNode mviewsNode;
-	private DefaultMutableTreeNode packagesNode;
-	private DefaultMutableTreeNode proceduresNode;
-	private DefaultMutableTreeNode functionsNode;
+	private final DefaultMutableTreeNode parentNode;
+	private final DefaultMutableTreeNode tablesNode;
+	private final DefaultMutableTreeNode viewsNode;
+	private final DefaultMutableTreeNode mviewsNode;
+	private final DefaultMutableTreeNode packagesNode;
+	private final DefaultMutableTreeNode proceduresNode;
+	private final DefaultMutableTreeNode functionsNode;
 
-	private AbstractSCubeDaoEditor sCubeDaoEditor;
+	private final AbstractSCubeDaoEditor sCubeDaoEditor;
 
 	public RDBMSNavigator(AbstractSCubeDaoEditor sCubeDaoEditor) {
 		super(getSectionNode());

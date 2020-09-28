@@ -17,7 +17,7 @@ public final class ApplicationWindow {
 
 	private static ApplicationWindow applicationWindow;
 
-	private ApplicationManager applicationManager = ApplicationManager
+	private final ApplicationManager applicationManager = ApplicationManager
 			.getApplicationManager();
 
 	public static final ApplicationWindow getApplicationWindow() {
@@ -111,8 +111,8 @@ public final class ApplicationWindow {
 		saveBtn.setIcon(applicationManager.getIcon("save"));
 		runBtn.setIcon(applicationManager.getIcon("run"));
 
-		mainFrame.setIconImage(((ImageIcon) applicationManager
-				.getIcon("icon.application")).getImage());
+		mainFrame.setIconImage(applicationManager
+				.getIcon("icon.application").getImage());
 
 		mainToolbar.setFloatable(false);
 

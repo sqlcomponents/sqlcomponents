@@ -95,7 +95,7 @@ public class JavaSpecification extends Specification {
 
 	}
 
-	private Configuration freeMarkerConfiguration;
+	private final Configuration freeMarkerConfiguration;
 	private Template daoTemplate;
 	private Template beanTemplate;
 	private Template serviceTemplate;

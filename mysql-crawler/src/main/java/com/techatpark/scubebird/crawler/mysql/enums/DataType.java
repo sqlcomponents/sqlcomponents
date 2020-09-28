@@ -25,9 +25,9 @@ public enum DataType {
 	BLOB("blob"),
 	TIME("time");
 
-	private String dataType; 
+	private final String dataType;
 	
-	private DataType(String dataType) {
+	DataType(String dataType) {
 		this.dataType = dataType;
 	}
 	public String getDataType() {

@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public final class SetupRequest {
 	
-	private HashMap<String, Object> requestMap ;
+	private final HashMap<String, Object> requestMap ;
 	
 	public SetupRequest() {
 		requestMap = new HashMap<String, Object>() ;

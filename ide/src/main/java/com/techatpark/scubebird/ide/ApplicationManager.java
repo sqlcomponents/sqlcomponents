@@ -29,7 +29,7 @@ public final class ApplicationManager implements InternalFrameListener {
 	private HashMap<String, ImageIcon> imageiconMaps;
 	private ResourceBundle labelBundle;
 
-	private ArrayList<JInternalFrame> internalFrames;
+	private final ArrayList<JInternalFrame> internalFrames;
 
 	private JDesktopPane desktop;
 
@@ -66,7 +66,7 @@ public final class ApplicationManager implements InternalFrameListener {
 				.getBundle("properties.icons");
 		keys = iconBundle.getKeys();
 		while (keys.hasMoreElements()) {
-			key = (String) keys.nextElement();
+			key = keys.nextElement();
 			imageiconMaps.put(key, new ImageIcon(ApplicationManager.class
 					.getResource(iconBundle.getString(key))));
 		}

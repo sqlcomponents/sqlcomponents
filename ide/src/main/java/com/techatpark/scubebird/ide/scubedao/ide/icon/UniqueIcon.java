@@ -5,8 +5,8 @@ import java.awt.*;
 
 public class UniqueIcon implements Icon {
 
-	private int width = 18;
-    private int height = 18;
+	private final int width = 18;
+    private final int height = 18;
     
     
 
