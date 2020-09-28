@@ -18,6 +18,7 @@
         <module>java-compiler</module>
         <module>mysql-crawler</module>
         <module>oracle-crawler</module>
+        <module>postgres-crawler</module>
         <module>ide</module>
 
     </modules>
