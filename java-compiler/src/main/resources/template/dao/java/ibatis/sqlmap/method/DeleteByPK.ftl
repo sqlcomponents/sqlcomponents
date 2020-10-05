@@ -1,5 +1,5 @@
 <#if tableType == 'TABLE' >
-	<delete id="delete${name}ByPk" parameterClass="map">
+	<delete id="delete${name}ByPk" parameterType="map">
 		DELETE FROM ${tableName} 
 		WHERE
 	    <#assign index=0>

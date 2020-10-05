@@ -4,7 +4,7 @@
 <#include "/template/dao/java/method/signature/GetByPKUniqueKeys.ftl">  {
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		${getUniqueKeysAsParameterStringNoTypeMap(uniqueConstraintGroupName)}
-		return (${name}) getSqlMapClientTemplate().queryForObject("get${name}By${uniqueConstraintGroupName}",map) ;
+		return (${name}) sqlSession.selectOne("get${name}By${uniqueConstraintGroupName}",map) ;
 	}<#assign a=addImportStatement("java.util.HashMap")>
 	</#list>
 </#if>

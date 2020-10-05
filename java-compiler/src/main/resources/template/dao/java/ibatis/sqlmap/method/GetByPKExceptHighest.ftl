@@ -1,6 +1,6 @@
 <#if highestPKIndex &gt; 1>
 <#assign a=addAliasStatement(name,beanPackage+"."+name)>
-	<select id="get${name}ByPkExceptHighest" parameterClass="map" resultClass="${name}">
+	<select id="get${name}ByPkExceptHighest" parameterType="map" resultType="${name}">
 		SELECT
 		<@columnSelection/> 
 		FROM ${tableName} 

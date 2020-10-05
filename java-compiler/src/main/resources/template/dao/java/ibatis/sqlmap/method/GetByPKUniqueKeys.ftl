@@ -1,7 +1,7 @@
 <#if uniqueConstraintGroupNames?size != 0 >
 	<#list uniqueConstraintGroupNames as uniqueConstraintGroupName>
 	<#assign a=addAliasStatement(name,beanPackage+"."+name)>
-	<select id="get${name}By${uniqueConstraintGroupName}" parameterClass="map" resultClass="${name}">
+	<select id="get${name}By${uniqueConstraintGroupName}" parameterType="map" resultType="${name}">
 		SELECT
 		<@columnSelection/> 
 		FROM ${tableName} 

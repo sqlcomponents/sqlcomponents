@@ -3,6 +3,6 @@
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("${name?uncap_first}",${name?uncap_first});
 		map.put("search${name}",search${name});		
-		return getSqlMapClientTemplate().update("update${name}ByEntity",map) ;
+		return sqlSession.update("update${name}ByEntity",map) ;
 	}<#assign a=addImportStatement("java.util.HashMap")>
 </#if>

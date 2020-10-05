@@ -16,9 +16,9 @@ class OracleCrawlerTest {
 
         daoProject.setName("Sakila");
         daoProject.setUrl("jdbc:oracle:thin:@localhost:51521:xe");
-        daoProject.setUserName("system");
-        daoProject.setPassword("mysecurepassword");
-        daoProject.setSchemaName("APPQOSSYS");
+        daoProject.setUserName("c##chris");
+        daoProject.setPassword("password");
+        daoProject.setSchemaName("c##chris");
         daoProject.setTablePatterns(List.of("%"));
 
         CrawlerConfig crawlerConfig = new CrawlerConfig();

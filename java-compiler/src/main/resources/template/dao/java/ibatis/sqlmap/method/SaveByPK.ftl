@@ -1,6 +1,6 @@
 <#if tableType == 'TABLE' >
 <#assign a=addAliasStatement(name,beanPackage+"."+name)>
-	<update id="save${name}ByPk" parameterClass="${name}">	
+	<update id="save${name}ByPk" parameterType="${name}">
 	MERGE INTO ${tableName} TARGET_TABLE
     USING DUAL
 	    ON (

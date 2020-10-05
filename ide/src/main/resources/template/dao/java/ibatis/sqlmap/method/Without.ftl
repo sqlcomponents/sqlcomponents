@@ -3,13 +3,13 @@
 		SELECT
 		<@columnSelection/> 
 		FROM ${tableName} 
-		<dynamic prepend="WHERE">		
+		<where>
 		<#list properties as property>
 			<#if property.column.nullable>
-			<isEqual prepend="AND" property="isNull${property.name?cap_first}" compareValue="true">
+			<if property="isNull${property.name?cap_first} == true">
 				${property.columnName} IS NULL 
-			</isEqual>	
+			</if>
 			</#if>
 		</#list>
-		</dynamic>
+		</where>
 	</select>

@@ -1,6 +1,6 @@
 <#if tableType == 'TABLE' >
 <#assign a=addAliasStatement(name,beanPackage+"."+name)>
-	<update id="update${name}ByPk" parameterClass="${name}">
+	<update id="update${name}ByPk" parameterType="${name}">
 		UPDATE ${tableName} SET 
 		<#assign index=0>
 		<#list properties as property>

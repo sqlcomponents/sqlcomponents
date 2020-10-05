@@ -1,5 +1,5 @@
 <#if tableType == 'TABLE' >
-	<update id="update${name}ByEntity" parameterClass="map">
+	<update id="update${name}ByEntity" parameterType="map">
 		UPDATE ${tableName} SET 
 		<#assign index=0>
 		<#list properties as property>

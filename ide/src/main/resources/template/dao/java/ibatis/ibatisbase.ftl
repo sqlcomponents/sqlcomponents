@@ -154,40 +154,40 @@
 
 
 <#macro dynamicWhere prefix>
-		<dynamic prepend="WHERE">		
+		<where>
 		<#list properties as property>
 			<#if property.sqlDataType?index_of("VARCHAR") !=  -1>
-			<isNotEmpty prepend="AND" property="${prefix}${property.name}">
-				${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
-			</isNotEmpty>	
+			<if test="${prefix}${property.name} != null">
+				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
+			</if>
 			<#elseif property.sqlDataType?index_of("BLOB") ==  -1>
-			<isNotNull prepend="AND" property="${prefix}${property.name}">
-				${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
-			</isNotNull>
+			<if test="${prefix}${property.name} != null">
+				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
+			</if>
 			</#if>
 		</#list>
-		</dynamic>	
+		</where>
 </#macro>
 
 <#macro dynamicPaginatedWhere prefix pageStart>
-		<dynamic prepend="WHERE">		
+		<where>
 		<#list properties as property>
 			<#if property.sqlDataType?index_of("VARCHAR") !=  -1>
-			<isNotEmpty prepend="AND" property="${prefix}${property.name}">
+			<isNotEmpty  property="${prefix}${property.name}">
 				${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
 			</isNotEmpty>	
 			<#elseif property.sqlDataType?index_of("BLOB") ==  -1>
-			<isNotNull prepend="AND" property="${prefix}${property.name}">
+			<if  test="${prefix}${property.name} != null">
 				${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
-			</isNotNull>
+			</if>
 			</#if>						
 		</#list>
 			<#if pageStart == "1">
-			<isNotNull prepend="AND" property="pageSize">
+			<isNotNull  property="pageSize">
 				ROWNUM &lt;= #pageSize${getDataBaseSpecificDefault("NUMBER",orm)}#
-			</isNotNull>			
+			</if>
 			</#if>
-		</dynamic>	
+		</where>
 </#macro>
 
 <#macro aliasStatements>

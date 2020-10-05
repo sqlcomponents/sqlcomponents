@@ -1,7 +1,8 @@
 <#include "/template/dao/java/ibatis/ibatisbase.ftl">
 package <#if daoPackage?? && daoPackage?length != 0 >${daoPackage}.</#if>sqlmapdao;
 
-import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Component;
 import java.sql.SQLException ;
 import ${daoPackage}.${name}Dao${orm.daoSuffix};
 
@@ -9,7 +10,14 @@ import ${daoPackage}.${name}Dao${orm.daoSuffix};
 /**
  * 
  */
-public class SqlMap${name}Dao${orm.daoSuffix} extends SqlMapClientDaoSupport implements ${name}Dao${orm.daoSuffix} {
+ @Component
+public class SqlMap${name}Dao${orm.daoSuffix} implements ${name}Dao${orm.daoSuffix} {
+
+    private final SqlSession sqlSession;
+
+  public SqlMap${name}Dao${orm.daoSuffix}(SqlSession sqlSession) {
+    this.sqlSession = sqlSession;
+  }
 
 	<#list orm.methodSpecification as method>
 		<#include "method/${method}.ftl">				

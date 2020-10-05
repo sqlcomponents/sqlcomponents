@@ -1,10 +1,10 @@
 <#if tableType == 'TABLE' >
 <#assign a=addAliasStatement(name,beanPackage+"."+name)>
-	<insert id="insert${name}" parameterClass="${name}">
+	<insert id="insert${name}" parameterType="${name}">
 		<#if sequenceName?? && highestPKIndex == 1>
 			<#list properties as property>
 				<#if property.primaryKeyIndex == 1>		
-		<selectKey resultClass="${property.dataType}" keyProperty="${property.name}" >
+		<selectKey resultType="${property.dataType}" keyProperty="${property.name}" >
 		SELECT ${sequenceName}.NEXTVAL AS ID FROM DUAL 
 		</selectKey>
 				</#if>

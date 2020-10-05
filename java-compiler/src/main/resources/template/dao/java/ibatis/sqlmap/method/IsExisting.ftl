@@ -1,6 +1,6 @@
 <#if highestPKIndex != 0>
 <#assign a=addAliasStatement(name,beanPackage+"."+name)>
-	<select id="isExisting${name}" parameterClass="map" resultClass="Boolean">
+	<select id="isExisting${name}" parameterType="map" resultType="Boolean">
 		SELECT
 		1
 		FROM ${tableName} 

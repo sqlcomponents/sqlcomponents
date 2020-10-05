@@ -1,18 +1,18 @@
 <#assign a=addAliasStatement(name,beanPackage+"."+name)>
-	<select id="get${name}ByEntity" parameterClass="${name}" resultClass="${name}">
+	<select id="get${name}ByEntity" parameterType="${name}" resultType="${name}">
 		SELECT
 		<@columnSelection/> 
 		FROM ${tableName} 
 	    <@dynamicWhere prefix=""/>
 	</select>
 <#if orm.pagination >
-	<select id="get${name}ByEntityPage1" parameterClass="map" resultClass="${name}">
+	<select id="get${name}ByEntityPage1" parameterType="map" resultType="${name}">
 		SELECT
 		<@columnSelection/> 
 		FROM ${tableName} 
 	    <@dynamicPaginatedWhere prefix="${name?uncap_first}." pageStart="1"/>
 	</select>
-	<select id="get${name}ByEntityPage" parameterClass="map" resultClass="${name}">
+	<select id="get${name}ByEntityPage" parameterType="map" resultType="${name}">
 	SELECT * FROM (
 		SELECT
 		<@columnSelection/>

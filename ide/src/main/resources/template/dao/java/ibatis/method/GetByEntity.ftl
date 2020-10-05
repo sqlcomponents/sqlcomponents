@@ -1,6 +1,6 @@
 	@SuppressWarnings("unchecked")
 <#include "/template/dao/java/method/signature/GetByEntity.ftl"> {
-		return (List<${name}>) getSqlMapClientTemplate().queryForList("get${name}ByEntity",search${name}) ;
+		return getSqlMapClientTemplate().selectList("get${name}ByEntity",search${name}) ;
 	}
 <#if orm.pagination >
 	@SuppressWarnings("unchecked")
@@ -17,13 +17,13 @@
 		else if (pageNumber == 1) {
 			map.put("pageNumber", pageNumber);
 			map.put("pageSize", pageSize);
-			${pluralName?uncap_first} = (List<${name}>) getSqlMapClientTemplate().queryForList(
+			${pluralName?uncap_first} = getSqlMapClientTemplate().selectList(
 					"get${name}ByEntityPage1", map);
 		}
 		else {
 			map.put("pageNumber", ( ( pageNumber - 1 ) * pageSize) + 1);
 			map.put("pageSize", (( pageNumber - 1 ) * pageSize) + pageSize);
-			${pluralName?uncap_first} = (List<${name}>) getSqlMapClientTemplate().queryForList("get${name}ByEntityPage",map) ;
+			${pluralName?uncap_first} = getSqlMapClientTemplate().selectList("get${name}ByEntityPage",map) ;
 		}		
 		return ${pluralName?uncap_first};
 	}<#assign a=addImportStatement("java.util.HashMap")>

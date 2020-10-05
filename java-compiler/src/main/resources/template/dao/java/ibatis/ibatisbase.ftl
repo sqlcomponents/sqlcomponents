@@ -10,7 +10,7 @@
 </#function>
 
 <#function getUpdateValue columnName propertyName propertySqlDataType orm>
-<#local updateValue="#"+ propertyName + getDataBaseSpecificDefault(propertySqlDataType,orm) +"#">
+<#local updateValue="#{"+ propertyName + getDataBaseSpecificDefault(propertySqlDataType,orm) +"}">
 	<#if orm.defaults??>
 		<#list orm.defaults as default>
 			<#if default.onUpdate && default.columnName == columnName>
@@ -27,22 +27,22 @@
 <#if orm.crawlerConfig.driverName == "oracle.jdbc.OracleDriver">
 <#switch propertySqlDataType>
   <#case "VARCHAR2">
-	 <#local dataBaseSpecificInsert=":VARCHAR:NOENTRY">
+	 <#local dataBaseSpecificInsert=",jdbcType=VARCHAR">
    <#break>
    <#case "VARCHAR">
-	 <#local dataBaseSpecificInsert=":VARCHAR:NOENTRY">
+	 <#local dataBaseSpecificInsert=",jdbcType=VARCHAR">
    <#break>
    <#case "BLOB">
-	 <#local dataBaseSpecificInsert=":BLOB">
+	 <#local dataBaseSpecificInsert=",jdbcType=BLOB">
    <#break>
    <#case "DATE">
-	 <#local dataBaseSpecificInsert=":DATE">
+	 <#local dataBaseSpecificInsert=",jdbcType=DATE">
    <#break>
     <#case "TIMESTAMP">
-	 <#local dataBaseSpecificInsert=":TIMESTAMP">
+	 <#local dataBaseSpecificInsert=",jdbcType=TIMESTAMP">
    <#break>
    <#case "NUMBER">
-	 <#local dataBaseSpecificInsert=":NUMERIC:-9999">
+	 <#local dataBaseSpecificInsert=",jdbcType=NUMERIC">
    <#break>
   <#case "medium">
 </#switch>
@@ -154,40 +154,40 @@
 
 
 <#macro dynamicWhere prefix>
-		<dynamic prepend="WHERE">		
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
 		<#list properties as property>
 			<#if property.sqlDataType?index_of("VARCHAR") !=  -1>
-			<isNotEmpty prepend="AND" property="${prefix}${property.name}">
-				${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
-			</isNotEmpty>	
+			<if  test="${prefix}${property.name} != null">
+				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
+			</if>
 			<#elseif property.sqlDataType?index_of("BLOB") ==  -1>
-			<isNotNull prepend="AND" property="${prefix}${property.name}">
-				${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
-			</isNotNull>
+			<if  test="${prefix}${property.name} != null">
+				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
+			</if>
 			</#if>
 		</#list>
-		</dynamic>	
+		</trim>
 </#macro>
 
 <#macro dynamicPaginatedWhere prefix pageStart>
-		<dynamic prepend="WHERE">		
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
 		<#list properties as property>
 			<#if property.sqlDataType?index_of("VARCHAR") !=  -1>
-			<isNotEmpty prepend="AND" property="${prefix}${property.name}">
-				${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
+			<isNotEmpty  property="${prefix}${property.name}">
+				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
 			</isNotEmpty>	
 			<#elseif property.sqlDataType?index_of("BLOB") ==  -1>
-			<isNotNull prepend="AND" property="${prefix}${property.name}">
-				${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
-			</isNotNull>
+			<if  test="${prefix}${property.name} != null">
+				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
+			</if>
 			</#if>						
 		</#list>
 			<#if pageStart == "1">
-			<isNotNull prepend="AND" property="pageSize">
+			<isNotNull  property="pageSize">
 				ROWNUM &lt;= #pageSize${getDataBaseSpecificDefault("NUMBER",orm)}#
-			</isNotNull>			
+			</if>
 			</#if>
-		</dynamic>	
+		</trim>
 </#macro>
 
 <#macro aliasStatements>

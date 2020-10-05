@@ -33,10 +33,10 @@ public class IBatisImplementation extends OrmImplementation {
 			}
 		}
 		try {
+//			processTemplates(project, project.getSrcFolder() + File.separator
+//					+ "spring-ibatis.xml", springiBatisTemplate);
 			processTemplates(project, project.getSrcFolder() + File.separator
-					+ "spring-ibatis.xml", springiBatisTemplate);
-			processTemplates(project, project.getSrcFolder() + File.separator
-					+ "SqlMapConfig.xml", sqlMapConfigTemplate);
+					+ "mybatis-config.xml", sqlMapConfigTemplate);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -86,7 +86,7 @@ public class IBatisImplementation extends OrmImplementation {
 			sqlMapTemplate = freeMarkerConfiguration
 					.getTemplate("template/dao/java/ibatis/sqlmap/sqlmap.ftl");
 			sqlMapConfigTemplate = freeMarkerConfiguration
-					.getTemplate("template/dao/java/ibatis/SqlMapConfig.ftl");
+					.getTemplate("template/dao/java/ibatis/mybatis-config.ftl");
 			springiBatisTemplate = freeMarkerConfiguration
 					.getTemplate("template/dao/java/ibatis/spring-ibatis.ftl");
 		} catch (IOException e) {

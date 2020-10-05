@@ -1,15 +1,15 @@
 <#assign a=addAliasStatement(name,beanPackage+"."+name)>
-	<select id="get${pluralName}Without" parameterClass="map" resultClass="${name}">
+	<select id="get${pluralName}Without" parameterType="map" resultType="${name}">
 		SELECT
 		<@columnSelection/> 
 		FROM ${tableName} 
-		<dynamic prepend="WHERE">		
+		<where>
 		<#list properties as property>
 			<#if property.column.nullable>
-			<isEqual prepend="AND" property="isNull${property.name?cap_first}" compareValue="true">
+			<if test="isNull${property.name?cap_first} == true">
 				${property.columnName} IS NULL 
-			</isEqual>	
+			</if>
 			</#if>
 		</#list>
-		</dynamic>
+		</where>
 	</select>

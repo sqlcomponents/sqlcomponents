@@ -1,6 +1,6 @@
 <#if highestPKIndex != 0>
 <#assign a=addAliasStatement(name,beanPackage+"."+name)>
-	<select id="get${name}ByPk" parameterClass="map" resultClass="${name}">
+	<select id="get${name}ByPk" parameterType="map" resultType="${name}">
 		SELECT
 		<@columnSelection/> 
 		FROM ${tableName} 
