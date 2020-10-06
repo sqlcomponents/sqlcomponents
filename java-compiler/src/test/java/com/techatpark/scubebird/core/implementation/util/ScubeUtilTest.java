@@ -9,6 +9,6 @@ class ScubeUtilTest {
     @Test
     void writeCode() throws IOException, ClassNotFoundException {
         ScubeUtil.generateCode("src/test/resources/oracle-hr.dao"
-                ,"/home/haripriya/Official/java-oracle-jdbc/target/generated-sources/hr-oracle");
+                ,"../examples/java-jdbc/target/generated-sources/hr-oracle");
     }
 }

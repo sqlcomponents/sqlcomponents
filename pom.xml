@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <name>Scube</name>
+    <name>SQL Components</name>
     <packaging>pom</packaging>
     <groupId>com.techatpark</groupId>
     <artifactId>scubebird</artifactId>
@@ -20,6 +20,8 @@
         <module>postgres-crawler</module>
         <module>java-compiler</module>
         <module>ide</module>
+
+        <module>examples</module>
     </modules>
 
     <dependencies>
