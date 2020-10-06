@@ -173,9 +173,9 @@
 		<trim prefix="WHERE" prefixOverrides="AND |OR ">
 		<#list properties as property>
 			<#if property.sqlDataType?index_of("VARCHAR") !=  -1>
-			<isNotEmpty  property="${prefix}${property.name}">
+			<if  test="${prefix}${property.name} != null">
 				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
-			</isNotEmpty>	
+			</if>
 			<#elseif property.sqlDataType?index_of("BLOB") ==  -1>
 			<if  test="${prefix}${property.name} != null">
 				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
@@ -183,7 +183,7 @@
 			</#if>						
 		</#list>
 			<#if pageStart == "1">
-			<isNotNull  property="pageSize">
+			<if test="pageSize$ != null">
 				ROWNUM &lt;= #pageSize${getDataBaseSpecificDefault("NUMBER",orm)}#
 			</if>
 			</#if>
