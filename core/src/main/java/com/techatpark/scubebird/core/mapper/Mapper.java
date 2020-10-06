@@ -145,11 +145,14 @@ public abstract class Mapper {
 
 	private String getSequenceName(DaoProject ormProject, String entityName) {
 		List<String> sequences = ormProject.getSchema().getSequences();
-		for (String sequence : sequences) {
-			if (entityName.equals(getEntityName(ormProject, sequence))) {
-				return sequence;
+		if(sequences != null ) {
+			for (String sequence : sequences) {
+				if (entityName.equals(getEntityName(ormProject, sequence))) {
+					return sequence;
+				}
 			}
 		}
+
 		return null;
 	}
 

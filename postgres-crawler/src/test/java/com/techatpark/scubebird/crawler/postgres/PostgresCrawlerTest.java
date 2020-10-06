@@ -2,6 +2,7 @@ package com.techatpark.scubebird.crawler.postgres;
 
 import com.techatpark.scubebird.core.crawler.Crawler;
 import com.techatpark.scubebird.core.exception.ScubeException;
+import com.techatpark.scubebird.core.mapper.Mapper;
 import com.techatpark.scubebird.core.model.CrawlerConfig;
 import com.techatpark.scubebird.core.model.DaoProject;
 import com.techatpark.scubebird.core.model.Schema;
@@ -30,6 +31,8 @@ class PostgresCrawlerTest {
 
         Crawler crawler = new PostgresCrawler();
         Schema schema = crawler.getSchema(daoProject);
+        daoProject.setOrm(Mapper.getMapper(daoProject).getOrm(
+                daoProject));
         System.out.printf("schema");
     }
 }

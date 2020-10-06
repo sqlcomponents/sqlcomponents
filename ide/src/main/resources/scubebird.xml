@@ -91,6 +91,11 @@
 			<classname>com.techatpark.scubebird.crawler.mysql.MySQLCrawler</classname>
 			<drivername>com.mysql.jdbc.Driver</drivername>		
 		</crawler>
+		<crawler>
+			<name>Postgres</name>
+			<classname>com.techatpark.scubebird.crawler.postgres.PostgresCrawler</classname>
+			<drivername>org.postgresql.Driver</drivername>
+		</crawler>
 	</crawlers>
 </scubebird>
 

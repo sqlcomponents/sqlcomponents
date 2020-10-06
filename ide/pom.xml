@@ -31,7 +31,11 @@
             <artifactId>scubebird-mysql-crawler</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scubebird-postgres-crawler</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
 
         <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
