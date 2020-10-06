@@ -60,35 +60,38 @@ public abstract class Mapper {
 
 	private List<Method> getMethods(DaoProject ormProject) {
 		Schema schema = ormProject.getSchema();
-		ArrayList<Method> methods = new ArrayList<Method>(schema.getFunctions()
-				.size());
+		ArrayList<Method> methods = new ArrayList<Method>();
 
-		for (Function function : schema.getFunctions()) {
+		if(schema.getFunctions() != null) {
+			for (Function function : schema.getFunctions()) {
 
-			methods.add(getMethod(function, ormProject));
+				methods.add(getMethod(function, ormProject));
+			}
 		}
+
 
 		return methods;
 	}
 
 	private List<Service> getServices(DaoProject ormProject) {
 
-		ArrayList<Service> services = new ArrayList<Service>(ormProject
-				.getSchema().getPackages().size());
-		Service service = null;
-		for (Package package1 : ormProject.getSchema().getPackages()) {
-			service = new Service();
-			
-			service.setPackage(package1);
-			service.setServiceName(getServiceName(ormProject, service.getName()));
-			service.setDaoPackage(getDaoPackage(ormProject, service.getName())) ;
-			service.setMethods(new ArrayList<Method>());
-			for (Function function : package1.getFunctions()) {
-				service.getMethods().add(getMethod(function, ormProject));
-			}
-			services.add(service) ;
-		}
+		ArrayList<Service> services = new ArrayList<Service>();
+		if(ormProject
+				.getSchema().getPackages() != null ) {
+			Service service = null;
+			for (Package package1 : ormProject.getSchema().getPackages()) {
+				service = new Service();
 
+				service.setPackage(package1);
+				service.setServiceName(getServiceName(ormProject, service.getName()));
+				service.setDaoPackage(getDaoPackage(ormProject, service.getName())) ;
+				service.setMethods(new ArrayList<Method>());
+				for (Function function : package1.getFunctions()) {
+					service.getMethods().add(getMethod(function, ormProject));
+				}
+				services.add(service) ;
+			}
+		}
 		return services;
 	}
 

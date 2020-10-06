@@ -57,7 +57,7 @@ public class PostgresCrawler extends Crawler {
             Column column = new Column();
             column.setColumnName(columnResultset.getString("COLUMN_NAME"));
             column.setTableName(columnResultset.getString("TABLE_NAME"));
-            column.setSqlDataType(columnResultset.getString("SQL_DATA_TYPE"));
+            column.setSqlDataType(columnResultset.getString("TYPE_NAME"));
             column.setSize(columnResultset.getInt("COLUMN_SIZE"));
             column.setDecimalDigits(columnResultset.getInt("DECIMAL_DIGITS"));
             column.setRemarks(columnResultset.getString("REMARKS"));
@@ -65,7 +65,6 @@ public class PostgresCrawler extends Crawler {
             column.setAutoIncrement(columnResultset.getBoolean("IS_AUTOINCREMENT"));
             column.setTableCategory(columnResultset.getString("TABLE_CAT"));
             column.setTableSchema(columnResultset.getString("TABLE_SCHEM"));
-            column.setTypeName(columnResultset.getString("TYPE_NAME"));
             column.setBufferLength(columnResultset.getInt("BUFFER_LENGTH"));
             column.setNumberPrecisionRadix(columnResultset.getInt("NUM_PREC_RADIX"));
             column.setColumnDefinition(columnResultset.getString("COLUMN_DEF"));
