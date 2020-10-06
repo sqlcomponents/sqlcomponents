@@ -54,6 +54,9 @@ public class PostgresCrawler extends Crawler {
         DatabaseMetaData databasemetadata = connection.getMetaData();
         ResultSet resultset = databasemetadata.getColumns(null,null, String.valueOf(table), null);
 
+        //Extracting Primary Key Index
+        ResultSet pk = databasemetadata.getPrimaryKeys(null,null, String.valueOf(table));
+
         //Extracting Foreign Keys.
         ResultSet fk = databasemetadata.getImportedKeys(null, null, String.valueOf(table));
         List<ForeignKey> foreignKeys = new ArrayList<>();
@@ -91,6 +94,7 @@ public class PostgresCrawler extends Crawler {
             column.setScopeTable(resultset.getString("SCOPE_TABLE"));
             column.setSourceDataType(resultset.getString("SOURCE_DATA_TYPE"));
             column.setGeneratedColumn(resultset.getBoolean("IS_GENERATEDCOLUMN"));
+            column.setPrimaryKeyIndex(resultset.getInt(pk.getString("KEY_SEQ")));
             column.setForeignKeys(foreignKeys);
 
             columns.add(column);
