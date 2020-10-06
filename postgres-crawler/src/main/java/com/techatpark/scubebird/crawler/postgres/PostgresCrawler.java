@@ -1,10 +1,7 @@
 package com.techatpark.scubebird.crawler.postgres;
 import com.techatpark.scubebird.core.crawler.Crawler;
 import com.techatpark.scubebird.core.exception.ScubeException;
-import com.techatpark.scubebird.core.model.Column;
-import com.techatpark.scubebird.core.model.DaoProject;
-import com.techatpark.scubebird.core.model.Schema;
-import com.techatpark.scubebird.core.model.Table;
+import com.techatpark.scubebird.core.model.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -57,33 +54,45 @@ public class PostgresCrawler extends Crawler {
         DatabaseMetaData databasemetadata = connection.getMetaData();
         ResultSet resultset = databasemetadata.getColumns(null,null, String.valueOf(table), null);
 
-        //TABLE_CAT
-        //TABLE_SCHEM
-        //TYPE_NAME
-        //BUFFER_LENGTH
-        //NUM_PREC_RADIX
-        //NULLABLE
-        //COLUMN_DEF
-        //SQL_DATA_TYPE
+        //Extracting Foreign Keys.
+        ResultSet fk = databasemetadata.getImportedKeys(null, null, String.valueOf(table));
+        List<ForeignKey> foreignKeys = new ArrayList<>();
+        while(fk.next())
+        {
+            ForeignKey foreignKey = new ForeignKey();
+            foreignKey.setTableName(fk.getString("FKTABLE_NAME"));
+            foreignKey.setColumnName(fk.getString("FKCOLUMN_NAME"));
+            foreignKeys.add(foreignKey);
+            //System.out.println(fk.getString("PKTABLE_NAME") + "---" + fk.getString("PKCOLUMN_NAME") + "===" + fk.getString("FKTABLE_NAME") + "---" + fk.getString("FKCOLUMN_NAME"));
+        }
+
         //SQL_DATETIME_SUB
         //CHAR_OCTET_LENGTH
-        //ORDINAL_POSITION
-        //SCOPE_CATALOG
-        //SCOPE_SCHEMA
-        //SCOPE_TABLE
-        //SOURCE_DATA_TYPE
-        //IS_GENERATEDCOLUMN
 
         while(resultset.next()) {
             Column column = new Column();
             column.setColumnName(resultset.getString("COLUMN_NAME"));
             column.setTableName(resultset.getString("TABLE_NAME"));
-            column.setSqlDataType(resultset.getString("DATA_TYPE"));
+            column.setSqlDataType(resultset.getString("SQL_DATA_TYPE"));
             column.setSize(resultset.getInt("COLUMN_SIZE"));
             column.setDecimalDigits(resultset.getInt("DECIMAL_DIGITS"));
             column.setRemarks(resultset.getString("REMARKS"));
             column.setNullable(resultset.getBoolean("IS_NULLABLE"));
             column.setAutoIncrement(resultset.getBoolean("IS_AUTOINCREMENT"));
+            column.setTableCategory(resultset.getString("TABLE_CAT"));
+            column.setTableSchema(resultset.getString("TABLE_SCHEM"));
+            column.setTypeName(resultset.getString("TYPE_NAME"));
+            column.setBufferLength(resultset.getInt("BUFFER_LENGTH"));
+            column.setNumberPrecisionRadix(resultset.getInt("NUM_PREC_RADIX"));
+            column.setColumnDefinition(resultset.getString("COLUMN_DEF"));
+            column.setOrdinalPosition(resultset.getInt("ORDINAL_POSITION"));
+            column.setScopeCatalog(resultset.getString("SCOPE_CATALOG"));
+            column.setScopeSchema(resultset.getString("SCOPE_SCHEMA"));
+            column.setScopeTable(resultset.getString("SCOPE_TABLE"));
+            column.setSourceDataType(resultset.getString("SOURCE_DATA_TYPE"));
+            column.setGeneratedColumn(resultset.getBoolean("IS_GENERATEDCOLUMN"));
+            column.setForeignKeys(foreignKeys);
+
             columns.add(column);
         }
         return columns;

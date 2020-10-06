@@ -14,13 +14,26 @@ public class Column implements Serializable {
     private String tableName;
     private String sqlDataType;
     private int size;
-
     private int decimalDigits;
     private String remarks;
     private boolean isNullable;
     private boolean isAutoIncrement;
     private String uniqueConstraintName;
     private int primaryKeyIndex;
+
+    private String tableCategory;
+    private String tableSchema;
+    private String typeName;
+    private int bufferLength;
+    private int numberPrecisionRadix;
+    private String columnDefinition;
+    private int ordinalPosition;
+    private String scopeCatalog;
+    private String scopeSchema;
+    private String scopeTable;
+    private String sourceDataType;
+    private Boolean isGeneratedColumn;
+
     private List<ForeignKey> foreignKeys;
 
     // Null if nothing
@@ -34,6 +47,103 @@ public class Column implements Serializable {
         }
         this.foreignKeys = foreignKeys;
     }
+
+    public String getTableCategory() {
+        return tableCategory;
+    }
+
+    public void setTableCategory(String tableCategory) {
+        this.tableCategory = tableCategory;
+    }
+
+    public String getTableSchema() {
+        return tableSchema;
+    }
+
+    public void setTableSchema(String tableSchema) {
+        this.tableSchema = tableSchema;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    public int getBufferLength() {
+        return bufferLength;
+    }
+
+    public void setBufferLength(int bufferLength) {
+        this.bufferLength = bufferLength;
+    }
+
+    public int getNumberPrecisionRadix() {
+        return numberPrecisionRadix;
+    }
+
+    public void setNumberPrecisionRadix(int numberPrecisionRadix) {
+        this.numberPrecisionRadix = numberPrecisionRadix;
+    }
+
+    public String getColumnDefinition() {
+        return columnDefinition;
+    }
+
+    public void setColumnDefinition(String columnDefinition) {
+        this.columnDefinition = columnDefinition;
+    }
+
+    public int getOrdinalPosition() {
+        return ordinalPosition;
+    }
+
+    public void setOrdinalPosition(int ordinalPosition) {
+        this.ordinalPosition = ordinalPosition;
+    }
+
+    public String getScopeCatalog() {
+        return scopeCatalog;
+    }
+
+    public void setScopeCatalog(String scopeCatalog) {
+        this.scopeCatalog = scopeCatalog;
+    }
+
+    public String getScopeSchema() {
+        return scopeSchema;
+    }
+
+    public void setScopeSchema(String scopeSchema) {
+        this.scopeSchema = scopeSchema;
+    }
+
+    public String getScopeTable() {
+        return scopeTable;
+    }
+
+    public void setScopeTable(String scopeTable) {
+        this.scopeTable = scopeTable;
+    }
+
+    public String getSourceDataType() {
+        return sourceDataType;
+    }
+
+    public void setSourceDataType(String sourceDataType) {
+        this.sourceDataType = sourceDataType;
+    }
+
+    public Boolean getGeneratedColumn() {
+        return isGeneratedColumn;
+    }
+
+    public void setGeneratedColumn(Boolean generatedColumn) {
+        isGeneratedColumn = generatedColumn;
+    }
+
 
     public int getSize() {
         return size;
