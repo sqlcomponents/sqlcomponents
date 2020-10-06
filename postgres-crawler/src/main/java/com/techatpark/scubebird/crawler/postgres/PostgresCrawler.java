@@ -25,7 +25,6 @@ public class PostgresCrawler extends Crawler {
         List<Table> tables = new ArrayList<>();
         Connection connection = getConnection(ormProject);
         DatabaseMetaData databasemetadata = connection.getMetaData();
-        //Print TABLE_TYPE "TABLE"
 
         ResultSet resultset = databasemetadata.getTables(null, null, null, new String[]{"TABLE"});
         while(resultset.next()) {
@@ -52,53 +51,68 @@ public class PostgresCrawler extends Crawler {
         List<Column> columns = new ArrayList<>();
         Connection connection = getConnection(ormProject);
         DatabaseMetaData databasemetadata = connection.getMetaData();
-        ResultSet resultset = databasemetadata.getColumns(null,null, String.valueOf(table), null);
+        ResultSet columnResultset = databasemetadata.getColumns(null,null, table.getTableName(), null);
 
-        //Extracting Primary Key Index
-        ResultSet pk = databasemetadata.getPrimaryKeys(null,null, String.valueOf(table));
-
-        //Extracting Foreign Keys.
-        ResultSet fk = databasemetadata.getImportedKeys(null, null, String.valueOf(table));
-        List<ForeignKey> foreignKeys = new ArrayList<>();
-        while(fk.next())
-        {
-            ForeignKey foreignKey = new ForeignKey();
-            foreignKey.setTableName(fk.getString("FKTABLE_NAME"));
-            foreignKey.setColumnName(fk.getString("FKCOLUMN_NAME"));
-            foreignKeys.add(foreignKey);
-            //System.out.println(fk.getString("PKTABLE_NAME") + "---" + fk.getString("PKCOLUMN_NAME") + "===" + fk.getString("FKTABLE_NAME") + "---" + fk.getString("FKCOLUMN_NAME"));
-        }
-
-        //SQL_DATETIME_SUB
-        //CHAR_OCTET_LENGTH
-
-        while(resultset.next()) {
+        while(columnResultset.next()) {
             Column column = new Column();
-            column.setColumnName(resultset.getString("COLUMN_NAME"));
-            column.setTableName(resultset.getString("TABLE_NAME"));
-            column.setSqlDataType(resultset.getString("SQL_DATA_TYPE"));
-            column.setSize(resultset.getInt("COLUMN_SIZE"));
-            column.setDecimalDigits(resultset.getInt("DECIMAL_DIGITS"));
-            column.setRemarks(resultset.getString("REMARKS"));
-            column.setNullable(resultset.getBoolean("IS_NULLABLE"));
-            column.setAutoIncrement(resultset.getBoolean("IS_AUTOINCREMENT"));
-            column.setTableCategory(resultset.getString("TABLE_CAT"));
-            column.setTableSchema(resultset.getString("TABLE_SCHEM"));
-            column.setTypeName(resultset.getString("TYPE_NAME"));
-            column.setBufferLength(resultset.getInt("BUFFER_LENGTH"));
-            column.setNumberPrecisionRadix(resultset.getInt("NUM_PREC_RADIX"));
-            column.setColumnDefinition(resultset.getString("COLUMN_DEF"));
-            column.setOrdinalPosition(resultset.getInt("ORDINAL_POSITION"));
-            column.setScopeCatalog(resultset.getString("SCOPE_CATALOG"));
-            column.setScopeSchema(resultset.getString("SCOPE_SCHEMA"));
-            column.setScopeTable(resultset.getString("SCOPE_TABLE"));
-            column.setSourceDataType(resultset.getString("SOURCE_DATA_TYPE"));
-            column.setGeneratedColumn(resultset.getBoolean("IS_GENERATEDCOLUMN"));
-            column.setPrimaryKeyIndex(resultset.getInt(pk.getString("KEY_SEQ")));
-            column.setForeignKeys(foreignKeys);
+            column.setColumnName(columnResultset.getString("COLUMN_NAME"));
+            column.setTableName(columnResultset.getString("TABLE_NAME"));
+            column.setSqlDataType(columnResultset.getString("SQL_DATA_TYPE"));
+            column.setSize(columnResultset.getInt("COLUMN_SIZE"));
+            column.setDecimalDigits(columnResultset.getInt("DECIMAL_DIGITS"));
+            column.setRemarks(columnResultset.getString("REMARKS"));
+            column.setNullable(columnResultset.getBoolean("IS_NULLABLE"));
+            column.setAutoIncrement(columnResultset.getBoolean("IS_AUTOINCREMENT"));
+            column.setTableCategory(columnResultset.getString("TABLE_CAT"));
+            column.setTableSchema(columnResultset.getString("TABLE_SCHEM"));
+            column.setTypeName(columnResultset.getString("TYPE_NAME"));
+            column.setBufferLength(columnResultset.getInt("BUFFER_LENGTH"));
+            column.setNumberPrecisionRadix(columnResultset.getInt("NUM_PREC_RADIX"));
+            column.setColumnDefinition(columnResultset.getString("COLUMN_DEF"));
+            column.setOrdinalPosition(columnResultset.getInt("ORDINAL_POSITION"));
+            column.setScopeCatalog(columnResultset.getString("SCOPE_CATALOG"));
+            column.setScopeSchema(columnResultset.getString("SCOPE_SCHEMA"));
+            column.setScopeTable(columnResultset.getString("SCOPE_TABLE"));
+            column.setSourceDataType(columnResultset.getString("SOURCE_DATA_TYPE"));
+            column.setGeneratedColumn( columnResultset.getString("IS_GENERATEDCOLUMN") != null
+                    && !columnResultset.getString("IS_GENERATEDCOLUMN").trim().equals("") );
+            column.setForeignKeys(new ArrayList<>());
 
             columns.add(column);
         }
+
+        // Fill Primary Keys
+        ResultSet primaryKeysResultSet = databasemetadata.getPrimaryKeys(null,null, table.getTableName());
+        while(primaryKeysResultSet.next()) {
+            columns.stream().filter(column -> {
+                try {
+                    return column.getColumnName().equals(primaryKeysResultSet.getString("COLUMN_NAME"));
+                } catch (SQLException throwables) {
+                    return false;
+                }
+            }).findFirst().get().setPrimaryKeyIndex(primaryKeysResultSet.getInt("KEY_SEQ"));
+        }
+
+        //Extracting Foreign Keys.
+        ResultSet foreignKeysResultSet = databasemetadata.getExportedKeys(null, null, table.getTableName());
+
+        while(foreignKeysResultSet.next())
+        {
+
+            ForeignKey foreignKey = new ForeignKey();
+            foreignKey.setTableName(foreignKeysResultSet.getString("FKTABLE_NAME"));
+            foreignKey.setColumnName(foreignKeysResultSet.getString("FKCOLUMN_NAME"));
+            columns.stream().filter(column -> {
+                try {
+                    return column.getColumnName().equals(foreignKeysResultSet.getString("PKCOLUMN_NAME"));
+                } catch (SQLException throwables) {
+                    return false;
+                }
+            }).findFirst().get().getForeignKeys().add(foreignKey);
+            //System.out.println(fk.getString("PKTABLE_NAME") + "---" + fk.getString("PKCOLUMN_NAME") + "===" + fk.getString("FKTABLE_NAME") + "---" + fk.getString("FKCOLUMN_NAME"));
+        }
+
+
         return columns;
     }
 }
