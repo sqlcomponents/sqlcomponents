@@ -20,8 +20,6 @@
         <module>postgres-crawler</module>
         <module>java-compiler</module>
         <module>ide</module>
-
-        <module>examples</module>
     </modules>
 
     <dependencies>
