@@ -7,6 +7,7 @@ import com.techatpark.scubebird.core.model.CrawlerConfig;
 import com.techatpark.scubebird.core.model.DaoProject;
 import com.techatpark.scubebird.core.model.Schema;
 import com.techatpark.scubebird.crawler.postgres.PostgresCrawler;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -50,5 +51,6 @@ class ScubeUtilTest {
         daoProject.setSrcFolder("/home/haripriya/Official/java-oracle-jdbc/target/generated-sources/sakila-postgres");
         daoProject.setCleanSource(true);
         ScubeUtil.writeCode(daoProject);
+        Assertions.assertNotNull(daoProject);
     }
 }

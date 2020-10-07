@@ -18,10 +18,7 @@
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) return rowMapper(resultSet);
-
-
         } 
-
         return null;
-	}<#assign a=addImportStatement("java.util.HashMap")>
+	}
 </#if>
