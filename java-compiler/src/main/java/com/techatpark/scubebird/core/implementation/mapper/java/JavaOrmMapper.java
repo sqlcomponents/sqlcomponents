@@ -21,6 +21,10 @@ public class JavaOrmMapper extends Mapper {
 	private static final String TINYINT = "tinyint";
 	private static final String SMALLINT = "smallint";
 
+
+	// Postgres Data Types
+	private static final String SERIAL = "serial";
+
 	// private static final String PLS_INTEGER = "PLS_INTEGER";
 	// private static final String BINARY_INTEGER = "BINARY_INTEGER";
 	// private static final String LONG = "LONG";
@@ -127,7 +131,12 @@ public class JavaOrmMapper extends Mapper {
 			} else {
 				return JAVA_GROUP_STRING;
 			}
-		} else if (NUMBER.equals(sqlType) || FLOAT.equals(sqlType) || SMALLINT.equals(sqlType) || TINYINT.equals(sqlType) || INT.equals(sqlType)) {
+		} else if (NUMBER.equals(sqlType)
+				|| FLOAT.equals(sqlType)
+				|| SMALLINT.equals(sqlType)
+				|| TINYINT.equals(sqlType)
+				|| INT.equals(sqlType)
+				|| SERIAL.equals(sqlType)) {
 			if (precision > 0) {
 				if (size >= 37 || size == 0) {
 					return JAVA_GROUP_DOUBLE;

@@ -21,19 +21,9 @@ public class JavaOrmMapper extends Mapper {
 	private static final String TINYINT = "tinyint";
 	private static final String SMALLINT = "smallint";
 
-	// private static final String PLS_INTEGER = "PLS_INTEGER";
-	// private static final String BINARY_INTEGER = "BINARY_INTEGER";
-	// private static final String LONG = "LONG";
-	// private static final String RAW = "RAW";
-	// private static final String LONG_RAW = "LONG RAW";
-	// private static final String ROWID = "ROWID";
-	// private static final String UROWID = "UROWID";
-	// private static final String MLSLABEL = "MLSLABEL";
-	// private static final String CLOB = "CLOB";
-	// private static final String NCLOB = "NCLOB";
-	// private static final String BLOB = "BLOB";
-	// private static final String BFILE = "BFILE";
-	// private static final String XMLType = "XMLType";
+	// Postgres Data Types
+	private static final String SERIAL = "serial";
+
 
 	// Java Data Type
 	private static final String JAVA_BYTE_ARRAY = "byte[]" ;
@@ -76,8 +66,6 @@ public class JavaOrmMapper extends Mapper {
 
 	// Java Data Type Group
 	private static final String[] JAVA_GROUP_STRING = new String[] { JAVA_STRING };
-	// private static final String[] JAVA_GROUP_CHAR = new String[] { JAVA_CHAR,
-	// JAVA_CHAR_PRIMITIVE, JAVA_STRING };
 	private static final String[] JAVA_GROUP_LONG = new String[] { JAVA_LONG,
 			JAVA_LONG_PRIMITIVE, JAVA_STRING };
 	private static final String[] JAVA_GROUP_INTEGER = new String[] {
@@ -102,12 +90,6 @@ public class JavaOrmMapper extends Mapper {
 	
 	private static final String[] JAVA_GROUP_BYTE_ARRAY = new String[] { JAVA_BYTE_ARRAY };
 
-	// private static final String JAVA_BOOLEAN = "java.lang.Boolean";
-	//
-	// private static final String JAVA_BOOLEAN_PRIMITIVE = "boolean";
-	// private static final String[] JAVA_GROUP_BOOLEAN = new String[] {
-	// JAVA_BOOLEAN, JAVA_BOOLEAN_PRIMITIVE, JAVA_STRING };
-
 	@Override
 	public String getValidDataType(String sqlType, int size, int precision) {
 		String[] dataType = getValidDataTypes(sqlType, size, precision);
@@ -127,7 +109,7 @@ public class JavaOrmMapper extends Mapper {
 			} else {
 				return JAVA_GROUP_STRING;
 			}
-		} else if (NUMBER.equals(sqlType) || FLOAT.equals(sqlType) || SMALLINT.equals(sqlType) || TINYINT.equals(sqlType) || INT.equals(sqlType)) {
+		} else if (SERIAL.equals(sqlType) || NUMBER.equals(sqlType) || FLOAT.equals(sqlType) || SMALLINT.equals(sqlType) || TINYINT.equals(sqlType) || INT.equals(sqlType)) {
 			if (precision > 0) {
 				if (size >= 37 || size == 0) {
 					return JAVA_GROUP_DOUBLE;
