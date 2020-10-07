@@ -24,7 +24,7 @@
 		</method>
 		-->
 		<method>
-			<id>GelAll</id>
+			<id>GetAll</id>
 			<name>Get all Records</name>
 			<description>Get all Records</description>
 		</method>

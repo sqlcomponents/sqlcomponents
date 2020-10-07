@@ -23,7 +23,7 @@ class ScubeUtilTest {
         daoProject.setUserName("postgres");
         daoProject.setPassword("postgres");
         daoProject.setSchemaName("sakila");
-        daoProject.setTablePatterns(List.of("%"));
+        daoProject.setTablePatterns(List.of("actor"));
 
         CrawlerConfig crawlerConfig = new CrawlerConfig();
         crawlerConfig.setClassName("com.techatpark.scubebird.crawler.postgres.PostgresCrawler");
@@ -38,7 +38,7 @@ class ScubeUtilTest {
 
         daoProject.setDaoSuffix("");
 
-        daoProject.setMethodSpecification(List.of("DeleteByEntity"));
+        daoProject.setMethodSpecification(List.of("GetAll"));
 
         daoProject.setRootPackage("org.example");
 

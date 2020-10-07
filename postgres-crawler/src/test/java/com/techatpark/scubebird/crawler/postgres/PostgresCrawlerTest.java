@@ -21,7 +21,7 @@ class PostgresCrawlerTest {
         daoProject.setUserName("postgres");
         daoProject.setPassword("postgres");
         daoProject.setSchemaName("sakila");
-        daoProject.setTablePatterns(List.of("%"));
+
 
         CrawlerConfig crawlerConfig = new CrawlerConfig();
         crawlerConfig.setClassName("com.techatpark.scubebird.crawler.postgres.PostgresCrawler");
