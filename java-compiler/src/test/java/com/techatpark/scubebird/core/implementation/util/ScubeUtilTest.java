@@ -38,7 +38,8 @@ class ScubeUtilTest {
 
         daoProject.setDaoSuffix("");
 
-        daoProject.setMethodSpecification(List.of("GetAll"));
+        daoProject.setMethodSpecification(List.of("DeleteByEntity", "DeleteByPK", "Without", "GetAll", "GetByEntity", "GetByPK", "GetByPKExceptHighest", "GetByPKUniqueKeys",
+                "InsertByEntiy", "IsExisting", "MViewRefresh", "SaveByPK", "UpdateByEntiy", "UpdateByPK"));
 
         daoProject.setRootPackage("org.example");
 
@@ -46,7 +47,7 @@ class ScubeUtilTest {
         Schema schema = crawler.getSchema(daoProject);
         daoProject.setOrm(Mapper.getMapper(daoProject).getOrm(
                 daoProject));
-        daoProject.setSrcFolder("/Users/sathishkumarthiyagarajan/IdeaProjects/jdbc-java/target/generated-sources/sakila-postgres");
+        daoProject.setSrcFolder("/home/haripriya/Official/java-oracle-jdbc/target/generated-sources/sakila-postgres");
         daoProject.setCleanSource(true);
         ScubeUtil.writeCode(daoProject);
     }
