@@ -61,7 +61,7 @@ public class JavaSpecification extends Specification {
 				.getDaoPackage());
 		new File(packageFolder).mkdirs();
 		processTemplates(entity, packageFolder + File.separator
-				+ entity.getName() + "Dao"  + daoSuffix.trim() + ".java", daoTemplate);
+				+ entity.getName() + "Dao"  + (daoSuffix ==null ? "" : daoSuffix.trim()) + ".java", daoTemplate);
 	}
 
 	private void writeServiceSpecification(Service service, String srcFolder,String daoSuffix)
@@ -70,7 +70,7 @@ public class JavaSpecification extends Specification {
 				.getDaoPackage());
 		new File(packageFolder).mkdirs();
 		processTemplates(service, packageFolder + File.separator
-				+ service.getServiceName() + "Dao"  + daoSuffix.trim() + ".java", serviceTemplate);
+				+ service.getServiceName() + "Dao"  + (daoSuffix == null ? "" : daoSuffix.trim()) + ".java", serviceTemplate);
 	}
 
 	private void processTemplates(Object model, String targetFile,

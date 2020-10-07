@@ -13,9 +13,20 @@
     </parent>
 
     <dependencies>
+
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scubebird-core</artifactId>
+            <artifactId>scubebird-oracle-crawler</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scubebird-mysql-crawler</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scubebird-postgres-crawler</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
