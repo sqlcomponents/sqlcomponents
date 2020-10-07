@@ -154,7 +154,7 @@ public class JavaOrmMapper extends Mapper {
 					return JAVA_GROUP_BYTE;
 				}
 			}
-		} else if (DATE.equals(sqlType) || ( sqlType.indexOf(TIMESTAMP) != -1 ) ) {
+		} else if (DATE.equals(sqlType) || ( TIMESTAMP.equalsIgnoreCase(sqlType) ) ) {
 			return JAVA_GROUP_DATE;
 		}
 		else if (BLOB.equals(sqlType)) {
