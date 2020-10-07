@@ -25,8 +25,7 @@ public class PostgresCrawler extends Crawler {
         List<Table> tables = new ArrayList<>();
         Connection connection = getConnection(ormProject);
         DatabaseMetaData databasemetadata = connection.getMetaData();
-
-        ResultSet resultset = databasemetadata.getTables(null, null, null, new String[]{"TABLE"});
+        ResultSet resultset = databasemetadata.getTables(null, null, ormProject.getTablePatterns().get(0), new String[]{"TABLE"});
         while(resultset.next()) {
             Table table = new Table();
             table.setTableName(resultset.getString("table_name"));
