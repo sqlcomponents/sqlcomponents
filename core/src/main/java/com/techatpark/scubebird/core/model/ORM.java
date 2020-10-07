@@ -62,16 +62,6 @@ public class ORM implements Serializable {
 		this.beanSuffix = beanSuffix;
 	}
 
-	private CrawlerConfig crawlerConfig ;
-
-	public CrawlerConfig getCrawlerConfig() {
-		return crawlerConfig;
-	}
-
-	public void setCrawlerConfig(CrawlerConfig crawlerConfig) {
-		this.crawlerConfig = crawlerConfig;
-	}
-
 	private HashMap<String, String> wordsMap;
 
 	private HashMap<String, String> modulesMap;

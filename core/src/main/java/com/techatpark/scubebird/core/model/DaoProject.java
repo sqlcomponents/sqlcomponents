@@ -21,14 +21,6 @@ public class DaoProject implements Serializable {
 
 	private List<String> sequencePatterns;
 
-	public CrawlerConfig getCrawlerConfig() {
-		return orm.getCrawlerConfig();
-	}
-
-	public void setCrawlerConfig(CrawlerConfig crawlerConfig) {
-		orm.setCrawlerConfig(crawlerConfig);
-	}
-
 	public List<String> getSequencePatterns() {
 		return sequencePatterns;
 	}

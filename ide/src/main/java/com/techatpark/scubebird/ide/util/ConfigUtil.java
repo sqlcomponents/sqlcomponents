@@ -1,6 +1,5 @@
 package com.techatpark.scubebird.ide.util;
 
-import com.techatpark.scubebird.core.model.CrawlerConfig;
 import com.techatpark.scubebird.ide.model.Method;
 
 import javax.xml.stream.XMLInputFactory;

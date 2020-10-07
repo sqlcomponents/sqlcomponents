@@ -1,12 +1,7 @@
 package com.techatpark.scubebird.crawler.mysql;
 
 import com.techatpark.scubebird.core.exception.ScubeException;
-import com.techatpark.scubebird.core.model.CrawlerConfig;
-import com.techatpark.scubebird.core.model.DaoProject;
-import com.techatpark.scubebird.core.model.Schema;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 class MySQLCrawlerTest {
 

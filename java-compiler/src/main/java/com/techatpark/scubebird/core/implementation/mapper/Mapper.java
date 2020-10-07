@@ -23,10 +23,10 @@ public abstract class Mapper {
 	public abstract String getValidDataType(String sqlType, int size,
 			int precision);
 
-	public ORM getOrm(DaoProject ormProject) throws ScubeException {
+	public ORM getOrm(DaoProject ormProject,Crawler crawler) throws ScubeException {
 
 		ORM orm = ormProject.getOrm();
-		Crawler crawler = Crawler.getCrawler(ormProject);
+
 
 		Schema schema = null;
 
