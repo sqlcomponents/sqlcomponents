@@ -1,6 +1,7 @@
 package com.techatpark.scubebird.core.implementation;
 
 import com.techatpark.scubebird.core.implementation.ibatis.IBatisImplementation;
+import com.techatpark.scubebird.core.implementation.jdbc.JdbcImplementation;
 import com.techatpark.scubebird.core.model.DaoProject;
 
 import java.io.File;
@@ -8,7 +9,8 @@ import java.io.File;
 public abstract class OrmImplementation {
 
 	public static OrmImplementation getImplementation() {
-		return new IBatisImplementation();
+		// return new IBatisImplementation();
+		return new JdbcImplementation();
 	}
 
 	public abstract void writeImplementation(DaoProject project);
@@ -22,7 +24,6 @@ public abstract class OrmImplementation {
 			} else {
 				filePath.append(charArray[i]);
 			}
-
 		}
 		return rootDir + File.separatorChar + filePath.toString();
 	}

@@ -1,8 +1,8 @@
 package com.techatpark.scubebird.core.implementation.util;
 
 import com.techatpark.scubebird.core.implementation.OrmImplementation;
+import com.techatpark.scubebird.core.implementation.specification.Specification;
 import com.techatpark.scubebird.core.model.DaoProject;
-import com.techatpark.scubebird.core.specification.Specification;
 
 import java.io.IOException;
 

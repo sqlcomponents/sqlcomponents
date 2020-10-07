@@ -1,7 +1,7 @@
 package com.techatpark.scubebird.ide.scubedao.ide.propertyeditor;
 
 import com.techatpark.scubebird.core.exception.ScubeException;
-import com.techatpark.scubebird.core.mapper.Mapper;
+import com.techatpark.scubebird.core.implementation.mapper.Mapper;
 import com.techatpark.scubebird.core.model.DaoProject;
 import com.techatpark.scubebird.ide.ApplicationManager;
 import com.techatpark.scubebird.ide.annotation.Screen;

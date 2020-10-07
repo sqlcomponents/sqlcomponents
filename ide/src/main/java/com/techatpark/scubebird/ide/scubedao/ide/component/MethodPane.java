@@ -1,6 +1,6 @@
 package com.techatpark.scubebird.ide.scubedao.ide.component;
 
-import com.techatpark.scubebird.core.mapper.Mapper;
+import com.techatpark.scubebird.core.implementation.mapper.Mapper;
 import com.techatpark.scubebird.core.model.DaoProject;
 import com.techatpark.scubebird.core.model.Method;
 import com.techatpark.scubebird.core.model.Property;
