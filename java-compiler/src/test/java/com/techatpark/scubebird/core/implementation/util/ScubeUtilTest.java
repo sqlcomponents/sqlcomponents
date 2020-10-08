@@ -37,7 +37,6 @@ class ScubeUtilTest {
 
         daoProject.setRootPackage("org.example");
 
-
         daoProject.setSrcFolder("/home/haripriya/Official/java-oracle-jdbc/target/generated-sources/sakila-postgres");
         daoProject.setCleanSource(true);
         ScubeUtil.writeCode(daoProject);

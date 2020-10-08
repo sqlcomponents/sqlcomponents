@@ -9,9 +9,13 @@ import java.util.List;
 
 public class PostgresCrawler extends Crawler {
 
+    public PostgresCrawler(final DaoProject ormProject) {
+        super(ormProject);
+    }
+
 
     @Override
-    public Schema getSchema(final DaoProject ormProject) throws ScubeException {
+    public Schema getSchema() throws ScubeException {
         Schema schema = new Schema();
         try {
             schema.setTables(getTables(ormProject));
@@ -23,7 +27,7 @@ public class PostgresCrawler extends Crawler {
 
     private List<Table> getTables(final DaoProject ormProject) throws SQLException, ClassNotFoundException {
         List<Table> tables = new ArrayList<>();
-        Connection connection = getConnection(ormProject);
+        Connection connection = getConnection();
         DatabaseMetaData databasemetadata = connection.getMetaData();
         ResultSet resultset = databasemetadata.getTables(null, null, ormProject.getTablePatterns().get(0), new String[]{"TABLE"});
         while(resultset.next()) {
@@ -48,7 +52,7 @@ public class PostgresCrawler extends Crawler {
 
     private List<Column> getColumns(final DaoProject ormProject, final Table table) throws SQLException, ClassNotFoundException {
         List<Column> columns = new ArrayList<>();
-        Connection connection = getConnection(ormProject);
+        Connection connection = getConnection();
         DatabaseMetaData databasemetadata = connection.getMetaData();
         ResultSet columnResultset = databasemetadata.getColumns(null,null, table.getTableName(), null);
 

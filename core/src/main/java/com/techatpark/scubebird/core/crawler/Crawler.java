@@ -10,12 +10,18 @@ import java.sql.SQLException;
 
 public abstract class Crawler {
 
-	protected Connection getConnection(DaoProject project) throws SQLException {
-		return DriverManager.getConnection(project.getUrl(), project
-				.getUserName(), project.getPassword());
+	protected final DaoProject ormProject;
+
+	protected Crawler(final DaoProject ormProject) {
+		this.ormProject = ormProject;
 	}
 
-	public abstract Schema getSchema(DaoProject ormProject)
+	protected Connection getConnection() throws SQLException {
+		return DriverManager.getConnection(ormProject.getUrl(), ormProject
+				.getUserName(), ormProject.getPassword());
+	}
+
+	public abstract Schema getSchema()
 			throws ScubeException;
 
 }

@@ -17,10 +17,14 @@ public class MySQLCrawler extends Crawler {
 
     private static final Object PRIMARY_KEY = "PRI";
 
+    public MySQLCrawler(final DaoProject ormProject) {
+        super(ormProject);
+    }
+
     @Override
-    public Schema getSchema(DaoProject project) throws ScubeException {
+    public Schema getSchema() throws ScubeException {
         Schema schema = new Schema();
-        schema.setTables(getTables(project));
+        schema.setTables(getTables(ormProject));
         schema.setFunctions(new ArrayList<Function>());
         schema.setPackages(new ArrayList<com.techatpark.scubebird.core.model.Package>());
         return schema;
@@ -41,7 +45,7 @@ public class MySQLCrawler extends Crawler {
                 "                c.IS_NULLABLE, c.DATA_TYPE, c.CHARACTER_MAXIMUM_LENGTH, c.CHARACTER_OCTET_LENGTH, c.NUMERIC_PRECISION, c.NUMERIC_SCALE, c.CHARACTER_SET_NAME, c.COLLATION_NAME, c.COLUMN_TYPE, c.COLUMN_KEY, c.EXTRA, c.PRIVILEGES, c.COLUMN_COMMENT FROM  information_Schema.columns c, information_Schema.tables t where  t.table_schema like {0}  and t.table_name = c.table_name  order by c.table_name,c.ordinal_position";
         query = MessageFormat.format(query, "'" + project.getSchemaName() + "'");
         try {
-            conn = getConnection(project);
+            conn = getConnection();
             stmt = conn.createStatement();
             rs = stmt.executeQuery(query);
             String tableName = "";

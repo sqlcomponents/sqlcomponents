@@ -46,12 +46,16 @@ public class OracleCrawler extends Crawler {
     // Sequence Related
     private static final int INDEX_TABLE_SEQUENCE = 1;
 
+    public OracleCrawler(final DaoProject ormProject) {
+        super(ormProject);
+    }
+
     @Override
-    public Schema getSchema(DaoProject project) throws ScubeException {
+    public Schema getSchema() throws ScubeException {
         Schema schema = new Schema();
-        schema.setTables(getTables(project));
-        getFunctions(project, schema);
-        schema.setSequences(getSequences(project));
+        schema.setTables(getTables(this.ormProject));
+        getFunctions(this.ormProject, schema);
+        schema.setSequences(getSequences(this.ormProject));
         return schema;
     }
 
@@ -69,7 +73,7 @@ public class OracleCrawler extends Crawler {
         ResultSet resultSet = null;
 
         try {
-            connection = getConnection(project);
+            connection = getConnection();
             statement = connection.createStatement();
             resultSet = statement.executeQuery(getFunctionsQuery(project));
 
@@ -170,7 +174,7 @@ public class OracleCrawler extends Crawler {
         ResultSet resultSet = null;
 
         try {
-            connection = getConnection(project);
+            connection = getConnection();
             statement = connection.createStatement();
             resultSet = statement.executeQuery(getTablesQuery(project));
 
@@ -232,7 +236,7 @@ public class OracleCrawler extends Crawler {
             }
         }
         try {
-            connection = getConnection(project);
+            connection = getConnection();
             statement = connection.createStatement();
             System.out.println(sequenceQuery.toString());
             resultSet = statement.executeQuery(sequenceQuery.toString());
