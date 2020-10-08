@@ -1,15 +1,3 @@
-/*
-
-Sakila for Oracle is a port of the Sakila example database available for MySQL, which was originally developed by Mike Hillyer of the MySQL AB documentation team. 
-This project is designed to help database administrators to decide which database to use for development of new products
-The user can run the same SQL against different kind of databases and compare the performance
-
-License: BSD
-Copyright DB Software Laboratory
-http://www.etl-tools.com
-
-*/
-
 
 --
 -- Table structure for table actor
@@ -39,14 +27,14 @@ BEGIN
   END IF;
   :NEW.last_update:=current_date;
 END;
-/
+
 
 CREATE OR REPLACE TRIGGER actor_before_update
 BEFORE UPDATE ON actor FOR EACH ROW 
 BEGIN
   :NEW.last_update:=current_date;
 END;
-/
+
 
 
 --
@@ -74,14 +62,14 @@ BEGIN
   END IF;
   :NEW.last_update:=current_date;
 END;
-/
+
 
 CREATE OR REPLACE TRIGGER country_before_update
 BEFORE UPDATE ON country FOR EACH ROW 
 BEGIN
   :NEW.last_update:=current_date;
 END;
-/
+
 
 
 --
@@ -112,14 +100,14 @@ BEGIN
   END IF;
  :NEW.last_update:=current_date;
 END;
-/
+
 
 CREATE OR REPLACE TRIGGER city_before_update
 BEFORE UPDATE ON city FOR EACH ROW 
 BEGIN
   :NEW.last_update:=current_date;
 END;
-/
+
 
 
 --
@@ -155,14 +143,14 @@ BEGIN
   END IF;
  :NEW.last_update:=current_date;
 END;
-/
+
 
 CREATE OR REPLACE TRIGGER address_before_update
 BEFORE UPDATE ON address FOR EACH ROW 
 BEGIN
   :NEW.last_update:=current_date;
 END;
-/
+
 
 --
 -- Table structure for table language
@@ -188,14 +176,14 @@ BEGIN
   END IF;
   :NEW.last_update:=current_date;
 END;
-/
+
 
 CREATE OR REPLACE TRIGGER language_before_update
 BEFORE UPDATE ON language FOR EACH ROW 
 BEGIN
   :NEW.last_update:=current_date;
 END;
-/
+
 
 --
 -- Table structure for table category
@@ -221,14 +209,14 @@ BEGIN
   END IF;
   :NEW.last_update:=current_date;
 END;
-/
+
 
 CREATE OR REPLACE TRIGGER category_before_update
 BEFORE UPDATE ON category FOR EACH ROW 
 BEGIN
   :NEW.last_update:=current_date;
 END;
-/
+
 
 --
 -- Table structure for table customer
@@ -268,13 +256,13 @@ BEGIN
   :NEW.last_update:=current_date;
   :NEW.create_date:=current_date;
 END;
-/
+
 CREATE OR REPLACE TRIGGER customer_before_update
 BEFORE UPDATE ON customer FOR EACH ROW 
 BEGIN
   :NEW.last_update:=current_date;
 END;
-/
+
 --
 -- Table structure for table film
 --
@@ -324,14 +312,14 @@ BEGIN
   END IF;
   :NEW.last_update:=current_date;
 END;
-/
+
 
 CREATE OR REPLACE TRIGGER film_before_update
 BEFORE UPDATE ON film FOR EACH ROW 
 BEGIN
   :NEW.last_update:=current_date;
 END;
-/
+
 
 --
 -- Table structure for table film_actor
@@ -355,14 +343,14 @@ BEFORE INSERT ON film_actor FOR EACH ROW
 BEGIN
     :NEW.last_update:=current_date;
 END;
-/
+
 
 CREATE OR REPLACE TRIGGER film_actor_before_update
 BEFORE UPDATE ON film_actor FOR EACH ROW 
 BEGIN
   :NEW.last_update:=current_date;
 END;
-/
+
 
 --
 -- Table structure for table film_category
@@ -387,14 +375,14 @@ BEFORE INSERT ON film_category FOR EACH ROW
 BEGIN
     :NEW.last_update:=current_date;
 END;
-/
+
 
 CREATE OR REPLACE TRIGGER film_category_before_update
 BEFORE UPDATE ON film_category FOR EACH ROW 
 BEGIN
   :NEW.last_update:=current_date;
 END;
-/
+
 --
 -- Table structure for table film_text
 --
@@ -436,13 +424,13 @@ BEGIN
   END IF;
   :NEW.last_update:=current_date;
 END;
-/
+
 CREATE OR REPLACE TRIGGER inventory_before_update
 BEFORE UPDATE ON inventory FOR EACH ROW 
 BEGIN
   :NEW.last_update:=current_date;
 END;
-/
+
 
 --
 -- Table structure for table staff
@@ -481,14 +469,14 @@ BEGIN
   END IF;
   :NEW.last_update:=current_date;
 END;
-/
+
 
 CREATE OR REPLACE TRIGGER staff_before_update
 BEFORE UPDATE ON staff FOR EACH ROW 
 BEGIN
   :NEW.last_update:=current_date;
 END;
-/
+
 
 --
 -- Table structure for table store
@@ -522,14 +510,14 @@ BEGIN
   END IF;
  :NEW.last_update:=current_date;
 END;
-/
+
 
 CREATE OR REPLACE TRIGGER store_before_update
 BEFORE UPDATE ON store FOR EACH ROW 
 BEGIN
   :NEW.last_update:=current_date;
 END;
-/
+
 
 --
 -- Table structure for table payment
@@ -565,14 +553,14 @@ BEGIN
   END IF;
  :NEW.last_update:=current_date;
 END;
-/
+
 
 CREATE OR REPLACE TRIGGER payment_before_update
 BEFORE UPDATE ON payment FOR EACH ROW 
 BEGIN
   :NEW.last_update:=current_date;
 END;
-/
+
 
 CREATE TABLE rental (
   rental_id INT NOT NULL,
@@ -610,14 +598,14 @@ BEGIN
   END IF;
  :NEW.last_update:=current_date;
 END;
-/
+
 
 CREATE OR REPLACE TRIGGER rental_before_update
 BEFORE UPDATE ON rental FOR EACH ROW 
 BEGIN
   :NEW.last_update:=current_date;
 END;
-/
+
 
 -- FK CONSTRAINTS
 ALTER TABLE customer ADD CONSTRAINT fk_customer_store FOREIGN KEY (store_id) REFERENCES store (store_id);
@@ -724,39 +712,3 @@ INNER JOIN film f ON i.film_id = f.film_id
 INNER JOIN film_category fc ON f.film_id = fc.film_id
 INNER JOIN category c ON fc.category_id = c.category_id
 GROUP BY c.name;
-
---
--- View structure for view actor_info
---
-
-/*
-CREATE VIEW actor_info
-AS
-SELECT
-a.actor_id,
-a.first_name,
-a.last_name,
-GROUP_CONCAT(DISTINCT CONCAT(c.name, ': ',
-        (SELECT GROUP_CONCAT(f.title ORDER BY f.title SEPARATOR ', ')
-                    FROM sakila.film f
-                    INNER JOIN sakila.film_category fc
-                      ON f.film_id = fc.film_id
-                    INNER JOIN sakila.film_actor fa
-                      ON f.film_id = fa.film_id
-                    WHERE fc.category_id = c.category_id
-                    AND fa.actor_id = a.actor_id
-                 )
-             )
-             ORDER BY c.name SEPARATOR '; ')
-AS film_info
-FROM sakila.actor a
-LEFT JOIN sakila.film_actor fa
-  ON a.actor_id = fa.actor_id
-LEFT JOIN sakila.film_category fc
-  ON fa.film_id = fc.film_id
-LEFT JOIN sakila.category c
-  ON fc.category_id = c.category_id
-GROUP BY a.actor_id, a.first_name, a.last_name;
-*/
-
--- TO DO PROCEDURES
