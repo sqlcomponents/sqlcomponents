@@ -1,27 +1,25 @@
 package com.techatpark.scubebird.core.implementation.util;
 
+import com.techatpark.scubebird.core.exception.ScubeException;
 import com.techatpark.scubebird.core.implementation.OrmImplementation;
+import com.techatpark.scubebird.core.implementation.mapper.Mapper;
 import com.techatpark.scubebird.core.implementation.specification.Specification;
 import com.techatpark.scubebird.core.model.DaoProject;
+import com.techatpark.scubebird.crawler.postgres.PostgresCrawler;
 
 import java.io.IOException;
 
 public class ScubeUtil {
 
-	public static void generateCode(String daoProject, String src)
-			throws ClassNotFoundException, IOException {
-		DaoProject project = (DaoProject) FileUtil.read(daoProject);
-		project.setSrcFolder(src);
-		ScubeUtil.writeCode(project);
-	}
 
-	public static void writeCode(DaoProject icgProject) {
-
-		if (icgProject.isCleanSource()) {
-			FileUtil.deleteDir(icgProject.getSrcFolder());
+	public static void writeCode(DaoProject daoProject) throws ScubeException {
+		daoProject.setOrm(Mapper.getMapper(daoProject).getOrm(
+				daoProject,new PostgresCrawler()));
+		if (daoProject.isCleanSource()) {
+			FileUtil.deleteDir(daoProject.getSrcFolder());
 		}
-		Specification.getSpecification().writeSpecification(icgProject);
-		OrmImplementation.getImplementation().writeImplementation(icgProject);
+		Specification.getSpecification().writeSpecification(daoProject);
+		OrmImplementation.getImplementation().writeImplementation(daoProject);
 
 	}
 }

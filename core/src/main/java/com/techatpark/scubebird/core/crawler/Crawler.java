@@ -10,8 +10,7 @@ import java.sql.SQLException;
 
 public abstract class Crawler {
 
-	protected Connection getConnection(DaoProject project) throws SQLException,
-			ClassNotFoundException {
+	protected Connection getConnection(DaoProject project) throws SQLException {
 		return DriverManager.getConnection(project.getUrl(), project
 				.getUserName(), project.getPassword());
 	}

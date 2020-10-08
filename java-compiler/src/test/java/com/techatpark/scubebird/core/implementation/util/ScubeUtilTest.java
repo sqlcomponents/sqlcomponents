@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 class ScubeUtilTest {
@@ -23,22 +24,21 @@ class ScubeUtilTest {
         daoProject.setUserName("postgres");
         daoProject.setPassword("postgres");
         daoProject.setSchemaName("sakila");
-        daoProject.setTablePatterns(List.of("actor"));
+        daoProject.setTablePatterns(Arrays.asList("actor"));
 
         daoProject.setOnline(true);
+
         daoProject.setBeanIdentifier("model");
         daoProject.setDaoIdentifier("dao");
-
         daoProject.setDaoSuffix("");
 
-        daoProject.setMethodSpecification(List.of("DeleteByEntity", "DeleteByPK", "Without", "GetAll", "GetByEntity", "GetByPK", "GetByPKExceptHighest", "GetByPKUniqueKeys",
+        daoProject.setMethodSpecification(Arrays.asList("DeleteByEntity", "DeleteByPK", "Without", "GetAll", "GetByEntity", "GetByPK", "GetByPKExceptHighest", "GetByPKUniqueKeys",
                 "InsertByEntiy", "IsExisting", "MViewRefresh", "SaveByPK", "UpdateByEntiy", "UpdateByPK"));
 
         daoProject.setRootPackage("org.example");
 
-        daoProject.setOrm(Mapper.getMapper(daoProject).getOrm(
-                daoProject,new PostgresCrawler()));
-        daoProject.setSrcFolder("/Users/sathishkumarthiyagarajan/IdeaProjects/jdbc-java/target/generated-sources/sakila-postgres");
+
+        daoProject.setSrcFolder("/home/haripriya/Official/java-oracle-jdbc/target/generated-sources/sakila-postgres");
         daoProject.setCleanSource(true);
         ScubeUtil.writeCode(daoProject);
         Assertions.assertNotNull(daoProject);

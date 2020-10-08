@@ -122,8 +122,6 @@ public class OracleCrawler extends Crawler {
 
         } catch (SQLException e) {
             throw new ScubeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new ScubeException(e);
         }
 
         schema.setFunctions(functions);
@@ -199,8 +197,6 @@ public class OracleCrawler extends Crawler {
             }
         } catch (SQLException e) {
             throw new ScubeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new ScubeException(e);
         }
         return tables;
     }
@@ -252,11 +248,7 @@ public class OracleCrawler extends Crawler {
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
-
         return sequences;
     }
 
