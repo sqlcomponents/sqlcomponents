@@ -131,22 +131,21 @@ public class OracleCrawler extends Crawler {
     }
 
     private String getFunctionsQuery(DaoProject project) {
-        StringBuffer buffer = new StringBuffer("""
-                SELECT
-                	 PACKAGE_NAME,
-                	 OBJECT_NAME,
-                	 IN_OUT,
-                	 ARGUMENT_NAME,
-                	 PLS_TYPE,
-                	 DATA_LENGTH	
-                FROM
-                	 USER_ARGUMENTS
-                ORDER BY
-                	  PACKAGE_NAME,
-                	  OBJECT_NAME,
-                	  IN_OUT,
-                	  POSITION
-                """);
+        StringBuffer buffer = new StringBuffer("\n" +
+                "                SELECT\n" +
+                "                \t PACKAGE_NAME,\n" +
+                "                \t OBJECT_NAME,\n" +
+                "                \t IN_OUT,\n" +
+                "                \t ARGUMENT_NAME,\n" +
+                "                \t PLS_TYPE,\n" +
+                "                \t DATA_LENGTH\t\n" +
+                "                FROM\n" +
+                "                \t USER_ARGUMENTS\n" +
+                "                ORDER BY\n" +
+                "                \t  PACKAGE_NAME,\n" +
+                "                \t  OBJECT_NAME,\n" +
+                "                \t  IN_OUT,\n" +
+                "                \t  POSITION");
 
         return buffer.toString();
     }
@@ -305,145 +304,142 @@ public class OracleCrawler extends Crawler {
     }
 
     private String getTablesQuery(DaoProject project) {
-        StringBuffer buffer = new StringBuffer("""
-                SELECT T1.TABLE_NAME,       
-                        T1.COMMENTS TABLE_COMMENTS,
-                        T1.TABLE_TYPE,
-                        T1.COLUMN_NAME,
-                        T1.DATA_TYPE,
-                        T1.DATA_LENGTH,
-                        T1.DATA_PRECISION,
-                        T1.NULLABLE,
-                        T1.COLUMN_COMMENTS COLUMN_COMMENTS,
-                        T2.POSITION PK_INDEX,
-                		T3.CONSTRAINT_NAME UNIQUE_CONSTRAINT,
-                        T4.REFERENCE_TABLE,
-                        T4.REFERENCE_COLUMN
-                FROM
-                (
-                    
-                (
-                SELECT C_TABLE.TABLE_NAME,
-                        C_TABLE_COMMENTS.COMMENTS,
-                        C_TABLE_COMMENTS.TABLE_TYPE,
-                        C_TABLE_COLUMN.COLUMN_NAME,
-                        C_TABLE_COLUMN.DATA_TYPE,
-                        C_TABLE_COLUMN.DATA_LENGTH,
-                        C_TABLE_COLUMN.DATA_PRECISION,
-                        C_TABLE_COLUMN.NULLABLE,		       
-                        C_TABLE_COLUMN_COMMENTS.COMMENTS COLUMN_COMMENTS       
-                    FROM\s
-                        USER_TABLES C_TABLE,
-                        USER_TAB_COMMENTS C_TABLE_COMMENTS,
-                        USER_TAB_COLS C_TABLE_COLUMN,
-                        USER_COL_COMMENTS C_TABLE_COLUMN_COMMENTS
-                       
-                    WHERE
-                        C_TABLE_COMMENTS.TABLE_NAME = C_TABLE.TABLE_NAME
-                        AND C_TABLE_COLUMN.TABLE_NAME = C_TABLE.TABLE_NAME
-                        AND C_TABLE_COLUMN_COMMENTS.TABLE_NAME = C_TABLE_COLUMN.TABLE_NAME
-                        AND C_TABLE_COLUMN_COMMENTS.COLUMN_NAME = C_TABLE_COLUMN.COLUMN_NAME
-                        AND @tableName1       
-                )
-                UNION
-                (
-                SELECT C_TABLE.VIEW_NAME TABLE_NAME,
-                        C_TABLE_COMMENTS.COMMENTS,
-                        C_TABLE_COMMENTS.TABLE_TYPE,
-                        C_TABLE_COLUMN.COLUMN_NAME,
-                        C_TABLE_COLUMN.DATA_TYPE,
-                        C_TABLE_COLUMN.DATA_LENGTH,
-                        C_TABLE_COLUMN.DATA_PRECISION,
-                        C_TABLE_COLUMN.NULLABLE,		       
-                        C_TABLE_COLUMN_COMMENTS.COMMENTS COLUMN_COMMENTS       
-                    FROM\s
-                        USER_VIEWS C_TABLE,
-                        USER_TAB_COMMENTS C_TABLE_COMMENTS,
-                        USER_TAB_COLS C_TABLE_COLUMN,
-                        USER_COL_COMMENTS C_TABLE_COLUMN_COMMENTS
-                       
-                    WHERE
-                        C_TABLE_COMMENTS.TABLE_NAME = C_TABLE.VIEW_NAME
-                        AND C_TABLE_COLUMN.TABLE_NAME = C_TABLE.VIEW_NAME
-                        AND C_TABLE_COLUMN_COMMENTS.TABLE_NAME = C_TABLE_COLUMN.TABLE_NAME
-                        AND C_TABLE_COLUMN_COMMENTS.COLUMN_NAME = C_TABLE_COLUMN.COLUMN_NAME
-                        AND @viewName1       
-                )
-                UNION
-                (
-                SELECT C_TABLE.MVIEW_NAME TABLE_NAME,
-                        C_TABLE_COMMENTS.COMMENTS,
-                        'MVIEW' TABLE_TYPE,
-                        C_TABLE_COLUMN.COLUMN_NAME,
-                        C_TABLE_COLUMN.DATA_TYPE,
-                        C_TABLE_COLUMN.DATA_LENGTH,
-                        C_TABLE_COLUMN.DATA_PRECISION,
-                        C_TABLE_COLUMN.NULLABLE,		       
-                        C_TABLE_COLUMN_COMMENTS.COMMENTS COLUMN_COMMENTS       
-                    FROM\s
-                        USER_MVIEWS C_TABLE,
-                        USER_MVIEW_COMMENTS C_TABLE_COMMENTS,
-                        USER_TAB_COLS C_TABLE_COLUMN,
-                        USER_COL_COMMENTS C_TABLE_COLUMN_COMMENTS
-                       
-                    WHERE
-                        C_TABLE_COMMENTS.MVIEW_NAME = C_TABLE.MVIEW_NAME
-                        AND C_TABLE_COLUMN.TABLE_NAME = C_TABLE.MVIEW_NAME
-                        AND C_TABLE_COLUMN_COMMENTS.TABLE_NAME = C_TABLE_COLUMN.TABLE_NAME
-                        AND C_TABLE_COLUMN_COMMENTS.COLUMN_NAME = C_TABLE_COLUMN.COLUMN_NAME
-                        AND @viewName2
-                )
-                       
-                ) T1,
-                (       
-                SELECT C.TABLE_NAME, C.OWNER, C.CONSTRAINT_NAME,C.COLUMN_NAME,C.POSITION
-                      FROM USER_CONS_COLUMNS C
-                      WHERE CONSTRAINT_NAME = ( SELECT CONSTRAINT_NAME
-                	      FROM USER_CONSTRAINTS
-                	      WHERE TABLE_NAME = C.TABLE_NAME
-                	      AND CONSTRAINT_TYPE = 'P'     
-                	      )
-                      AND @tableName2
-                ) T2,
-                (       
-                SELECT C.TABLE_NAME, C.OWNER, C.CONSTRAINT_NAME,C.COLUMN_NAME,C.POSITION
-                      FROM USER_CONS_COLUMNS C
-                      WHERE CONSTRAINT_NAME = ( SELECT CONSTRAINT_NAME
-                	      FROM USER_CONSTRAINTS
-                	      WHERE TABLE_NAME = C.TABLE_NAME
-                		  AND CONSTRAINT_NAME = C.CONSTRAINT_NAME
-                	      AND CONSTRAINT_TYPE = 'U'     
-                	      )
-                      AND @tableName2
-                ) T3,
-                (
-                SELECT UNIQUE A.CONSTRAINT_NAME,
-                      A.TABLE_NAME,
-                      A.OWNER,
-                      C.COLUMN_NAME COLUMN_NAME ,
-                      B.TABLE_NAME REFERENCE_TABLE,
-                      B.COLUMN_NAME REFERENCE_COLUMN,
-                      A.R_CONSTRAINT_NAME ,
-                      C.POSITION
-                      FROM USER_CONSTRAINTS A, USER_CONS_COLUMNS B, USER_CONS_COLUMNS C
-                      WHERE A.R_CONSTRAINT_NAME=B.CONSTRAINT_NAME     
-                      AND A.CONSTRAINT_NAME=C.CONSTRAINT_NAME        
-                      AND A.TABLE_NAME=C.TABLE_NAME
-                      AND B.POSITION=C.POSITION     
-                      AND @tableName3
-                      ORDER BY A.CONSTRAINT_NAME, C.POSITION
-                ) T4
-                WHERE
-                T1.TABLE_NAME = T2.TABLE_NAME(+)
-                AND T1.COLUMN_NAME = T2.COLUMN_NAME(+)
-                AND T1.TABLE_NAME = T3.TABLE_NAME(+)
-                AND T1.COLUMN_NAME = T3.COLUMN_NAME(+)
-                AND T1.TABLE_NAME = T4.TABLE_NAME(+)
-                AND T1.COLUMN_NAME = T4.COLUMN_NAME(+)
-                ORDER BY
-                	T1.TABLE_NAME,PK_INDEX,T1.COLUMN_NAME
-                    
-                """);
+        StringBuffer buffer = new StringBuffer("SELECT T1.TABLE_NAME,       \n" +
+                "                        T1.COMMENTS TABLE_COMMENTS,\n" +
+                "                        T1.TABLE_TYPE,\n" +
+                "                        T1.COLUMN_NAME,\n" +
+                "                        T1.DATA_TYPE,\n" +
+                "                        T1.DATA_LENGTH,\n" +
+                "                        T1.DATA_PRECISION,\n" +
+                "                        T1.NULLABLE,\n" +
+                "                        T1.COLUMN_COMMENTS COLUMN_COMMENTS,\n" +
+                "                        T2.POSITION PK_INDEX,\n" +
+                "                \t\tT3.CONSTRAINT_NAME UNIQUE_CONSTRAINT,\n" +
+                "                        T4.REFERENCE_TABLE,\n" +
+                "                        T4.REFERENCE_COLUMN\n" +
+                "                FROM\n" +
+                "                (\n" +
+                "                    \n" +
+                "                (\n" +
+                "                SELECT C_TABLE.TABLE_NAME,\n" +
+                "                        C_TABLE_COMMENTS.COMMENTS,\n" +
+                "                        C_TABLE_COMMENTS.TABLE_TYPE,\n" +
+                "                        C_TABLE_COLUMN.COLUMN_NAME,\n" +
+                "                        C_TABLE_COLUMN.DATA_TYPE,\n" +
+                "                        C_TABLE_COLUMN.DATA_LENGTH,\n" +
+                "                        C_TABLE_COLUMN.DATA_PRECISION,\n" +
+                "                        C_TABLE_COLUMN.NULLABLE,\t\t       \n" +
+                "                        C_TABLE_COLUMN_COMMENTS.COMMENTS COLUMN_COMMENTS       \n" +
+                "                    FROMs\n" +
+                "                        USER_TABLES C_TABLE,\n" +
+                "                        USER_TAB_COMMENTS C_TABLE_COMMENTS,\n" +
+                "                        USER_TAB_COLS C_TABLE_COLUMN,\n" +
+                "                        USER_COL_COMMENTS C_TABLE_COLUMN_COMMENTS\n" +
+                "                       \n" +
+                "                    WHERE\n" +
+                "                        C_TABLE_COMMENTS.TABLE_NAME = C_TABLE.TABLE_NAME\n" +
+                "                        AND C_TABLE_COLUMN.TABLE_NAME = C_TABLE.TABLE_NAME\n" +
+                "                        AND C_TABLE_COLUMN_COMMENTS.TABLE_NAME = C_TABLE_COLUMN.TABLE_NAME\n" +
+                "                        AND C_TABLE_COLUMN_COMMENTS.COLUMN_NAME = C_TABLE_COLUMN.COLUMN_NAME\n" +
+                "                        AND @tableName1       \n" +
+                "                )\n" +
+                "                UNION\n" +
+                "                (\n" +
+                "                SELECT C_TABLE.VIEW_NAME TABLE_NAME,\n" +
+                "                        C_TABLE_COMMENTS.COMMENTS,\n" +
+                "                        C_TABLE_COMMENTS.TABLE_TYPE,\n" +
+                "                        C_TABLE_COLUMN.COLUMN_NAME,\n" +
+                "                        C_TABLE_COLUMN.DATA_TYPE,\n" +
+                "                        C_TABLE_COLUMN.DATA_LENGTH,\n" +
+                "                        C_TABLE_COLUMN.DATA_PRECISION,\n" +
+                "                        C_TABLE_COLUMN.NULLABLE,\t\t       \n" +
+                "                        C_TABLE_COLUMN_COMMENTS.COMMENTS COLUMN_COMMENTS       \n" +
+                "                    FROMs\n" +
+                "                        USER_VIEWS C_TABLE,\n" +
+                "                        USER_TAB_COMMENTS C_TABLE_COMMENTS,\n" +
+                "                        USER_TAB_COLS C_TABLE_COLUMN,\n" +
+                "                        USER_COL_COMMENTS C_TABLE_COLUMN_COMMENTS\n" +
+                "                       \n" +
+                "                    WHERE\n" +
+                "                        C_TABLE_COMMENTS.TABLE_NAME = C_TABLE.VIEW_NAME\n" +
+                "                        AND C_TABLE_COLUMN.TABLE_NAME = C_TABLE.VIEW_NAME\n" +
+                "                        AND C_TABLE_COLUMN_COMMENTS.TABLE_NAME = C_TABLE_COLUMN.TABLE_NAME\n" +
+                "                        AND C_TABLE_COLUMN_COMMENTS.COLUMN_NAME = C_TABLE_COLUMN.COLUMN_NAME\n" +
+                "                        AND @viewName1       \n" +
+                "                )\n" +
+                "                UNION\n" +
+                "                (\n" +
+                "                SELECT C_TABLE.MVIEW_NAME TABLE_NAME,\n" +
+                "                        C_TABLE_COMMENTS.COMMENTS,\n" +
+                "                        'MVIEW' TABLE_TYPE,\n" +
+                "                        C_TABLE_COLUMN.COLUMN_NAME,\n" +
+                "                        C_TABLE_COLUMN.DATA_TYPE,\n" +
+                "                        C_TABLE_COLUMN.DATA_LENGTH,\n" +
+                "                        C_TABLE_COLUMN.DATA_PRECISION,\n" +
+                "                        C_TABLE_COLUMN.NULLABLE,\t\t       \n" +
+                "                        C_TABLE_COLUMN_COMMENTS.COMMENTS COLUMN_COMMENTS       \n" +
+                "                    FROMs\n" +
+                "                        USER_MVIEWS C_TABLE,\n" +
+                "                        USER_MVIEW_COMMENTS C_TABLE_COMMENTS,\n" +
+                "                        USER_TAB_COLS C_TABLE_COLUMN,\n" +
+                "                        USER_COL_COMMENTS C_TABLE_COLUMN_COMMENTS\n" +
+                "                       \n" +
+                "                    WHERE\n" +
+                "                        C_TABLE_COMMENTS.MVIEW_NAME = C_TABLE.MVIEW_NAME\n" +
+                "                        AND C_TABLE_COLUMN.TABLE_NAME = C_TABLE.MVIEW_NAME\n" +
+                "                        AND C_TABLE_COLUMN_COMMENTS.TABLE_NAME = C_TABLE_COLUMN.TABLE_NAME\n" +
+                "                        AND C_TABLE_COLUMN_COMMENTS.COLUMN_NAME = C_TABLE_COLUMN.COLUMN_NAME\n" +
+                "                        AND @viewName2\n" +
+                "                )\n" +
+                "                       \n" +
+                "                ) T1,\n" +
+                "                (       \n" +
+                "                SELECT C.TABLE_NAME, C.OWNER, C.CONSTRAINT_NAME,C.COLUMN_NAME,C.POSITION\n" +
+                "                      FROM USER_CONS_COLUMNS C\n" +
+                "                      WHERE CONSTRAINT_NAME = ( SELECT CONSTRAINT_NAME\n" +
+                "                \t      FROM USER_CONSTRAINTS\n" +
+                "                \t      WHERE TABLE_NAME = C.TABLE_NAME\n" +
+                "                \t      AND CONSTRAINT_TYPE = 'P'     \n" +
+                "                \t      )\n" +
+                "                      AND @tableName2\n" +
+                "                ) T2,\n" +
+                "                (       \n" +
+                "                SELECT C.TABLE_NAME, C.OWNER, C.CONSTRAINT_NAME,C.COLUMN_NAME,C.POSITION\n" +
+                "                      FROM USER_CONS_COLUMNS C\n" +
+                "                      WHERE CONSTRAINT_NAME = ( SELECT CONSTRAINT_NAME\n" +
+                "                \t      FROM USER_CONSTRAINTS\n" +
+                "                \t      WHERE TABLE_NAME = C.TABLE_NAME\n" +
+                "                \t\t  AND CONSTRAINT_NAME = C.CONSTRAINT_NAME\n" +
+                "                \t      AND CONSTRAINT_TYPE = 'U'     \n" +
+                "                \t      )\n" +
+                "                      AND @tableName2\n" +
+                "                ) T3,\n" +
+                "                (\n" +
+                "                SELECT UNIQUE A.CONSTRAINT_NAME,\n" +
+                "                      A.TABLE_NAME,\n" +
+                "                      A.OWNER,\n" +
+                "                      C.COLUMN_NAME COLUMN_NAME ,\n" +
+                "                      B.TABLE_NAME REFERENCE_TABLE,\n" +
+                "                      B.COLUMN_NAME REFERENCE_COLUMN,\n" +
+                "                      A.R_CONSTRAINT_NAME ,\n" +
+                "                      C.POSITION\n" +
+                "                      FROM USER_CONSTRAINTS A, USER_CONS_COLUMNS B, USER_CONS_COLUMNS C\n" +
+                "                      WHERE A.R_CONSTRAINT_NAME=B.CONSTRAINT_NAME     \n" +
+                "                      AND A.CONSTRAINT_NAME=C.CONSTRAINT_NAME        \n" +
+                "                      AND A.TABLE_NAME=C.TABLE_NAME\n" +
+                "                      AND B.POSITION=C.POSITION     \n" +
+                "                      AND @tableName3\n" +
+                "                      ORDER BY A.CONSTRAINT_NAME, C.POSITION\n" +
+                "                ) T4\n" +
+                "                WHERE\n" +
+                "                T1.TABLE_NAME = T2.TABLE_NAME(+)\n" +
+                "                AND T1.COLUMN_NAME = T2.COLUMN_NAME(+)\n" +
+                "                AND T1.TABLE_NAME = T3.TABLE_NAME(+)\n" +
+                "                AND T1.COLUMN_NAME = T3.COLUMN_NAME(+)\n" +
+                "                AND T1.TABLE_NAME = T4.TABLE_NAME(+)\n" +
+                "                AND T1.COLUMN_NAME = T4.COLUMN_NAME(+)\n" +
+                "                ORDER BY\n" +
+                "                \tT1.TABLE_NAME,PK_INDEX,T1.COLUMN_NAME");
         String str = null;
         String SPACE = "\n";
         str = buffer.toString().replaceAll("@schemaName",

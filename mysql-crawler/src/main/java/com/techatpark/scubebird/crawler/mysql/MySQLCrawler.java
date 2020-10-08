@@ -31,16 +31,14 @@ public class MySQLCrawler extends Crawler {
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
-        String query = """
-                SELECT 
-                c.TABLE_CATALOG, 
-                c.TABLE_SCHEMA, 
-                c.TABLE_NAME, 
-                c.COLUMN_NAME, 
-                c.ORDINAL_POSITION, 
-                c.COLUMN_DEFAULT, 
-                c.IS_NULLABLE, c.DATA_TYPE, c.CHARACTER_MAXIMUM_LENGTH, c.CHARACTER_OCTET_LENGTH, c.NUMERIC_PRECISION, c.NUMERIC_SCALE, c.CHARACTER_SET_NAME, c.COLLATION_NAME, c.COLUMN_TYPE, c.COLUMN_KEY, c.EXTRA, c.PRIVILEGES, c.COLUMN_COMMENT FROM  information_Schema.columns c, information_Schema.tables t where  t.table_schema like {0}  and t.table_name = c.table_name  order by c.table_name,c.ordinal_position;
-                """;
+        String query = "SELECT \n" +
+                "                c.TABLE_CATALOG, \n" +
+                "                c.TABLE_SCHEMA, \n" +
+                "                c.TABLE_NAME, \n" +
+                "                c.COLUMN_NAME, \n" +
+                "                c.ORDINAL_POSITION, \n" +
+                "                c.COLUMN_DEFAULT, \n" +
+                "                c.IS_NULLABLE, c.DATA_TYPE, c.CHARACTER_MAXIMUM_LENGTH, c.CHARACTER_OCTET_LENGTH, c.NUMERIC_PRECISION, c.NUMERIC_SCALE, c.CHARACTER_SET_NAME, c.COLLATION_NAME, c.COLUMN_TYPE, c.COLUMN_KEY, c.EXTRA, c.PRIVILEGES, c.COLUMN_COMMENT FROM  information_Schema.columns c, information_Schema.tables t where  t.table_schema like {0}  and t.table_name = c.table_name  order by c.table_name,c.ordinal_position";
         query = MessageFormat.format(query, "'" + project.getSchemaName() + "'");
         try {
             conn = getConnection(project);
