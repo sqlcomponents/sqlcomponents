@@ -3,6 +3,7 @@ package com.techatpark.scubebird.core.implementation.util;
 import com.techatpark.scubebird.core.crawler.Crawler;
 import com.techatpark.scubebird.core.exception.ScubeException;
 import com.techatpark.scubebird.core.implementation.mapper.Mapper;
+import com.techatpark.scubebird.core.implementation.mapper.java.JavaOrmMapper;
 import com.techatpark.scubebird.core.model.DaoProject;
 import com.techatpark.scubebird.core.model.Schema;
 import com.techatpark.scubebird.crawler.postgres.PostgresCrawler;
@@ -40,6 +41,11 @@ class ScubeUtilTest {
 
         daoProject.setSrcFolder("/home/haripriya/Official/java-oracle-jdbc/target/generated-sources/sakila-postgres");
         daoProject.setCleanSource(true);
+
+        Crawler crawler = new PostgresCrawler(daoProject);
+        Mapper mapper = new JavaOrmMapper();
+        daoProject.setOrm(mapper.getOrm(daoProject,crawler));
+
         ScubeUtil.writeCode(daoProject);
         Assertions.assertNotNull(daoProject);
     }

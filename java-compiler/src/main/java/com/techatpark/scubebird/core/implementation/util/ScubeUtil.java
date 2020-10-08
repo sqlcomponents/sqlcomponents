@@ -15,9 +15,7 @@ public class ScubeUtil {
 
 
 	public static void writeCode(DaoProject daoProject) throws ScubeException, SQLException {
-		Crawler crawler = new PostgresCrawler(daoProject);
-		Mapper mapper = new JavaOrmMapper();
-		daoProject.setOrm(mapper.getOrm(daoProject,crawler));
+
 		if (daoProject.isCleanSource()) {
 			FileUtil.deleteDir(daoProject.getSrcFolder());
 		}
