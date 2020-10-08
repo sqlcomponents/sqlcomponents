@@ -17,7 +17,7 @@ public class MySQLCrawler extends Crawler {
 
     private static final Object PRIMARY_KEY = "PRI";
 
-    public MySQLCrawler(final DaoProject ormProject) {
+    public MySQLCrawler(final DaoProject ormProject) throws SQLException {
         super(ormProject);
     }
 

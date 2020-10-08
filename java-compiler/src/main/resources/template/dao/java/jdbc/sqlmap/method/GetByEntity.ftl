@@ -19,6 +19,6 @@
 		,row_number() over  (order by ${getPrimaryKeysAsCommaSeparated()}) ROW_NUMBER
 		FROM ${tableName} 
 	    <@dynamicWhere prefix="${name?uncap_first}."/>
-	) WHERE ROW_NUMBER BETWEEN #pageNumber${getDataBaseSpecificDefault("NUMBER",orm)}# AND #pageSize${getDataBaseSpecificDefault("NUMBER",orm)}# ORDER BY ROW_NUMBER
+	) WHERE ROW_NUMBER BETWEEN #pageNumber${getDataBaseSpecificDefault("NUMBER",driverName)}# AND #pageSize${getDataBaseSpecificDefault("NUMBER",driverName)}# ORDER BY ROW_NUMBER
 	</select>	
 </#if>

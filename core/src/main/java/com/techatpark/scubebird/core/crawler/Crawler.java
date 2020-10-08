@@ -5,6 +5,7 @@ import com.techatpark.scubebird.core.model.DaoProject;
 import com.techatpark.scubebird.core.model.Schema;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -12,8 +13,11 @@ public abstract class Crawler {
 
 	protected final DaoProject ormProject;
 
-	protected Crawler(final DaoProject ormProject) {
+	protected Crawler(final DaoProject ormProject) throws SQLException {
 		this.ormProject = ormProject;
+		Connection connection = getConnection();
+		DatabaseMetaData databasemetadata = connection.getMetaData();
+		ormProject.setDriverName(databasemetadata.getDriverName());
 	}
 
 	protected Connection getConnection() throws SQLException {

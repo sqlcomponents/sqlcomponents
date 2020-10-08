@@ -9,10 +9,12 @@ import com.techatpark.scubebird.core.implementation.specification.Specification;
 import com.techatpark.scubebird.core.model.DaoProject;
 import com.techatpark.scubebird.crawler.postgres.PostgresCrawler;
 
+import java.sql.SQLException;
+
 public class ScubeUtil {
 
 
-	public static void writeCode(DaoProject daoProject) throws ScubeException {
+	public static void writeCode(DaoProject daoProject) throws ScubeException, SQLException {
 		Crawler crawler = new PostgresCrawler(daoProject);
 		Mapper mapper = new JavaOrmMapper();
 		daoProject.setOrm(mapper.getOrm(daoProject,crawler));

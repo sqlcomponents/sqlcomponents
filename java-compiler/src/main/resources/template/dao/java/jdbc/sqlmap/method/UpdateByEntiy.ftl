@@ -4,7 +4,7 @@
 		<#assign index=0>
 		<#list properties as property>
 			<#if property.primaryKeyIndex == 0>		
-			<#if index == 0><#assign index=1><#else>,</#if>"${property.columnName}" = ${getUpdateValue(property.columnName,name?uncap_first +"."+ property.name,property.sqlDataType,orm)}
+			<#if index == 0><#assign index=1><#else>,</#if>"${property.columnName}" = ${getUpdateValue(property.columnName,name?uncap_first +"."+ property.name,property.sqlDataType,driverName)}
 			</#if>
 		</#list>		
 		<@dynamicWhere prefix="search${name}."/>

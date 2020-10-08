@@ -10,13 +10,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
 class ScubeUtilTest {
 
     @Test
-    void writeCode() throws IOException, ClassNotFoundException, ScubeException {
+    void writeCode() throws IOException, ClassNotFoundException, ScubeException, SQLException {
         DaoProject daoProject = new DaoProject();
 
         daoProject.setName("Sakila");

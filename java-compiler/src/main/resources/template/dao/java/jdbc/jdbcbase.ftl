@@ -9,8 +9,8 @@
 	<#return "">
 </#function>
 
-<#function getUpdateValue columnName propertyName propertySqlDataType orm>
-<#local updateValue="#{"+ propertyName + getDataBaseSpecificDefault(propertySqlDataType,orm) +"}">
+<#function getUpdateValue columnName propertyName propertySqlDataType driverName>
+<#local updateValue="#{"+ propertyName + getDataBaseSpecificDefault(propertySqlDataType,driverName) +"}">
 	<#if orm.defaults??>
 		<#list orm.defaults as default>
 			<#if default.onUpdate && default.columnName == columnName>
@@ -22,9 +22,9 @@
 <#return updateValue>
 </#function>
 
-<#function getDataBaseSpecificDefault propertySqlDataType orm>
+<#function getDataBaseSpecificDefault propertySqlDataType driverName>
 <#local dataBaseSpecificInsert="">
-<#if orm.crawlerConfig.driverName == "oracle.jdbc.OracleDriver">
+<#if driverName == "Oracle JDBC driver">
 <#switch propertySqlDataType>
   <#case "VARCHAR2">
 	 <#local dataBaseSpecificInsert=",jdbcType=VARCHAR">
@@ -50,8 +50,8 @@
 <#return dataBaseSpecificInsert>
 </#function>
 
-<#function getInsertValue columnName propertyName propertySqlDataType orm>
-<#local insertValue="#"+ propertyName + getDataBaseSpecificDefault(propertySqlDataType,orm) +"#">
+<#function getInsertValue columnName propertyName propertySqlDataType driverName>
+<#local insertValue="#"+ propertyName + getDataBaseSpecificDefault(propertySqlDataType,driverName) +"#">
 	<#if orm.defaults?? >
 	<#list orm.defaults as default>
 		<#if default.onInsert && default.columnName == columnName>
@@ -171,11 +171,11 @@
 		<#list properties as property>
 			<#if property.sqlDataType?index_of("VARCHAR") !=  -1>
 			<if  test="${prefix}${property.name} != null">
-				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
+				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,driverName)}#
 			</if>
 			<#elseif property.sqlDataType?index_of("BLOB") ==  -1>
 			<if  test="${prefix}${property.name} != null">
-				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
+				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,driverName)}#
 			</if>
 			</#if>
 		</#list>
@@ -187,17 +187,17 @@
 		<#list properties as property>
 			<#if property.sqlDataType?index_of("VARCHAR") !=  -1>
 			<if  test="${prefix}${property.name} != null">
-				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
+				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,driverName)}#
 			</if>
 			<#elseif property.sqlDataType?index_of("BLOB") ==  -1>
 			<if  test="${prefix}${property.name} != null">
-				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,orm)}#
+				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,driverName)}#
 			</if>
 			</#if>						
 		</#list>
 			<#if pageStart == "1">
 			<if test="pageSize$ != null">
-				ROWNUM &lt;= #pageSize${getDataBaseSpecificDefault("NUMBER",orm)}#
+				ROWNUM &lt;= #pageSize${getDataBaseSpecificDefault("NUMBER",driverName)}#
 			</if>
 			</#if>
 		</trim>

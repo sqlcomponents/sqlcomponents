@@ -9,7 +9,7 @@ import java.util.List;
 
 public class PostgresCrawler extends Crawler {
 
-    public PostgresCrawler(final DaoProject ormProject) {
+    public PostgresCrawler(final DaoProject ormProject) throws SQLException {
         super(ormProject);
     }
 
@@ -18,17 +18,18 @@ public class PostgresCrawler extends Crawler {
     public Schema getSchema() throws ScubeException {
         Schema schema = new Schema();
         try {
-            schema.setTables(getTables(ormProject));
+            Connection connection = getConnection();
+            DatabaseMetaData databasemetadata = connection.getMetaData();
+            schema.setTables(getTables(databasemetadata));
         } catch (SQLException | ClassNotFoundException e) {
             throw new ScubeException(e);
         }
         return schema;
     }
 
-    private List<Table> getTables(final DaoProject ormProject) throws SQLException, ClassNotFoundException {
+    private List<Table> getTables(DatabaseMetaData databasemetadata) throws SQLException, ClassNotFoundException {
         List<Table> tables = new ArrayList<>();
-        Connection connection = getConnection();
-        DatabaseMetaData databasemetadata = connection.getMetaData();
+
         ResultSet resultset = databasemetadata.getTables(null, null, ormProject.getTablePatterns().get(0), new String[]{"TABLE"});
         while(resultset.next()) {
             Table table = new Table();
@@ -55,7 +56,6 @@ public class PostgresCrawler extends Crawler {
         Connection connection = getConnection();
         DatabaseMetaData databasemetadata = connection.getMetaData();
         ResultSet columnResultset = databasemetadata.getColumns(null,null, table.getTableName(), null);
-
         while(columnResultset.next()) {
             Column column = new Column();
             column.setColumnName(columnResultset.getString("COLUMN_NAME"));
@@ -79,7 +79,6 @@ public class PostgresCrawler extends Crawler {
             column.setGeneratedColumn( columnResultset.getString("IS_GENERATEDCOLUMN") != null
                     && !columnResultset.getString("IS_GENERATEDCOLUMN").trim().equals("") );
             column.setForeignKeys(new ArrayList<>());
-
             columns.add(column);
         }
 

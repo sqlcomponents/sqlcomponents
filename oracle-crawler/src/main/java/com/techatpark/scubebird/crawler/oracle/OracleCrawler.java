@@ -46,7 +46,7 @@ public class OracleCrawler extends Crawler {
     // Sequence Related
     private static final int INDEX_TABLE_SEQUENCE = 1;
 
-    public OracleCrawler(final DaoProject ormProject) {
+    public OracleCrawler(final DaoProject ormProject) throws SQLException {
         super(ormProject);
     }
 

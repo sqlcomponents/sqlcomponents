@@ -17,6 +17,16 @@ public class DaoProject implements Serializable {
 
 	private String srcFolder;
 
+	private String driverName;
+
+	public String getDriverName() {
+		return driverName;
+	}
+
+	public void setDriverName(final String driverName) {
+		this.driverName = driverName;
+	}
+
 	private List<String> tablePatterns;
 
 	private List<String> sequencePatterns;
