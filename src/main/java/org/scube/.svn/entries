@@ -1,43 +1,0 @@
-10
-
-dir
-20
-http://scubebird.googlecode.com/svn/trunk/application/src/org/scube
-http://scubebird.googlecode.com/svn
-
-
-
-2010-11-09T13:49:37.099940Z
-20
-sathishkumar.thiyagarajan
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-4ddfe754-3f0e-11de-b48d-dbaac48c8fd3
-
-ant
-dir
-
-scubedao
-dir
-
-util
-dir
-
-exception
-dir
-
-ide
-dir
-

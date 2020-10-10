@@ -48,7 +48,7 @@ public class PostgresCrawler extends Crawler {
             tables.add(table);
         }
 
-         return tables;
+        return tables;
     }
 
     private List<Column> getColumns(final DaoProject ormProject, final Table table) throws SQLException, ClassNotFoundException {

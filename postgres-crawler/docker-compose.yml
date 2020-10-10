@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+  postgresdb:
+    image: postgres:11
+    container_name: postgresdb
+    environment:
+      POSTGRES_DB: moviedb
+      POSTGRES_USER: moviedb
+      POSTGRES_PASSWORD: moviedb
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init.db:/docker-entrypoint-initdb.d
