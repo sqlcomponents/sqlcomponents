@@ -1,9 +1,13 @@
 package com.techatpark.scubebird.crawler.postgres;
+
 import com.techatpark.scubebird.core.crawler.Crawler;
 import com.techatpark.scubebird.core.exception.ScubeException;
 import com.techatpark.scubebird.core.model.*;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,33 +34,38 @@ public class PostgresCrawler extends Crawler {
     private List<Table> getTables(DatabaseMetaData databasemetadata) throws SQLException, ClassNotFoundException {
         List<Table> tables = new ArrayList<>();
 
-        ResultSet resultset = databasemetadata.getTables(null, null, ormProject.getTablePatterns().get(0), new String[]{"TABLE"});
-        while(resultset.next()) {
-            Table table = new Table();
-            table.setTableName(resultset.getString("table_name"));
-            table.setCategoryName(resultset.getString("table_cat"));
-            table.setSchemaName(resultset.getString("table_schem"));
-            table.setTableType(resultset.getString("table_type"));
-            table.setRemarks(resultset.getString("remarks"));
-            table.setCategoryType(resultset.getString("type_cat"));
-            table.setSchemaType(resultset.getString("type_schem"));
-            table.setNameType(resultset.getString("type_name"));
-            table.setSelfReferencingColumnName(resultset.getString("self_referencing_col_name"));
-            table.setReferenceGeneration(resultset.getString("ref_generation"));
+        ResultSet resultset = databasemetadata.getTables(null, null, null, new String[]{"TABLE"});
+        String tableName;
+        while (resultset.next()) {
+            tableName = resultset.getString("table_name");
+            if (shouldConsiderThisTable(tableName)) {
+                Table table = new Table();
+                table.setTableName(tableName);
+                table.setCategoryName(resultset.getString("table_cat"));
+                table.setSchemaName(resultset.getString("table_schem"));
+                table.setTableType(resultset.getString("table_type"));
+                table.setRemarks(resultset.getString("remarks"));
+                table.setCategoryType(resultset.getString("type_cat"));
+                table.setSchemaType(resultset.getString("type_schem"));
+                table.setNameType(resultset.getString("type_name"));
+                table.setSelfReferencingColumnName(resultset.getString("self_referencing_col_name"));
+                table.setReferenceGeneration(resultset.getString("ref_generation"));
 
-            table.setColumns(getColumns(ormProject, table));
-            tables.add(table);
+                table.setColumns(getColumns(table));
+                tables.add(table);
+            }
+
         }
 
         return tables;
     }
 
-    private List<Column> getColumns(final DaoProject ormProject, final Table table) throws SQLException, ClassNotFoundException {
+    private List<Column> getColumns(final Table table) throws SQLException, ClassNotFoundException {
         List<Column> columns = new ArrayList<>();
         Connection connection = getConnection();
         DatabaseMetaData databasemetadata = connection.getMetaData();
-        ResultSet columnResultset = databasemetadata.getColumns(null,null, table.getTableName(), null);
-        while(columnResultset.next()) {
+        ResultSet columnResultset = databasemetadata.getColumns(null, null, table.getTableName(), null);
+        while (columnResultset.next()) {
             Column column = new Column();
             column.setColumnName(columnResultset.getString("COLUMN_NAME"));
             column.setTableName(columnResultset.getString("TABLE_NAME"));
@@ -76,15 +85,15 @@ public class PostgresCrawler extends Crawler {
             column.setScopeSchema(columnResultset.getString("SCOPE_SCHEMA"));
             column.setScopeTable(columnResultset.getString("SCOPE_TABLE"));
             column.setSourceDataType(columnResultset.getString("SOURCE_DATA_TYPE"));
-            column.setGeneratedColumn( columnResultset.getString("IS_GENERATEDCOLUMN") != null
-                    && !columnResultset.getString("IS_GENERATEDCOLUMN").trim().equals("") );
+            column.setGeneratedColumn(columnResultset.getString("IS_GENERATEDCOLUMN") != null
+                    && !columnResultset.getString("IS_GENERATEDCOLUMN").trim().equals(""));
             column.setForeignKeys(new ArrayList<>());
             columns.add(column);
         }
 
         // Fill Primary Keys
-        ResultSet primaryKeysResultSet = databasemetadata.getPrimaryKeys(null,null, table.getTableName());
-        while(primaryKeysResultSet.next()) {
+        ResultSet primaryKeysResultSet = databasemetadata.getPrimaryKeys(null, null, table.getTableName());
+        while (primaryKeysResultSet.next()) {
             columns.stream().filter(column -> {
                 try {
                     return column.getColumnName().equals(primaryKeysResultSet.getString("COLUMN_NAME"));
@@ -97,8 +106,7 @@ public class PostgresCrawler extends Crawler {
         //Extracting Foreign Keys.
         ResultSet foreignKeysResultSet = databasemetadata.getExportedKeys(null, null, table.getTableName());
 
-        while(foreignKeysResultSet.next())
-        {
+        while (foreignKeysResultSet.next()) {
 
             ForeignKey foreignKey = new ForeignKey();
             foreignKey.setTableName(foreignKeysResultSet.getString("FKTABLE_NAME"));
@@ -115,5 +123,11 @@ public class PostgresCrawler extends Crawler {
 
 
         return columns;
+    }
+
+    private boolean shouldConsiderThisTable(final String tableName) {
+        return ormProject.getTablePatterns() == null || this.ormProject.getTablePatterns().stream().anyMatch(pattern -> {
+            return tableName.matches(pattern);
+        });
     }
 }
