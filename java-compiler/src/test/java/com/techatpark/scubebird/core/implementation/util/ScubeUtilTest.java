@@ -33,10 +33,10 @@ class ScubeUtilTest {
 
         Application connectToPostgress() throws SQLException, ScubeException {
             daoProject.setName("Movie");
-            daoProject.setUrl("jdbc:postgresql://localhost:5432/sakila");
-            daoProject.setUserName("postgres");
-            daoProject.setPassword("postgres");
-            daoProject.setSchemaName("sakila");
+            daoProject.setUrl("jdbc:postgresql://localhost:5432/moviedb");
+            daoProject.setUserName("moviedb");
+            daoProject.setPassword("moviedb");
+            daoProject.setSchemaName("moviedb");
             daoProject.setTablePatterns(Arrays.asList("%"));
 
             daoProject.setOnline(true);
@@ -77,7 +77,7 @@ class ScubeUtilTest {
         }
 
         void writeCode() throws SQLException, ScubeException {
-            daoProject.setSrcFolder("/home/haripriya/Official/java-oracle-jdbc/target/generated-sources/sakila-postgres");
+            daoProject.setSrcFolder("/Users/sathishkumarthiyagarajan/IdeaProjects/jdbc-java/target/generated-sources/movie-db");
 
             ScubeUtil.writeCode(daoProject);
 

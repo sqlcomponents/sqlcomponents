@@ -25,13 +25,26 @@ public class PostgresCrawler extends Crawler {
             Connection connection = getConnection();
             DatabaseMetaData databasemetadata = connection.getMetaData();
             schema.setTables(getTables(databasemetadata));
-        } catch (SQLException | ClassNotFoundException e) {
+            schema.setSequences(getSequences(databasemetadata));
+        } catch (SQLException e) {
             throw new ScubeException(e);
         }
         return schema;
     }
 
-    private List<Table> getTables(DatabaseMetaData databasemetadata) throws SQLException, ClassNotFoundException {
+    private List<String> getSequences(DatabaseMetaData databasemetadata) throws SQLException {
+        List<String> sequences = new ArrayList<>();
+        ResultSet resultset = databasemetadata.getTables(null, null,
+                null, new String[]{"SEQUENCE"});
+
+        while (resultset.next()) {
+            sequences.add(resultset.getString("table_name"));
+        }
+
+        return sequences;
+    }
+
+    private List<Table> getTables(DatabaseMetaData databasemetadata) throws SQLException {
         List<Table> tables = new ArrayList<>();
 
         ResultSet resultset = databasemetadata.getTables(null, null, null, new String[]{"TABLE"});
@@ -60,7 +73,7 @@ public class PostgresCrawler extends Crawler {
         return tables;
     }
 
-    private List<Column> getColumns(final Table table) throws SQLException, ClassNotFoundException {
+    private List<Column> getColumns(final Table table) throws SQLException {
         List<Column> columns = new ArrayList<>();
         Connection connection = getConnection();
         DatabaseMetaData databasemetadata = connection.getMetaData();
