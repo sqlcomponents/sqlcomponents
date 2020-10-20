@@ -70,7 +70,7 @@
 
 	<#list properties as property>
 		<#if property.primaryKeyIndex != 0>
-			<#local pkAsParameterStr = pkAsParameterStr + "preparedStatement.set${getClassName(property.dataType)}(${index}," + property.name+");\n\t">
+			
 		</#if>
 	</#list>
 	<#return pkAsParameterStr> 
@@ -167,19 +167,20 @@
 
 
 <#macro dynamicWhere prefix>
-		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+
 		<#list properties as property>
 			<#if property.sqlDataType?index_of("VARCHAR") !=  -1>
-			<if  test="${prefix}${property.name} != null">
-				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,driverName)}#
-			</if>
+
+			if(${prefix}.get${property.name?cap_first}() != null) {
+				dynamicWhere.append("AND ${property.columnName} like '").append(${prefix}.get${property.name?cap_first}()).append("' ");
+			}
 			<#elseif property.sqlDataType?index_of("BLOB") ==  -1>
-			<if  test="${prefix}${property.name} != null">
-				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,driverName)}#
-			</if>
+			if(${prefix}.get${property.name?cap_first}() != null) {
+				dynamicWhere.append("AND ${property.columnName} like '").append(${prefix}.get${property.name?cap_first}()).append("' ");
+			}
 			</#if>
 		</#list>
-		</trim>
+
 </#macro>
 
 <#macro dynamicPaginatedWhere prefix pageStart>

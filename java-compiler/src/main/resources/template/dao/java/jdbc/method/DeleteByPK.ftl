@@ -1,6 +1,5 @@
 <#if tableType == 'TABLE' >
-<#include "/template/dao/java/method/signature/DeleteByPK.ftl"> {
-
+	public int deleteById(${getPrimaryKeysAsParameterString()}) throws SQLException  {
 		final String query = """
                 DELETE FROM ${tableName} 
 					WHERE
@@ -11,12 +10,9 @@
 						</#if>
 					</#list>
                 """;
-
         try (Connection connection = dataSource.getConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-				 		
 			${getPrimaryKeysAsPreparedStatements()}
-            
             return preparedStatement.executeUpdate();
         }
 	}<#assign a=addImportStatement("java.util.HashMap")>

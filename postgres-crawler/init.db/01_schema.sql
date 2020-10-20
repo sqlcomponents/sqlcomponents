@@ -9,14 +9,14 @@ SET client_min_messages = warning;
 SET escape_string_warning = off;
 
 --
--- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: moviedb
 --
 
 COMMENT ON SCHEMA public IS 'Standard public schema';
 
 
 --
--- Name: plpgsql; Type: PROCEDURAL LANGUAGE; Schema: -; Owner: postgres
+-- Name: plpgsql; Type: PROCEDURAL LANGUAGE; Schema: -; Owner: moviedb
 --
 
 CREATE OR REPLACE PROCEDURAL LANGUAGE plpgsql;
@@ -27,7 +27,7 @@ ALTER PROCEDURAL LANGUAGE plpgsql OWNER TO moviedb;
 SET search_path = public, pg_catalog;
 
 --
--- Name: actor_actor_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: actor_actor_id_seq; Type: SEQUENCE; Schema: public; Owner: moviedb
 --
 
 CREATE SEQUENCE actor_actor_id_seq
@@ -44,7 +44,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: actor; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: actor; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE actor (
@@ -58,7 +58,7 @@ CREATE TABLE actor (
 ALTER TABLE public.actor OWNER TO moviedb;
 
 --
--- Name: mpaa_rating; Type: TYPE; Schema: public; Owner: postgres
+-- Name: mpaa_rating; Type: TYPE; Schema: public; Owner: moviedb
 --
 
 CREATE TYPE mpaa_rating AS ENUM (
@@ -73,7 +73,7 @@ CREATE TYPE mpaa_rating AS ENUM (
 ALTER TYPE public.mpaa_rating OWNER TO moviedb;
 
 --
--- Name: year; Type: DOMAIN; Schema: public; Owner: postgres
+-- Name: year; Type: DOMAIN; Schema: public; Owner: moviedb
 --
 
 CREATE DOMAIN year AS integer
@@ -83,7 +83,7 @@ CREATE DOMAIN year AS integer
 ALTER DOMAIN public.year OWNER TO moviedb;
 
 --
--- Name: _group_concat(text, text); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: _group_concat(text, text); Type: FUNCTION; Schema: public; Owner: moviedb
 --
 
 CREATE FUNCTION _group_concat(text, text) RETURNS text
@@ -100,7 +100,7 @@ $_$
 ALTER FUNCTION public._group_concat(text, text) OWNER TO moviedb;
 
 --
--- Name: group_concat(text); Type: AGGREGATE; Schema: public; Owner: postgres
+-- Name: group_concat(text); Type: AGGREGATE; Schema: public; Owner: moviedb
 --
 
 CREATE AGGREGATE group_concat(text) (
@@ -112,7 +112,7 @@ CREATE AGGREGATE group_concat(text) (
 ALTER AGGREGATE public.group_concat(text) OWNER TO moviedb;
 
 --
--- Name: category_category_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: category_category_id_seq; Type: SEQUENCE; Schema: public; Owner: moviedb
 --
 
 CREATE SEQUENCE category_category_id_seq
@@ -125,7 +125,7 @@ CREATE SEQUENCE category_category_id_seq
 ALTER TABLE public.category_category_id_seq OWNER TO moviedb;
 
 --
--- Name: category; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: category; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE category (
@@ -138,7 +138,7 @@ CREATE TABLE category (
 ALTER TABLE public.category OWNER TO moviedb;
 
 --
--- Name: film_film_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: film_film_id_seq; Type: SEQUENCE; Schema: public; Owner: moviedb
 --
 
 CREATE SEQUENCE film_film_id_seq
@@ -151,7 +151,7 @@ CREATE SEQUENCE film_film_id_seq
 ALTER TABLE public.film_film_id_seq OWNER TO moviedb;
 
 --
--- Name: film; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: film; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE film (
@@ -175,7 +175,7 @@ CREATE TABLE film (
 ALTER TABLE public.film OWNER TO moviedb;
 
 --
--- Name: film_actor; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: film_actor; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE film_actor (
@@ -188,7 +188,7 @@ CREATE TABLE film_actor (
 ALTER TABLE public.film_actor OWNER TO moviedb;
 
 --
--- Name: film_category; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: film_category; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE film_category (
@@ -201,7 +201,7 @@ CREATE TABLE film_category (
 ALTER TABLE public.film_category OWNER TO moviedb;
 
 --
--- Name: actor_info; Type: VIEW; Schema: public; Owner: postgres
+-- Name: actor_info; Type: VIEW; Schema: public; Owner: moviedb
 --
 
 CREATE VIEW actor_info AS
@@ -211,7 +211,7 @@ CREATE VIEW actor_info AS
 ALTER TABLE public.actor_info OWNER TO moviedb;
 
 --
--- Name: address_address_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: address_address_id_seq; Type: SEQUENCE; Schema: public; Owner: moviedb
 --
 
 CREATE SEQUENCE address_address_id_seq
@@ -224,7 +224,7 @@ CREATE SEQUENCE address_address_id_seq
 ALTER TABLE public.address_address_id_seq OWNER TO moviedb;
 
 --
--- Name: address; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: address; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE address (
@@ -242,7 +242,7 @@ CREATE TABLE address (
 ALTER TABLE public.address OWNER TO moviedb;
 
 --
--- Name: city_city_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: city_city_id_seq; Type: SEQUENCE; Schema: public; Owner: moviedb
 --
 
 CREATE SEQUENCE city_city_id_seq
@@ -255,7 +255,7 @@ CREATE SEQUENCE city_city_id_seq
 ALTER TABLE public.city_city_id_seq OWNER TO moviedb;
 
 --
--- Name: city; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: city; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE city (
@@ -269,7 +269,7 @@ CREATE TABLE city (
 ALTER TABLE public.city OWNER TO moviedb;
 
 --
--- Name: country_country_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: country_country_id_seq; Type: SEQUENCE; Schema: public; Owner: moviedb
 --
 
 CREATE SEQUENCE country_country_id_seq
@@ -282,7 +282,7 @@ CREATE SEQUENCE country_country_id_seq
 ALTER TABLE public.country_country_id_seq OWNER TO moviedb;
 
 --
--- Name: country; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: country; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE country (
@@ -295,7 +295,7 @@ CREATE TABLE country (
 ALTER TABLE public.country OWNER TO moviedb;
 
 --
--- Name: customer_customer_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: customer_customer_id_seq; Type: SEQUENCE; Schema: public; Owner: moviedb
 --
 
 CREATE SEQUENCE customer_customer_id_seq
@@ -308,7 +308,7 @@ CREATE SEQUENCE customer_customer_id_seq
 ALTER TABLE public.customer_customer_id_seq OWNER TO moviedb;
 
 --
--- Name: customer; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: customer; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE customer (
@@ -328,7 +328,7 @@ CREATE TABLE customer (
 ALTER TABLE public.customer OWNER TO moviedb;
 
 --
--- Name: customer_list; Type: VIEW; Schema: public; Owner: postgres
+-- Name: customer_list; Type: VIEW; Schema: public; Owner: moviedb
 --
 
 CREATE VIEW customer_list AS
@@ -338,7 +338,7 @@ CREATE VIEW customer_list AS
 ALTER TABLE public.customer_list OWNER TO moviedb;
 
 --
--- Name: film_list; Type: VIEW; Schema: public; Owner: postgres
+-- Name: film_list; Type: VIEW; Schema: public; Owner: moviedb
 --
 
 CREATE VIEW film_list AS
@@ -348,7 +348,7 @@ CREATE VIEW film_list AS
 ALTER TABLE public.film_list OWNER TO moviedb;
 
 --
--- Name: inventory_inventory_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: inventory_inventory_id_seq; Type: SEQUENCE; Schema: public; Owner: moviedb
 --
 
 CREATE SEQUENCE inventory_inventory_id_seq
@@ -361,7 +361,7 @@ CREATE SEQUENCE inventory_inventory_id_seq
 ALTER TABLE public.inventory_inventory_id_seq OWNER TO moviedb;
 
 --
--- Name: inventory; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: inventory; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE inventory (
@@ -375,7 +375,7 @@ CREATE TABLE inventory (
 ALTER TABLE public.inventory OWNER TO moviedb;
 
 --
--- Name: language_language_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: language_language_id_seq; Type: SEQUENCE; Schema: public; Owner: moviedb
 --
 
 CREATE SEQUENCE language_language_id_seq
@@ -388,7 +388,7 @@ CREATE SEQUENCE language_language_id_seq
 ALTER TABLE public.language_language_id_seq OWNER TO moviedb;
 
 --
--- Name: language; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: language; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE language (
@@ -401,7 +401,7 @@ CREATE TABLE language (
 ALTER TABLE public.language OWNER TO moviedb;
 
 --
--- Name: nicer_but_slower_film_list; Type: VIEW; Schema: public; Owner: postgres
+-- Name: nicer_but_slower_film_list; Type: VIEW; Schema: public; Owner: moviedb
 --
 
 CREATE VIEW nicer_but_slower_film_list AS
@@ -411,7 +411,7 @@ CREATE VIEW nicer_but_slower_film_list AS
 ALTER TABLE public.nicer_but_slower_film_list OWNER TO moviedb;
 
 --
--- Name: payment_payment_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: payment_payment_id_seq; Type: SEQUENCE; Schema: public; Owner: moviedb
 --
 
 CREATE SEQUENCE payment_payment_id_seq
@@ -424,7 +424,7 @@ CREATE SEQUENCE payment_payment_id_seq
 ALTER TABLE public.payment_payment_id_seq OWNER TO moviedb;
 
 --
--- Name: payment; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: payment; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE payment (
@@ -440,7 +440,7 @@ CREATE TABLE payment (
 ALTER TABLE public.payment OWNER TO moviedb;
 
 --
--- Name: payment_p2007_01; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: payment_p2007_01; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE payment_p2007_01 (CONSTRAINT payment_p2007_01_payment_date_check CHECK (((payment_date >= '2007-01-01 00:00:00'::timestamp without time zone) AND (payment_date < '2007-02-01 00:00:00'::timestamp without time zone)))
@@ -451,7 +451,7 @@ INHERITS (payment);
 ALTER TABLE public.payment_p2007_01 OWNER TO moviedb;
 
 --
--- Name: payment_p2007_02; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: payment_p2007_02; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE payment_p2007_02 (CONSTRAINT payment_p2007_02_payment_date_check CHECK (((payment_date >= '2007-02-01 00:00:00'::timestamp without time zone) AND (payment_date < '2007-03-01 00:00:00'::timestamp without time zone)))
@@ -462,7 +462,7 @@ INHERITS (payment);
 ALTER TABLE public.payment_p2007_02 OWNER TO moviedb;
 
 --
--- Name: payment_p2007_03; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: payment_p2007_03; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE payment_p2007_03 (CONSTRAINT payment_p2007_03_payment_date_check CHECK (((payment_date >= '2007-03-01 00:00:00'::timestamp without time zone) AND (payment_date < '2007-04-01 00:00:00'::timestamp without time zone)))
@@ -473,7 +473,7 @@ INHERITS (payment);
 ALTER TABLE public.payment_p2007_03 OWNER TO moviedb;
 
 --
--- Name: payment_p2007_04; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: payment_p2007_04; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE payment_p2007_04 (CONSTRAINT payment_p2007_04_payment_date_check CHECK (((payment_date >= '2007-04-01 00:00:00'::timestamp without time zone) AND (payment_date < '2007-05-01 00:00:00'::timestamp without time zone)))
@@ -484,7 +484,7 @@ INHERITS (payment);
 ALTER TABLE public.payment_p2007_04 OWNER TO moviedb;
 
 --
--- Name: payment_p2007_05; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: payment_p2007_05; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE payment_p2007_05 (CONSTRAINT payment_p2007_05_payment_date_check CHECK (((payment_date >= '2007-05-01 00:00:00'::timestamp without time zone) AND (payment_date < '2007-06-01 00:00:00'::timestamp without time zone)))
@@ -495,7 +495,7 @@ INHERITS (payment);
 ALTER TABLE public.payment_p2007_05 OWNER TO moviedb;
 
 --
--- Name: payment_p2007_06; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: payment_p2007_06; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE payment_p2007_06 (CONSTRAINT payment_p2007_06_payment_date_check CHECK (((payment_date >= '2007-06-01 00:00:00'::timestamp without time zone) AND (payment_date < '2007-07-01 00:00:00'::timestamp without time zone)))
@@ -506,7 +506,7 @@ INHERITS (payment);
 ALTER TABLE public.payment_p2007_06 OWNER TO moviedb;
 
 --
--- Name: rental_rental_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: rental_rental_id_seq; Type: SEQUENCE; Schema: public; Owner: moviedb
 --
 
 CREATE SEQUENCE rental_rental_id_seq
@@ -519,7 +519,7 @@ CREATE SEQUENCE rental_rental_id_seq
 ALTER TABLE public.rental_rental_id_seq OWNER TO moviedb;
 
 --
--- Name: rental; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: rental; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE rental (
@@ -536,7 +536,7 @@ CREATE TABLE rental (
 ALTER TABLE public.rental OWNER TO moviedb;
 
 --
--- Name: sales_by_film_category; Type: VIEW; Schema: public; Owner: postgres
+-- Name: sales_by_film_category; Type: VIEW; Schema: public; Owner: moviedb
 --
 
 CREATE VIEW sales_by_film_category AS
@@ -546,7 +546,7 @@ CREATE VIEW sales_by_film_category AS
 ALTER TABLE public.sales_by_film_category OWNER TO moviedb;
 
 --
--- Name: staff_staff_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: staff_staff_id_seq; Type: SEQUENCE; Schema: public; Owner: moviedb
 --
 
 CREATE SEQUENCE staff_staff_id_seq
@@ -559,7 +559,7 @@ CREATE SEQUENCE staff_staff_id_seq
 ALTER TABLE public.staff_staff_id_seq OWNER TO moviedb;
 
 --
--- Name: staff; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: staff; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE staff (
@@ -580,7 +580,7 @@ CREATE TABLE staff (
 ALTER TABLE public.staff OWNER TO moviedb;
 
 --
--- Name: store_store_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: store_store_id_seq; Type: SEQUENCE; Schema: public; Owner: moviedb
 --
 
 CREATE SEQUENCE store_store_id_seq
@@ -593,7 +593,7 @@ CREATE SEQUENCE store_store_id_seq
 ALTER TABLE public.store_store_id_seq OWNER TO moviedb;
 
 --
--- Name: store; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: store; Type: TABLE; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE TABLE store (
@@ -607,7 +607,7 @@ CREATE TABLE store (
 ALTER TABLE public.store OWNER TO moviedb;
 
 --
--- Name: sales_by_store; Type: VIEW; Schema: public; Owner: postgres
+-- Name: sales_by_store; Type: VIEW; Schema: public; Owner: moviedb
 --
 
 CREATE VIEW sales_by_store AS
@@ -617,7 +617,7 @@ CREATE VIEW sales_by_store AS
 ALTER TABLE public.sales_by_store OWNER TO moviedb;
 
 --
--- Name: staff_list; Type: VIEW; Schema: public; Owner: postgres
+-- Name: staff_list; Type: VIEW; Schema: public; Owner: moviedb
 --
 
 CREATE VIEW staff_list AS
@@ -627,7 +627,7 @@ CREATE VIEW staff_list AS
 ALTER TABLE public.staff_list OWNER TO moviedb;
 
 --
--- Name: film_in_stock(integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: film_in_stock(integer, integer); Type: FUNCTION; Schema: public; Owner: moviedb
 --
 
 CREATE FUNCTION film_in_stock(p_film_id integer, p_store_id integer, OUT p_film_count integer) RETURNS SETOF integer
@@ -644,7 +644,7 @@ $_$
 ALTER FUNCTION public.film_in_stock(p_film_id integer, p_store_id integer, OUT p_film_count integer) OWNER TO moviedb;
 
 --
--- Name: film_not_in_stock(integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: film_not_in_stock(integer, integer); Type: FUNCTION; Schema: public; Owner: moviedb
 --
 
 CREATE FUNCTION film_not_in_stock(p_film_id integer, p_store_id integer, OUT p_film_count integer) RETURNS SETOF integer
@@ -661,7 +661,7 @@ $_$
 ALTER FUNCTION public.film_not_in_stock(p_film_id integer, p_store_id integer, OUT p_film_count integer) OWNER TO moviedb;
 
 --
--- Name: get_customer_balance(integer, timestamp without time zone); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: get_customer_balance(integer, timestamp without time zone); Type: FUNCTION; Schema: public; Owner: moviedb
 --
 
 CREATE FUNCTION get_customer_balance(p_customer_id integer, p_effective_date timestamp without time zone) RETURNS numeric
@@ -707,7 +707,7 @@ $$
 ALTER FUNCTION public.get_customer_balance(p_customer_id integer, p_effective_date timestamp without time zone) OWNER TO moviedb;
 
 --
--- Name: inventory_held_by_customer(integer); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: inventory_held_by_customer(integer); Type: FUNCTION; Schema: public; Owner: moviedb
 --
 
 CREATE FUNCTION inventory_held_by_customer(p_inventory_id integer) RETURNS integer
@@ -729,7 +729,7 @@ END $$
 ALTER FUNCTION public.inventory_held_by_customer(p_inventory_id integer) OWNER TO moviedb;
 
 --
--- Name: inventory_in_stock(integer); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: inventory_in_stock(integer); Type: FUNCTION; Schema: public; Owner: moviedb
 --
 
 CREATE FUNCTION inventory_in_stock(p_inventory_id integer) RETURNS boolean
@@ -766,7 +766,7 @@ END $$
 ALTER FUNCTION public.inventory_in_stock(p_inventory_id integer) OWNER TO moviedb;
 
 --
--- Name: last_day(timestamp without time zone); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: last_day(timestamp without time zone); Type: FUNCTION; Schema: public; Owner: moviedb
 --
 
 CREATE FUNCTION last_day(timestamp without time zone) RETURNS date
@@ -784,7 +784,7 @@ $_$
 ALTER FUNCTION public.last_day(timestamp without time zone) OWNER TO moviedb;
 
 --
--- Name: last_updated(); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: last_updated(); Type: FUNCTION; Schema: public; Owner: moviedb
 --
 
 CREATE FUNCTION last_updated() RETURNS trigger
@@ -799,7 +799,7 @@ END $$
 ALTER FUNCTION public.last_updated() OWNER TO moviedb;
 
 --
--- Name: rewards_report(integer, numeric); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: rewards_report(integer, numeric); Type: FUNCTION; Schema: public; Owner: moviedb
 --
 
 CREATE FUNCTION rewards_report(min_monthly_purchases integer, min_dollar_amount_purchased numeric) RETURNS SETOF customer
@@ -863,7 +863,7 @@ $_$
 ALTER FUNCTION public.rewards_report(min_monthly_purchases integer, min_dollar_amount_purchased numeric) OWNER TO moviedb;
 
 --
--- Name: actor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: actor_pkey; Type: CONSTRAINT; Schema: public; Owner: moviedb; Tablespace:
 --
 
 ALTER TABLE ONLY actor
@@ -871,7 +871,7 @@ ALTER TABLE ONLY actor
 
 
 --
--- Name: address_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: address_pkey; Type: CONSTRAINT; Schema: public; Owner: moviedb; Tablespace:
 --
 
 ALTER TABLE ONLY address
@@ -879,7 +879,7 @@ ALTER TABLE ONLY address
 
 
 --
--- Name: category_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: category_pkey; Type: CONSTRAINT; Schema: public; Owner: moviedb; Tablespace:
 --
 
 ALTER TABLE ONLY category
@@ -887,7 +887,7 @@ ALTER TABLE ONLY category
 
 
 --
--- Name: city_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: city_pkey; Type: CONSTRAINT; Schema: public; Owner: moviedb; Tablespace:
 --
 
 ALTER TABLE ONLY city
@@ -895,7 +895,7 @@ ALTER TABLE ONLY city
 
 
 --
--- Name: country_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: country_pkey; Type: CONSTRAINT; Schema: public; Owner: moviedb; Tablespace:
 --
 
 ALTER TABLE ONLY country
@@ -903,7 +903,7 @@ ALTER TABLE ONLY country
 
 
 --
--- Name: customer_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: customer_pkey; Type: CONSTRAINT; Schema: public; Owner: moviedb; Tablespace:
 --
 
 ALTER TABLE ONLY customer
@@ -911,7 +911,7 @@ ALTER TABLE ONLY customer
 
 
 --
--- Name: film_actor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: film_actor_pkey; Type: CONSTRAINT; Schema: public; Owner: moviedb; Tablespace:
 --
 
 ALTER TABLE ONLY film_actor
@@ -919,7 +919,7 @@ ALTER TABLE ONLY film_actor
 
 
 --
--- Name: film_category_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: film_category_pkey; Type: CONSTRAINT; Schema: public; Owner: moviedb; Tablespace:
 --
 
 ALTER TABLE ONLY film_category
@@ -927,7 +927,7 @@ ALTER TABLE ONLY film_category
 
 
 --
--- Name: film_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: film_pkey; Type: CONSTRAINT; Schema: public; Owner: moviedb; Tablespace:
 --
 
 ALTER TABLE ONLY film
@@ -935,7 +935,7 @@ ALTER TABLE ONLY film
 
 
 --
--- Name: inventory_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: inventory_pkey; Type: CONSTRAINT; Schema: public; Owner: moviedb; Tablespace:
 --
 
 ALTER TABLE ONLY inventory
@@ -943,7 +943,7 @@ ALTER TABLE ONLY inventory
 
 
 --
--- Name: language_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: language_pkey; Type: CONSTRAINT; Schema: public; Owner: moviedb; Tablespace:
 --
 
 ALTER TABLE ONLY language
@@ -951,7 +951,7 @@ ALTER TABLE ONLY language
 
 
 --
--- Name: payment_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: payment_pkey; Type: CONSTRAINT; Schema: public; Owner: moviedb; Tablespace:
 --
 
 ALTER TABLE ONLY payment
@@ -959,7 +959,7 @@ ALTER TABLE ONLY payment
 
 
 --
--- Name: rental_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: rental_pkey; Type: CONSTRAINT; Schema: public; Owner: moviedb; Tablespace:
 --
 
 ALTER TABLE ONLY rental
@@ -967,7 +967,7 @@ ALTER TABLE ONLY rental
 
 
 --
--- Name: staff_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: staff_pkey; Type: CONSTRAINT; Schema: public; Owner: moviedb; Tablespace:
 --
 
 ALTER TABLE ONLY staff
@@ -975,7 +975,7 @@ ALTER TABLE ONLY staff
 
 
 --
--- Name: store_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: store_pkey; Type: CONSTRAINT; Schema: public; Owner: moviedb; Tablespace:
 --
 
 ALTER TABLE ONLY store
@@ -983,252 +983,252 @@ ALTER TABLE ONLY store
 
 
 --
--- Name: film_fulltext_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: film_fulltext_idx; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX film_fulltext_idx ON film USING gist (fulltext);
 
 
 --
--- Name: idx_actor_last_name; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_actor_last_name; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_actor_last_name ON actor USING btree (last_name);
 
 
 --
--- Name: idx_fk_address_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_address_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_address_id ON customer USING btree (address_id);
 
 
 --
--- Name: idx_fk_city_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_city_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_city_id ON address USING btree (city_id);
 
 
 --
--- Name: idx_fk_country_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_country_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_country_id ON city USING btree (country_id);
 
 
 --
--- Name: idx_fk_customer_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_customer_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_customer_id ON payment USING btree (customer_id);
 
 
 --
--- Name: idx_fk_film_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_film_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_film_id ON film_actor USING btree (film_id);
 
 
 --
--- Name: idx_fk_inventory_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_inventory_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_inventory_id ON rental USING btree (inventory_id);
 
 
 --
--- Name: idx_fk_language_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_language_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_language_id ON film USING btree (language_id);
 
 
 --
--- Name: idx_fk_original_language_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_original_language_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_original_language_id ON film USING btree (original_language_id);
 
 
 --
--- Name: idx_fk_payment_p2007_01_customer_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_payment_p2007_01_customer_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_payment_p2007_01_customer_id ON payment_p2007_01 USING btree (customer_id);
 
 
 --
--- Name: idx_fk_payment_p2007_01_staff_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_payment_p2007_01_staff_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_payment_p2007_01_staff_id ON payment_p2007_01 USING btree (staff_id);
 
 
 --
--- Name: idx_fk_payment_p2007_02_customer_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_payment_p2007_02_customer_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_payment_p2007_02_customer_id ON payment_p2007_02 USING btree (customer_id);
 
 
 --
--- Name: idx_fk_payment_p2007_02_staff_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_payment_p2007_02_staff_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_payment_p2007_02_staff_id ON payment_p2007_02 USING btree (staff_id);
 
 
 --
--- Name: idx_fk_payment_p2007_03_customer_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_payment_p2007_03_customer_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_payment_p2007_03_customer_id ON payment_p2007_03 USING btree (customer_id);
 
 
 --
--- Name: idx_fk_payment_p2007_03_staff_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_payment_p2007_03_staff_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_payment_p2007_03_staff_id ON payment_p2007_03 USING btree (staff_id);
 
 
 --
--- Name: idx_fk_payment_p2007_04_customer_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_payment_p2007_04_customer_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_payment_p2007_04_customer_id ON payment_p2007_04 USING btree (customer_id);
 
 
 --
--- Name: idx_fk_payment_p2007_04_staff_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_payment_p2007_04_staff_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_payment_p2007_04_staff_id ON payment_p2007_04 USING btree (staff_id);
 
 
 --
--- Name: idx_fk_payment_p2007_05_customer_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_payment_p2007_05_customer_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_payment_p2007_05_customer_id ON payment_p2007_05 USING btree (customer_id);
 
 
 --
--- Name: idx_fk_payment_p2007_05_staff_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_payment_p2007_05_staff_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_payment_p2007_05_staff_id ON payment_p2007_05 USING btree (staff_id);
 
 
 --
--- Name: idx_fk_payment_p2007_06_customer_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_payment_p2007_06_customer_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_payment_p2007_06_customer_id ON payment_p2007_06 USING btree (customer_id);
 
 
 --
--- Name: idx_fk_payment_p2007_06_staff_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_payment_p2007_06_staff_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_payment_p2007_06_staff_id ON payment_p2007_06 USING btree (staff_id);
 
 
 --
--- Name: idx_fk_staff_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_staff_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_staff_id ON payment USING btree (staff_id);
 
 
 --
--- Name: idx_fk_store_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_fk_store_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_fk_store_id ON customer USING btree (store_id);
 
 
 --
--- Name: idx_last_name; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_last_name; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_last_name ON customer USING btree (last_name);
 
 
 --
--- Name: idx_store_id_film_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_store_id_film_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_store_id_film_id ON inventory USING btree (store_id, film_id);
 
 
 --
--- Name: idx_title; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_title; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE INDEX idx_title ON film USING btree (title);
 
 
 --
--- Name: idx_unq_manager_staff_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_unq_manager_staff_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE UNIQUE INDEX idx_unq_manager_staff_id ON store USING btree (manager_staff_id);
 
 
 --
--- Name: idx_unq_rental_rental_date_inventory_id_customer_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: idx_unq_rental_rental_date_inventory_id_customer_id; Type: INDEX; Schema: public; Owner: moviedb; Tablespace:
 --
 
 CREATE UNIQUE INDEX idx_unq_rental_rental_date_inventory_id_customer_id ON rental USING btree (rental_date, inventory_id, customer_id);
 
 
 --
--- Name: payment_insert_p2007_01; Type: RULE; Schema: public; Owner: postgres
+-- Name: payment_insert_p2007_01; Type: RULE; Schema: public; Owner: moviedb
 --
 
 CREATE RULE payment_insert_p2007_01 AS ON INSERT TO payment WHERE ((new.payment_date >= '2007-01-01 00:00:00'::timestamp without time zone) AND (new.payment_date < '2007-02-01 00:00:00'::timestamp without time zone)) DO INSTEAD INSERT INTO payment_p2007_01 (payment_id, customer_id, staff_id, rental_id, amount, payment_date) VALUES (DEFAULT, new.customer_id, new.staff_id, new.rental_id, new.amount, new.payment_date);
 
 
 --
--- Name: payment_insert_p2007_02; Type: RULE; Schema: public; Owner: postgres
+-- Name: payment_insert_p2007_02; Type: RULE; Schema: public; Owner: moviedb
 --
 
 CREATE RULE payment_insert_p2007_02 AS ON INSERT TO payment WHERE ((new.payment_date >= '2007-02-01 00:00:00'::timestamp without time zone) AND (new.payment_date < '2007-03-01 00:00:00'::timestamp without time zone)) DO INSTEAD INSERT INTO payment_p2007_02 (payment_id, customer_id, staff_id, rental_id, amount, payment_date) VALUES (DEFAULT, new.customer_id, new.staff_id, new.rental_id, new.amount, new.payment_date);
 
 
 --
--- Name: payment_insert_p2007_03; Type: RULE; Schema: public; Owner: postgres
+-- Name: payment_insert_p2007_03; Type: RULE; Schema: public; Owner: moviedb
 --
 
 CREATE RULE payment_insert_p2007_03 AS ON INSERT TO payment WHERE ((new.payment_date >= '2007-03-01 00:00:00'::timestamp without time zone) AND (new.payment_date < '2007-04-01 00:00:00'::timestamp without time zone)) DO INSTEAD INSERT INTO payment_p2007_03 (payment_id, customer_id, staff_id, rental_id, amount, payment_date) VALUES (DEFAULT, new.customer_id, new.staff_id, new.rental_id, new.amount, new.payment_date);
 
 
 --
--- Name: payment_insert_p2007_04; Type: RULE; Schema: public; Owner: postgres
+-- Name: payment_insert_p2007_04; Type: RULE; Schema: public; Owner: moviedb
 --
 
 CREATE RULE payment_insert_p2007_04 AS ON INSERT TO payment WHERE ((new.payment_date >= '2007-04-01 00:00:00'::timestamp without time zone) AND (new.payment_date < '2007-05-01 00:00:00'::timestamp without time zone)) DO INSTEAD INSERT INTO payment_p2007_04 (payment_id, customer_id, staff_id, rental_id, amount, payment_date) VALUES (DEFAULT, new.customer_id, new.staff_id, new.rental_id, new.amount, new.payment_date);
 
 
 --
--- Name: payment_insert_p2007_05; Type: RULE; Schema: public; Owner: postgres
+-- Name: payment_insert_p2007_05; Type: RULE; Schema: public; Owner: moviedb
 --
 
 CREATE RULE payment_insert_p2007_05 AS ON INSERT TO payment WHERE ((new.payment_date >= '2007-05-01 00:00:00'::timestamp without time zone) AND (new.payment_date < '2007-06-01 00:00:00'::timestamp without time zone)) DO INSTEAD INSERT INTO payment_p2007_05 (payment_id, customer_id, staff_id, rental_id, amount, payment_date) VALUES (DEFAULT, new.customer_id, new.staff_id, new.rental_id, new.amount, new.payment_date);
 
 
 --
--- Name: payment_insert_p2007_06; Type: RULE; Schema: public; Owner: postgres
+-- Name: payment_insert_p2007_06; Type: RULE; Schema: public; Owner: moviedb
 --
 
 CREATE RULE payment_insert_p2007_06 AS ON INSERT TO payment WHERE ((new.payment_date >= '2007-06-01 00:00:00'::timestamp without time zone) AND (new.payment_date < '2007-07-01 00:00:00'::timestamp without time zone)) DO INSTEAD INSERT INTO payment_p2007_06 (payment_id, customer_id, staff_id, rental_id, amount, payment_date) VALUES (DEFAULT, new.customer_id, new.staff_id, new.rental_id, new.amount, new.payment_date);
 
 
 --
--- Name: film_fulltext_trigger; Type: TRIGGER; Schema: public; Owner: postgres
+-- Name: film_fulltext_trigger; Type: TRIGGER; Schema: public; Owner: moviedb
 --
 
 CREATE TRIGGER film_fulltext_trigger
@@ -1238,7 +1238,7 @@ CREATE TRIGGER film_fulltext_trigger
 
 
 --
--- Name: last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+-- Name: last_updated; Type: TRIGGER; Schema: public; Owner: moviedb
 --
 
 CREATE TRIGGER last_updated
@@ -1248,7 +1248,7 @@ CREATE TRIGGER last_updated
 
 
 --
--- Name: last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+-- Name: last_updated; Type: TRIGGER; Schema: public; Owner: moviedb
 --
 
 CREATE TRIGGER last_updated
@@ -1258,7 +1258,7 @@ CREATE TRIGGER last_updated
 
 
 --
--- Name: last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+-- Name: last_updated; Type: TRIGGER; Schema: public; Owner: moviedb
 --
 
 CREATE TRIGGER last_updated
@@ -1268,7 +1268,7 @@ CREATE TRIGGER last_updated
 
 
 --
--- Name: last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+-- Name: last_updated; Type: TRIGGER; Schema: public; Owner: moviedb
 --
 
 CREATE TRIGGER last_updated
@@ -1278,7 +1278,7 @@ CREATE TRIGGER last_updated
 
 
 --
--- Name: last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+-- Name: last_updated; Type: TRIGGER; Schema: public; Owner: moviedb
 --
 
 CREATE TRIGGER last_updated
@@ -1288,7 +1288,7 @@ CREATE TRIGGER last_updated
 
 
 --
--- Name: last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+-- Name: last_updated; Type: TRIGGER; Schema: public; Owner: moviedb
 --
 
 CREATE TRIGGER last_updated
@@ -1298,7 +1298,7 @@ CREATE TRIGGER last_updated
 
 
 --
--- Name: last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+-- Name: last_updated; Type: TRIGGER; Schema: public; Owner: moviedb
 --
 
 CREATE TRIGGER last_updated
@@ -1308,7 +1308,7 @@ CREATE TRIGGER last_updated
 
 
 --
--- Name: last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+-- Name: last_updated; Type: TRIGGER; Schema: public; Owner: moviedb
 --
 
 CREATE TRIGGER last_updated
@@ -1318,7 +1318,7 @@ CREATE TRIGGER last_updated
 
 
 --
--- Name: last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+-- Name: last_updated; Type: TRIGGER; Schema: public; Owner: moviedb
 --
 
 CREATE TRIGGER last_updated
@@ -1328,7 +1328,7 @@ CREATE TRIGGER last_updated
 
 
 --
--- Name: last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+-- Name: last_updated; Type: TRIGGER; Schema: public; Owner: moviedb
 --
 
 CREATE TRIGGER last_updated
@@ -1338,7 +1338,7 @@ CREATE TRIGGER last_updated
 
 
 --
--- Name: last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+-- Name: last_updated; Type: TRIGGER; Schema: public; Owner: moviedb
 --
 
 CREATE TRIGGER last_updated
@@ -1348,7 +1348,7 @@ CREATE TRIGGER last_updated
 
 
 --
--- Name: last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+-- Name: last_updated; Type: TRIGGER; Schema: public; Owner: moviedb
 --
 
 CREATE TRIGGER last_updated
@@ -1358,7 +1358,7 @@ CREATE TRIGGER last_updated
 
 
 --
--- Name: last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+-- Name: last_updated; Type: TRIGGER; Schema: public; Owner: moviedb
 --
 
 CREATE TRIGGER last_updated
@@ -1368,7 +1368,7 @@ CREATE TRIGGER last_updated
 
 
 --
--- Name: last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+-- Name: last_updated; Type: TRIGGER; Schema: public; Owner: moviedb
 --
 
 CREATE TRIGGER last_updated
@@ -1378,7 +1378,7 @@ CREATE TRIGGER last_updated
 
 
 --
--- Name: address_city_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: address_city_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY address
@@ -1386,7 +1386,7 @@ ALTER TABLE ONLY address
 
 
 --
--- Name: city_country_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: city_country_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY city
@@ -1394,7 +1394,7 @@ ALTER TABLE ONLY city
 
 
 --
--- Name: customer_address_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: customer_address_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY customer
@@ -1402,7 +1402,7 @@ ALTER TABLE ONLY customer
 
 
 --
--- Name: customer_store_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: customer_store_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY customer
@@ -1410,7 +1410,7 @@ ALTER TABLE ONLY customer
 
 
 --
--- Name: film_actor_actor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: film_actor_actor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY film_actor
@@ -1418,7 +1418,7 @@ ALTER TABLE ONLY film_actor
 
 
 --
--- Name: film_actor_film_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: film_actor_film_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY film_actor
@@ -1426,7 +1426,7 @@ ALTER TABLE ONLY film_actor
 
 
 --
--- Name: film_category_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: film_category_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY film_category
@@ -1434,7 +1434,7 @@ ALTER TABLE ONLY film_category
 
 
 --
--- Name: film_category_film_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: film_category_film_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY film_category
@@ -1442,7 +1442,7 @@ ALTER TABLE ONLY film_category
 
 
 --
--- Name: film_language_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: film_language_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY film
@@ -1450,7 +1450,7 @@ ALTER TABLE ONLY film
 
 
 --
--- Name: film_original_language_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: film_original_language_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY film
@@ -1458,7 +1458,7 @@ ALTER TABLE ONLY film
 
 
 --
--- Name: inventory_film_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: inventory_film_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY inventory
@@ -1466,7 +1466,7 @@ ALTER TABLE ONLY inventory
 
 
 --
--- Name: inventory_store_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: inventory_store_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY inventory
@@ -1474,7 +1474,7 @@ ALTER TABLE ONLY inventory
 
 
 --
--- Name: payment_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment
@@ -1482,7 +1482,7 @@ ALTER TABLE ONLY payment
 
 
 --
--- Name: payment_p2007_01_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_p2007_01_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment_p2007_01
@@ -1490,7 +1490,7 @@ ALTER TABLE ONLY payment_p2007_01
 
 
 --
--- Name: payment_p2007_01_rental_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_p2007_01_rental_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment_p2007_01
@@ -1498,7 +1498,7 @@ ALTER TABLE ONLY payment_p2007_01
 
 
 --
--- Name: payment_p2007_01_staff_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_p2007_01_staff_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment_p2007_01
@@ -1506,7 +1506,7 @@ ALTER TABLE ONLY payment_p2007_01
 
 
 --
--- Name: payment_p2007_02_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_p2007_02_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment_p2007_02
@@ -1514,7 +1514,7 @@ ALTER TABLE ONLY payment_p2007_02
 
 
 --
--- Name: payment_p2007_02_rental_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_p2007_02_rental_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment_p2007_02
@@ -1522,7 +1522,7 @@ ALTER TABLE ONLY payment_p2007_02
 
 
 --
--- Name: payment_p2007_02_staff_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_p2007_02_staff_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment_p2007_02
@@ -1530,7 +1530,7 @@ ALTER TABLE ONLY payment_p2007_02
 
 
 --
--- Name: payment_p2007_03_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_p2007_03_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment_p2007_03
@@ -1538,7 +1538,7 @@ ALTER TABLE ONLY payment_p2007_03
 
 
 --
--- Name: payment_p2007_03_rental_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_p2007_03_rental_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment_p2007_03
@@ -1546,7 +1546,7 @@ ALTER TABLE ONLY payment_p2007_03
 
 
 --
--- Name: payment_p2007_03_staff_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_p2007_03_staff_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment_p2007_03
@@ -1554,7 +1554,7 @@ ALTER TABLE ONLY payment_p2007_03
 
 
 --
--- Name: payment_p2007_04_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_p2007_04_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment_p2007_04
@@ -1562,7 +1562,7 @@ ALTER TABLE ONLY payment_p2007_04
 
 
 --
--- Name: payment_p2007_04_rental_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_p2007_04_rental_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment_p2007_04
@@ -1570,7 +1570,7 @@ ALTER TABLE ONLY payment_p2007_04
 
 
 --
--- Name: payment_p2007_04_staff_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_p2007_04_staff_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment_p2007_04
@@ -1578,7 +1578,7 @@ ALTER TABLE ONLY payment_p2007_04
 
 
 --
--- Name: payment_p2007_05_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_p2007_05_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment_p2007_05
@@ -1586,7 +1586,7 @@ ALTER TABLE ONLY payment_p2007_05
 
 
 --
--- Name: payment_p2007_05_rental_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_p2007_05_rental_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment_p2007_05
@@ -1594,7 +1594,7 @@ ALTER TABLE ONLY payment_p2007_05
 
 
 --
--- Name: payment_p2007_05_staff_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_p2007_05_staff_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment_p2007_05
@@ -1602,7 +1602,7 @@ ALTER TABLE ONLY payment_p2007_05
 
 
 --
--- Name: payment_p2007_06_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_p2007_06_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment_p2007_06
@@ -1610,7 +1610,7 @@ ALTER TABLE ONLY payment_p2007_06
 
 
 --
--- Name: payment_p2007_06_rental_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_p2007_06_rental_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment_p2007_06
@@ -1618,7 +1618,7 @@ ALTER TABLE ONLY payment_p2007_06
 
 
 --
--- Name: payment_p2007_06_staff_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_p2007_06_staff_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment_p2007_06
@@ -1626,7 +1626,7 @@ ALTER TABLE ONLY payment_p2007_06
 
 
 --
--- Name: payment_rental_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_rental_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment
@@ -1634,7 +1634,7 @@ ALTER TABLE ONLY payment
 
 
 --
--- Name: payment_staff_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: payment_staff_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY payment
@@ -1642,7 +1642,7 @@ ALTER TABLE ONLY payment
 
 
 --
--- Name: rental_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: rental_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY rental
@@ -1650,7 +1650,7 @@ ALTER TABLE ONLY rental
 
 
 --
--- Name: rental_inventory_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: rental_inventory_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY rental
@@ -1658,7 +1658,7 @@ ALTER TABLE ONLY rental
 
 
 --
--- Name: rental_staff_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: rental_staff_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY rental
@@ -1666,7 +1666,7 @@ ALTER TABLE ONLY rental
 
 
 --
--- Name: staff_address_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: staff_address_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY staff
@@ -1674,7 +1674,7 @@ ALTER TABLE ONLY staff
 
 
 --
--- Name: staff_store_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: staff_store_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY staff
@@ -1682,7 +1682,7 @@ ALTER TABLE ONLY staff
 
 
 --
--- Name: store_address_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: store_address_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY store
@@ -1690,7 +1690,7 @@ ALTER TABLE ONLY store
 
 
 --
--- Name: store_manager_staff_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: store_manager_staff_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: moviedb
 --
 
 ALTER TABLE ONLY store
@@ -1698,11 +1698,11 @@ ALTER TABLE ONLY store
 
 
 --
--- Name: public; Type: ACL; Schema: -; Owner: postgres
+-- Name: public; Type: ACL; Schema: -; Owner: moviedb
 --
 
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
-GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO moviedb;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 

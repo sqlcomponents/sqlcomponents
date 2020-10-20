@@ -1,2 +1,2 @@
 <#assign a=addImportStatement(beanPackage+"."+name)>
-	public int delete${name}(${name} search${name}) throws SQLException 
+	public int delete(${name} search${name}) throws SQLException 

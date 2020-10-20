@@ -14,6 +14,8 @@ public interface ${name}Dao${orm.daoSuffix} {
 		<#include "method/${method}.ftl">				
 	</#list>
 
+	
+
 	<#--
 	<#if exportedKeys?size != 0>
 	public List<${name}> get${name}s(Search${name} search${name}) throws SQLException;

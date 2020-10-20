@@ -1,5 +1,5 @@
 <#include "/template/dao/java/jdbc/jdbcbase.ftl">
-package <#if daoPackage?? && daoPackage?length != 0 >${daoPackage}.</#if>sqlmapdao;
+package <#if daoPackage?? && daoPackage?length != 0 >${daoPackage}.</#if>jdbc;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -9,17 +9,16 @@ import java.sql.SQLException ;
 
 import java.util.HashMap;
 import java.util.List;
-import ${daoPackage}.${name}Dao${orm.daoSuffix};
 
 <#assign capturedOutput>
 /**
  * 
  */
-public class Jdbc${name}Dao${orm.daoSuffix} implements ${name}Dao${orm.daoSuffix} {
+public class Jdbc${name}Repository${orm.daoSuffix}  {
 
   private final DataSource dataSource;
 
-  public Jdbc${name}Dao${orm.daoSuffix}(DataSource dataSource) {
+  public Jdbc${name}Repository${orm.daoSuffix}(DataSource dataSource) {
     this.dataSource = dataSource;
   }
 
@@ -37,7 +36,7 @@ public class Jdbc${name}Dao${orm.daoSuffix} implements ${name}Dao${orm.daoSuffix
 	private ${name} rowMapper(ResultSet rs) throws SQLException {
         final ${name} obj = new ${name}();
 		<#list properties as property>
-			obj.set${property.name?cap_first}(rs.get${getClassName(property.dataType)}("${property.columnName}"));
+		obj.set${property.name?cap_first}(rs.get${getClassName(property.dataType)}("${property.columnName}"));
 		</#list>
         return obj;
     }

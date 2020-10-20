@@ -5,7 +5,6 @@ import com.techatpark.scubebird.core.exception.ScubeException;
 import com.techatpark.scubebird.core.implementation.mapper.Mapper;
 import com.techatpark.scubebird.core.implementation.mapper.java.JavaOrmMapper;
 import com.techatpark.scubebird.core.model.DaoProject;
-import com.techatpark.scubebird.crawler.oracle.OracleCrawler;
 import com.techatpark.scubebird.crawler.postgres.PostgresCrawler;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +36,7 @@ class ScubeUtilTest {
             daoProject.setUserName("moviedb");
             daoProject.setPassword("moviedb");
             daoProject.setSchemaName("moviedb");
-            daoProject.setTablePatterns(Arrays.asList("%"));
+            daoProject.setTablePatterns(Arrays.asList("payment"));
 
             daoProject.setOnline(true);
             daoProject.setBeanIdentifier("model");
@@ -53,34 +52,25 @@ class ScubeUtilTest {
             return this;
         }
 
-        Application connectToOracle() throws SQLException, ScubeException {
-            daoProject.setName("Movie");
-            daoProject.setUrl("jdbc:oracle:thin:@localhost:51521:xe");
-            daoProject.setUserName("c##movie");
-            daoProject.setPassword("movie");
-            daoProject.setSchemaName("c##movie");
-            daoProject.setTablePatterns(Arrays.asList("%"));
-            return this;
-        }
-
         Application understand() {
 
-            daoProject.setMethodSpecification(Arrays.asList("DeleteByEntity", "DeleteByPK", "Without", "GetAll",
-                    "GetByEntity", "GetByPK", "GetByPKExceptHighest", "GetByPKUniqueKeys",
-                    "InsertByEntiy", "IsExisting", "MViewRefresh", "SaveByPK", "UpdateByEntiy", "UpdateByPK"));
+            daoProject.setMethodSpecification(Arrays.asList("DeleteByEntity", "DeleteByPK"
+//                    , "Without", "GetAll",
+//                    "GetByEntity", "GetByPK", "GetByPKExceptHighest", "GetByPKUniqueKeys",
+//                    "InsertByEntiy", "IsExisting", "MViewRefresh", "SaveByPK", "UpdateByEntiy"
+//                    , "UpdateByPK"
+
+            ));
             return this;
         }
 
         Application mapToJava() {
-
             return this;
         }
 
         void writeCode() throws SQLException, ScubeException {
-            daoProject.setSrcFolder("/Users/sathishkumarthiyagarajan/IdeaProjects/jdbc-java/target/generated-sources/movie-db");
-
+            daoProject.setSrcFolder("/home/haripriya/Official/data-science-journey/target/generated-sources/movie-db");
             ScubeUtil.writeCode(daoProject);
-
             System.out.println("Granted !");
         }
 

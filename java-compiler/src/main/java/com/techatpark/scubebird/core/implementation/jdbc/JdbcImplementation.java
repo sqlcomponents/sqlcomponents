@@ -42,7 +42,7 @@ public class JdbcImplementation extends OrmImplementation {
 				+ ".jdbc");
 		new File(packageFolder).mkdirs();
 		processTemplates(entity, packageFolder + File.separator + "Jdbc"
-				+ entity.getName() + "Dao"  + daoSuffix.trim() + ".java", daoTemplate);
+				+ entity.getName() + "Repository"  + daoSuffix.trim() + ".java", daoTemplate);
 	}
 
 
