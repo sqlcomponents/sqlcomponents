@@ -1,5 +1,5 @@
 <#if highestPKIndex != 0>
-<#include "/template/dao/java/method/signature/GetByPK.ftl"> {
+public ${name} find(${getPrimaryKeysAsParameterString()}) throws SQLException  {
 		final String query = """
                 SELECT
 		<@columnSelection/> 

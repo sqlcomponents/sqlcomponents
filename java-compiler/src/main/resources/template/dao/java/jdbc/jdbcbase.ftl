@@ -70,8 +70,8 @@
 
 	<#list properties as property>
 		<#if property.primaryKeyIndex != 0>
-			
-		</#if>
+        			<#local pkAsParameterStr = pkAsParameterStr + "preparedStatement.set${getClassName(property.dataType)}(${index}," + property.name+");\n\t">
+        		</#if>
 	</#list>
 	<#return pkAsParameterStr> 
 </#function>
