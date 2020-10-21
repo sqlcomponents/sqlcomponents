@@ -1,15 +1,14 @@
 <#if tableType == 'TABLE' >
-public int delete(${name} search${name}) throws SQLException  {
+public int delete(Criteria criteria) throws SQLException  {
 		
 
-		StringBuffer dynamicWhere = new StringBuffer();
-		<@dynamicWhere prefix="search${name}"/>
 		
         try (Connection connection = dataSource.getConnection();
 			Statement statement = connection.createStatement()) {
-			final String query = "DELETE FROM ${tableName}" + (dynamicWhere.isEmpty() ? "" : (" WHERE" + dynamicWhere.substring(4)));
+			String whereClause = criteria.asSql() ;
+			final String query = "DELETE FROM ${tableName}" + (whereClause == null ? "" : (" WHERE " + whereClause));
 			System.out.println(query);
-            return 0;
+            return statement.executeUpdate(query);
         }
 	}<#assign a=addImportStatement(beanPackage+"."+name)><#assign a=addImportStatement("java.sql.Statement")>
 </#if>
