@@ -15,5 +15,5 @@
 			${getPrimaryKeysAsPreparedStatements()}
             return preparedStatement.executeUpdate();
         }
-	}<#assign a=addImportStatement("java.util.HashMap")>
+	}<#assign a=addImportStatement("java.sql.PreparedStatement")>
 </#if>

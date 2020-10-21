@@ -170,7 +170,6 @@
 
 		<#list properties as property>
 			<#if property.sqlDataType?index_of("VARCHAR") !=  -1>
-
 			if(${prefix}.get${property.name?cap_first}() != null) {
 				dynamicWhere.append("AND ${property.columnName} like '").append(${prefix}.get${property.name?cap_first}()).append("' ");
 			}

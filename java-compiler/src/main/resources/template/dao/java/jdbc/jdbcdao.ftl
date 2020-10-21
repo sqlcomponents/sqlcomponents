@@ -3,7 +3,6 @@ package <#if daoPackage?? && daoPackage?length != 0 >${daoPackage}.</#if>jdbc;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException ;
 
@@ -36,7 +35,7 @@ public class Jdbc${name}Repository${orm.daoSuffix}  {
 	private ${name} rowMapper(ResultSet rs) throws SQLException {
         final ${name} obj = new ${name}();
 		<#list properties as property>
-		obj.set${property.name?cap_first}(rs.get${getClassName(property.dataType)}("${property.columnName}"));
+		obj.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}("${property.columnName}"));
 		</#list>
         return obj;
     }

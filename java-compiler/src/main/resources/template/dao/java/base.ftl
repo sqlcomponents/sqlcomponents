@@ -6,6 +6,14 @@
 	<#return str?split(".")?last>
 </#function>
 
+<#function getJDBCClassName str> 
+	<#local pkAsParameterStr="${getClassName(str)}">
+	<#if pkAsParameterStr == "Integer">
+			<#local pkAsParameterStr="Int">
+	</#if>
+	<#return pkAsParameterStr>
+</#function>
+
 <#function getProperty propertyName> 
 	<#list properties as property>
 		<#if property.name == propertyName>
