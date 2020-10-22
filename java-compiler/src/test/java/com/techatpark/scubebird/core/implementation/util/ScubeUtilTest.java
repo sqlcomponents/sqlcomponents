@@ -54,11 +54,12 @@ class ScubeUtilTest {
 
         Application understand() {
 
-            daoProject.setMethodSpecification(Arrays.asList("DeleteByEntity", "DeleteByPK"
-//                    , "Without", "GetAll",
-//                    "GetByEntity", "GetByPK", "GetByPKExceptHighest", "GetByPKUniqueKeys",
-//                    "InsertByEntiy", "IsExisting", "MViewRefresh", "SaveByPK", "UpdateByEntiy"
-//                    , "UpdateByPK"
+            daoProject.setMethodSpecification(Arrays.asList("DeleteByEntity", "DeleteByPK",
+                     "Without",
+                     "GetAll",
+                    "GetByEntity", "GetByPK", "GetByPKExceptHighest", "GetByPKUniqueKeys"
+                    ,"InsertByEntiy", "IsExisting", "MViewRefresh", "SaveByPK", "UpdateByEntiy"
+                    , "UpdateByPK"
 
             ));
             return this;
@@ -69,7 +70,7 @@ class ScubeUtilTest {
         }
 
         void writeCode() throws SQLException, ScubeException {
-            daoProject.setSrcFolder("/home/haripriya/Official/data-science-journey/target/generated-sources/movie-db");
+            daoProject.setSrcFolder("/Users/sathishkumarthiyagarajan/IdeaProjects/jdbc-java/target/generated-sources/movie-db");
             ScubeUtil.writeCode(daoProject);
             System.out.println("Granted !");
         }

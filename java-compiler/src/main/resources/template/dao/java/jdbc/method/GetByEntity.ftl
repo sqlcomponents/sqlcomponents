@@ -1,4 +1,4 @@
-	@SuppressWarnings("unchecked")
+
 public List<${name}> find(Criteria criteria) throws SQLException  {
 String whereClause = criteria.asSql() ;
 				final String query = """
@@ -18,7 +18,7 @@ String whereClause = criteria.asSql() ;
                         }
 	}
 <#if orm.pagination >
-	@SuppressWarnings("unchecked")
+
 <#include "/template/dao/java/method/signature/GetByEntity_Paginated.ftl"> {
 		List<${name}> ${pluralName?uncap_first} = null ;
 		HashMap<String, Object> map = new HashMap<String, Object>(3);

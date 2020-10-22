@@ -58,29 +58,29 @@ public static class Criteria {
 
 			<#switch property.dataType>
 			<#case "java.lang.String">
-				public StringQuery ${property.name}() {
-					StringQuery query = new StringQuery("${property.columnName}",this);
+				public StringField ${property.name}() {
+					StringField query = new StringField("${property.columnName}",this);
 					this.nodes.add(query);
 					return query;
 				}
 				<#break>
 			<#case "java.lang.Integer">
-				public NumberQuery<Integer> ${property.name}() {
-					NumberQuery<Integer> query = new NumberQuery("${property.columnName}",this);
+				public NumberField<Integer> ${property.name}() {
+					NumberField<Integer> query = new NumberField("${property.columnName}",this);
 					this.nodes.add(query);
 					return query;
 				}
 				<#break>
 			<#case "java.lang.Long">
-				public NumberQuery<Long> ${property.name}() {
-					NumberQuery<Long> query = new NumberQuery("${property.columnName}",this);
+				public NumberField<Long> ${property.name}() {
+					NumberField<Long> query = new NumberField("${property.columnName}",this);
 					this.nodes.add(query);
 					return query;
 				}
 				<#break>
 				<#case "java.lang.Float">
-				public NumberQuery<Float> ${property.name}() {
-					NumberQuery<Float> query = new NumberQuery("${property.columnName}",this);
+				public NumberField<Float> ${property.name}() {
+					NumberField<Float> query = new NumberField("${property.columnName}",this);
 					this.nodes.add(query);
 					return query;
 				}
@@ -118,8 +118,8 @@ public static class Criteria {
         public String asSql() {
             return nodes.isEmpty() ? null : nodes.stream().map(node -> {
                 String asSql ;
-                if(node instanceof Query) {
-                    asSql = ((Query) node ).asSql();
+                if(node instanceof Field) {
+                    asSql = ((Field) node ).asSql();
                 }else if (node instanceof Criteria) {
                     asSql = "(" + ((Criteria) node ).asSql() + ")";
                 }
@@ -130,12 +130,12 @@ public static class Criteria {
             }).collect(Collectors.joining(" "));
         }
 
-        public abstract class Query {
+        public abstract class Field {
 
             protected final String columnName;
             protected final Criteria criteria;
 
-            public Query(final String columnName, final Criteria criteria) {
+            public Field(final String columnName, final Criteria criteria) {
                 this.columnName = columnName;
                 this.criteria = criteria;
             }
@@ -144,10 +144,10 @@ public static class Criteria {
 
         }
 
-        public class StringQuery extends Query {
+        public class StringField extends Field {
             private String sql ;
 
-            public StringQuery(final String columnName, final Criteria criteria) {
+            public StringField(final String columnName, final Criteria criteria) {
                 super(columnName,criteria);
             }
 
@@ -167,11 +167,11 @@ public static class Criteria {
             }
         }
 
-        public class NumberQuery<T extends Number> extends Query {
+        public class NumberField<T extends Number> extends Field {
 
             private String sql ;
 
-            public NumberQuery(final String columnName, final Criteria criteria) {
+            public NumberField(final String columnName, final Criteria criteria) {
                 super(columnName,criteria);
             }
 

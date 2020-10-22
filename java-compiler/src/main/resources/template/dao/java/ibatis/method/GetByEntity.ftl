@@ -1,9 +1,9 @@
-	@SuppressWarnings("unchecked")
+
 <#include "/template/dao/java/method/signature/GetByEntity.ftl"> {
 		return sqlSession.selectList("get${name}ByEntity",search${name}) ;
 	}
 <#if orm.pagination >
-	@SuppressWarnings("unchecked")
+
 <#include "/template/dao/java/method/signature/GetByEntity_Paginated.ftl"> {
 		List<${name}> ${pluralName?uncap_first} = null ;
 		HashMap<String, Object> map = new HashMap<String, Object>(3);
