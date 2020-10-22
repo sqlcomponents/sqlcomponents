@@ -1,7 +1,6 @@
-
-public List<${name}> find(Criteria criteria) throws SQLException  {
-String whereClause = criteria.asSql() ;
-				final String query = """
+    public List<${name}> find(Criteria criteria) throws SQLException  {
+        String whereClause = criteria.asSql() ;
+		final String query = """
                                 SELECT
                 		<@columnSelection/>
                 		FROM ${tableName}

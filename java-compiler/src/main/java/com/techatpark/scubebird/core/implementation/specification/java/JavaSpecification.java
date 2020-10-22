@@ -60,8 +60,7 @@ public class JavaSpecification extends Specification {
 		String packageFolder = getPackageAsFolder(srcFolder, entity
 				.getDaoPackage());
 		new File(packageFolder).mkdirs();
-		processTemplates(entity, packageFolder + File.separator
-				+ entity.getName() + "Dao"  + daoSuffix.trim() + ".java", daoTemplate);
+
 	}
 
 	private void writeServiceSpecification(Service service, String srcFolder,String daoSuffix)
@@ -85,7 +84,7 @@ public class JavaSpecification extends Specification {
 
 		try {
 			beanTemplate = freeMarkerConfiguration.getTemplate("bean.ftl");
-			daoTemplate = freeMarkerConfiguration.getTemplate("dao.ftl");
+
 			serviceTemplate = freeMarkerConfiguration
 					.getTemplate("service.ftl");
 		} catch (IOException e) {
@@ -96,7 +95,7 @@ public class JavaSpecification extends Specification {
 	}
 
 	private final Configuration freeMarkerConfiguration;
-	private Template daoTemplate;
+
 	private Template beanTemplate;
 	private Template serviceTemplate;
 

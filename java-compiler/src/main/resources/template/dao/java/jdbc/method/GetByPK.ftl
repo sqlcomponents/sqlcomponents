@@ -1,5 +1,5 @@
 <#if highestPKIndex != 0>
-public ${name} find(${getPrimaryKeysAsParameterString()}) throws SQLException  {
+    public ${name} find(${getPrimaryKeysAsParameterString()}) throws SQLException  {
 		final String query = """
                 SELECT
 		<@columnSelection/> 

@@ -38,10 +38,9 @@ public class JdbcImplementation extends OrmImplementation {
 	private void writeDaoImplementation(ProcessedEntity entity, String srcFolder,String daoSuffix)
 			throws IOException, TemplateException {
 		String packageFolder = getPackageAsFolder(srcFolder, entity
-				.getDaoPackage()
-				+ ".jdbc");
+				.getDaoPackage());
 		new File(packageFolder).mkdirs();
-		processTemplates(entity, packageFolder + File.separator + "Jdbc"
+		processTemplates(entity, packageFolder + File.separator
 				+ entity.getName() + "Repository"  + daoSuffix.trim() + ".java", daoTemplate);
 	}
 
