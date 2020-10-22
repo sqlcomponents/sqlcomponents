@@ -1,5 +1,6 @@
 <#if tableType == 'TABLE' >
-<#include "/template/dao/java/method/signature/InsertByEntiy.ftl"> {
+
+	public ${name} create(${name} ${name?uncap_first}) throws SQLException  {
 	
 				return null;
 	}

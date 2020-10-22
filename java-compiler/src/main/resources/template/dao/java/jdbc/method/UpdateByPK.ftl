@@ -1,5 +1,5 @@
 <#if tableType == 'TABLE' >
-<#include "/template/dao/java/method/signature/UpdateByPK.ftl">{
+    public int update${name}(${name} ${name?uncap_first}) throws SQLException {
 		return 0;
 	}
 </#if>

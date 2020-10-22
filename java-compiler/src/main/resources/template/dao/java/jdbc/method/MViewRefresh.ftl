@@ -1,3 +1,3 @@
-<#include "/template/dao/java/method/signature/MViewRefresh.ftl">{
+    public void refresh${pluralName}() throws SQLException {
 
 	}

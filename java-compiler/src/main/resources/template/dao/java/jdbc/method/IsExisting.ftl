@@ -1,5 +1,5 @@
 <#if highestPKIndex != 0>
-<#include "/template/dao/java/method/signature/IsExisting.ftl">{
+	public Boolean isExisting${name}(${getPrimaryKeysAsParameterString()}) throws SQLException {
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		${getPrimaryKeysAsParameterStringNoTypeMap()}
 		return false;
