@@ -70,8 +70,8 @@
 
 	<#list properties as property>
 		<#if property.primaryKeyIndex != 0>
-        			<#local pkAsParameterStr = pkAsParameterStr + "preparedStatement.set${getClassName(property.dataType)}(${index}," + property.name+");\n\t">
-        		</#if>
+        	<#local pkAsParameterStr = pkAsParameterStr + "preparedStatement.set${getClassName(property.dataType)}(${index}," + property.name+");\n\t">
+        </#if>
 	</#list>
 	<#return pkAsParameterStr> 
 </#function>
@@ -195,10 +195,3 @@
 		</trim>
 </#macro>
 
-<#macro aliasStatements>
-
-	<#list aliasStatementsList?sort as aliasStatement>
-	${aliasStatement}
-	</#list>
-	
-</#macro>

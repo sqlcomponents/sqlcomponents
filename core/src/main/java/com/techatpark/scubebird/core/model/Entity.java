@@ -124,8 +124,6 @@ public class Entity implements Serializable {
 		return table.getSequenceName();
 	}
 
-	public void setSequenceName(String sequenceName) {
-		table.setSequenceName(sequenceName);
-	}
+
 
 }

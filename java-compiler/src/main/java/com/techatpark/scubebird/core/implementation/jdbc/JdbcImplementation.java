@@ -233,9 +233,6 @@ public class JdbcImplementation extends OrmImplementation {
 			return entity.getSequenceName();
 		}
 
-		public void setSequenceName(String sequenceName) {
-			entity.setSequenceName(sequenceName);
-		}
 
 	}
 

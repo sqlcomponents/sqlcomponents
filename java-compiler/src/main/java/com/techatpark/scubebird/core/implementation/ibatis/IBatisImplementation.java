@@ -241,13 +241,6 @@ public class IBatisImplementation extends OrmImplementation {
 			entity.setTableType(type);
 		}
 
-		public String getSequenceName() {
-			return entity.getSequenceName();
-		}
-
-		public void setSequenceName(String sequenceName) {
-			entity.setSequenceName(sequenceName);
-		}
 
 	}
 

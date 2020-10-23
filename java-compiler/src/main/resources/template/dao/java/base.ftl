@@ -14,6 +14,17 @@
 	<#return pkAsParameterStr>
 </#function>
 
+<#function wrapGet wText property > 
+<#switch property.dataType>
+  <#case "java.util.Date">
+	 <#return "${wText}.get${property.name?cap_first}() == null ? null : new java.sql.Date(${wText}.get${property.name?cap_first}().getTime())">
+  <#default>
+  <#return "${wText}.get${property.name?cap_first}()">
+</#switch>
+
+	
+</#function>
+
 <#function getProperty propertyName> 
 	<#list properties as property>
 		<#if property.name == propertyName>

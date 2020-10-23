@@ -28,7 +28,8 @@ public abstract class Mapper {
         ORM orm = ormProject.getOrm();
 
         if (ormProject.getOrm().getSchema() == null || ormProject.isOnline()) {
-            ormProject.getOrm().setSchema(crawler.getSchema());
+            Schema schema = crawler.getSchema();
+            ormProject.getOrm().setSchema(schema);
         }
 
         orm.setEntities(getEntities(ormProject));
@@ -120,9 +121,7 @@ public abstract class Mapper {
                             .getTableName()));
             entity.setBeanPackage(getBeanPackage(ormProject, table
                     .getTableName()));
-            entity
-                    .setSequenceName(getSequenceName(ormProject, entity
-                            .getName()));
+
 
             properties = new ArrayList<Property>(table.getColumns().size());
 
