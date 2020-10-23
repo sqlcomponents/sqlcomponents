@@ -24,8 +24,8 @@ public class PostgresCrawler extends Crawler {
         try {
             Connection connection = getConnection();
             DatabaseMetaData databasemetadata = connection.getMetaData();
-            schema.setTables(getTables(databasemetadata));
             schema.setSequences(getSequences(databasemetadata));
+            schema.setTables(getTables(databasemetadata,schema));
         } catch (SQLException e) {
             throw new ScubeException(e);
         }
@@ -44,13 +44,13 @@ public class PostgresCrawler extends Crawler {
         return sequences;
     }
 
-    private List<Table> getTables(DatabaseMetaData databasemetadata) throws SQLException {
+    private List<Table> getTables(DatabaseMetaData databasemetadata,Schema schema) throws SQLException {
         List<Table> tables = new ArrayList<>();
 
         ResultSet resultset = databasemetadata.getTables(null, null, null, new String[]{"TABLE"});
-        String tableName;
+
         while (resultset.next()) {
-            tableName = resultset.getString("table_name");
+            final String tableName = resultset.getString("table_name");
             if (shouldConsiderThisTable(tableName)) {
                 Table table = new Table();
                 table.setTableName(tableName);
@@ -65,6 +65,14 @@ public class PostgresCrawler extends Crawler {
                 table.setReferenceGeneration(resultset.getString("ref_generation"));
 
                 table.setColumns(getColumns(table));
+
+                // Set Sequence
+                schema.getSequences()
+                        .stream()
+                        .filter(sequenceName->sequenceName.contains(tableName))
+                        .findFirst()
+                .ifPresent(sequenceName->table.setSequenceName(sequenceName));
+
                 tables.add(table);
             }
 

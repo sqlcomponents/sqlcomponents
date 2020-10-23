@@ -20,7 +20,7 @@ class PostgresCrawlerTest {
         daoProject.setUserName("moviedb");
         daoProject.setPassword("moviedb");
         daoProject.setSchemaName("moviedb");
-        daoProject.setTablePatterns(Arrays.asList("actor","film_actor"));
+        daoProject.setTablePatterns(Arrays.asList("payment"));
 
         Crawler crawler = new PostgresCrawler(daoProject);
         Schema schema = crawler.getSchema();
