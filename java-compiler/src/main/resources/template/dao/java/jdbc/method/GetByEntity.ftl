@@ -1,20 +1,16 @@
     public List<${name}> find(Criteria criteria) throws SQLException  {
         String whereClause = criteria.asSql() ;
-		final String query = """
-                                SELECT
-                		<@columnSelection/>
-                		FROM ${tableName}
-                                """+ (whereClause == null ? "" : (" WHERE " + whereClause));
-                        try (Connection conn = dataSource.getConnection();
-                            PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+		final String query = "SELECT <@columnSelection/> FROM ${tableName}"+ (whereClause == null ? "" : (" WHERE " + whereClause));
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement preparedStatement = conn.prepareStatement(query)) {
 
-                            ResultSet resultSet = preparedStatement.executeQuery();
-                			List<${name}> arrays = new ArrayList();
-                            while (resultSet.next()) {
-                				arrays.add(rowMapper(resultSet));
-                			}
-                			return arrays;
-                        }
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<${name}> arrays = new ArrayList();
+            while (resultSet.next()) {
+                arrays.add(rowMapper(resultSet));
+            }
+            return arrays;
+        }
 	}
 <#if orm.pagination >
 
