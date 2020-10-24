@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 /**
  * 
  */
-public class ${name}Repository${orm.daoSuffix}  {
+public class ${name}Store${orm.daoSuffix}  {
 
   private final DataSource dataSource;
 
-  public ${name}Repository${orm.daoSuffix}(DataSource dataSource) {
+  public ${name}Store${orm.daoSuffix}(DataSource dataSource) {
     this.dataSource = dataSource;
   }
 
@@ -55,32 +55,31 @@ public class ${name}Repository${orm.daoSuffix}  {
         }
 <#list properties as property>
 
-
     <#switch property.dataType>
     <#case "java.lang.String">
-        public StringField ${property.name}() {
-            StringField query = new StringField("${property.columnName}",this);
+        public <#if property.column.isNullable??>Nullable</#if>StringField ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>StringField query = new <#if property.column.isNullable??>Nullable</#if>StringField("${property.columnName}",this);
             this.nodes.add(query);
             return query;
         }
         <#break>
     <#case "java.lang.Integer">
-        public NumberField<Integer> ${property.name}() {
-            NumberField<Integer> query = new NumberField("${property.columnName}",this);
+        public <#if property.column.isNullable??>Nullable</#if>NumberField<Integer> ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>NumberField<Integer> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.columnName}",this);
             this.nodes.add(query);
             return query;
         }
         <#break>
     <#case "java.lang.Long">
-        public NumberField<Long> ${property.name}() {
-            NumberField<Long> query = new NumberField("${property.columnName}",this);
+        public <#if property.column.isNullable??>Nullable</#if>NumberField<Long> ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>NumberField<Long> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.columnName}",this);
             this.nodes.add(query);
             return query;
         }
         <#break>
-        <#case "java.lang.Float">
-        public NumberField<Float> ${property.name}() {
-            NumberField<Float> query = new NumberField("${property.columnName}",this);
+    <#case "java.lang.Float">
+        public <#if property.column.isNullable??>Nullable</#if>NumberField<Float> ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>NumberField<Float> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.columnName}",this);
             this.nodes.add(query);
             return query;
         }
@@ -141,7 +140,7 @@ public class ${name}Repository${orm.daoSuffix}  {
         }
 
         public class StringField extends Field {
-            private String sql;
+            protected String sql;
 
             public StringField(final String columnName, final Criteria criteria) {
                 super(columnName, criteria);
@@ -163,9 +162,27 @@ public class ${name}Repository${orm.daoSuffix}  {
             }
         }
 
+        public class NullableStringField extends StringField {
+
+
+            public NullableStringField(final String columnName, final Criteria criteria) {
+                super(columnName, criteria);
+            }
+
+            public Criteria isNull() {
+                sql = columnName + " IS NULL";
+                return criteria;
+            }
+
+            public Criteria isNotNull() {
+                sql = columnName + " IS NOT NULL";
+                return criteria;
+            }
+        }
+
         public class NumberField<T extends Number> extends Field {
 
-            private String sql;
+            protected String sql;
 
             public NumberField(final String columnName, final Criteria criteria) {
                 super(columnName, criteria);
@@ -201,7 +218,29 @@ public class ${name}Repository${orm.daoSuffix}  {
                 return sql;
             }
         }
+
+
+
+        public class NullableNumberField<T extends Number> extends NumberField<T> {
+
+
+            public NullableNumberField(final String columnName, final Criteria criteria) {
+                super(columnName, criteria);
+            }
+
+            public Criteria isNull() {
+                sql = columnName + " IS NULL";
+                return criteria;
+            }
+
+            public Criteria isNotNull() {
+                sql = columnName + " IS NOT NULL";
+                return criteria;
+            }
+        }
     }
+
+
 
 
 
