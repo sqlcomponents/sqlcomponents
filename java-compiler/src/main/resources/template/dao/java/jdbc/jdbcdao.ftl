@@ -42,15 +42,31 @@ public class ${name}Store${orm.daoSuffix}  {
         return obj;
     }
 
-    public static Criteria where() {
+    public static LCriteria where() {
         return new Criteria();
     }
 
-    public static class Criteria {
+    public static class Criteria extends LCriteria {
+        private String asSql() {
+            return nodes.isEmpty() ? null : nodes.stream().map(node -> {
+                String asSql;
+                if (node instanceof Field) {
+                    asSql = ((Field) node).asSql();
+                } else if (node instanceof Criteria) {
+                    asSql = "(" + ((Criteria) node).asSql() + ")";
+                } else {
+                    asSql = (String) node;
+                }
+                return asSql;
+            }).collect(Collectors.joining(" "));
+        }
+    }
 
-        private final List<Object> nodes;
+    public static class LCriteria {
 
-        public Criteria() {
+        protected final List<Object> nodes;
+
+        public LCriteria() {
             this.nodes = new ArrayList<>();
         }
 <#list properties as property>
@@ -89,12 +105,12 @@ public class ${name}Store${orm.daoSuffix}  {
 
 		</#list>
 
-        public Criteria and() {
+        public LCriteria and() {
             this.nodes.add("AND");
             return this;
         }
 
-        public Criteria or() {
+        public LCriteria or() {
             this.nodes.add("OR");
             return this;
         }
@@ -102,37 +118,28 @@ public class ${name}Store${orm.daoSuffix}  {
         public Criteria and(final Criteria criteria) {
             this.nodes.add("AND");
             this.nodes.add(criteria);
-            return this;
+            return (Criteria) this;
         }
 
         public Criteria or(final Criteria criteria) {
             this.nodes.add("OR");
             this.nodes.add(criteria);
-            return this;
+            return (Criteria) this;
         }
 
-        private String asSql() {
-            return nodes.isEmpty() ? null : nodes.stream().map(node -> {
-                String asSql;
-                if (node instanceof Field) {
-                    asSql = ((Field) node).asSql();
-                } else if (node instanceof Criteria) {
-                    asSql = "(" + ((Criteria) node).asSql() + ")";
-                } else {
-                    asSql = (String) node;
-                }
-                return asSql;
-            }).collect(Collectors.joining(" "));
-        }
 
         public abstract class Field {
 
             protected final String columnName;
-            protected final Criteria criteria;
+            private final LCriteria criteria;
 
-            public Field(final String columnName, final Criteria criteria) {
+            public Field(final String columnName, final LCriteria criteria) {
                 this.columnName = columnName;
                 this.criteria = criteria;
+            }
+
+            protected Criteria getCriteria() {
+                return (Criteria) criteria;
             }
 
             protected abstract String asSql();
@@ -142,18 +149,18 @@ public class ${name}Store${orm.daoSuffix}  {
         public class StringField extends Field {
             protected String sql;
 
-            public StringField(final String columnName, final Criteria criteria) {
+            public StringField(final String columnName, final LCriteria criteria) {
                 super(columnName, criteria);
             }
 
             public Criteria eq(final String value) {
                 sql = columnName + "='" + value + "'";
-                return criteria;
+                return getCriteria();
             }
 
             public Criteria like(final String value) {
                 sql = columnName + " LIKE '" + value + "'";
-                return criteria;
+                return getCriteria();
             }
 
             @Override
@@ -165,18 +172,18 @@ public class ${name}Store${orm.daoSuffix}  {
         public class NullableStringField extends StringField {
 
 
-            public NullableStringField(final String columnName, final Criteria criteria) {
+            public NullableStringField(final String columnName, final LCriteria criteria) {
                 super(columnName, criteria);
             }
 
             public Criteria isNull() {
                 sql = columnName + " IS NULL";
-                return criteria;
+                return getCriteria();
             }
 
             public Criteria isNotNull() {
                 sql = columnName + " IS NOT NULL";
-                return criteria;
+                return getCriteria();
             }
         }
 
@@ -184,33 +191,33 @@ public class ${name}Store${orm.daoSuffix}  {
 
             protected String sql;
 
-            public NumberField(final String columnName, final Criteria criteria) {
+            public NumberField(final String columnName, final LCriteria criteria) {
                 super(columnName, criteria);
             }
 
             public Criteria eq(final T value) {
                 sql = columnName + "=" + value;
-                return criteria;
+                return getCriteria();
             }
 
             public Criteria gt(final T value) {
                 sql = columnName + ">" + value;
-                return criteria;
+                return getCriteria();
             }
 
             public Criteria gte(final T value) {
                 sql = columnName + ">=" + value;
-                return criteria;
+                return getCriteria();
             }
 
             public Criteria lt(final T value) {
                 sql = columnName + "<" + value;
-                return criteria;
+                return getCriteria();
             }
 
             public Criteria lte(final T value) {
                 sql = columnName + "<=" + value;
-                return criteria;
+                return getCriteria();
             }
 
             @Override
@@ -224,18 +231,18 @@ public class ${name}Store${orm.daoSuffix}  {
         public class NullableNumberField<T extends Number> extends NumberField<T> {
 
 
-            public NullableNumberField(final String columnName, final Criteria criteria) {
+            public NullableNumberField(final String columnName, final LCriteria criteria) {
                 super(columnName, criteria);
             }
 
             public Criteria isNull() {
                 sql = columnName + " IS NULL";
-                return criteria;
+                return getCriteria();
             }
 
             public Criteria isNotNull() {
                 sql = columnName + " IS NOT NULL";
-                return criteria;
+                return getCriteria();
             }
         }
     }
