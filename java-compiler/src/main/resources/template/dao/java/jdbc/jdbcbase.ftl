@@ -67,10 +67,10 @@
 
 <#function getPrimaryKeysAsPreparedStatements>
 	<#local pkAsParameterStr="">
-
+    <#assign index=1>
 	<#list properties as property>
 		<#if property.primaryKeyIndex != 0>
-        	<#local pkAsParameterStr = pkAsParameterStr + "preparedStatement.set${getClassName(property.dataType)}(${index}," + property.name+");\n\t">
+        	<#local pkAsParameterStr = pkAsParameterStr + "preparedStatement.set${getJDBCClassName(property.dataType)}(${index}," + property.name+");\n\t"><#assign index=index+1>
         </#if>
 	</#list>
 	<#return pkAsParameterStr> 

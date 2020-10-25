@@ -1,4 +1,4 @@
-    public List<${name}> find(Criteria criteria) throws SQLException  {
+    public List<${name}> select(Criteria criteria) throws SQLException  {
         String whereClause = criteria.asSql() ;
 		final String query = "SELECT <@columnSelection/> FROM ${tableName}"+ (whereClause == null ? "" : (" WHERE " + whereClause));
         try (Connection conn = dataSource.getConnection();
@@ -11,7 +11,7 @@
             }
             return arrays;
         }
-	}
+	}<#assign a=addImportStatement(beanPackage+"."+name)><#assign a=addImportStatement("java.sql.PreparedStatement")>
 <#if orm.pagination >
 
 <#include "/template/dao/java/method/signature/GetByEntity_Paginated.ftl"> {

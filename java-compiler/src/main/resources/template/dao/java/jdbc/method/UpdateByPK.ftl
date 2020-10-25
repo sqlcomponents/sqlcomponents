@@ -1,5 +1,5 @@
 <#if tableType == 'TABLE' >
-    public int update(${getPrimaryKeysAsParameterString()},${name} ${name?uncap_first}) throws SQLException {
+    public int update(<#if getPrimaryKeysAsParameterString() == ""><#else>${getPrimaryKeysAsParameterString()},</#if>${name} ${name?uncap_first}) throws SQLException {
 final String query = """
 		UPDATE ${tableName} SET
         		<#assign index=0>
