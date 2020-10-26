@@ -6,8 +6,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException ;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,31 +43,24 @@ public class ${name}Store${orm.daoSuffix}  {
 <#list properties as property>
     <#switch property.dataType>
     <#case "java.lang.String">
-        public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>StringField ${property.name}() {
-
-        <#break>
+    public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>StringField ${property.name}() {
+    <#break>
     <#case "java.lang.Integer">
-        public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>NumberField<Integer> ${property.name}() {
-
-        <#break>
+    public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>NumberField<Integer> ${property.name}() {
+    <#break>
     <#case "java.lang.Long">
-        public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>NumberField<Long> ${property.name}() {
-
-        <#break>
+    public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>NumberField<Long> ${property.name}() {
+    <#break>
     <#case "java.lang.Float">
-        public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>NumberField<Float> ${property.name}() {
-
-        <#break>
+    public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>NumberField<Float> ${property.name}() {
+    <#break>
     <#case "java.util.Date">
-        public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>DateField ${property.name}() {
-
-        <#break>
+    public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>DateField ${property.name}() {
+    <#break>
     </#switch>
-    return new Criteria().${property.name}();
-        }
-
-
-		</#list>
+        return new Criteria().${property.name}();
+    }
+    </#list>
 
     public static class Criteria extends PartialCriteria {
         private String asSql() {
@@ -107,7 +98,6 @@ public class ${name}Store${orm.daoSuffix}  {
             this.nodes.add(criteria);
             return (Criteria) this;
         }
-
 
     }
 
@@ -156,12 +146,7 @@ public class ${name}Store${orm.daoSuffix}  {
         }
         <#break>
     </#switch>
-
-
 		</#list>
-
-
-
 
         public abstract class Field {
 
@@ -205,7 +190,6 @@ public class ${name}Store${orm.daoSuffix}  {
         }
 
         public class NullableStringField extends StringField {
-
 
             public NullableStringField(final String columnName, final PartialCriteria criteria) {
                 super(columnName, criteria);
@@ -261,10 +245,7 @@ public class ${name}Store${orm.daoSuffix}  {
             }
         }
 
-
-
         public class NullableNumberField<T extends Number> extends NumberField<T> {
-
 
             public NullableNumberField(final String columnName, final PartialCriteria criteria) {
                 super(columnName, criteria);
@@ -280,75 +261,63 @@ public class ${name}Store${orm.daoSuffix}  {
                 return getCriteria();
             }
         }
-        
-        
-        
-        
-        
+
         public class DateField<Date> extends Field {
         
-                    protected String sql;
-        
-                    public DateField(final String columnName, final PartialCriteria criteria) {
-                        super(columnName, criteria);
-                    }
-        
-                    public Criteria eq(final Date value) {
-                        sql = columnName + "=" + value;
-                        return getCriteria();
-                    }
-        
-                    public Criteria gt(final Date value) {
-                        sql = columnName + ">" + value;
-                        return getCriteria();
-                    }
-        
-                    public Criteria gte(final Date value) {
-                        sql = columnName + ">=" + value;
-                        return getCriteria();
-                    }
-        
-                    public Criteria lt(final Date value) {
-                        sql = columnName + "<" + value;
-                        return getCriteria();
-                    }
-        
-                    public Criteria lte(final Date value) {
-                        sql = columnName + "<=" + value;
-                        return getCriteria();
-                    }
-        
-                    @Override
-                    protected String asSql() {
-                        return sql;
-                    }
-                }
-        
-        
-        
-                public class NullableDateField extends DateField {
-        
-        
-                    public NullableDateField(final String columnName, final PartialCriteria criteria) {
-                        super(columnName, criteria);
-                    }
-        
-                    public Criteria isNull() {
-                        sql = columnName + " IS NULL";
-                        return getCriteria();
-                    }
-        
-                    public Criteria isNotNull() {
-                        sql = columnName + " IS NOT NULL";
-                        return getCriteria();
-                    }
-                }
+            protected String sql;
+
+            public DateField(final String columnName, final PartialCriteria criteria) {
+                super(columnName, criteria);
+            }
+
+            public Criteria eq(final Date value) {
+                sql = columnName + "=" + value;
+                return getCriteria();
+            }
+
+            public Criteria gt(final Date value) {
+                sql = columnName + ">" + value;
+                return getCriteria();
+            }
+
+            public Criteria gte(final Date value) {
+                sql = columnName + ">=" + value;
+                return getCriteria();
+            }
+
+            public Criteria lt(final Date value) {
+                sql = columnName + "<" + value;
+                return getCriteria();
+            }
+
+            public Criteria lte(final Date value) {
+                sql = columnName + "<=" + value;
+                return getCriteria();
+            }
+
+            @Override
+            protected String asSql() {
+                return sql;
+            }
+        }
+
+        public class NullableDateField extends DateField {
+
+            public NullableDateField(final String columnName, final PartialCriteria criteria) {
+                super(columnName, criteria);
+            }
+
+            public Criteria isNull() {
+                sql = columnName + " IS NULL";
+                return getCriteria();
+            }
+
+            public Criteria isNotNull() {
+                sql = columnName + " IS NOT NULL";
+                return getCriteria();
+            }
+        }
     }
-
-
-
-
-
 
 }
 </#assign>

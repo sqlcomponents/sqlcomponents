@@ -1,5 +1,5 @@
 <#if tableType == 'TABLE' >
-	public int deleteById(${getPrimaryKeysAsParameterString()}) throws SQLException  {
+	public int delete(${getPrimaryKeysAsParameterString()}) throws SQLException  {
 		final String query = """
                 DELETE FROM ${tableName} 
 					WHERE

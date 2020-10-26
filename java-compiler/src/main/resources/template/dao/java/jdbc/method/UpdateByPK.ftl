@@ -1,6 +1,6 @@
 <#if tableType == 'TABLE' >
-    public int update(<#if getPrimaryKeysAsParameterString() == ""><#else>${getPrimaryKeysAsParameterString()},</#if>${name} ${name?uncap_first}) throws SQLException {
-final String query = """
+    public int update(${name} ${name?uncap_first}) throws SQLException {
+        final String query = """
 		UPDATE ${tableName} SET
         		<#assign index=0>
         		<#list properties as property>
@@ -33,7 +33,7 @@ final String query = """
         <#assign index=0>
         <#list properties as property>
             <#if property.primaryKeyIndex != 0>
-            <#if index == 0><#assign index=1><#else></#if>preparedStatement.set${getJDBCClassName(property.dataType)}(${column_index},${property.name});
+            <#if index == 0><#assign index=1><#else></#if>preparedStatement.set${getJDBCClassName(property.dataType)}(${column_index},${wrapGet(name?uncap_first,property)});
                                                           				<#assign column_index = column_index + 1>
             </#if>
         </#list>

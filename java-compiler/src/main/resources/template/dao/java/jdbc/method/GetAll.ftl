@@ -1,5 +1,5 @@
 <#assign a=addImportStatement(beanPackage+"."+name)><#assign a=addImportStatement("java.util.List")>
-    public List<${name}> findAll() throws SQLException {
+    public List<${name}> select() throws SQLException {
 		final String query = """
                 SELECT
 		<@columnSelection/> 
