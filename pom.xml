@@ -15,10 +15,7 @@
     </properties>
     <modules>
         <module>core</module>
-        <module>mysql-crawler</module>
-        <module>oracle-crawler</module>
-        <module>postgres-crawler</module>
-        <module>java-compiler</module>
+        <module>compiler</module>
     </modules>
 
     <dependencies>
@@ -35,18 +32,17 @@
             <version>2.2</version>
             <scope>test</scope>
         </dependency>
+
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.16</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M5</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
+
 
 </project>
