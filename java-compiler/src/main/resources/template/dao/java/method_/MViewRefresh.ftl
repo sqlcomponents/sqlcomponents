@@ -1,1 +1,0 @@
-<#include "signature/MViewRefresh.ftl">;

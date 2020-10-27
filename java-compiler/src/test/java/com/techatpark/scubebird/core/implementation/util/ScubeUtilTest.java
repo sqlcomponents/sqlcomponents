@@ -36,11 +36,11 @@ class ScubeUtilTest {
             daoProject.setUserName("moviedb");
             daoProject.setPassword("moviedb");
             daoProject.setSchemaName("moviedb");
-            daoProject.setTablePatterns(Arrays.asList("payment"));
+            // daoProject.setTablePatterns(Arrays.asList("movie"));
 
             daoProject.setOnline(true);
             daoProject.setBeanIdentifier("model");
-            daoProject.setDaoIdentifier("dao");
+            daoProject.setDaoIdentifier("store");
             daoProject.setDaoSuffix("");
             daoProject.setRootPackage("org.example");
             daoProject.setCleanSource(true);
@@ -54,13 +54,18 @@ class ScubeUtilTest {
 
         Application understand() {
 
-            daoProject.setMethodSpecification(Arrays.asList("DeleteByEntity", "DeleteByPK",
-                     "Without",
-                     "GetAll",
-                    "GetByEntity", "GetByPK", "GetByPKExceptHighest", "GetByPKUniqueKeys"
-                    ,"InsertByEntiy", "IsExisting", "MViewRefresh", "SaveByPK", "UpdateByEntiy"
+            daoProject.setMethodSpecification(Arrays.asList(
+                    "DeleteByEntity"
+                    , "DeleteByPK"
+                    , "GetAll"
+                    , "GetByEntity"
+                    , "GetByPK"
+                    , "GetByPKExceptHighest"
+                    , "GetByPKUniqueKeys"
+                    , "InsertByEntiy"
+                    , "IsExisting"
+                    , "MViewRefresh"
                     , "UpdateByPK"
-
             ));
             return this;
         }
@@ -74,7 +79,6 @@ class ScubeUtilTest {
             ScubeUtil.writeCode(daoProject);
             System.out.println("Granted !");
         }
-
 
     }
 }

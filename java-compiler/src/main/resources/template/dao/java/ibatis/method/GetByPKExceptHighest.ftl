@@ -1,8 +1,0 @@
-<#if highestPKIndex &gt; 1>
-
-<#include "/template/dao/java/method/signature/GetByPKExceptHighest.ftl"> {
-		HashMap<String,Object> map = new HashMap<String,Object>();
-		${getPrimaryKeysAsParameterStringNoTypeMapExceptHighest()}
-		return sqlSession.selectList("get${name}ByPkExceptHighest",map) ;
-	}<#assign a=addImportStatement("java.util.HashMap")>
-</#if>
