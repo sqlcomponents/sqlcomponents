@@ -3,6 +3,7 @@ package org.sqlcomponents.core.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.sqlcomponents.core.model.enumeration.Flag;
 
 import java.sql.Types;
 import java.util.SortedSet;
@@ -33,7 +34,7 @@ public class Column  {
     private String scopeSchema;
     private String scopeTable;
     private String sourceDataType;
-    private Boolean generatedColumn;
+    private Flag generatedColumn;
 
     private SortedSet<Key> exportedKeys;
 

@@ -2,6 +2,7 @@ package org.sqlcomponents.core.crawler;
 
 import org.sqlcomponents.core.exception.ScubeException;
 import org.sqlcomponents.core.model.*;
+import org.sqlcomponents.core.model.enumeration.Flag;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -113,8 +114,7 @@ public class Crawler {
 			column.setScopeSchema(columnResultset.getString("SCOPE_SCHEMA"));
 			column.setScopeTable(columnResultset.getString("SCOPE_TABLE"));
 			column.setSourceDataType(columnResultset.getString("SOURCE_DATA_TYPE"));
-			column.setGeneratedColumn(columnResultset.getString("IS_GENERATEDCOLUMN") != null
-					&& !columnResultset.getString("IS_GENERATEDCOLUMN").trim().equals(""));
+			column.setGeneratedColumn(Flag.value(columnResultset.getString("IS_GENERATEDCOLUMN")));
 
 			column.setExportedKeys(new TreeSet<>());
 
