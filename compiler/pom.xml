@@ -7,8 +7,8 @@
     <groupId>org.sqlcomponents</groupId>
     <artifactId>compiler</artifactId>
     <parent>
-        <groupId>com.techatpark</groupId>
-        <artifactId>scubebird</artifactId>
+        <groupId>org.sqlcomponents</groupId>
+        <artifactId>sqlcomponents</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
