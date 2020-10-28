@@ -1,9 +1,9 @@
 package org.sqlcomponents.core.model;
 
-import java.io.Serializable;
+
 import java.util.List;
 
-public class Service implements Serializable {
+public class Service  {
 
 	/**
 	 * 

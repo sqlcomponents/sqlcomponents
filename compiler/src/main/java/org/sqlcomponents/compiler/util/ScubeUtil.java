@@ -3,19 +3,19 @@ package org.sqlcomponents.compiler.util;
 import org.sqlcomponents.core.exception.ScubeException;
 import org.sqlcomponents.compiler.OrmImplementation;
 import org.sqlcomponents.compiler.specification.Specification;
-import org.sqlcomponents.core.model.DaoProject;
+import org.sqlcomponents.core.model.Application;
 
 import java.sql.SQLException;
 
 public class ScubeUtil {
 
 
-	public static void writeCode(DaoProject daoProject) throws ScubeException, SQLException {
+	public static void writeCode(Application application) throws ScubeException, SQLException {
 
-		if (daoProject.isCleanSource()) {
-			FileUtil.deleteDir(daoProject.getSrcFolder());
+		if (application.isCleanSource()) {
+			FileUtil.deleteDir(application.getSrcFolder());
 		}
-		Specification.getSpecification().writeSpecification(daoProject);
-		OrmImplementation.getImplementation().writeImplementation(daoProject);
+		Specification.getSpecification().writeSpecification(application);
+		OrmImplementation.getImplementation().writeImplementation(application);
 	}
 }

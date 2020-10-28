@@ -15,7 +15,7 @@ import java.util.List;
 public class JdbcImplementation extends OrmImplementation {
 
 	@Override
-	public void writeImplementation(DaoProject project) {
+	public void writeImplementation(Application project) {
 		ORM orm = project.getOrm();
 		ProcessedEntity processedEntity = new ProcessedEntity(orm,project);
 		for (Entity entity : orm.getEntities()) {
@@ -102,19 +102,19 @@ public class JdbcImplementation extends OrmImplementation {
 
 		private ORM orm;
 
-		private DaoProject ormDaoProject;
+		private Application ormApplication;
 
-		public DaoProject getOrmDaoProject() {
-			return ormDaoProject;
+		public Application getOrmDaoProject() {
+			return ormApplication;
 		}
 
-		public void setOrmDaoProject(final DaoProject ormDaoProject) {
-			this.ormDaoProject = ormDaoProject;
+		public void setOrmDaoProject(final Application ormApplication) {
+			this.ormApplication = ormApplication;
 		}
 
-		public ProcessedEntity(ORM orm, DaoProject ormDaoProject) {
+		public ProcessedEntity(ORM orm, Application ormApplication) {
 			setOrm(orm);
-			setOrmDaoProject(ormDaoProject);
+			setOrmDaoProject(ormApplication);
 		}
 
 		public ORM getOrm() {
@@ -222,11 +222,11 @@ public class JdbcImplementation extends OrmImplementation {
 		}
 
 		public String getDriverName() {
-			return ormDaoProject.getDriverName();
+			return ormApplication.getDriverName();
 		}
 
 		public void setDriverName(final String driverName) {
-			ormDaoProject.setDriverName(driverName);
+			ormApplication.setDriverName(driverName);
 		}
 		public String getSequenceName() {
 			return entity.getSequenceName();

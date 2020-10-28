@@ -1,7 +1,7 @@
 package org.sqlcomponents.compiler;
 
 import org.sqlcomponents.compiler.jdbc.JdbcImplementation;
-import org.sqlcomponents.core.model.DaoProject;
+import org.sqlcomponents.core.model.Application;
 
 import java.io.File;
 
@@ -11,7 +11,7 @@ public abstract class OrmImplementation {
 		return new JdbcImplementation();
 	}
 
-	public abstract void writeImplementation(DaoProject project);
+	public abstract void writeImplementation(Application project);
 
 	protected String getPackageAsFolder(String rootDir, String packageStr) {
 		char[] charArray = packageStr.toCharArray();

@@ -1,11 +1,11 @@
 package org.sqlcomponents.core.model;
 
 
-import java.io.Serializable;
+
 import java.util.HashMap;
 import java.util.List;
 
-public class ORM implements Serializable {
+public class ORM  {
 
 	/**
 	 * 
@@ -18,7 +18,7 @@ public class ORM implements Serializable {
 
 	private String schemaName;
 
-	private Schema schema;
+	private Database database;
 
 	private String url;
 	
@@ -140,12 +140,12 @@ public class ORM implements Serializable {
 		this.password = password;
 	}
 
-	public Schema getSchema() {
-		return schema;
+	public Database getSchema() {
+		return database;
 	}
 
-	public void setSchema(Schema schema) {
-		this.schema = schema;
+	public void setSchema(Database database) {
+		this.database = database;
 	}
 
 	public String getUrl() {

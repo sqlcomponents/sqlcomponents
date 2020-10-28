@@ -1,6 +1,5 @@
 package org.sqlcomponents.core.mapper;
 
-import org.sqlcomponents.core.constants.ApplicationConstants;
 import org.sqlcomponents.core.crawler.Crawler;
 import org.sqlcomponents.core.exception.ScubeException;
 import org.sqlcomponents.core.model.*;
@@ -12,8 +11,9 @@ import java.util.List;
 
 public abstract class Mapper {
 
+    String DB_WORD_SEPARATOR ="_";
 
-    public static ORM getOrm(DaoProject ormProject) throws ScubeException {
+    public static ORM getOrm(Application application) throws ScubeException {
         return null;
     }
 
@@ -23,60 +23,60 @@ public abstract class Mapper {
     public abstract String getValidDataType(String sqlType, int size,
                                             int precision);
 
-    public ORM getOrm(DaoProject ormProject, Crawler crawler) throws ScubeException {
+    public ORM getOrm(Application application, Crawler crawler) throws ScubeException {
 
-        ORM orm = ormProject.getOrm();
+        ORM orm = application.getOrm();
 
-        if (ormProject.getOrm().getSchema() == null || ormProject.isOnline()) {
-            Schema schema = crawler.getSchema();
-            ormProject.getOrm().setSchema(schema);
+        if (application.getOrm().getSchema() == null || application.isOnline()) {
+            Database database = crawler.getSchema();
+            application.getOrm().setSchema(database);
         }
 
-        orm.setEntities(getEntities(ormProject));
-        orm.setMethods(getMethods(ormProject));
-        orm.setServices(getServices(ormProject));
+        orm.setEntities(getEntities(application));
+        orm.setMethods(getMethods(application));
+        orm.setServices(getServices(application));
         return orm;
     }
 
-    private Method getMethod(Function function, DaoProject ormProject) {
+    private Method getMethod(Function function, Application application) {
         List<Property> properties = new ArrayList<Property>(function
                 .getParametes().size());
         Method method = new Method(function);
-        method.setName(getPropertyName(ormProject, function.getFunctionName()));
+        method.setName(getPropertyName(application, function.getFunctionName()));
 
         for (Column column : function.getParametes()) {
-            properties.add(getProperty(ormProject, column));
+            properties.add(getProperty(application, column));
         }
         method.setInputParameters(properties);
 
-        method.setOutputProperty(getProperty(ormProject, function.getOutput()));
+        method.setOutputProperty(getProperty(application, function.getOutput()));
         return method;
     }
 
-    private List<Method> getMethods(DaoProject ormProject) {
-        Schema schema = ormProject.getSchema();
+    private List<Method> getMethods(Application application) {
+        Database database = application.getSchema();
         ArrayList<Method> methods = new ArrayList<Method>();
-        if (schema.getFunctions() != null) {
-            for (Function function : schema.getFunctions()) {
-                methods.add(getMethod(function, ormProject));
+        if (database.getFunctions() != null) {
+            for (Function function : database.getFunctions()) {
+                methods.add(getMethod(function, application));
             }
         }
         return methods;
     }
 
-    private List<Service> getServices(DaoProject ormProject) {
+    private List<Service> getServices(Application application) {
         ArrayList<Service> services = new ArrayList<Service>();
-        if (ormProject
+        if (application
                 .getSchema().getPackages() != null) {
             Service service = null;
-            for (Package package1 : ormProject.getSchema().getPackages()) {
+            for (Package package1 : application.getSchema().getPackages()) {
                 service = new Service();
                 service.setPackage(package1);
-                service.setServiceName(getServiceName(ormProject, service.getName()));
-                service.setDaoPackage(getDaoPackage(ormProject, service.getName()));
+                service.setServiceName(getServiceName(application, service.getName()));
+                service.setDaoPackage(getDaoPackage(application, service.getName()));
                 service.setMethods(new ArrayList<Method>());
                 for (Function function : package1.getFunctions()) {
-                    service.getMethods().add(getMethod(function, ormProject));
+                    service.getMethods().add(getMethod(function, application));
                 }
                 services.add(service);
             }
@@ -85,14 +85,14 @@ public abstract class Mapper {
         return services;
     }
 
-    private Property getProperty(DaoProject ormProject, Column column) {
+    private Property getProperty(Application application, Column column) {
         if (column != null) {
             Property property = new Property(column);
             if (column.getColumnName() != null) {
-                property.setName(getPropertyName(ormProject, column
+                property.setName(getPropertyName(application, column
                         .getColumnName()));
             }
-            property.setUniqueConstraintGroup(getEntityName(ormProject,
+            property.setUniqueConstraintGroup(getEntityName(application,
                     property.getUniqueConstraintName()));
             property.setDataType(getValidDataType(property.getSqlDataType(),
                     property.getSize(), property.getDecimalDigits()));
@@ -102,31 +102,31 @@ public abstract class Mapper {
 
     }
 
-    private List<Entity> getEntities(DaoProject ormProject) {
+    private List<Entity> getEntities(Application application) {
 
-        Schema schema = ormProject.getSchema();
+        Database database = application.getSchema();
 
-        ArrayList<Entity> entities = new ArrayList<Entity>(schema.getTables()
+        ArrayList<Entity> entities = new ArrayList<Entity>(database.getTables()
                 .size());
 
         List<Property> properties;
         Entity entity;
 
-        for (Table table : schema.getTables()) {
+        for (Table table : database.getTables()) {
             entity = new Entity(table);
-            entity.setName(getEntityName(ormProject, table.getTableName()));
-            entity.setPluralName(getPluralName(ormProject, entity.getName()));
+            entity.setName(getEntityName(application, table.getTableName()));
+            entity.setPluralName(getPluralName(application, entity.getName()));
             entity
-                    .setDaoPackage(getDaoPackage(ormProject, table
+                    .setDaoPackage(getDaoPackage(application, table
                             .getTableName()));
-            entity.setBeanPackage(getBeanPackage(ormProject, table
+            entity.setBeanPackage(getBeanPackage(application, table
                     .getTableName()));
 
 
             properties = new ArrayList<Property>(table.getColumns().size());
 
             for (Column column : table.getColumns()) {
-                properties.add(getProperty(ormProject, column));
+                properties.add(getProperty(application, column));
             }
             entity.setProperties(properties);
             entities.add(entity);
@@ -134,11 +134,11 @@ public abstract class Mapper {
         return entities;
     }
 
-    private String getSequenceName(DaoProject ormProject, String entityName) {
-        List<String> sequences = ormProject.getSchema().getSequences();
+    private String getSequenceName(Application application, String entityName) {
+        List<String> sequences = application.getSchema().getSequences();
         if (sequences != null) {
             for (String sequence : sequences) {
-                if (entityName.equals(getEntityName(ormProject, sequence))) {
+                if (entityName.equals(getEntityName(application, sequence))) {
                     return sequence;
                 }
             }
@@ -147,14 +147,14 @@ public abstract class Mapper {
         return null;
     }
 
-    protected String getServiceName(DaoProject ormProject, String packageName) {
+    protected String getServiceName(Application application, String packageName) {
         if (packageName != null) {
             StringBuffer buffer = new StringBuffer();
             String[] relationalWords = packageName
-                    .split(ApplicationConstants.DB_WORD_SEPARATOR);
+                    .split(DB_WORD_SEPARATOR);
             int relationalWordsCount = relationalWords.length;
             for (int index = 0; index < relationalWordsCount; index++) {
-                buffer.append(toTileCase(getObjectOrientedWord(ormProject,
+                buffer.append(toTileCase(getObjectOrientedWord(application,
                         relationalWords[index])));
             }
             buffer.append("Service");
@@ -163,31 +163,31 @@ public abstract class Mapper {
         return null;
     }
 
-    protected String getEntityName(DaoProject ormProject, String tableName) {
+    protected String getEntityName(Application application, String tableName) {
         if (tableName != null) {
             StringBuffer buffer = new StringBuffer();
             String[] relationalWords = tableName
-                    .split(ApplicationConstants.DB_WORD_SEPARATOR);
+                    .split(DB_WORD_SEPARATOR);
             int relationalWordsCount = relationalWords.length;
             for (int index = 0; index < relationalWordsCount; index++) {
-                buffer.append(toTileCase(getObjectOrientedWord(ormProject,
+                buffer.append(toTileCase(getObjectOrientedWord(application,
                         relationalWords[index])));
             }
-            if (ormProject.getBeanSuffix() != null && ormProject.getBeanSuffix().trim().length() != 0) {
-                buffer.append(ormProject.getBeanSuffix().trim());
+            if (application.getBeanSuffix() != null && application.getBeanSuffix().trim().length() != 0) {
+                buffer.append(application.getBeanSuffix().trim());
             }
             return buffer.toString();
         }
         return null;
     }
 
-    protected String getObjectOrientedWord(DaoProject ormProject,
+    protected String getObjectOrientedWord(Application application,
                                            String relationalWord) {
         String objectOrientedWord = null;
-        if (ormProject.getWordsMap() != null) {
-            for (String relationalWordKey : ormProject.getWordsMap().keySet()) {
+        if (application.getWordsMap() != null) {
+            for (String relationalWordKey : application.getWordsMap().keySet()) {
                 if (relationalWord.equalsIgnoreCase(relationalWordKey)) {
-                    objectOrientedWord = ormProject.getWordsMap().get(
+                    objectOrientedWord = application.getWordsMap().get(
                             relationalWordKey);
                 }
 
@@ -197,9 +197,9 @@ public abstract class Mapper {
 
     }
 
-    protected String getPluralName(DaoProject ormProject, String entityName) {
+    protected String getPluralName(Application application, String entityName) {
         String pluralName = null;
-        HashMap<String, String> pluralMap = ormProject.getPluralMap();
+        HashMap<String, String> pluralMap = application.getPluralMap();
         String pluralValue;
         String capsEntityName = entityName.toUpperCase();
         if (pluralMap != null && pluralMap.size() != 0) {
@@ -221,16 +221,16 @@ public abstract class Mapper {
     }
 
 
-    private String getPackage(DaoProject ormProject, String tableName, String identifier) {
+    private String getPackage(Application application, String tableName, String identifier) {
         StringBuffer buffer = new StringBuffer();
 
-        if (ormProject.getRootPackage() != null) {
-            buffer.append(ormProject.getRootPackage());
+        if (application.getRootPackage() != null) {
+            buffer.append(application.getRootPackage());
         }
 
-        String moduleName = getModuleName(ormProject, tableName);
+        String moduleName = getModuleName(application, tableName);
 
-        if (ormProject.isModulesFirst()) {
+        if (application.isModulesFirst()) {
             if (moduleName != null &&
                     moduleName.trim().length() != 0) {
                 buffer.append(".");
@@ -256,19 +256,19 @@ public abstract class Mapper {
         return buffer.toString().toLowerCase();
     }
 
-    protected String getDaoPackage(DaoProject ormProject, String tableName) {
-        return getPackage(ormProject, tableName, ormProject.getDaoIdentifier());
+    protected String getDaoPackage(Application application, String tableName) {
+        return getPackage(application, tableName, application.getDaoIdentifier());
     }
 
-    protected String getBeanPackage(DaoProject ormProject, String tableName) {
-        return getPackage(ormProject, tableName, ormProject.getBeanIdentifier());
+    protected String getBeanPackage(Application application, String tableName) {
+        return getPackage(application, tableName, application.getBeanIdentifier());
     }
 
-    protected String getModuleName(DaoProject ormProject, String tableName) {
+    protected String getModuleName(Application application, String tableName) {
 
         String[] dbWords = tableName
-                .split(ApplicationConstants.DB_WORD_SEPARATOR);
-        HashMap<String, String> modulesMap = ormProject.getModulesMap();
+                .split(DB_WORD_SEPARATOR);
+        HashMap<String, String> modulesMap = application.getModulesMap();
         if (modulesMap != null) {
             for (String moduleKey : modulesMap.keySet()) {
                 for (int i = dbWords.length - 1; i >= 0; i--) {
@@ -283,17 +283,17 @@ public abstract class Mapper {
         return null;
     }
 
-    protected String getPropertyName(DaoProject ormProject, String columnName) {
+    protected String getPropertyName(Application application, String columnName) {
         StringBuffer buffer = new StringBuffer();
         String[] relationalWords = columnName
-                .split(ApplicationConstants.DB_WORD_SEPARATOR);
+                .split(DB_WORD_SEPARATOR);
         int relationalWordsCount = relationalWords.length;
         for (int index = 0; index < relationalWordsCount; index++) {
             if (index == 0) {
-                buffer.append(getObjectOrientedWord(ormProject,
+                buffer.append(getObjectOrientedWord(application,
                         relationalWords[index]).toLowerCase());
             } else {
-                buffer.append(toTileCase(getObjectOrientedWord(ormProject,
+                buffer.append(toTileCase(getObjectOrientedWord(application,
                         relationalWords[index])));
             }
         }

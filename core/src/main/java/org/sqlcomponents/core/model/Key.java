@@ -1,13 +1,6 @@
 package org.sqlcomponents.core.model;
 
-import java.io.Serializable;
-
-public class ForeignKey implements Serializable, Comparable<ForeignKey> {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class Key implements Comparable<Key> {
 
 	private String tableName;
 	private String columnName;
@@ -29,7 +22,7 @@ public class ForeignKey implements Serializable, Comparable<ForeignKey> {
 	}
 
 	@Override
-	public int compareTo(ForeignKey o) {
+	public int compareTo(Key o) {
 		return this.getTableName().compareTo(o.getTableName());
 	}
 

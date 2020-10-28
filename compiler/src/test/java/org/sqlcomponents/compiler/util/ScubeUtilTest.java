@@ -4,7 +4,6 @@ import org.sqlcomponents.core.crawler.Crawler;
 import org.sqlcomponents.core.exception.ScubeException;
 import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.mapper.java.JavaOrmMapper;
-import org.sqlcomponents.core.model.DaoProject;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -23,37 +22,37 @@ class ScubeUtilTest {
 
     class Application {
 
-        private final DaoProject daoProject ;
+        private final org.sqlcomponents.core.model.Application application;
 
         Application() {
-            this.daoProject = new DaoProject();
+            this.application = new org.sqlcomponents.core.model.Application();
         }
 
         Application connectToPostgress() throws SQLException, ScubeException {
-            daoProject.setName("Movie");
-            daoProject.setUrl("jdbc:postgresql://localhost:5432/moviedb");
-            daoProject.setUserName("moviedb");
-            daoProject.setPassword("moviedb");
-            daoProject.setSchemaName("moviedb");
+            application.setName("Movie");
+            application.setUrl("jdbc:postgresql://localhost:5432/moviedb");
+            application.setUserName("moviedb");
+            application.setPassword("moviedb");
+            application.setSchemaName("moviedb");
             // daoProject.setTablePatterns(Arrays.asList("movie"));
 
-            daoProject.setOnline(true);
-            daoProject.setBeanIdentifier("model");
-            daoProject.setDaoIdentifier("store");
-            daoProject.setDaoSuffix("");
-            daoProject.setRootPackage("org.example");
-            daoProject.setCleanSource(true);
+            application.setOnline(true);
+            application.setBeanIdentifier("model");
+            application.setDaoIdentifier("store");
+            application.setDaoSuffix("");
+            application.setRootPackage("org.example");
+            application.setCleanSource(true);
 
 
-            Crawler crawler = new Crawler(daoProject);
+            Crawler crawler = new Crawler(application);
             Mapper mapper = new JavaOrmMapper();
-            daoProject.setOrm(mapper.getOrm(daoProject,crawler));
+            application.setOrm(mapper.getOrm(application,crawler));
             return this;
         }
 
         Application understand() {
 
-            daoProject.setMethodSpecification(Arrays.asList(
+            application.setMethodSpecification(Arrays.asList(
                     "DeleteByEntity"
                     , "DeleteByPK"
                     , "GetAll"
@@ -78,8 +77,8 @@ class ScubeUtilTest {
             if(sourceCodeFolder == null) {
                 throw new IllegalArgumentException("Set Environment Variable JDBC_CODE_FOLDER");
             }
-            daoProject.setSrcFolder(sourceCodeFolder);
-            ScubeUtil.writeCode(daoProject);
+            application.setSrcFolder(sourceCodeFolder);
+            ScubeUtil.writeCode(application);
             System.out.println("Granted !");
         }
 

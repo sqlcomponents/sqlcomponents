@@ -1,9 +1,8 @@
 package org.sqlcomponents.core.model;
 
-import java.io.Serializable;
-import java.util.List;
+import java.util.SortedSet;
 
-public class Property implements Serializable {
+public class Property  {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -107,14 +106,12 @@ public class Property implements Serializable {
 		column.setPrimaryKeyIndex(primaryKeyIndex);
 	}
 
-
-
-	public List<ForeignKey> getForeignKeys() {
-		return column.getForeignKeys();
+	public SortedSet<Key> getExportedKeys() {
+		return column.getExportedKeys();
 	}
 
-	public void setForeignKeys(List<ForeignKey> foreignKeys) {
-		column.setForeignKeys(foreignKeys);
+	public void setExportedKeys(SortedSet<Key> keys) {
+		column.setExportedKeys(keys);
 	}
 
 	public void setRemarks(String remarks) {

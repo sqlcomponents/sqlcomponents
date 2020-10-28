@@ -1,7 +1,7 @@
 package org.sqlcomponents.compiler.specification;
 
 import org.sqlcomponents.compiler.specification.java.JavaSpecification;
-import org.sqlcomponents.core.model.DaoProject;
+import org.sqlcomponents.core.model.Application;
 
 import java.io.File;
 
@@ -12,7 +12,7 @@ public abstract class Specification {
 		return new JavaSpecification() ;
 	}
 	
-	public abstract void writeSpecification(DaoProject project) ;
+	public abstract void writeSpecification(Application project) ;
 
 	
 	protected String getPackageAsFolder(String rootDir, String packageStr) {

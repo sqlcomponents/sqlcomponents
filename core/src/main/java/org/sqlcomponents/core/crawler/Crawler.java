@@ -6,35 +6,35 @@ import org.sqlcomponents.core.model.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 public class Crawler {
 
-	protected final DaoProject ormProject;
+	private final Application application;
 
-	public Crawler(final DaoProject ormProject) throws SQLException {
-		this.ormProject = ormProject;
+	public Crawler(final Application application) throws SQLException {
+		this.application = application;
 		Connection connection = getConnection();
 		DatabaseMetaData databasemetadata = connection.getMetaData();
-		ormProject.setDriverName(databasemetadata.getDriverName());
+		application.setDriverName(databasemetadata.getDriverName());
 	}
 
 	private Connection getConnection() throws SQLException {
-		return DriverManager.getConnection(ormProject.getUrl(), ormProject
-				.getUserName(), ormProject.getPassword());
+		return DriverManager.getConnection(application.getUrl(), application
+				.getUserName(), application.getPassword());
 	}
 
-
-	public Schema getSchema() throws ScubeException {
-		Schema schema = new Schema();
+	public Database getSchema() throws ScubeException {
+		Database database = new Database();
 		try {
 			Connection connection = getConnection();
 			DatabaseMetaData databasemetadata = connection.getMetaData();
-			schema.setSequences(getSequences(databasemetadata));
-			schema.setTables(getTables(databasemetadata,schema));
+			database.setSequences(getSequences(databasemetadata));
+			database.setTables(getTables(databasemetadata, database));
 		} catch (SQLException e) {
 			throw new ScubeException(e);
 		}
-		return schema;
+		return database;
 	}
 
 	private List<String> getSequences(DatabaseMetaData databasemetadata) throws SQLException {
@@ -49,7 +49,7 @@ public class Crawler {
 		return sequences;
 	}
 
-	private List<Table> getTables(DatabaseMetaData databasemetadata, Schema schema) throws SQLException {
+	private List<Table> getTables(DatabaseMetaData databasemetadata, Database database) throws SQLException {
 		List<Table> tables = new ArrayList<>();
 
 		ResultSet resultset = databasemetadata.getTables(null, null, null, new String[]{"TABLE"});
@@ -72,7 +72,7 @@ public class Crawler {
 				table.setColumns(getColumns(table));
 
 				// Set Sequence
-				schema.getSequences()
+				database.getSequences()
 						.stream()
 						.filter(sequenceName->sequenceName.contains(tableName))
 						.findFirst()
@@ -91,6 +91,7 @@ public class Crawler {
 		Connection connection = getConnection();
 		DatabaseMetaData databasemetadata = connection.getMetaData();
 		ResultSet columnResultset = databasemetadata.getColumns(null, null, table.getTableName(), null);
+
 		while (columnResultset.next()) {
 			Column column = new Column();
 			column.setColumnName(columnResultset.getString("COLUMN_NAME"));
@@ -113,7 +114,9 @@ public class Crawler {
 			column.setSourceDataType(columnResultset.getString("SOURCE_DATA_TYPE"));
 			column.setGeneratedColumn(columnResultset.getString("IS_GENERATEDCOLUMN") != null
 					&& !columnResultset.getString("IS_GENERATEDCOLUMN").trim().equals(""));
-			column.setForeignKeys(new ArrayList<>());
+
+			column.setExportedKeys(new TreeSet<>());
+
 			columns.add(column);
 		}
 
@@ -133,26 +136,22 @@ public class Crawler {
 		ResultSet foreignKeysResultSet = databasemetadata.getExportedKeys(null, null, table.getTableName());
 
 		while (foreignKeysResultSet.next()) {
-
-			ForeignKey foreignKey = new ForeignKey();
-			foreignKey.setTableName(foreignKeysResultSet.getString("FKTABLE_NAME"));
-			foreignKey.setColumnName(foreignKeysResultSet.getString("FKCOLUMN_NAME"));
+			Key key = new Key();
+			key.setTableName(foreignKeysResultSet.getString("FKTABLE_NAME"));
+			key.setColumnName(foreignKeysResultSet.getString("FKCOLUMN_NAME"));
 			columns.stream().filter(column -> {
 				try {
 					return column.getColumnName().equals(foreignKeysResultSet.getString("PKCOLUMN_NAME"));
 				} catch (SQLException throwables) {
 					return false;
 				}
-			}).findFirst().get().getForeignKeys().add(foreignKey);
-			//System.out.println(fk.getString("PKTABLE_NAME") + "---" + fk.getString("PKCOLUMN_NAME") + "===" + fk.getString("FKTABLE_NAME") + "---" + fk.getString("FKCOLUMN_NAME"));
+			}).findFirst().get().getExportedKeys().add(key);
 		}
-
-
 		return columns;
 	}
 
 	private boolean shouldConsiderThisTable(final String tableName) {
-		return ormProject.getTablePatterns() == null || this.ormProject.getTablePatterns().stream().anyMatch(pattern -> {
+		return application.getTablePatterns() == null || this.application.getTablePatterns().stream().anyMatch(pattern -> {
 			return tableName.matches(pattern);
 		});
 	}

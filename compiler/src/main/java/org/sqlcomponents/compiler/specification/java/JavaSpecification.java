@@ -15,7 +15,7 @@ import java.util.List;
 public class JavaSpecification extends Specification {
 
 	@Override
-	public void writeSpecification(DaoProject project) {
+	public void writeSpecification(Application project) {
 		ORM orm = project.getOrm();
 		ProcessedEntity processedEntity = new ProcessedEntity(orm);
 		for (Entity entity : orm.getEntities()) {
@@ -172,11 +172,11 @@ public class JavaSpecification extends Specification {
 			List<String> uniqueForignTableNames = new ArrayList<String>();
 
 			for (Property property : getProperties()) {
-				for (ForeignKey foreignKey : property.getColumn()
-						.getForeignKeys()) {
-					if (!uniqueForignTableNames.contains(foreignKey
+				for (Key key : property.getColumn()
+						.getExportedKeys()) {
+					if (!uniqueForignTableNames.contains(key
 							.getTableName())) {
-						uniqueForignTableNames.add(foreignKey.getTableName());
+						uniqueForignTableNames.add(key.getTableName());
 					}
 				}
 			}
@@ -192,9 +192,9 @@ public class JavaSpecification extends Specification {
 			processedForignKey.setProcessedEntity(new ProcessedEntity(orm));
 			List<Property> propertiesList = new ArrayList<Property>();
 			for (Property property : getProperties()) {
-				for (ForeignKey foreignKey : property.getColumn()
-						.getForeignKeys()) {
-					if (foreignKey.getTableName().equals(tableName)) {
+				for (Key key : property.getColumn()
+						.getExportedKeys()) {
+					if (key.getTableName().equals(tableName)) {
 						if (!propertiesList.contains(property)) {
 							propertiesList.add(property);
 						}

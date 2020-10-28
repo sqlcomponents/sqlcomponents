@@ -1,10 +1,10 @@
 package org.sqlcomponents.core.model;
 
-import java.io.Serializable;
+
 import java.util.HashMap;
 import java.util.List;
 
-public class DaoProject implements Serializable {
+public class Application {
 
 	/**
 	 * 
@@ -81,7 +81,7 @@ public class DaoProject implements Serializable {
 
 	private ORM orm;
 
-	public DaoProject() {
+	public Application() {
 		setOrm(new ORM());
 	}
 
@@ -177,7 +177,7 @@ public class DaoProject implements Serializable {
 		return orm.getPassword();
 	}
 
-	public Schema getSchema() {
+	public Database getSchema() {
 		return orm.getSchema();
 	}
 
@@ -217,8 +217,8 @@ public class DaoProject implements Serializable {
 		orm.setPassword(password);
 	}
 
-	public void setSchema(Schema schema) {
-		orm.setSchema(schema);
+	public void setSchema(Database database) {
+		orm.setSchema(database);
 	}
 
 	public void setUpdateMap(HashMap<String, String> updateMap) {

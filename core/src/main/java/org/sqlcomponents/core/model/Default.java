@@ -1,12 +1,12 @@
 package org.sqlcomponents.core.model;
 
-import java.io.Serializable;
+
 
 /**
  * @author photoninfotech
  * 
  */
-public class Default implements Serializable {
+public class Default  {
 
 	/**
 	 * 
