@@ -22,7 +22,6 @@ public class JdbcImplementation extends OrmImplementation {
 			try {
 				processedEntity.setEntity(entity);
 				writeDaoImplementation(processedEntity, project.getSrcFolder(),project.getDaoSuffix());
-
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

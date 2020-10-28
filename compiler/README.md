@@ -5,5 +5,6 @@ This is Java Compiler
 1. Native High Performance JDBC Code
 2. Type Safe Query Builders
 3. Fluent API
-4. Documented API
-5. Validation Builtin
+4. Optimized Data Type Mapping
+5. Documented API
+6. Validation Builtin

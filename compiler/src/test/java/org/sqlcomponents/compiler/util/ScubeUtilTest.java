@@ -2,8 +2,8 @@ package org.sqlcomponents.compiler.util;
 
 import org.sqlcomponents.core.crawler.Crawler;
 import org.sqlcomponents.core.exception.ScubeException;
-import org.sqlcomponents.compiler.mapper.Mapper;
-import org.sqlcomponents.compiler.mapper.java.JavaOrmMapper;
+import org.sqlcomponents.core.mapper.Mapper;
+import org.sqlcomponents.core.mapper.java.JavaOrmMapper;
 import org.sqlcomponents.core.model.DaoProject;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +26,7 @@ class ScubeUtilTest {
         private final DaoProject daoProject ;
 
         Application() {
-            this.daoProject = new DaoProject();;
+            this.daoProject = new DaoProject();
         }
 
         Application connectToPostgress() throws SQLException, ScubeException {
@@ -74,7 +74,11 @@ class ScubeUtilTest {
         }
 
         void writeCode() throws SQLException, ScubeException {
-            daoProject.setSrcFolder(System.getenv("JDBC_CODE_FOLDER"));
+            String sourceCodeFolder = System.getenv("JDBC_CODE_FOLDER");
+            if(sourceCodeFolder == null) {
+                throw new IllegalArgumentException("Set Environment Variable JDBC_CODE_FOLDER");
+            }
+            daoProject.setSrcFolder(sourceCodeFolder);
             ScubeUtil.writeCode(daoProject);
             System.out.println("Granted !");
         }

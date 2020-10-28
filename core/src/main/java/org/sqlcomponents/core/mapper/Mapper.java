@@ -1,4 +1,4 @@
-package org.sqlcomponents.compiler.mapper;
+package org.sqlcomponents.core.mapper;
 
 import org.sqlcomponents.core.constants.ApplicationConstants;
 import org.sqlcomponents.core.crawler.Crawler;

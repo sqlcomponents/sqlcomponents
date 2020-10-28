@@ -1,6 +1,6 @@
-package org.sqlcomponents.compiler.mapper.java;
+package org.sqlcomponents.core.mapper.java;
 
-import org.sqlcomponents.compiler.mapper.Mapper;
+import org.sqlcomponents.core.mapper.Mapper;
 
 public class JavaOrmMapper extends Mapper {
 
