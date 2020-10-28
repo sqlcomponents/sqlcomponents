@@ -70,8 +70,8 @@ public class Property  {
 		return column.getSize();
 	}
 
-	public String getSqlDataType() {
-		return column.getSqlDataType();
+	public String getTypeName() {
+		return column.getTypeName();
 	}
 
 	public String getTableName() {
@@ -122,8 +122,8 @@ public class Property  {
 		column.setSize(size);
 	}
 
-	public void setSqlDataType(String sqlDataType) {
-		column.setSqlDataType(sqlDataType);
+	public void setTypeName(String sqlDataType) {
+		column.setTypeName(sqlDataType);
 	}
 
 	public void setTableName(String tableName) {

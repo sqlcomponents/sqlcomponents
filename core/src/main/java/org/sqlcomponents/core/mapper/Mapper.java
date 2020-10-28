@@ -94,7 +94,7 @@ public abstract class Mapper {
             }
             property.setUniqueConstraintGroup(getEntityName(application,
                     property.getUniqueConstraintName()));
-            property.setDataType(getValidDataType(property.getSqlDataType(),
+            property.setDataType(getValidDataType(property.getTypeName(),
                     property.getSize(), property.getDecimalDigits()));
             return property;
         }

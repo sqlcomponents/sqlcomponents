@@ -4,6 +4,7 @@ package org.sqlcomponents.core.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Types;
 import java.util.SortedSet;
 
 @Setter
@@ -12,7 +13,6 @@ public class Column  {
 
     private String columnName;
     private String tableName;
-    private String sqlDataType;
     private int size;
     private int decimalDigits;
     private String remarks;
@@ -24,6 +24,7 @@ public class Column  {
     private String tableCategory;
     private String tableSchema;
     private String typeName;
+    private int types;
     private int bufferLength;
     private int numberPrecisionRadix;
     private String columnDefinition;
