@@ -25,7 +25,7 @@ public class Crawler {
 				.getUserName(), application.getPassword());
 	}
 
-	public Database getSchema() throws ScubeException {
+	public Database getDatabase() throws ScubeException {
 		Database database = new Database();
 		try {
 			Connection connection = getConnection();
