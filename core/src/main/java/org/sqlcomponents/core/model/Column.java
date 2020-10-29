@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.sqlcomponents.core.model.enumeration.Flag;
 
-import java.sql.Types;
 import java.util.SortedSet;
 
 @Setter
@@ -38,5 +37,9 @@ public class Column  {
 
     private SortedSet<Key> exportedKeys;
 
+    private final Table table;
 
+    public Column(final Table table) {
+        this.table = table;
+    }
 }

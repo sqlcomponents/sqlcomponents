@@ -58,7 +58,7 @@ public class Crawler {
 		while (resultset.next()) {
 			final String tableName = resultset.getString("table_name");
 			if (shouldConsiderThisTable(tableName)) {
-				Table table = new Table();
+				Table table = new Table(database);
 				table.setTableName(tableName);
 				table.setCategoryName(resultset.getString("table_cat"));
 				table.setSchemaName(resultset.getString("table_schem"));
@@ -94,7 +94,7 @@ public class Crawler {
 		ResultSet columnResultset = databasemetadata.getColumns(null, null, table.getTableName(), null);
 
 		while (columnResultset.next()) {
-			Column column = new Column();
+			Column column = new Column(table);
 			column.setColumnName(columnResultset.getString("COLUMN_NAME"));
 			column.setTableName(columnResultset.getString("TABLE_NAME"));
 			column.setTypeName(columnResultset.getString("TYPE_NAME"));

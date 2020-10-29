@@ -32,6 +32,11 @@ public class Table  {
     private String referenceGeneration;
     private List<Column> columns;
 
+    private final Database database;
+
+    public Table(final Database database) {
+        this.database = database;
+    }
 
 
 }
