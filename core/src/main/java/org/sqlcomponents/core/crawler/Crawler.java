@@ -32,11 +32,13 @@ public class Crawler {
 			DatabaseMetaData databasemetadata = connection.getMetaData();
 			database.setSequences(getSequences(databasemetadata));
 			database.setTables(getTables(databasemetadata, database));
+			database.setFunctions(getProcedures(databasemetadata));
 		} catch (SQLException e) {
 			throw new ScubeException(e);
 		}
 		return database;
 	}
+
 
 	private List<String> getSequences(DatabaseMetaData databasemetadata) throws SQLException {
 		List<String> sequences = new ArrayList<>();
@@ -155,5 +157,25 @@ public class Crawler {
 		return application.getTablePatterns() == null || this.application.getTablePatterns().stream().anyMatch(pattern -> {
 			return tableName.matches(pattern);
 		});
+	}
+
+	private List<Function> getProcedures(DatabaseMetaData databasemetadata) throws SQLException {
+
+		List<Function> functions = new ArrayList<>();
+
+		ResultSet functionResultset = databasemetadata.getProcedures(null, null, null);
+		System.out.println(functionResultset.getMetaData().getColumnCount());
+		while (functionResultset.next()) {
+			Function function = new Function();
+			function.setFunctionName(functionResultset.getString("PROCEDURE_NAME"));
+			function.setFunctionCategory(functionResultset.getString("PROCEDURE_CAT"));
+			function.setFunctionSchema(functionResultset.getString("PROCEDURE_SCHEM"));
+			function.setFunctionType(functionResultset.getShort("PROCEDURE_TYPE"));
+			function.setRemarks(functionResultset.getString("REMARKS"));
+			function.setSpecificName(functionResultset.getString("SPECIFIC_NAME"));
+			functions.add(function);
+		}
+		System.out.println("procedures");
+		return functions;
 	}
 }

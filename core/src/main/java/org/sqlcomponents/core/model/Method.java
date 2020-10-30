@@ -79,8 +79,8 @@ public class Method  {
 
 
 
-	public List<Column> getParametes() {
-		return function.getParametes();
+	public List<Column> getParameters() {
+		return function.getParameters();
 	}
 
 	public void setOutput(Column output) {
@@ -90,7 +90,7 @@ public class Method  {
 
 
 	public void setParametes(List<Column> parametes) {
-		function.setParametes(parametes);
+		function.setParameters(parametes);
 	}
 	
 	@Override

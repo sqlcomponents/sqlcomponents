@@ -40,11 +40,11 @@ public abstract class Mapper {
 
     private Method getMethod(Function function, Application application) {
         List<Property> properties = new ArrayList<Property>(function
-                .getParametes().size());
+                .getParameters().size());
         Method method = new Method(function);
         method.setName(getPropertyName(application, function.getFunctionName()));
 
-        for (Column column : function.getParametes()) {
+        for (Column column : function.getParameters()) {
             properties.add(getProperty(application, column));
         }
         method.setInputParameters(properties);
