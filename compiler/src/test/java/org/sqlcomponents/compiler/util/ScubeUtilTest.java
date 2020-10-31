@@ -6,6 +6,7 @@ import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.mapper.java.JavaOrmMapper;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.Arrays;
 
@@ -73,11 +74,8 @@ class ScubeUtilTest {
         }
 
         void writeCode() throws SQLException, ScubeException {
-            String sourceCodeFolder = System.getenv("JDBC_CODE_FOLDER");
-            if(sourceCodeFolder == null) {
-                throw new IllegalArgumentException("Set Environment Variable JDBC_CODE_FOLDER");
-            }
-            application.setSrcFolder(sourceCodeFolder);
+            application.setSrcFolder("../java-test/target/generated-sources/movie-db");
+            System.out.println(new File("../java-test/target/generated-sources/movie-db").getAbsolutePath());
             ScubeUtil.writeCode(application);
             System.out.println("Granted !");
         }

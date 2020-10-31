@@ -6,6 +6,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.sqlcomponents.core.model.*;
 import org.sqlcomponents.core.model.relational.Table;
+import org.sqlcomponents.core.model.relational.enumeration.TableType;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -174,7 +175,7 @@ public class JdbcImplementation extends OrmImplementation {
 			return entity.getTable().getTableName();
 		}
 
-		public String getTableType() {
+		public TableType getTableType() {
 			return entity.getTable().getTableType();
 		}
 
@@ -218,7 +219,7 @@ public class JdbcImplementation extends OrmImplementation {
 			entity.getTable().setTableName(tableName);
 		}
 
-		public void setTableType(String type) {
+		public void setTableType(TableType type) {
 			entity.getTable().setTableType(type);
 		}
 

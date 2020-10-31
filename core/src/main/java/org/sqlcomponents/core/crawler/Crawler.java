@@ -53,6 +53,7 @@ public class Crawler {
 			final String tableName = resultset.getString("table_name");
 
 				Table table = new Table(database);
+			table.setTableType(TableType.TABLE);
 				table.setTableName(tableName);
 				table.setCategoryName(resultset.getString("table_cat"));
 				table.setSchemaName(resultset.getString("table_schem"));
