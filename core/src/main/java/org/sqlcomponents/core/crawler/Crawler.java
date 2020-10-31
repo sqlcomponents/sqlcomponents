@@ -159,14 +159,14 @@ public class Crawler {
 		});
 	}
 
-	private List<Function> getProcedures(DatabaseMetaData databasemetadata) throws SQLException {
+	private List<Procedure> getProcedures(DatabaseMetaData databasemetadata) throws SQLException {
 
-		List<Function> functions = new ArrayList<>();
+		List<Procedure> functions = new ArrayList<>();
 
 		ResultSet functionResultset = databasemetadata.getProcedures(null, null, null);
 		System.out.println(functionResultset.getMetaData().getColumnCount());
 		while (functionResultset.next()) {
-			Function function = new Function();
+			Procedure function = new Procedure();
 			function.setFunctionName(functionResultset.getString("PROCEDURE_NAME"));
 			function.setFunctionCategory(functionResultset.getString("PROCEDURE_CAT"));
 			function.setFunctionSchema(functionResultset.getString("PROCEDURE_SCHEM"));

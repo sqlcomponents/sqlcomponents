@@ -38,7 +38,7 @@ public abstract class Mapper {
         return orm;
     }
 
-    private Method getMethod(Function function, Application application) {
+    private Method getMethod(Procedure function, Application application) {
         List<Property> properties = new ArrayList<Property>(function
                 .getParameters().size());
         Method method = new Method(function);
@@ -57,7 +57,7 @@ public abstract class Mapper {
         Database database = application.getSchema();
         ArrayList<Method> methods = new ArrayList<Method>();
         if (database.getFunctions() != null) {
-            for (Function function : database.getFunctions()) {
+            for (Procedure function : database.getFunctions()) {
                 methods.add(getMethod(function, application));
             }
         }
@@ -75,7 +75,7 @@ public abstract class Mapper {
                 service.setServiceName(getServiceName(application, service.getName()));
                 service.setDaoPackage(getDaoPackage(application, service.getName()));
                 service.setMethods(new ArrayList<Method>());
-                for (Function function : package1.getFunctions()) {
+                for (Procedure function : package1.getFunctions()) {
                     service.getMethods().add(getMethod(function, application));
                 }
                 services.add(service);

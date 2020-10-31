@@ -25,7 +25,7 @@ public class Method  {
 
 	private Property outputProperty;
 
-	private Function function;
+	private Procedure function;
 	
 	public String getRemarks() {
 		return function.getRemarks();
@@ -35,7 +35,7 @@ public class Method  {
 		function.setRemarks(remarks);
 	}
 
-	public Method(Function function) {
+	public Method(Procedure function) {
 		setFunction(function) ;
 	}
 
@@ -65,11 +65,11 @@ public class Method  {
 		this.outputProperty = outputProperty;
 	}
 
-	public Function getFunction() {
+	public Procedure getFunction() {
 		return function;
 	}
 
-	public void setFunction(Function function) {
+	public void setFunction(Procedure function) {
 		this.function = function;
 	}
 

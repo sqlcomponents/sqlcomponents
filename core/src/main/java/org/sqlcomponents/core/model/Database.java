@@ -11,7 +11,7 @@ import java.util.List;
 public class Database {
 
     private List<Table> tables;
-    private List<Function> functions;
+    private List<Procedure> functions;
     private List<Package> packages;
     private List<String> sequences;
     private String catalogTerm;

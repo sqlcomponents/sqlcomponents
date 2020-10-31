@@ -46,7 +46,7 @@ public class Service  {
 		this.dbPackage = dbPackage;
 	}
 
-	public List<Function> getFunctions() {
+	public List<Procedure> getFunctions() {
 		return dbPackage.getFunctions();
 	}
 
@@ -58,7 +58,7 @@ public class Service  {
 		return dbPackage.getRemarks();
 	}
 
-	public void setFunctions(List<Function> functions) {
+	public void setFunctions(List<Procedure> functions) {
 		dbPackage.setFunctions(functions);
 	}
 

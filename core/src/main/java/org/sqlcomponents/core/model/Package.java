@@ -12,13 +12,13 @@ public class Package  {
 
 	private String name;
 	private String remarks;
-	private List<Function> functions;
+	private List<Procedure> functions;
 
-	public List<Function> getFunctions() {
+	public List<Procedure> getFunctions() {
 		return functions;
 	}
 
-	public void setFunctions(List<Function> functions) {
+	public void setFunctions(List<Procedure> functions) {
 		this.functions = functions;
 	}
 
