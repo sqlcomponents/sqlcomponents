@@ -4,6 +4,7 @@ import org.sqlcomponents.core.exception.ScubeException;
 import org.sqlcomponents.core.model.*;
 import org.sqlcomponents.core.model.relational.enumeration.Flag;
 import org.sqlcomponents.core.model.relational.*;
+import org.sqlcomponents.core.model.relational.enumeration.TableType;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -21,6 +22,9 @@ public class Crawler {
 			database.setSequences(getSequences(databasemetadata));
 			database.setTables(getTables(databasemetadata, database));
 			database.setFunctions(getProcedures(databasemetadata));
+			database.setCatalogTerm(databasemetadata.getCatalogTerm());
+			database.setCatalogSeperator(databasemetadata.getCatalogSeparator());
+			database.setDatabaseProductName(databasemetadata.getDatabaseProductName());
 		} catch (SQLException e) {
 			throw new ScubeException(e);
 		}
@@ -52,7 +56,7 @@ public class Crawler {
 				table.setTableName(tableName);
 				table.setCategoryName(resultset.getString("table_cat"));
 				table.setSchemaName(resultset.getString("table_schem"));
-				table.setTableType(resultset.getString("table_type"));
+//				table.setTableType(TableType.value(resultset.getString("table_type")));
 				table.setRemarks(resultset.getString("remarks"));
 				table.setCategoryType(resultset.getString("type_cat"));
 				table.setSchemaType(resultset.getString("type_schem"));
