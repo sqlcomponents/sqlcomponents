@@ -7,6 +7,7 @@ import freemarker.template.TemplateException;
 import org.sqlcomponents.core.model.*;
 import org.sqlcomponents.core.model.relational.Key;
 import org.sqlcomponents.core.model.relational.Table;
+import org.sqlcomponents.core.model.relational.enumeration.TableType;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -263,7 +264,7 @@ public class JavaSpecification extends Specification {
 			return entity.getTable().getTableName();
 		}
 
-		public String getTableType() {
+		public TableType getTableType() {
 			return entity.getTable().getTableType();
 		}
 
@@ -307,7 +308,7 @@ public class JavaSpecification extends Specification {
 			entity.getTable().setTableName(tableName);
 		}
 
-		public void setTableType(String type) {
+		public void setTableType(TableType type) {
 			entity.getTable().setTableType(type);
 		}
 
