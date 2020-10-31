@@ -2,6 +2,7 @@ package org.sqlcomponents.core.model.relational;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.sqlcomponents.core.model.relational.enumeration.TableType;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class Table  {
 
     private String schemaName;
 
-    private String tableType;
+    private TableType tableType;
 
     private String remarks;
 

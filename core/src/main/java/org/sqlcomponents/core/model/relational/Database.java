@@ -3,8 +3,10 @@ package org.sqlcomponents.core.model.relational;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.sqlcomponents.core.model.relational.enumeration.TableType;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -14,6 +16,10 @@ public class Database {
     private List<Procedure> functions;
     private List<Package> packages;
     private List<String> sequences;
+
+
+    private Set<TableType> tableTypes;
+
     private String catalogTerm;
     private String catalogSeperator;
     private String databaseProductName;
