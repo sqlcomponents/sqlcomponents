@@ -26,11 +26,11 @@ public class Database {
     private int databaseMajorVersion;
     private int databaseMinorVersion;
     private String databaseProductVersion;
-    private int defaultTransactionIssolation;
+    private int defaultTransactionIsolation;
     private int driverMajorVersion;
     private int driverMinorVersion;
     private String driverName;
-    private int driverVersion;
+    private String driverVersion;
     private String extraNameCharacters;
     private String identifierQuoteString;
     private int jdbcMajorVersion;
@@ -67,7 +67,6 @@ public class Database {
     private String stringFunctions;
     private String systemFunctions;
     private String timeDateFunctions;
-    private int defaultTransactionIsolation;
     private boolean supportsTransactions;
     private boolean supportsTransactionIsolationLevel;
     private boolean supportsDataDefinitionAndDataManipulationTransactions;
