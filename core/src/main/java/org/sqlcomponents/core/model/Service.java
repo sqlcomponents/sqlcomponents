@@ -1,6 +1,9 @@
 package org.sqlcomponents.core.model;
 
 
+import org.sqlcomponents.core.model.relational.Package;
+import org.sqlcomponents.core.model.relational.Procedure;
+
 import java.util.List;
 
 public class Service  {

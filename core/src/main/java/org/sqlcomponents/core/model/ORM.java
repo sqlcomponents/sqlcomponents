@@ -2,6 +2,8 @@ package org.sqlcomponents.core.model;
 
 
 
+import org.sqlcomponents.core.model.relational.Database;
+
 import java.util.HashMap;
 import java.util.List;
 

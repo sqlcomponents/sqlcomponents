@@ -1,4 +1,4 @@
-package org.sqlcomponents.core.model;
+package org.sqlcomponents.core.model.relational;
 
 
 import lombok.Getter;

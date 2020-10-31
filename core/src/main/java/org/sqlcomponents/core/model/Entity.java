@@ -3,6 +3,7 @@ package org.sqlcomponents.core.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.sqlcomponents.core.model.relational.Table;
 
 import java.util.List;
 

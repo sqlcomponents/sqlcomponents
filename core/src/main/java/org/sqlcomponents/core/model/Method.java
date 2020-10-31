@@ -1,6 +1,9 @@
 package org.sqlcomponents.core.model;
 
 
+import org.sqlcomponents.core.model.relational.Column;
+import org.sqlcomponents.core.model.relational.Procedure;
+
 import java.util.List;
 
 public class Method  {

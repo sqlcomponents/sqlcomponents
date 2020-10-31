@@ -1,5 +1,8 @@
 package org.sqlcomponents.core.model;
 
+import org.sqlcomponents.core.model.relational.Column;
+import org.sqlcomponents.core.model.relational.Key;
+
 import java.util.SortedSet;
 
 public class Property  {

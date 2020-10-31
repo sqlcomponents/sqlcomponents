@@ -5,6 +5,8 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.sqlcomponents.core.model.*;
+import org.sqlcomponents.core.model.relational.Key;
+import org.sqlcomponents.core.model.relational.Table;
 
 import java.io.File;
 import java.io.FileWriter;

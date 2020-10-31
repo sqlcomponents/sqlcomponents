@@ -3,7 +3,7 @@ package org.sqlcomponents.core.crawler;
 import org.junit.jupiter.api.Test;
 import org.sqlcomponents.core.exception.ScubeException;
 import org.sqlcomponents.core.model.Application;
-import org.sqlcomponents.core.model.Database;
+import org.sqlcomponents.core.model.relational.Database;
 
 import java.sql.SQLException;
 

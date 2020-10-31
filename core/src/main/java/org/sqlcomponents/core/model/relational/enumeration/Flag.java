@@ -1,4 +1,4 @@
-package org.sqlcomponents.core.model.enumeration;
+package org.sqlcomponents.core.model.relational.enumeration;
 
 public enum Flag {
     YES("YES"),

@@ -3,7 +3,8 @@ package org.sqlcomponents.core.mapper;
 import org.sqlcomponents.core.crawler.Crawler;
 import org.sqlcomponents.core.exception.ScubeException;
 import org.sqlcomponents.core.model.*;
-import org.sqlcomponents.core.model.Package;
+import org.sqlcomponents.core.model.relational.*;
+import org.sqlcomponents.core.model.relational.Package;
 
 import java.util.ArrayList;
 import java.util.HashMap;

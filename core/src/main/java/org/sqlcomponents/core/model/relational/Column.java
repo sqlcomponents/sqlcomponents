@@ -1,9 +1,9 @@
-package org.sqlcomponents.core.model;
+package org.sqlcomponents.core.model.relational;
 
 
 import lombok.Getter;
 import lombok.Setter;
-import org.sqlcomponents.core.model.enumeration.Flag;
+import org.sqlcomponents.core.model.relational.enumeration.Flag;
 
 import java.util.SortedSet;
 

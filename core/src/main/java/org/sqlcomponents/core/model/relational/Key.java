@@ -1,4 +1,4 @@
-package org.sqlcomponents.core.model;
+package org.sqlcomponents.core.model.relational;
 
 public class Key implements Comparable<Key> {
 

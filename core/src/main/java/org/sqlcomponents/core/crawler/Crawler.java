@@ -2,7 +2,8 @@ package org.sqlcomponents.core.crawler;
 
 import org.sqlcomponents.core.exception.ScubeException;
 import org.sqlcomponents.core.model.*;
-import org.sqlcomponents.core.model.enumeration.Flag;
+import org.sqlcomponents.core.model.relational.enumeration.Flag;
+import org.sqlcomponents.core.model.relational.*;
 
 import java.sql.*;
 import java.util.ArrayList;
