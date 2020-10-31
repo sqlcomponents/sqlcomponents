@@ -2,10 +2,6 @@ package org.sqlcomponents.core.exception;
 
 public class ScubeException extends Exception {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	public ScubeException() {
 		super();
