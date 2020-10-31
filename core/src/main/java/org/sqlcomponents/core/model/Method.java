@@ -8,10 +8,7 @@ import java.util.List;
 
 public class Method  {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+
 
 	public String getFunctionName() {
 		return function.getFunctionName();
