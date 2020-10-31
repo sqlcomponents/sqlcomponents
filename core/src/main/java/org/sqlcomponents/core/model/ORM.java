@@ -197,7 +197,7 @@ public class ORM  {
 	public Entity getEntity(String tableName) {
 		Entity entity = null ;
 		for (Entity entity2 : getEntities()) {
-			if(entity2.getTableName().equals(tableName)) {
+			if(entity2.getTable().getTableName().equals(tableName)) {
 				return entity2;
 			}
 		}

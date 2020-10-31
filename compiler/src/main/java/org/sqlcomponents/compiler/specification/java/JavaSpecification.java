@@ -226,7 +226,7 @@ public class JavaSpecification extends Specification {
 		}
 
 		public String getCategoryName() {
-			return entity.getCategoryName();
+			return entity.getTable().getCategoryName();
 		}
 
 		public String getDaoPackage() {
@@ -246,11 +246,11 @@ public class JavaSpecification extends Specification {
 		}
 
 		public String getRemarks() {
-			return entity.getRemarks();
+			return entity.getTable().getRemarks();
 		}
 
 		public String getSchemaName() {
-			return entity.getSchemaName();
+			return entity.getTable().getSchemaName();
 		}
 
 		public Table getTable() {
@@ -258,11 +258,11 @@ public class JavaSpecification extends Specification {
 		}
 
 		public String getTableName() {
-			return entity.getTableName();
+			return entity.getTable().getTableName();
 		}
 
 		public String getTableType() {
-			return entity.getTableType();
+			return entity.getTable().getTableType();
 		}
 
 		public void setBeanPackage(String beanPackage) {
@@ -270,7 +270,7 @@ public class JavaSpecification extends Specification {
 		}
 
 		public void setCategoryName(String categoryName) {
-			entity.setCategoryName(categoryName);
+			entity.getTable().setCategoryName(categoryName);
 		}
 
 		public void setDaoPackage(String daoPackage) {
@@ -290,11 +290,11 @@ public class JavaSpecification extends Specification {
 		}
 
 		public void setRemarks(String remarks) {
-			entity.setRemarks(remarks);
+			entity.getTable().setRemarks(remarks);
 		}
 
 		public void setSchemaName(String schemaName) {
-			entity.setSchemaName(schemaName);
+			entity.getTable().setSchemaName(schemaName);
 		}
 
 		public void setTable(Table table) {
@@ -302,14 +302,12 @@ public class JavaSpecification extends Specification {
 		}
 
 		public void setTableName(String tableName) {
-			entity.setTableName(tableName);
+			entity.getTable().setTableName(tableName);
 		}
 
 		public void setTableType(String type) {
-			entity.setTableType(type);
+			entity.getTable().setTableType(type);
 		}
-
-
 
 	}
 
