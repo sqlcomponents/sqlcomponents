@@ -29,7 +29,7 @@ public abstract class Mapper {
         ORM orm = application.getOrm();
 
         if (application.getOrm().getSchema() == null || application.isOnline()) {
-            Database database = crawler.getDatabase();
+            Database database = crawler.getDatabase(application);
             application.getOrm().setSchema(database);
         }
 

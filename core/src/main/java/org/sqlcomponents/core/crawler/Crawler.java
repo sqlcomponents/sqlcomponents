@@ -12,24 +12,11 @@ import java.util.TreeSet;
 
 public class Crawler {
 
-	private final Application application;
 
-	public Crawler(final Application application) throws SQLException {
-		this.application = application;
-		Connection connection = getConnection();
-		DatabaseMetaData databasemetadata = connection.getMetaData();
-		application.setDriverName(databasemetadata.getDriverName());
-	}
-
-	private Connection getConnection() throws SQLException {
-		return DriverManager.getConnection(application.getUrl(), application
-				.getUserName(), application.getPassword());
-	}
-
-	public Database getDatabase() throws ScubeException {
+	public Database getDatabase(final Application application) throws ScubeException {
 		Database database = new Database();
-		try {
-			Connection connection = getConnection();
+		try (Connection connection = DriverManager.getConnection(application.getUrl(), application
+				.getUserName(), application.getPassword());) {
 			DatabaseMetaData databasemetadata = connection.getMetaData();
 			database.setSequences(getSequences(databasemetadata));
 			database.setTables(getTables(databasemetadata, database));
@@ -60,7 +47,7 @@ public class Crawler {
 
 		while (resultset.next()) {
 			final String tableName = resultset.getString("table_name");
-			if (shouldConsiderThisTable(tableName)) {
+
 				Table table = new Table(database);
 				table.setTableName(tableName);
 				table.setCategoryName(resultset.getString("table_cat"));
@@ -73,7 +60,7 @@ public class Crawler {
 				table.setSelfReferencingColumnName(resultset.getString("self_referencing_col_name"));
 				table.setReferenceGeneration(resultset.getString("ref_generation"));
 
-				table.setColumns(getColumns(table));
+				table.setColumns(getColumns(databasemetadata,table));
 
 				// Set Sequence
 				database.getSequences()
@@ -83,17 +70,16 @@ public class Crawler {
 						.ifPresent(sequenceName->table.setSequenceName(sequenceName));
 
 				tables.add(table);
-			}
+
 
 		}
 
 		return tables;
 	}
 
-	private List<Column> getColumns(final Table table) throws SQLException {
+	private List<Column> getColumns(DatabaseMetaData databasemetadata,final Table table) throws SQLException {
 		List<Column> columns = new ArrayList<>();
-		Connection connection = getConnection();
-		DatabaseMetaData databasemetadata = connection.getMetaData();
+
 		ResultSet columnResultset = databasemetadata.getColumns(null, null, table.getTableName(), null);
 
 		while (columnResultset.next()) {
@@ -152,12 +138,6 @@ public class Crawler {
 			}).findFirst().get().getExportedKeys().add(key);
 		}
 		return columns;
-	}
-
-	private boolean shouldConsiderThisTable(final String tableName) {
-		return application.getTablePatterns() == null || this.application.getTablePatterns().stream().anyMatch(pattern -> {
-			return tableName.matches(pattern);
-		});
 	}
 
 	private List<Procedure> getProcedures(DatabaseMetaData databasemetadata) throws SQLException {

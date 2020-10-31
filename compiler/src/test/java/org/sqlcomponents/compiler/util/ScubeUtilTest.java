@@ -44,7 +44,7 @@ class ScubeUtilTest {
             application.setCleanSource(true);
 
 
-            Crawler crawler = new Crawler(application);
+            Crawler crawler = new Crawler();
             Mapper mapper = new JavaOrmMapper();
             application.setOrm(mapper.getOrm(application,crawler));
             return this;

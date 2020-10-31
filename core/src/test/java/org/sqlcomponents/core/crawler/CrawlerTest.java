@@ -19,7 +19,7 @@ class CrawlerTest {
         application.setPassword("moviedb");
         application.setSchemaName("moviedb");
 
-        Database database = new Crawler(application).getDatabase();
+        Database database = new Crawler().getDatabase(application);
 
         System.out.println("Crawled");
     }
