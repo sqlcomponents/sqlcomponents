@@ -68,7 +68,6 @@ public class Crawler {
 			database.setSystemFunctions(databasemetadata.getSystemFunctions());
 			database.setTimeDateFunctions(databasemetadata.getTimeDateFunctions());
 			database.setSupportsTransactions(databasemetadata.supportsTransactions());
-//			database.setSupportsTransactionIsolationLevel(databasemetadata.supportsTransactionIsolationLevel());
 			database.setSupportsDataDefinitionAndDataManipulationTransactions(databasemetadata.supportsDataDefinitionAndDataManipulationTransactions());
 			database.setDataDefinitionCausesTransactionCommit(databasemetadata.dataDefinitionCausesTransactionCommit());
 			database.setDataDefinitionIgnoredInTransactions(databasemetadata.dataDefinitionIgnoredInTransactions());
@@ -83,6 +82,8 @@ public class Crawler {
 //			database.setUpdatesAreDetected(databasemetadata.updatesAreDetected());
 //			database.setDeletesAreDetected(databasemetadata.deletesAreDetected());
 //			database.setInsertsAreDetected(databasemetadata.insertsAreDetected());
+// 			database.setSupportsResultSetHoldability(databasemetadata.supportsResultSetHoldability());
+//			database.setSupportsTransactionIsolationLevel(databasemetadata.supportsTransactionIsolationLevel());
 			database.setCatalogAtStart(databasemetadata.isCatalogAtStart());
 			database.setReadOnly(databasemetadata.isReadOnly());
 			database.setLocatorsUpdateCopy(databasemetadata.locatorsUpdateCopy());
@@ -91,12 +92,36 @@ public class Crawler {
 			database.setSupportsNamedParameters(databasemetadata.supportsNamedParameters());
 			database.setSupportsMultipleOpenResults(databasemetadata.supportsMultipleOpenResults());
 			database.setSupportsGetGeneratedKeys(databasemetadata.supportsGetGeneratedKeys());
-//			database.setSupportsResultSetHoldability(databasemetadata.supportsResultSetHoldability());
 			database.setSqlStateType(databasemetadata.getSQLStateType());
 			database.setSupportsStatementPooling(databasemetadata.supportsStatementPooling());
 			database.setAllProceduresAreCallable(databasemetadata.allProceduresAreCallable());
 			database.setAllTablesAreSelectable(databasemetadata.allTablesAreSelectable());
 			database.setUrl(databasemetadata.getURL());
+			database.setUserName(databasemetadata.getUserName());
+			database.setNullPlusNonNullIsNull(databasemetadata.nullPlusNonNullIsNull());
+			database.setNullsAreSortedHigh(databasemetadata.nullsAreSortedHigh());
+			database.setNullsAreSortedLow(databasemetadata.nullsAreSortedLow());
+			database.setNullsAreSortedAtStart(databasemetadata.nullsAreSortedAtStart());
+			database.setNullsAreSortedAtEnd(databasemetadata.nullsAreSortedAtEnd());
+			database.setAutoCommitFailureClosesAllResultSets(databasemetadata.autoCommitFailureClosesAllResultSets());
+			database.setGeneratedKeyAlwaysReturned(databasemetadata.generatedKeyAlwaysReturned());
+			database.setStoresLowerCaseIdentifiers(databasemetadata.storesLowerCaseIdentifiers());
+			database.setStoresLowerCaseQuotedIdentifiers(databasemetadata.storesLowerCaseQuotedIdentifiers());
+			database.setStoresMixedCaseIdentifiers(databasemetadata.storesMixedCaseIdentifiers());
+			database.setStoresMixedCaseQuotedIdentifiers(databasemetadata.storesMixedCaseQuotedIdentifiers());
+			database.setStoresUpperCaseIdentifiers(databasemetadata.storesUpperCaseIdentifiers());
+			database.setStoresUpperCaseQuotedIdentifiers(databasemetadata.storesUpperCaseQuotedIdentifiers());
+			database.setSupportsAlterTableWithAddColumn(databasemetadata.supportsAlterTableWithAddColumn());
+			database.setSupportsAlterTableWithDropColumn(databasemetadata.supportsAlterTableWithDropColumn());
+			database.setSupportsANSI92EntryLevelSQL(databasemetadata.supportsANSI92EntryLevelSQL());
+			database.setSupportsANSI92FullSQL(databasemetadata.supportsANSI92FullSQL());
+			database.setSupportsANSI92IntermediateSQL(databasemetadata.supportsANSI92IntermediateSQL());
+			database.setSupportsCatalogsInDataManipulation(databasemetadata.supportsCatalogsInDataManipulation());
+			database.setSupportsCatalogsInIndexDefinitions(databasemetadata.supportsCatalogsInIndexDefinitions());
+			database.setSupportsCatalogsInPrivilegeDefinitions(databasemetadata.supportsCatalogsInPrivilegeDefinitions());
+			database.setSupportsCatalogsInProcedureCalls(databasemetadata.supportsCatalogsInProcedureCalls());
+			database.setSupportsCatalogsInTableDefinitions(databasemetadata.supportsCatalogsInTableDefinitions());
+			database.setSupportsColumnAliasing(databasemetadata.supportsColumnAliasing());
 		} catch (SQLException e) {
 			throw new ScubeException(e);
 		}
@@ -125,11 +150,11 @@ public class Crawler {
 			final String tableName = resultset.getString("table_name");
 
 				Table table = new Table(database);
-			table.setTableType(TableType.TABLE);
+//				table.setTableType(TableType.TABLE);
 				table.setTableName(tableName);
 				table.setCategoryName(resultset.getString("table_cat"));
 				table.setSchemaName(resultset.getString("table_schem"));
-//				table.setTableType(TableType.value(resultset.getString("table_type")));
+				table.setTableType(TableType.value(resultset.getString("table_type")));
 				table.setRemarks(resultset.getString("remarks"));
 				table.setCategoryType(resultset.getString("type_cat"));
 				table.setSchemaType(resultset.getString("type_schem"));
