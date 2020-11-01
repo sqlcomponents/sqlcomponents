@@ -7,9 +7,7 @@ import org.sqlcomponents.core.model.relational.*;
 import org.sqlcomponents.core.model.relational.enumeration.TableType;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Crawler {
 
@@ -58,15 +56,15 @@ public class Crawler {
 			database.setMaxTableNameLength(databasemetadata.getMaxTableNameLength());
 			database.setMaxTablesInSelect(databasemetadata.getMaxTablesInSelect());
 			database.setMaxUserNameLength(databasemetadata.getMaxUserNameLength());
-			database.setNumericFunctions(databasemetadata.getNumericFunctions());
+			database.setNumericFunctions(new HashSet<>(Arrays.asList(databasemetadata.getNumericFunctions().split(","))));
 			database.setProcedureTerm(databasemetadata.getProcedureTerm());
 			database.setResultSetHoldability(databasemetadata.getResultSetHoldability());
 			database.setSchemaTerm(databasemetadata.getSchemaTerm());
 			database.setSearchStringEscape(databasemetadata.getSearchStringEscape());
-			database.setSqlKeywords(databasemetadata.getSQLKeywords());
-			database.setStringFunctions(databasemetadata.getStringFunctions());
-			database.setSystemFunctions(databasemetadata.getSystemFunctions());
-			database.setTimeDateFunctions(databasemetadata.getTimeDateFunctions());
+			database.setSqlKeywords(new HashSet<>(Arrays.asList(databasemetadata.getSQLKeywords().split(","))));
+			database.setStringFunctions(new HashSet<>(Arrays.asList(databasemetadata.getStringFunctions().split(","))));
+			database.setSystemFunctions(new HashSet<>(Arrays.asList(databasemetadata.getSystemFunctions().split(","))));
+			database.setTimeDateFunctions(new HashSet<>(Arrays.asList(databasemetadata.getTimeDateFunctions().split(","))));
 			database.setSupportsTransactions(databasemetadata.supportsTransactions());
 			database.setSupportsDataDefinitionAndDataManipulationTransactions(databasemetadata.supportsDataDefinitionAndDataManipulationTransactions());
 			database.setDataDefinitionCausesTransactionCommit(databasemetadata.dataDefinitionCausesTransactionCommit());
