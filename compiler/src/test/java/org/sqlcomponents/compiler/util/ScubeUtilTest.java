@@ -7,13 +7,14 @@ import org.sqlcomponents.core.mapper.java.JavaOrmMapper;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 
 class ScubeUtilTest {
 
     @Test
-    void writeCode() throws ScubeException, SQLException {
+    void writeCode() throws ScubeException, SQLException, IOException {
         new Application()
                 .connectToPostgress()
                 .understand()
@@ -73,7 +74,7 @@ class ScubeUtilTest {
             return this;
         }
 
-        void writeCode() throws SQLException, ScubeException {
+        void writeCode() throws SQLException, ScubeException, IOException {
             application.setSrcFolder("../java-test/target/generated-sources/movie-db");
             System.out.println(new File("../java-test/target/generated-sources/movie-db").getAbsolutePath());
             ScubeUtil.writeCode(application);

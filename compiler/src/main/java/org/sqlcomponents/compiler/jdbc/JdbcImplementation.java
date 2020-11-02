@@ -24,6 +24,7 @@ public class JdbcImplementation extends OrmImplementation {
 			try {
 				processedEntity.setEntity(entity);
 				writeDaoImplementation(processedEntity, project.getSrcFolder(),project.getDaoSuffix());
+				writeBeanSpecification(processedEntity, project.getSrcFolder());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -44,7 +45,14 @@ public class JdbcImplementation extends OrmImplementation {
 		processTemplates(entity, packageFolder + File.separator
 				+ entity.getName() + "Store"  + daoSuffix.trim() + ".java", daoTemplate);
 	}
-
+	private void writeBeanSpecification(ProcessedEntity entity, String srcFolder)
+			throws IOException, TemplateException {
+		String packageFolder = getPackageAsFolder(srcFolder, entity
+				.getBeanPackage());
+		new File(packageFolder).mkdirs();
+		processTemplates(entity, packageFolder + File.separator
+				+ entity.getName() + ".java", beanTemplate);
+	}
 
 
 	private void processTemplates(Object model, String targetFile,
@@ -63,6 +71,7 @@ public class JdbcImplementation extends OrmImplementation {
 		try {
 			daoTemplate = freeMarkerConfiguration
 					.getTemplate("template/dao/java/jdbc/jdbcdao.ftl");
+			beanTemplate = freeMarkerConfiguration.getTemplate("template/dao/java/bean.ftl");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -72,6 +81,7 @@ public class JdbcImplementation extends OrmImplementation {
 
 	private final Configuration freeMarkerConfiguration;
 	private Template daoTemplate;
+	private Template beanTemplate;
 
 	public static class ProcessedEntity {
 

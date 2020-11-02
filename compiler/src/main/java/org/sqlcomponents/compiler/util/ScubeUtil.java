@@ -2,7 +2,6 @@ package org.sqlcomponents.compiler.util;
 
 import org.sqlcomponents.core.exception.ScubeException;
 import org.sqlcomponents.compiler.OrmImplementation;
-import org.sqlcomponents.compiler.specification.Specification;
 import org.sqlcomponents.core.model.Application;
 
 import java.io.File;
@@ -23,7 +22,7 @@ public class ScubeUtil {
 					.map(Path::toFile)
 					.forEach(File::delete);
 		}
-		Specification.getSpecification().writeSpecification(application);
+
 		OrmImplementation.getImplementation().writeImplementation(application);
 	}
 }
