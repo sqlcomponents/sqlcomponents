@@ -1,17 +1,16 @@
 package org.sqlcomponents.core.model;
 
-
 import org.sqlcomponents.core.model.relational.Database;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
 public class Application {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	private String name;
 
@@ -277,6 +276,20 @@ public class Application {
 
 	public void setSrcFolder(String srcFolder) {
 		this.srcFolder = srcFolder;
+	}
+
+
+
+	public void writeCode() throws IOException {
+
+		if (this.isCleanSource()) {
+			Files.walk(new File(this.getSrcFolder()).toPath())
+					.sorted(Comparator.reverseOrder())
+					.map(Path::toFile)
+					.forEach(File::delete);
+		}
+
+
 	}
 
 }

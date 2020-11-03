@@ -1,9 +1,9 @@
-package org.sqlcomponents.compiler.jdbc;
+package org.sqlcomponents.compiler.java;
 
-import org.sqlcomponents.compiler.OrmImplementation;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.sqlcomponents.core.compiler.Compiler;
 import org.sqlcomponents.core.model.*;
 import org.sqlcomponents.core.model.relational.Table;
 import org.sqlcomponents.core.model.relational.enumeration.TableType;
@@ -14,10 +14,29 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JdbcImplementation extends OrmImplementation {
+public class JdbcCompiler implements Compiler {
+
+	private final Configuration cfg;
+	private Template daoTemplate;
+	private Template beanTemplate;
+
+	public JdbcCompiler() {
+		cfg = new Configuration(Configuration.VERSION_2_3_29);
+		cfg.setClassForTemplateLoading(
+				JdbcCompiler.class, "/");
+		try {
+			daoTemplate = cfg
+					.getTemplate("template/dao/java/jdbc/jdbcdao.ftl");
+			beanTemplate = cfg.getTemplate("template/dao/java/bean.ftl");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 
 	@Override
-	public void writeImplementation(Application project) {
+	public void compile(Application project) {
 		ORM orm = project.getOrm();
 		ProcessedEntity processedEntity = new ProcessedEntity(orm,project);
 		for (Entity entity : orm.getEntities()) {
@@ -33,8 +52,6 @@ public class JdbcImplementation extends OrmImplementation {
 				e.printStackTrace();
 			}
 		}
-
-
 	}
 
 	private void writeDaoImplementation(ProcessedEntity entity, String srcFolder,String daoSuffix)
@@ -63,25 +80,22 @@ public class JdbcImplementation extends OrmImplementation {
 		fileWriter.close();
 	}
 
-	public JdbcImplementation() {
-		freeMarkerConfiguration = new Configuration();
-		freeMarkerConfiguration.setClassForTemplateLoading(
-				JdbcImplementation.class, "/");
-
-		try {
-			daoTemplate = freeMarkerConfiguration
-					.getTemplate("template/dao/java/jdbc/jdbcdao.ftl");
-			beanTemplate = freeMarkerConfiguration.getTemplate("template/dao/java/bean.ftl");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	private String getPackageAsFolder(String rootDir, String packageStr) {
+		char[] charArray = packageStr.toCharArray();
+		StringBuffer filePath = new StringBuffer();
+		for (int i = 0; i < charArray.length; i++) {
+			if (charArray[i] == '.') {
+				filePath.append(File.separatorChar);
+			} else {
+				filePath.append(charArray[i]);
+			}
 		}
-
+		return rootDir + File.separatorChar + filePath.toString();
 	}
 
-	private final Configuration freeMarkerConfiguration;
-	private Template daoTemplate;
-	private Template beanTemplate;
+
+
+
 
 	public static class ProcessedEntity {
 

@@ -74,10 +74,10 @@ class ScubeUtilTest {
             return this;
         }
 
-        void writeCode() throws SQLException, ScubeException, IOException {
+        void writeCode() throws IOException {
             application.setSrcFolder("../java-test/target/generated-sources/movie-db");
             System.out.println(new File("../java-test/target/generated-sources/movie-db").getAbsolutePath());
-            ScubeUtil.writeCode(application);
+            application.writeCode();
             System.out.println("Granted !");
         }
 
