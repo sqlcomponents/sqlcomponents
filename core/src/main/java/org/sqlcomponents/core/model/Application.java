@@ -1,5 +1,6 @@
 package org.sqlcomponents.core.model;
 
+import org.sqlcomponents.core.compiler.Compiler;
 import org.sqlcomponents.core.model.relational.Database;
 
 import java.io.File;
@@ -280,14 +281,16 @@ public class Application {
 
 
 
-	public void writeCode() throws IOException {
+	public void compile(Compiler compiler) throws IOException {
 
-		if (this.isCleanSource()) {
+		if (this.isCleanSource() && new File(this.getSrcFolder()).exists()) {
 			Files.walk(new File(this.getSrcFolder()).toPath())
 					.sorted(Comparator.reverseOrder())
 					.map(Path::toFile)
 					.forEach(File::delete);
 		}
+
+		compiler.compile(this);
 
 
 	}

@@ -1,5 +1,6 @@
 package org.sqlcomponents.compiler.util;
 
+import org.sqlcomponents.compiler.java.JdbcCompiler;
 import org.sqlcomponents.core.crawler.Crawler;
 import org.sqlcomponents.core.exception.ScubeException;
 import org.sqlcomponents.core.mapper.Mapper;
@@ -76,8 +77,7 @@ class ScubeUtilTest {
 
         void writeCode() throws IOException {
             application.setSrcFolder("../java-test/target/generated-sources/movie-db");
-            System.out.println(new File("../java-test/target/generated-sources/movie-db").getAbsolutePath());
-            application.writeCode();
+            application.compile(new JdbcCompiler());
             System.out.println("Granted !");
         }
 
