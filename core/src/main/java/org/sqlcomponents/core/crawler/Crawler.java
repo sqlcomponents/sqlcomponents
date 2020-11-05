@@ -17,6 +17,9 @@ public class Crawler {
 		try (Connection connection = DriverManager.getConnection(application.getUrl(), application
 				.getUserName(), application.getPassword());) {
 			DatabaseMetaData databasemetadata = connection.getMetaData();
+
+			database.setTableTypes(getTableTypes(databasemetadata));
+
 			database.setSequences(getSequences(databasemetadata));
 			database.setTables(getTables(databasemetadata, database));
 			database.setFunctions(getProcedures(databasemetadata));
@@ -126,6 +129,20 @@ public class Crawler {
 		return database;
 	}
 
+	private Set<TableType> getTableTypes(DatabaseMetaData databasemetadata) throws SQLException {
+		Set<TableType> tableTypes = new TreeSet<>();
+		ResultSet resultset = databasemetadata.getTableTypes();
+
+		while (resultset.next()) {
+
+				tableTypes.add(TableType.value(resultset.getString("TABLE_TYPE")));
+
+
+		}
+
+		return tableTypes;
+	}
+
 
 	private List<String> getSequences(DatabaseMetaData databasemetadata) throws SQLException {
 		List<String> sequences = new ArrayList<>();
@@ -142,7 +159,7 @@ public class Crawler {
 	private List<Table> getTables(DatabaseMetaData databasemetadata, Database database) throws SQLException {
 		List<Table> tables = new ArrayList<>();
 
-		ResultSet resultset = databasemetadata.getTables(null, null, null, new String[]{"TABLE"});
+		ResultSet resultset = databasemetadata.getTables(null, null,  null,new String[]{"TABLE"});
 
 		while (resultset.next()) {
 			final String tableName = resultset.getString("table_name");
@@ -219,7 +236,14 @@ public class Crawler {
 				} catch (SQLException throwables) {
 					return false;
 				}
-			}).findFirst().get().setPrimaryKeyIndex(primaryKeysResultSet.getInt("KEY_SEQ"));
+			}).findFirst()
+					.ifPresent(column-> {
+						try {
+							column.setPrimaryKeyIndex(primaryKeysResultSet.getInt("KEY_SEQ"));
+						} catch (SQLException throwables) {
+							throwables.printStackTrace();
+						}
+					});
 		}
 
 		//Extracting Foreign Keys.
