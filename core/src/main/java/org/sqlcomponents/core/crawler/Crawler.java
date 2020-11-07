@@ -269,7 +269,6 @@ public class Crawler {
 		List<Procedure> functions = new ArrayList<>();
 
 		ResultSet functionResultset = databasemetadata.getProcedures(null, null, null);
-		System.out.println(functionResultset.getMetaData().getColumnCount());
 		while (functionResultset.next()) {
 			Procedure function = new Procedure();
 			function.setFunctionName(functionResultset.getString("PROCEDURE_NAME"));
@@ -280,7 +279,7 @@ public class Crawler {
 			function.setSpecificName(functionResultset.getString("SPECIFIC_NAME"));
 			functions.add(function);
 		}
-		System.out.println("procedures");
+
 		return functions;
 	}
 }

@@ -14,16 +14,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JdbcCompiler implements Compiler {
+public class JavaCompiler implements Compiler {
 
 	private final Configuration cfg;
 	private Template daoTemplate;
 	private Template beanTemplate;
 
-	public JdbcCompiler() {
+	public JavaCompiler() {
 		cfg = new Configuration(Configuration.VERSION_2_3_29);
 		cfg.setClassForTemplateLoading(
-				JdbcCompiler.class, "/");
+				JavaCompiler.class, "/");
 		try {
 			daoTemplate = cfg
 					.getTemplate("template/dao/java/jdbc/jdbcdao.ftl");

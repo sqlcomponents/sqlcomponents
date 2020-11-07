@@ -41,6 +41,9 @@ public class Application {
 		this.sequencePatterns = sequencePatterns;
 	}
 
+
+	private String databaseWordSeparator ="_";
+
 	private String rootPackage;
 
 	private HashMap<String, String> wordsMap;
@@ -50,6 +53,15 @@ public class Application {
 	private HashMap<String, String> pluralMap;
 
 	private String sequenceTableMap;
+
+
+	public String getDatabaseWordSeparator() {
+		return databaseWordSeparator;
+	}
+
+	public void setDatabaseWordSeparator(String databaseWordSeparator) {
+		this.databaseWordSeparator = databaseWordSeparator;
+	}
 
 	public String getBeanSuffix() {
 		return orm.getBeanSuffix();

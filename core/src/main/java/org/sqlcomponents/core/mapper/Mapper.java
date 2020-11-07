@@ -12,7 +12,6 @@ import java.util.List;
 
 public abstract class Mapper {
 
-    String DB_WORD_SEPARATOR ="_";
 
     public static ORM getOrm(Application application) throws ScubeException {
         return null;
@@ -152,7 +151,7 @@ public abstract class Mapper {
         if (packageName != null) {
             StringBuffer buffer = new StringBuffer();
             String[] relationalWords = packageName
-                    .split(DB_WORD_SEPARATOR);
+                    .split(application.getDatabaseWordSeparator());
             int relationalWordsCount = relationalWords.length;
             for (int index = 0; index < relationalWordsCount; index++) {
                 buffer.append(toTileCase(getObjectOrientedWord(application,
@@ -168,7 +167,7 @@ public abstract class Mapper {
         if (tableName != null) {
             StringBuffer buffer = new StringBuffer();
             String[] relationalWords = tableName
-                    .split(DB_WORD_SEPARATOR);
+                    .split(application.getDatabaseWordSeparator());
             int relationalWordsCount = relationalWords.length;
             for (int index = 0; index < relationalWordsCount; index++) {
                 buffer.append(toTileCase(getObjectOrientedWord(application,
@@ -268,7 +267,7 @@ public abstract class Mapper {
     protected String getModuleName(Application application, String tableName) {
 
         String[] dbWords = tableName
-                .split(DB_WORD_SEPARATOR);
+                .split(application.getDatabaseWordSeparator());
         HashMap<String, String> modulesMap = application.getModulesMap();
         if (modulesMap != null) {
             for (String moduleKey : modulesMap.keySet()) {
@@ -287,7 +286,7 @@ public abstract class Mapper {
     protected String getPropertyName(Application application, String columnName) {
         StringBuffer buffer = new StringBuffer();
         String[] relationalWords = columnName
-                .split(DB_WORD_SEPARATOR);
+                .split(application.getDatabaseWordSeparator());
         int relationalWordsCount = relationalWords.length;
         for (int index = 0; index < relationalWordsCount; index++) {
             if (index == 0) {

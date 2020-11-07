@@ -1,19 +1,16 @@
-package org.sqlcomponents.compiler.util;
+package org.sqlcomponents.compiler.java;
 
-import org.sqlcomponents.compiler.java.JdbcCompiler;
+import org.junit.jupiter.api.Test;
 import org.sqlcomponents.core.crawler.Crawler;
 import org.sqlcomponents.core.exception.ScubeException;
 import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.mapper.java.JavaOrmMapper;
-import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-class ScubeUtilTest {
-
+class JavaCompilerTest {
     @Test
     void writeCode() throws ScubeException, SQLException, IOException {
         new Application()
@@ -77,7 +74,7 @@ class ScubeUtilTest {
 
         void writeCode() throws IOException {
             application.setSrcFolder("../java-test/target/generated-sources/movie-db");
-            application.compile(new JdbcCompiler());
+            application.compile(new JavaCompiler());
             System.out.println("Granted !");
         }
 
