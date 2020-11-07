@@ -1,10 +1,10 @@
 package org.sqlcomponents.compiler.java;
 
 import org.junit.jupiter.api.Test;
+import org.sqlcomponents.compiler.java.mapper.JavaMapper;
 import org.sqlcomponents.core.crawler.Crawler;
 import org.sqlcomponents.core.exception.ScubeException;
 import org.sqlcomponents.core.mapper.Mapper;
-import org.sqlcomponents.core.mapper.java.JavaOrmMapper;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -44,9 +44,8 @@ class JavaCompilerTest {
             application.setCleanSource(true);
 
 
-            Crawler crawler = new Crawler();
-            Mapper mapper = new JavaOrmMapper();
-            application.setOrm(mapper.getOrm(application,crawler));
+
+
             return this;
         }
 
@@ -72,7 +71,7 @@ class JavaCompilerTest {
             return this;
         }
 
-        void writeCode() throws IOException {
+        void writeCode() throws IOException, ScubeException {
             application.setSrcFolder("../java-test/target/generated-sources/movie-db");
             application.compile(new JavaCompiler());
             System.out.println("Granted !");

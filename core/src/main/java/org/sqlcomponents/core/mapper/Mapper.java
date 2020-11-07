@@ -12,16 +12,7 @@ import java.util.List;
 
 public abstract class Mapper {
 
-
-    public static ORM getOrm(Application application) throws ScubeException {
-        return null;
-    }
-
-    public abstract String[] getValidDataTypes(String sqlType, int size,
-                                               int precision);
-
-    public abstract String getValidDataType(String sqlType, int size,
-                                            int precision);
+    public abstract String getDataType(Column column);
 
     public ORM getOrm(Application application, Crawler crawler) throws ScubeException {
 
@@ -94,8 +85,7 @@ public abstract class Mapper {
             }
             property.setUniqueConstraintGroup(getEntityName(application,
                     property.getUniqueConstraintName()));
-            property.setDataType(getValidDataType(property.getTypeName(),
-                    property.getSize(), property.getDecimalDigits()));
+            property.setDataType(getDataType(column));
             return property;
         }
         return null;
@@ -134,18 +124,7 @@ public abstract class Mapper {
         return entities;
     }
 
-    private String getSequenceName(Application application, String entityName) {
-        List<String> sequences = application.getSchema().getSequences();
-        if (sequences != null) {
-            for (String sequence : sequences) {
-                if (entityName.equals(getEntityName(application, sequence))) {
-                    return sequence;
-                }
-            }
-        }
 
-        return null;
-    }
 
     protected String getServiceName(Application application, String packageName) {
         if (packageName != null) {

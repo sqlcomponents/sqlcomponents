@@ -3,7 +3,11 @@ package org.sqlcomponents.compiler.java;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.sqlcomponents.compiler.java.mapper.JavaMapper;
 import org.sqlcomponents.core.compiler.Compiler;
+import org.sqlcomponents.core.crawler.Crawler;
+import org.sqlcomponents.core.exception.ScubeException;
+import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.*;
 import org.sqlcomponents.core.model.relational.Table;
 import org.sqlcomponents.core.model.relational.enumeration.TableType;
@@ -36,14 +40,16 @@ public class JavaCompiler implements Compiler {
 	}
 
 	@Override
-	public void compile(Application project) {
-		ORM orm = project.getOrm();
-		ProcessedEntity processedEntity = new ProcessedEntity(orm,project);
+	public void compile(Application application) throws ScubeException {
+		Mapper mapper = new JavaMapper();
+		application.setOrm(mapper.getOrm(application,new Crawler()));
+		ORM orm = application.getOrm();
+		ProcessedEntity processedEntity = new ProcessedEntity(orm,application);
 		for (Entity entity : orm.getEntities()) {
 			try {
 				processedEntity.setEntity(entity);
-				writeDaoImplementation(processedEntity, project.getSrcFolder(),project.getDaoSuffix());
-				writeBeanSpecification(processedEntity, project.getSrcFolder());
+				writeDaoImplementation(processedEntity, application.getSrcFolder(),application.getDaoSuffix());
+				writeBeanSpecification(processedEntity, application.getSrcFolder());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -92,9 +98,6 @@ public class JavaCompiler implements Compiler {
 		}
 		return rootDir + File.separatorChar + filePath.toString();
 	}
-
-
-
 
 
 	public static class ProcessedEntity {
