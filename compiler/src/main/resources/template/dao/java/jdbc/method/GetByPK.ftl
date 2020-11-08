@@ -1,9 +1,9 @@
-<#if highestPKIndex != 0>
+<#if table.hasPrimaryKey>
     public ${name} find(${getPrimaryKeysAsParameterString()}) throws SQLException  {
 		final String query = """
                 SELECT
 		<@columnSelection/> 
-		FROM ${tableName} 
+		FROM ${table.tableName}
 		WHERE
 	    <#assign index=0>
 		<#list properties as property>

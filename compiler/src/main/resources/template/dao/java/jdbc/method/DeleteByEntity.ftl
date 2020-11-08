@@ -1,7 +1,7 @@
-<#if tableType == 'TABLE' >
+<#if table.tableType == 'TABLE' >
     public int delete(Criteria criteria) throws SQLException  {
         String whereClause = criteria.asSql() ;
-    	final String query = "DELETE FROM ${tableName}" + (whereClause == null ? "" : (" WHERE " + whereClause));
+    	final String query = "DELETE FROM ${table.tableName}" + (whereClause == null ? "" : (" WHERE " + whereClause));
     	System.out.println(query);
         try (Connection connection = dataSource.getConnection();
 			Statement statement = connection.createStatement()) {

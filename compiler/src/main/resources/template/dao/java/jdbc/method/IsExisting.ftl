@@ -1,9 +1,9 @@
-<#if highestPKIndex != 0>
+<#if table.hasPrimaryKey>
 	public boolean exists(${getPrimaryKeysAsParameterString()}) throws SQLException {
         final String query = """
                 SELECT
 		1
-		FROM ${tableName}
+		FROM ${table.tableName}
 		WHERE
 	    <#assign index=0>
 		<#list properties as property>

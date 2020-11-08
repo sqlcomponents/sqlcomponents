@@ -1,4 +1,4 @@
-<#if highestPKIndex &gt; 1>
+<#if table.hasPrimaryKey>
 
     public List<${name}> get${pluralName}(${getPrimaryKeysAsParameterStringExceptHighest()}) throws SQLException  {
 		HashMap<String,Object> map = new HashMap<String,Object>();

@@ -1,7 +1,7 @@
-<#if tableType == 'TABLE' >
+<#if table.tableType == 'TABLE' >
 	public int delete(${getPrimaryKeysAsParameterString()}) throws SQLException  {
 		final String query = """
-                DELETE FROM ${tableName} 
+                DELETE FROM ${table.tableName}
 					WHERE
 					<#assign index=0>
 					<#list properties as property>

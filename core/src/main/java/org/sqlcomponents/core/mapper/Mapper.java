@@ -103,7 +103,7 @@ public abstract class Mapper {
         Entity entity;
 
         for (Table table : database.getTables()) {
-            entity = new Entity(table);
+            entity = new Entity(application.getOrm(),table);
             entity.setName(getEntityName(application, table.getTableName()));
             entity.setPluralName(getPluralName(application, entity.getName()));
             entity

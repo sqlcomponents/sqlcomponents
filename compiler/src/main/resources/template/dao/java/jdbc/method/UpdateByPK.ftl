@@ -1,7 +1,7 @@
-<#if tableType == 'TABLE' >
+<#if table.tableType == 'TABLE' >
     public int update(${name} ${name?uncap_first}) throws SQLException {
         final String query = """
-		UPDATE ${tableName} SET
+		UPDATE ${table.tableName} SET
         		<#assign index=0>
         		<#list properties as property>
         			<#if property.primaryKeyIndex == 0>

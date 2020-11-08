@@ -3,7 +3,7 @@
 		final String query = """
                 SELECT
 		<@columnSelection/> 
-		FROM ${tableName} 
+		FROM ${table.tableName}
                 """;
         try (Connection conn = dataSource.getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(query)) {

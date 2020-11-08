@@ -109,7 +109,7 @@
 	<#local index=0>
 	<#list properties as property>
 		<#if property.primaryKeyIndex != 0>
-			<#if property.primaryKeyIndex != highestPKIndex>
+			<#if property.primaryKeyIndex != table.highestPKIndex>
 				<#if index == 0>
 					<#local index=1>
 				<#else>

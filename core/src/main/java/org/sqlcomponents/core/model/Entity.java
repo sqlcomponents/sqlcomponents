@@ -17,10 +17,13 @@ public class Entity  {
 	private String pluralName;
 	private String beanPackage;
 	private String daoPackage;
+
+	private ORM orm;
 	
 	private List<Property> properties;
 
-	public Entity(Table table) {
+	public Entity(ORM orm, Table table) {
+		setOrm(orm); ;
 		setTable(table);
 	}
 

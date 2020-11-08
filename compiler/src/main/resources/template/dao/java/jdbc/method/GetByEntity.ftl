@@ -1,6 +1,6 @@
     public List<${name}> select(Criteria criteria) throws SQLException  {
         String whereClause = criteria.asSql() ;
-		final String query = "SELECT <@columnSelection/> FROM ${tableName}"+ (whereClause == null ? "" : (" WHERE " + whereClause));
+		final String query = "SELECT <@columnSelection/> FROM ${table.tableName}"+ (whereClause == null ? "" : (" WHERE " + whereClause));
         try (Connection conn = dataSource.getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(query)) {
 

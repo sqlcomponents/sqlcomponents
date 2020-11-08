@@ -44,12 +44,10 @@ public class JavaCompiler implements Compiler {
 		Mapper mapper = new JavaMapper();
 		application.setOrm(mapper.getOrm(application,new Crawler()));
 		ORM orm = application.getOrm();
-		ProcessedEntity processedEntity = new ProcessedEntity(orm,application);
 		for (Entity entity : orm.getEntities()) {
 			try {
-				processedEntity.setEntity(entity);
-				writeDaoImplementation(processedEntity, application.getSrcFolder(),application.getDaoSuffix());
-				writeBeanSpecification(processedEntity, application.getSrcFolder());
+				writeDaoImplementation(entity, application.getSrcFolder(),application.getDaoSuffix());
+				writeBeanSpecification(entity, application.getSrcFolder());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -60,7 +58,7 @@ public class JavaCompiler implements Compiler {
 		}
 	}
 
-	private void writeDaoImplementation(ProcessedEntity entity, String srcFolder,String daoSuffix)
+	private void writeDaoImplementation(Entity entity, String srcFolder,String daoSuffix)
 			throws IOException, TemplateException {
 		String packageFolder = getPackageAsFolder(srcFolder, entity
 				.getDaoPackage());
@@ -68,7 +66,7 @@ public class JavaCompiler implements Compiler {
 		processTemplates(entity, packageFolder + File.separator
 				+ entity.getName() + "Store"  + daoSuffix.trim() + ".java", daoTemplate);
 	}
-	private void writeBeanSpecification(ProcessedEntity entity, String srcFolder)
+	private void writeBeanSpecification(Entity entity, String srcFolder)
 			throws IOException, TemplateException {
 		String packageFolder = getPackageAsFolder(srcFolder, entity
 				.getBeanPackage());

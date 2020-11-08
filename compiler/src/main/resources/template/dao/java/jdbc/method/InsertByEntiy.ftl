@@ -1,7 +1,7 @@
-<#if tableType == 'TABLE' >
+<#if table.tableType == 'TABLE' >
 	public final int create(final ${name} ${name?uncap_first}) throws SQLException  {
 		final String query = """
-		INSERT INTO ${tableName} (
+		INSERT INTO ${table.tableName} (
 		<#assign index=0>
 		<#list properties as property>		
 			<#if property.column.generatedColumn == "NO" >
@@ -12,7 +12,7 @@
 	    VALUES (
 	    <#assign index=0>
 	    <#list properties as property>		
-			<#if index == 0><#if sequenceName?? && highestPKIndex == 1>
+			<#if index == 0><#if sequenceName?? && table.highestPKIndex == 1>
 			<#list properties as property><#if property.primaryKeyIndex == 1>nextval('${sequenceName}')</#if></#list><#else>    ?</#if><#assign index=1><#else>            ,?</#if>
 		</#list>
 	    )	
