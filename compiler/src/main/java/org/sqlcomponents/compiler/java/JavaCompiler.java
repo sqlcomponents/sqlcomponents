@@ -44,7 +44,8 @@ public class JavaCompiler implements Compiler {
 		Mapper mapper = new JavaMapper();
 		application.setOrm(mapper.getOrm(application,new Crawler()));
 		ORM orm = application.getOrm();
-		for (Entity entity : orm.getEntities()) {
+
+		orm.getEntities().parallelStream().forEach(entity -> {
 			try {
 				writeDaoImplementation(entity, application.getSrcFolder(),application.getDaoSuffix());
 				writeBeanSpecification(entity, application.getSrcFolder());
@@ -55,7 +56,8 @@ public class JavaCompiler implements Compiler {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		});
+
 	}
 
 	private void writeDaoImplementation(Entity entity, String srcFolder,String daoSuffix)

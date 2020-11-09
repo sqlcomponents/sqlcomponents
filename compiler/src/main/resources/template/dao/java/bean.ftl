@@ -15,17 +15,17 @@ public class ${name} {
 	/**
 	 * ${property.remarks}  
 	 */ 
-	</#if>	
+	</#if>
+	<#if !property.nullable >
+    <#assign a=addImportStatement("javax.validation.constraints.NotNull")>
+    @NotNull
+    </#if>
 	<#if property.size != 0 && property.decimalDigits == 0 >
 	<#assign a=addImportStatement("javax.validation.constraints.Size")>
 	@Size(max=${property.size?c})
 	<#elseif property.size != 0>
 	<#assign a=addImportStatement("javax.validation.constraints.Digits")>
 	@Digits(integer=${property.size?c},fraction=${property.decimalDigits?c})
-	</#if>	
-	<#if !property.nullable >
-	<#assign a=addImportStatement("javax.validation.constraints.NotNull")>
-	@NotNull
 	</#if>
 	<#if orm.validationMap?? && orm.validationMap[property.columnName]?? >
 	<#assign a=addImportStatement("javax.validation.constraints.Pattern")>

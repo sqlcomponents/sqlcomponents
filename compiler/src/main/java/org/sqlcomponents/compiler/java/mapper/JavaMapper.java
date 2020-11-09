@@ -28,20 +28,6 @@ public class JavaMapper extends Mapper {
     private static final String INT4 = "int4";
     private static final String NUMERIC = "numeric";
 
-    // private static final String PLS_INTEGER = "PLS_INTEGER";
-    // private static final String BINARY_INTEGER = "BINARY_INTEGER";
-    // private static final String LONG = "LONG";
-    // private static final String RAW = "RAW";
-    // private static final String LONG_RAW = "LONG RAW";
-    // private static final String ROWID = "ROWID";
-    // private static final String UROWID = "UROWID";
-    // private static final String MLSLABEL = "MLSLABEL";
-    // private static final String CLOB = "CLOB";
-    // private static final String NCLOB = "NCLOB";
-    // private static final String BLOB = "BLOB";
-    // private static final String BFILE = "BFILE";
-    // private static final String XMLType = "XMLType";
-
     // Java Data Type
     private static final String JAVA_BYTE_ARRAY = "byte[]" ;
 
@@ -72,10 +58,6 @@ public class JavaMapper extends Mapper {
     private static final String JAVA_DATE = "java.util.Date";
 
     private static final String JAVA_DATE_SQL = "java.sql.Date";
-
-    // private static final String JAVA_CHAR = "java.lang.Character";
-    //
-    // private static final String JAVA_CHAR_PRIMITIVE = "char";
 
     private static final String JAVA_BYTE = "java.lang.Byte";
 
