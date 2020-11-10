@@ -4,6 +4,7 @@ import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.relational.Column;
 
 public class JavaMapper extends Mapper {
+
     // Oracle Data Types
     private static final String VARCHAR2 = "VARCHAR2";
     private static final String NVARCHAR2 = "NVARCHAR2";
@@ -91,11 +92,7 @@ public class JavaMapper extends Mapper {
 
     private static final String[] JAVA_GROUP_BYTE_ARRAY = new String[] { JAVA_BYTE_ARRAY };
 
-    // private static final String JAVA_BOOLEAN = "java.lang.Boolean";
-    //
-    // private static final String JAVA_BOOLEAN_PRIMITIVE = "boolean";
-    // private static final String[] JAVA_GROUP_BOOLEAN = new String[] {
-    // JAVA_BOOLEAN, JAVA_BOOLEAN_PRIMITIVE, JAVA_STRING };
+
 
     @Override
     public String getDataType(Column column) {

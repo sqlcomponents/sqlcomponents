@@ -52,17 +52,17 @@ class JavaCompilerTest {
         Application understand() {
 
             application.setMethodSpecification(Arrays.asList(
-                    "DeleteByEntity"
-                    , "DeleteByPK"
-                    , "GetAll"
-                    , "GetByEntity"
-                    , "GetByPK"
-                    , "GetByPKExceptHighest"
-                    , "GetByPKUniqueKeys"
-                    , "InsertByEntiy"
-                    , "IsExisting"
-                    , "MViewRefresh"
-                    , "UpdateByPK"
+                    "InsertByEntiy",
+//                    "DeleteByEntity",
+//                    "DeleteByPK",
+//                    "GetAll",
+//                    "GetByEntity",
+//                    "GetByPKExceptHighest",
+//                    "GetByPKUniqueKeys",
+//                    "IsExisting",
+//                    "MViewRefresh",
+//                    "UpdateByPK",
+                    "GetByPK"
             ));
             return this;
         }
