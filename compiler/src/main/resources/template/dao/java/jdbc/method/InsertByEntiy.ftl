@@ -1,10 +1,10 @@
 <#if table.tableType == 'TABLE' >
-	public final int create(final ${name} ${name?uncap_first}) throws SQLException  {
+	public final int insert(final ${name} ${name?uncap_first}) throws SQLException  {
 		final String query = """
 		INSERT INTO ${table.tableName} (
 		<#assign index=0>
 		<#list properties as property>		
-			<#if property.column.generatedColumn == "NO" >
+			<#if property.column.generatedColumn != "YES" >
 			<#if index == 0><#assign index=1><#else>,</#if>"${property.columnName}"
 			</#if>
 		</#list>
@@ -38,6 +38,5 @@
 			</#list>	
 			return preparedStatement.executeUpdate();
         }
-				
-	}
+	}<#assign a=addImportStatement(beanPackage+"."+name)><#assign a=addImportStatement("java.sql.PreparedStatement")>
 </#if>

@@ -319,7 +319,7 @@ public class ${name}Store${orm.daoSuffix}  {
         }
     }
 
-}
+}<#assign a=addImportStatement("java.util.ArrayList")>
 </#assign>
 <@importStatements/>
 

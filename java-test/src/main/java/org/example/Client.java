@@ -1,9 +1,11 @@
 package org.example;
 
+import org.example.model.AllInAllAzaguRaja;
 import org.example.store.AllInAllAzaguRajaStore;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
+import java.sql.Date;
 import java.sql.SQLException;
 
 public class Client {
@@ -14,7 +16,11 @@ public class Client {
 //        actorStore.select(actorId().eq(100L))
 //        .forEach(actor-> System.out.println(actor.getFirstName()));
 
-        System.out.println(allInAllAzaguRajaStore.exists(1L,1L));
+        AllInAllAzaguRaja allInAllAzaguRaja = new AllInAllAzaguRaja();
+        allInAllAzaguRaja.setCode(1L);
+        allInAllAzaguRaja.setTitle("Title");
+        allInAllAzaguRajaStore.insert(allInAllAzaguRaja);
+        System.out.println(allInAllAzaguRajaStore.find(1L));
     }
 
 
