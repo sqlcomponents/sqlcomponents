@@ -3,9 +3,12 @@ package org.sqlcomponents.core.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.sqlcomponents.core.model.relational.Column;
 import org.sqlcomponents.core.model.relational.Table;
+import org.sqlcomponents.core.model.relational.enumeration.Flag;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -27,4 +30,9 @@ public class Entity  {
 		setTable(table);
 	}
 
+	public List<Property> getInsertableProperties() {
+		return this.getProperties().stream().filter(property -> {
+			return property.getColumn().isInsertable();
+		}).collect(Collectors.toList());
+	}
 }

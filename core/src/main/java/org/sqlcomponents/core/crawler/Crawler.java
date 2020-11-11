@@ -64,10 +64,10 @@ public class Crawler {
 			database.setResultSetHoldability(databasemetadata.getResultSetHoldability());
 			database.setSchemaTerm(databasemetadata.getSchemaTerm());
 			database.setSearchStringEscape(databasemetadata.getSearchStringEscape());
-			database.setSqlKeywords(new HashSet<>(Arrays.asList(databasemetadata.getSQLKeywords().split(","))));
-			database.setStringFunctions(new HashSet<>(Arrays.asList(databasemetadata.getStringFunctions().split(","))));
-			database.setSystemFunctions(new HashSet<>(Arrays.asList(databasemetadata.getSystemFunctions().split(","))));
-			database.setTimeDateFunctions(new HashSet<>(Arrays.asList(databasemetadata.getTimeDateFunctions().split(","))));
+			database.setSqlKeywords(new TreeSet<>(Arrays.asList(databasemetadata.getSQLKeywords().split(","))));
+			database.setStringFunctions(new TreeSet<>(Arrays.asList(databasemetadata.getStringFunctions().split(","))));
+			database.setSystemFunctions(new TreeSet<>(Arrays.asList(databasemetadata.getSystemFunctions().split(","))));
+			database.setTimeDateFunctions(new TreeSet<>(Arrays.asList(databasemetadata.getTimeDateFunctions().split(","))));
 			database.setSupportsTransactions(databasemetadata.supportsTransactions());
 			database.setSupportsDataDefinitionAndDataManipulationTransactions(databasemetadata.supportsDataDefinitionAndDataManipulationTransactions());
 			database.setDataDefinitionCausesTransactionCommit(databasemetadata.dataDefinitionCausesTransactionCommit());

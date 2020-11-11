@@ -122,8 +122,8 @@ public class JavaCompiler implements Compiler {
 		public int getHighestPKIndex() {
 			int highestPKIndex = 0;
 			for (Property property : getProperties()) {
-				if (highestPKIndex < property.getPrimaryKeyIndex()) {
-					highestPKIndex = property.getPrimaryKeyIndex();
+				if (highestPKIndex < property.getColumn().getPrimaryKeyIndex()) {
+					highestPKIndex = property.getColumn().getPrimaryKeyIndex();
 				}
 			}
 			return highestPKIndex;

@@ -69,7 +69,7 @@
 	<#local pkAsParameterStr="">
     <#assign index=1>
 	<#list properties as property>
-		<#if property.primaryKeyIndex != 0>
+		<#if property.column.primaryKeyIndex != 0>
         	<#local pkAsParameterStr = pkAsParameterStr + "preparedStatement.set${getJDBCClassName(property.dataType)}(${index}," + property.name+");\n\t"><#assign index=index+1>
         </#if>
 	</#list>
@@ -80,7 +80,7 @@
 	<#local pkAsParameterStr="">
 
 	<#list properties as property>
-		<#if property.primaryKeyIndex != 0>
+		<#if property.column.primaryKeyIndex != 0>
 			<#local pkAsParameterStr = pkAsParameterStr + "map.put(\"" + property.name+ "\"," + property.name+");\n\t">
 		</#if>
 	</#list>
@@ -108,8 +108,8 @@
 	<#local pkAsParameterStr="">
 	<#local index=0>
 	<#list properties as property>
-		<#if property.primaryKeyIndex != 0>
-			<#if property.primaryKeyIndex != table.highestPKIndex>
+		<#if property.column.primaryKeyIndex != 0>
+			<#if property.column.primaryKeyIndex != table.highestPKIndex>
 				<#if index == 0>
 					<#local index=1>
 				<#else>
@@ -143,31 +143,31 @@
 	<#local pkAsParameterStr="">
 	<#local index=0>
 	<#list properties as property>
-		<#if property.primaryKeyIndex != 0>
+		<#if property.column.primaryKeyIndex != 0>
 			<#if index == 0>
 				<#local index=1>
 			<#else>
 				<#local pkAsParameterStr = pkAsParameterStr + "," >
 			</#if>
-			<#local pkAsParameterStr = pkAsParameterStr + property.columnName>
+			<#local pkAsParameterStr = pkAsParameterStr + property.column.columnName>
 		</#if>
 	</#list>
 	<#return pkAsParameterStr> 
 </#function>
 
 
-<#macro columnSelection><#assign index=0><#list properties as property><#if index == 0><#assign index=1><#else>,</#if>\"${property.columnName}\"</#list></#macro>
+<#macro columnSelection><#assign index=0><#list properties as property><#if index == 0><#assign index=1><#else>,</#if>\"${property.column.columnName}\"</#list></#macro>
 
 <#macro dynamicWhere prefix>
 
 		<#list properties as property>
 			<#if property.sqlDataType?index_of("VARCHAR") !=  -1>
 			if(${prefix}.get${property.name?cap_first}() != null) {
-				dynamicWhere.append("AND ${property.columnName} like '").append(${prefix}.get${property.name?cap_first}()).append("' ");
+				dynamicWhere.append("AND ${property.column.columnName} like '").append(${prefix}.get${property.name?cap_first}()).append("' ");
 			}
 			<#elseif property.sqlDataType?index_of("BLOB") ==  -1>
 			if(${prefix}.get${property.name?cap_first}() != null) {
-				dynamicWhere.append("AND ${property.columnName} like '").append(${prefix}.get${property.name?cap_first}()).append("' ");
+				dynamicWhere.append("AND ${property.column.columnName} like '").append(${prefix}.get${property.name?cap_first}()).append("' ");
 			}
 			</#if>
 		</#list>
@@ -179,11 +179,11 @@
 		<#list properties as property>
 			<#if property.sqlDataType?index_of("VARCHAR") !=  -1>
 			<if  test="${prefix}${property.name} != null">
-				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,driverName)}#
+				AND ${property.column.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,driverName)}#
 			</if>
 			<#elseif property.sqlDataType?index_of("BLOB") ==  -1>
 			<if  test="${prefix}${property.name} != null">
-				AND ${property.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,driverName)}#
+				AND ${property.column.columnName} like #${prefix}${property.name}${getDataBaseSpecificDefault(property.sqlDataType,driverName)}#
 			</if>
 			</#if>						
 		</#list>

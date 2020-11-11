@@ -53,8 +53,9 @@ class JavaCompilerTest {
 
             application.setMethodSpecification(Arrays.asList(
                     "InsertByEntiy",
+                    "DeleteByPK",
 //                    "DeleteByEntity",
-//                    "DeleteByPK",
+
 //                    "GetAll",
 //                    "GetByEntity",
 //                    "GetByPKExceptHighest",

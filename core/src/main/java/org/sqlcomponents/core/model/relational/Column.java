@@ -42,4 +42,13 @@ public class Column  {
     public Column(final Table table) {
         this.table = table;
     }
+
+
+    public String getEscapedName() {
+        return this.table.getDatabase().escapedName(this.getColumnName());
+    }
+
+    public boolean isInsertable() {
+        return !isAutoIncrement && generatedColumn != Flag.YES;
+    }
 }

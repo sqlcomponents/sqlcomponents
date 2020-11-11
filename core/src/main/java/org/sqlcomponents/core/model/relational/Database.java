@@ -7,6 +7,7 @@ import org.sqlcomponents.core.model.relational.enumeration.TableType;
 
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 
 @Getter
 @Setter
@@ -63,10 +64,10 @@ public class Database {
     //private rowidlifetime rowIdLifeTime;
     private String schemaTerm;
     private String searchStringEscape;
-    private Set<String> sqlKeywords;
-    private Set<String> stringFunctions;
-    private Set<String> systemFunctions;
-    private Set<String> timeDateFunctions;
+    private SortedSet<String> sqlKeywords;
+    private SortedSet<String> stringFunctions;
+    private SortedSet<String> systemFunctions;
+    private SortedSet<String> timeDateFunctions;
     private boolean supportsTransactions;
     private boolean supportsTransactionIsolationLevel;
     private boolean supportsDataDefinitionAndDataManipulationTransactions;
@@ -170,4 +171,16 @@ public class Database {
     private boolean usersLocalFilePerTable;
     private boolean usersLocalFiles;
 
+
+    /**
+     * Used to get Escaped Name for tableName or columnName
+     * @param name
+     * @return escapedName
+     */
+    public String escapedName(final String name) {
+        Boolean shouldEscape = this.getSqlKeywords().stream()
+                .filter(keyword->keyword.equalsIgnoreCase(name))
+                .findFirst().isPresent();
+        return shouldEscape ? this.identifierQuoteString + name + this.identifierQuoteString : name;
+    }
 }

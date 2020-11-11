@@ -37,6 +37,10 @@ public class Table  {
                 .filter(column->column.getPrimaryKeyIndex() != 0).findFirst().isPresent();
     }
 
+    public String getEscapedName() {
+        return this.database.escapedName(this.getTableName());
+    }
+
     public int getHighestPKIndex() {
         int highestPKIndex = 0;
         for (Column column : columns) {

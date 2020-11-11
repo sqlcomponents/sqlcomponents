@@ -84,7 +84,7 @@ public abstract class Mapper {
                         .getColumnName()));
             }
             property.setUniqueConstraintGroup(getEntityName(application,
-                    property.getUniqueConstraintName()));
+                    property.getColumn().getUniqueConstraintName()));
             property.setDataType(getDataType(column));
             return property;
         }

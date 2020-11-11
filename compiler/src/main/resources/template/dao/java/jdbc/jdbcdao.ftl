@@ -4,7 +4,7 @@ package <#if daoPackage?? && daoPackage?length != 0 >${daoPackage}</#if>;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException ;
+import java.sql.SQLException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
 /**
  * 
  */
-public class ${name}Store${orm.daoSuffix}  {
+public final class ${name}Store${orm.daoSuffix}  {
 
-  private final DataSource dataSource;
+    private final DataSource dataSource;
 
-  public ${name}Store${orm.daoSuffix}(DataSource dataSource) {
-    this.dataSource = dataSource;
-  }
+    public ${name}Store${orm.daoSuffix}(final DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
 	<#list orm.methodSpecification as method>
 		<#include "/template/dao/java/jdbc/method/${method}.ftl">
@@ -112,35 +112,35 @@ public class ${name}Store${orm.daoSuffix}  {
     <#switch property.dataType>
     <#case "java.lang.String">
         public <#if property.column.isNullable??>Nullable</#if>StringField ${property.name}() {
-            <#if property.column.isNullable??>Nullable</#if>StringField query = new <#if property.column.isNullable??>Nullable</#if>StringField("${property.columnName}",this);
+            <#if property.column.isNullable??>Nullable</#if>StringField query = new <#if property.column.isNullable??>Nullable</#if>StringField("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
         <#break>
     <#case "java.lang.Integer">
         public <#if property.column.isNullable??>Nullable</#if>NumberField<Integer> ${property.name}() {
-            <#if property.column.isNullable??>Nullable</#if>NumberField<Integer> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.columnName}",this);
+            <#if property.column.isNullable??>Nullable</#if>NumberField<Integer> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
         <#break>
     <#case "java.lang.Long">
         public <#if property.column.isNullable??>Nullable</#if>NumberField<Long> ${property.name}() {
-            <#if property.column.isNullable??>Nullable</#if>NumberField<Long> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.columnName}",this);
+            <#if property.column.isNullable??>Nullable</#if>NumberField<Long> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
         <#break>
     <#case "java.lang.Float">
         public <#if property.column.isNullable??>Nullable</#if>NumberField<Float> ${property.name}() {
-            <#if property.column.isNullable??>Nullable</#if>NumberField<Float> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.columnName}",this);
+            <#if property.column.isNullable??>Nullable</#if>NumberField<Float> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
         <#break>
     <#case "java.util.Date">
         public <#if property.column.isNullable??>Nullable</#if>DateField ${property.name}() {
-            <#if property.column.isNullable??>Nullable</#if>DateField query = new <#if property.column.isNullable??>Nullable</#if>DateField("${property.columnName}",this);
+            <#if property.column.isNullable??>Nullable</#if>DateField query = new <#if property.column.isNullable??>Nullable</#if>DateField("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }

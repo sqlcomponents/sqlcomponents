@@ -5,8 +5,8 @@
 					WHERE
 					<#assign index=0>
 					<#list properties as property>
-						<#if property.primaryKeyIndex != 0>		
-						<#if index == 0><#assign index=1><#else>,</#if>${property.columnName} = ?
+						<#if property.column.primaryKeyIndex != 0>
+						<#if index == 0><#assign index=1><#else>,</#if>${property.column.columnName} = ?
 						</#if>
 					</#list>
                 """;

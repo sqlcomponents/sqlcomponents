@@ -16,20 +16,20 @@ public class ${name} {
 	 * ${property.remarks}  
 	 */ 
 	</#if>
-	<#if !property.nullable >
+	<#if !property.column.nullable >
     <#assign a=addImportStatement("javax.validation.constraints.NotNull")>
     @NotNull
     </#if>
-	<#if property.size != 0 && property.decimalDigits == 0 >
+	<#if property.column.size != 0 && property.column.decimalDigits == 0 >
 	<#assign a=addImportStatement("javax.validation.constraints.Size")>
-	@Size(max=${property.size?c})
-	<#elseif property.size != 0>
+	@Size(max=${property.column.size?c})
+	<#elseif property.column.size != 0>
 	<#assign a=addImportStatement("javax.validation.constraints.Digits")>
-	@Digits(integer=${property.size?c},fraction=${property.decimalDigits?c})
+	@Digits(integer=${property.column.size?c},fraction=${property.column.decimalDigits?c})
 	</#if>
-	<#if orm.validationMap?? && orm.validationMap[property.columnName]?? >
+	<#if orm.validationMap?? && orm.validationMap[property.column.columnName]?? >
 	<#assign a=addImportStatement("javax.validation.constraints.Pattern")>
-	@Pattern(regexp="${orm.validationMap[property.columnName]}")
+	@Pattern(regexp="${orm.validationMap[property.column.columnName]}")
 	</#if>
 	private ${getClassName(property.dataType)} ${property.name};	
 	<#assign a=addImportStatement(property.dataType)>
