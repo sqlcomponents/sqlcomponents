@@ -24,7 +24,7 @@ public class Column  {
     private String tableCategory;
     private String tableSchema;
     private String typeName;
-    private int types;
+    private int type;
     private int bufferLength;
     private int numberPrecisionRadix;
     private String columnDefinition;

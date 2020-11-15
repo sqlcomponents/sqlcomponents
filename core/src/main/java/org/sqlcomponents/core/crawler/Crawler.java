@@ -204,7 +204,7 @@ public class Crawler {
 			column.setColumnName(columnResultset.getString("COLUMN_NAME"));
 			column.setTableName(columnResultset.getString("TABLE_NAME"));
 			column.setTypeName(columnResultset.getString("TYPE_NAME"));
-			column.setTypes(columnResultset.getInt("DATA_TYPE"));
+			column.setType(columnResultset.getInt("DATA_TYPE"));
 			column.setSize(columnResultset.getInt("COLUMN_SIZE"));
 			column.setDecimalDigits(columnResultset.getInt("DECIMAL_DIGITS"));
 			column.setRemarks(columnResultset.getString("REMARKS"));
