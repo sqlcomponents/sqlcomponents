@@ -134,10 +134,7 @@ public class Crawler {
 		ResultSet resultset = databasemetadata.getTableTypes();
 
 		while (resultset.next()) {
-
-				tableTypes.add(TableType.value(resultset.getString("TABLE_TYPE")));
-
-
+			tableTypes.add(TableType.value(resultset.getString("TABLE_TYPE")));
 		}
 
 		return tableTypes;
@@ -165,7 +162,6 @@ public class Crawler {
 			final String tableName = resultset.getString("table_name");
 
 				Table table = new Table(database);
-//				table.setTableType(TableType.TABLE);
 				table.setTableName(tableName);
 				table.setCategoryName(resultset.getString("table_cat"));
 				table.setSchemaName(resultset.getString("table_schem"));

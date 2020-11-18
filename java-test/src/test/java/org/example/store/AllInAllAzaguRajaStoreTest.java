@@ -24,15 +24,10 @@ class AllInAllAzaguRajaStoreTest {
 
     @BeforeAll
     void init() throws SQLException {
-
-        allInAllAzaguRajaStore.delete(1L);
-
+        allInAllAzaguRajaStore.delete(1);
         allInAllAzaguRaja = new AllInAllAzaguRaja();
-        allInAllAzaguRaja.setVarchar("Title");
-        allInAllAzaguRajaStore.insert(allInAllAzaguRaja);
-
-        allInAllAzaguRaja = allInAllAzaguRajaStore.find(1L);
-
+        allInAllAzaguRaja.setA3DigitNumber(2);
+        allInAllAzaguRajaStore.insert().value(allInAllAzaguRaja).returning();
     }
 
     @Test
