@@ -1,5 +1,6 @@
 package org.sqlcomponents.compiler.java;
 
+import com.google.googlejavaformat.java.FormatterException;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -15,16 +16,21 @@ import org.sqlcomponents.core.model.relational.enumeration.TableType;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import com.google.googlejavaformat.java.Formatter;
 
 public class JavaCompiler implements Compiler {
 
 	private final Configuration cfg;
+	private final Formatter formatter;
 	private Template daoTemplate;
 	private Template beanTemplate;
 
 	public JavaCompiler() {
+		formatter = new Formatter();
 		cfg = new Configuration(Configuration.VERSION_2_3_29);
 		cfg.setClassForTemplateLoading(
 				JavaCompiler.class, "/");
@@ -49,10 +55,7 @@ public class JavaCompiler implements Compiler {
 			try {
 				writeDaoImplementation(entity, application.getSrcFolder(),application.getDaoSuffix());
 				writeBeanSpecification(entity, application.getSrcFolder());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (TemplateException e) {
+			} catch (IOException | TemplateException | FormatterException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -61,7 +64,7 @@ public class JavaCompiler implements Compiler {
 	}
 
 	private void writeDaoImplementation(Entity entity, String srcFolder,String daoSuffix)
-			throws IOException, TemplateException {
+			throws IOException, TemplateException, FormatterException {
 		String packageFolder = getPackageAsFolder(srcFolder, entity
 				.getDaoPackage());
 		new File(packageFolder).mkdirs();
@@ -69,7 +72,7 @@ public class JavaCompiler implements Compiler {
 				+ entity.getName() + "Store"  + daoSuffix.trim() + ".java", daoTemplate);
 	}
 	private void writeBeanSpecification(Entity entity, String srcFolder)
-			throws IOException, TemplateException {
+			throws IOException, TemplateException, FormatterException {
 		String packageFolder = getPackageAsFolder(srcFolder, entity
 				.getBeanPackage());
 		new File(packageFolder).mkdirs();
@@ -79,11 +82,15 @@ public class JavaCompiler implements Compiler {
 
 
 	private void processTemplates(Object model, String targetFile,
-			Template template) throws IOException, TemplateException {
-		FileWriter fileWriter = new FileWriter(targetFile);
-		template.process(model, fileWriter);
-		fileWriter.flush();
-		fileWriter.close();
+			Template template) throws IOException, TemplateException, FormatterException {
+		StringWriter stringWriter = new StringWriter();
+		template.process(model, stringWriter);
+
+		Files.write(new File(targetFile).toPath(),
+				formatter.formatSource(stringWriter.getBuffer().toString()).getBytes());
+
+		stringWriter.flush();
+		stringWriter.close();
 	}
 
 	private String getPackageAsFolder(String rootDir, String packageStr) {
