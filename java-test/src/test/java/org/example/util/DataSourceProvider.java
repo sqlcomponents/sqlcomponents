@@ -5,6 +5,7 @@ import org.postgresql.ds.PGSimpleDataSource;
 import javax.sql.DataSource;
 
 public final class DataSourceProvider {
+    
     public static DataSource dataSource() {
         PGSimpleDataSource ds = new PGSimpleDataSource();
         ds.setServerNames(new String[]{"localhost"});

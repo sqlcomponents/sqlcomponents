@@ -24,14 +24,17 @@ class AllInAllAzaguRajaStoreTest {
 
     @BeforeAll
     void init() throws SQLException {
-        allInAllAzaguRajaStore.delete(1);
+        allInAllAzaguRajaStore.deleteAll();
         allInAllAzaguRaja = new AllInAllAzaguRaja();
         allInAllAzaguRaja.setA3DigitNumber(2);
-        allInAllAzaguRajaStore.insert().value(allInAllAzaguRaja).returning();
+        allInAllAzaguRaja.setA7DigitNumber(3);
+        allInAllAzaguRaja = allInAllAzaguRajaStore.insert()
+                .value(allInAllAzaguRaja).returning();
+
     }
 
     @Test
     void create() throws SQLException {
-        assertNotNull(allInAllAzaguRaja,"Azagu Raja created");
+        assertNotNull(allInAllAzaguRajaStore.find(allInAllAzaguRaja.getCode()),"Azagu Raja created");
     }
 }

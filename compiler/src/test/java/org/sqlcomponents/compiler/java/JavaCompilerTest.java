@@ -54,15 +54,15 @@ class JavaCompilerTest {
             application.setMethodSpecification(Arrays.asList(
                     "InsertByEntiy",
                     "DeleteByPK",
-//                    "DeleteByEntity",
-
-//                    "GetAll",
-//                    "GetByEntity",
-//                    "GetByPKExceptHighest",
-//                    "GetByPKUniqueKeys",
-//                    "IsExisting",
-//                    "MViewRefresh",
-//                    "UpdateByPK",
+                    "DeleteByEntity",
+                    "DeleteAll",
+                    "GetAll",
+                    "GetByEntity",
+                    "GetByPKExceptHighest",
+                    "GetByPKUniqueKeys",
+                    "IsExisting",
+                    "MViewRefresh",
+                    "UpdateByPK",
                     "GetByPK"
             ));
             return this;

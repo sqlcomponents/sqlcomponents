@@ -40,28 +40,7 @@ public final class ${name}Store${orm.daoSuffix}  {
         return ${name?uncap_first};
     }
 
-    public final InsertBuilder insert() {
-        return new InsertBuilder(this);
-    }
 
-    public static class InsertBuilder {
-        private final ${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix};
-
-        private ${name} ${name?uncap_first};
-
-        private InsertBuilder(${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix}) {
-            this.${name?uncap_first}Store${orm.daoSuffix} = ${name?uncap_first}Store${orm.daoSuffix};
-        }
-
-        public InsertBuilder value(${name} ${name?uncap_first}) {
-            this.${name?uncap_first} = ${name?uncap_first};
-            return this;
-        }
-
-        public void returning()  {
-
-        }
-    }
 
 <#list properties as property>
     <#switch property.dataType>

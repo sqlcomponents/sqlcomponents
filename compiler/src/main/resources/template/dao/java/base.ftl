@@ -68,6 +68,24 @@
 	<#return pkAsParameterStr> 
 </#function>
 
+<#function getPrimaryKeysFromRS>
+	<#local pkAsParameterStr="">
+	<#local index=0>
+	<#list properties as property>
+		<#if property.column.primaryKeyIndex != 0>
+			<#if index == 0>
+				<#local index=1>
+			<#else>
+				<#local pkAsParameterStr = pkAsParameterStr + "," >
+			</#if>
+
+			<#local pkAsParameterStr = pkAsParameterStr + "res.get"+ getJDBCClassName(property.dataType) + "(\"" +property.column.columnName + "\")" >
+            <#local a=addImportStatement(property.dataType)>
+		</#if>
+	</#list>
+	<#return pkAsParameterStr>
+</#function>
+
 
 <#function getPrimaryKeysAsParameterStringExceptHighest>
 	<#local pkAsParameterStr="">
