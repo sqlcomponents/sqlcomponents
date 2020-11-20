@@ -26,7 +26,7 @@ class AllInAllAzaguRajaStoreTest {
     void init() throws SQLException {
         allInAllAzaguRajaStore.deleteAll();
         allInAllAzaguRaja = new AllInAllAzaguRaja();
-        allInAllAzaguRaja.setI3Num(111);
+        allInAllAzaguRaja.setA7DigitNumber(3);
 //        allInAllAzaguRaja.setVarchar("4");
         allInAllAzaguRaja = allInAllAzaguRajaStore.insert()
                 .value(allInAllAzaguRaja).returning();
