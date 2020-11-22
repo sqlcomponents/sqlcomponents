@@ -3,6 +3,7 @@ package org.example.store;
 import static org.example.util.DataSourceProvider.dataSource;
 
 import org.example.model.AllInAllAzaguRaja;
+import org.example.model.AllInAllAzaguRajaReference;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -12,13 +13,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.sql.SQLException;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class AllInAllAzaguRajaStoreTest {
+class AllInAllAzaguRajaReferenceStoreTest {
 
     private final AllInAllAzaguRajaStore allInAllAzaguRajaStore;
-
+    
+    
     private AllInAllAzaguRaja allInAllAzaguRaja;
-
-    AllInAllAzaguRajaStoreTest() {
+    private AllInAllAzaguRajaReference allInAllAzaguRajaReference;
+    
+    
+    AllInAllAzaguRajaReferenceStoreTest() {
         this.allInAllAzaguRajaStore = new AllInAllAzaguRajaStore(dataSource());
     }
 
