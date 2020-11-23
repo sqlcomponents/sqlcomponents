@@ -26,7 +26,7 @@ public class Entity  {
 	private List<Property> properties;
 
 	public Entity(ORM orm, Table table) {
-		setOrm(orm); ;
+		setOrm(orm);
 		setTable(table);
 	}
 

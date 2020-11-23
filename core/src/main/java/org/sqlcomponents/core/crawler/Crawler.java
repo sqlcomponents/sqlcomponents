@@ -8,6 +8,7 @@ import org.sqlcomponents.core.model.relational.enumeration.TableType;
 
 import java.sql.*;
 import java.util.*;
+import java.util.function.Predicate;
 
 public class Crawler {
 
@@ -15,13 +16,13 @@ public class Crawler {
 	public Database getDatabase(final Application application) throws ScubeException {
 		Database database = new Database();
 		try (Connection connection = DriverManager.getConnection(application.getUrl(), application
-				.getUserName(), application.getPassword());) {
+				.getUserName(), application.getPassword())) {
 			DatabaseMetaData databasemetadata = connection.getMetaData();
 
 			database.setTableTypes(getTableTypes(databasemetadata));
 
 			database.setSequences(getSequences(databasemetadata));
-			database.setTables(getTables(databasemetadata, database));
+			database.setTables(getTables(databasemetadata, database,tableName-> application.getTablePatterns() == null || application.getTablePatterns().contains(tableName)));
 			database.setFunctions(getProcedures(databasemetadata));
 			database.setCatalogTerm(databasemetadata.getCatalogTerm());
 			database.setCatalogSeperator(databasemetadata.getCatalogSeparator());
@@ -153,14 +154,14 @@ public class Crawler {
 		return sequences;
 	}
 
-	private List<Table> getTables(DatabaseMetaData databasemetadata, Database database) throws SQLException {
+	private List<Table> getTables(DatabaseMetaData databasemetadata, Database database, Predicate<String> tableFilter) throws SQLException {
 		List<Table> tables = new ArrayList<>();
 
 		ResultSet resultset = databasemetadata.getTables(null, null,  null,new String[]{"TABLE"});
 
 		while (resultset.next()) {
 			final String tableName = resultset.getString("table_name");
-
+			if(tableFilter.test(tableName)) {
 				Table table = new Table(database);
 				table.setTableName(tableName);
 				table.setCategoryName(resultset.getString("table_cat"));
@@ -183,6 +184,8 @@ public class Crawler {
 						.ifPresent(sequenceName->table.setSequenceName(sequenceName));
 
 				tables.add(table);
+			}
+
 
 
 		}

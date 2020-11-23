@@ -1,14 +1,12 @@
 package org.sqlcomponents.compiler.java;
 
 import org.junit.jupiter.api.Test;
-import org.sqlcomponents.compiler.java.mapper.JavaMapper;
-import org.sqlcomponents.core.crawler.Crawler;
 import org.sqlcomponents.core.exception.ScubeException;
-import org.sqlcomponents.core.mapper.Mapper;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.List;
 
 class JavaCompilerTest {
     @Test
@@ -44,8 +42,6 @@ class JavaCompilerTest {
             application.setCleanSource(true);
 
 
-
-
             return this;
         }
 
@@ -73,9 +69,10 @@ class JavaCompilerTest {
         }
 
         void writeCode() throws IOException, ScubeException {
+            application.setTablePatterns(Arrays.asList("all_in_all_azagu_raja_reference"));
             application.setSrcFolder("../datastore/target/generated-sources/movie-db");
             application.compile(new JavaCompiler());
-            System.out.println("Code is compiled into "+ application.getSrcFolder());
+            System.out.println("Code is compiled into " + application.getSrcFolder());
         }
 
     }

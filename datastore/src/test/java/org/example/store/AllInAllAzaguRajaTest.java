@@ -12,13 +12,10 @@ import static org.example.util.DataSourceProvider.dataSource;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AllInAllAzaguRajaTest {
 
-    private final AllInAllAzaguRajaStore allInAllAzaguRajaStore;
-
     private final AllInAllAzaguRajaReferenceStore allAzaguRajaReferenceStore;
 
     AllInAllAzaguRajaTest() {
         this.allAzaguRajaReferenceStore = new AllInAllAzaguRajaReferenceStore(dataSource());
-        this.allInAllAzaguRajaStore = new AllInAllAzaguRajaStore(dataSource());
     }
 
     @BeforeAll
