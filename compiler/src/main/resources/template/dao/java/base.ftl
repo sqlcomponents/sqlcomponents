@@ -68,6 +68,24 @@
 	<#return pkAsParameterStr> 
 </#function>
 
+<#function getPrimaryKeysFromModel nameOfObject>
+	<#local pkAsParameterStr="">
+	<#local index=0>
+	<#list properties as property>
+		<#if property.column.primaryKeyIndex != 0>
+			<#if index == 0>
+				<#local index=1>
+			<#else>
+				<#local pkAsParameterStr = pkAsParameterStr + "," >
+			</#if>
+
+			<#local pkAsParameterStr = pkAsParameterStr + nameOfObject + ".get"+ property.name?cap_first + "()" >
+            <#local a=addImportStatement(property.dataType)>
+		</#if>
+	</#list>
+	<#return pkAsParameterStr>
+</#function>
+
 <#function getPrimaryKeysFromRS>
 	<#local pkAsParameterStr="">
 	<#local index=0>
