@@ -10,7 +10,7 @@ CREATE TABLE all_in_all_azagu_raja_reference (
 );
 
 
-CREATE TABLE public.all_in_all_azagu_raja(
+CREATE TABLE all_in_all_azagu_raja(
    id SERIAL PRIMARY KEY,
    reference_code VARCHAR(80),
    CONSTRAINT fk_code
@@ -19,11 +19,14 @@ CREATE TABLE public.all_in_all_azagu_raja(
 );
 
 
-INSERT INTO public.all_in_all_azagu_raja_reference
-(code, "name")
-VALUES('A110', 'Hari'),('A210', 'Priya'),('A310', 'Hansini');
+INSERT INTO all_in_all_azagu_raja_reference
+(code, name)
+VALUES
+('A110', 'Hari')
+,('A210', 'Priya')
+,('A310', 'Hansini');
 
-INSERT INTO public.all_in_all_azagu_raja
+INSERT INTO all_in_all_azagu_raja
 (reference_code)
 VALUES('A110');
 

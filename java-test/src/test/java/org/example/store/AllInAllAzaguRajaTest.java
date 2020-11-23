@@ -1,35 +1,33 @@
 package org.example.store;
 
-import static org.example.util.DataSourceProvider.dataSource;
-
 import org.example.model.AllInAllAzaguRajaReference;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.sql.SQLException;
 
+import static org.example.util.DataSourceProvider.dataSource;
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class AllInAllAzaguRajaReferenceStoreTest {
+class AllInAllAzaguRajaTest {
+
+    private final AllInAllAzaguRajaStore allInAllAzaguRajaStore;
 
     private final AllInAllAzaguRajaReferenceStore allAzaguRajaReferenceStore;
 
-    private AllInAllAzaguRajaReference allInAllAzaguRajaReference;
-    
-    
-    AllInAllAzaguRajaReferenceStoreTest() {
+    AllInAllAzaguRajaTest() {
         this.allAzaguRajaReferenceStore = new AllInAllAzaguRajaReferenceStore(dataSource());
+        this.allInAllAzaguRajaStore = new AllInAllAzaguRajaStore(dataSource());
     }
 
     @BeforeAll
     void init() throws SQLException {
 
-
     }
 
     @Test
-    void create() throws SQLException {
-           }
+    void testAllInAllAzaguRaja() throws SQLException {
+
+    }
 }
