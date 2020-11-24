@@ -45,13 +45,17 @@ class AllInAllAzaguRajaTest {
         allInAllAzaguRaja.setReferenceCode("A110");
         this.allInAllAzaguRajaStore.insert(allInAllAzaguRaja);
 
-//        //this is to check reference, --> find with a given code.
-//        AllInAllAzaguRajaReference insertedObject = this.allAzaguRajaReferenceStore.find("A110");
-//
-//        //this is to check reference, --> update by updating a parameter.
-//        insertedObject.setName("Priya");
-//        this.allAzaguRajaReferenceStore.update(insertedObject);
-//        Assertions.assertEquals("Priya", this.allAzaguRajaReferenceStore.find("A110").getName(), "reference updated successfully");
-//
+        //this is to check reference, --> find with a given code.
+        AllInAllAzaguRajaReference insertedObject = this.allAzaguRajaReferenceStore.find("A110");
+
+        //this is to check mymodel, --> find with a given reference_code.
+        AllInAllAzaguRaja insertedAllinallazaguraja = this.allInAllAzaguRajaStore.find("A110");
+        Assertions.assertNotNull(insertedAllinallazaguraja, "record found");
+        
+        //this is to check reference, --> update by updating a parameter.
+        insertedObject.setName("Priya");
+        this.allAzaguRajaReferenceStore.update(insertedObject);
+        Assertions.assertEquals("Priya", this.allAzaguRajaReferenceStore.find("A110").getName(), "reference updated successfully");
+
     }
 }
