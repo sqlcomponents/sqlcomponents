@@ -3,8 +3,11 @@ package org.example.store;
 import org.example.model.AllInAllAzaguRaja;
 import org.example.model.AllInAllAzaguRajaReference;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import org.junit.jupiter.api.*;
 =======
+=======
+>>>>>>> 99720a355689c54690ae6e8094e91cfcfdc0cf00
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -28,6 +31,7 @@ class AllInAllAzaguRajaTest {
         this.allInAllAzaguRajaStore = new AllInAllAzaguRajaStore(dataSource());
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     @BeforeEach
     void init() throws SQLException {
@@ -55,6 +59,17 @@ class AllInAllAzaguRajaTest {
     void testAllInAllAzaguRaja() throws SQLException {
 //        this.allInAllAzaguRajaStore.deleteAll();
 //        this.allAzaguRajaReferenceStore.deleteAll();
+=======
+
+
+    @Test
+    void testAllInAllAzaguRaja() throws SQLException {
+//        this.allInAllAzaguRajaStore.deleteAll();
+//        this.allAzaguRajaReferenceStore.deleteAll();
+
+        List<AllInAllAzaguRaja> allinallazagurajaList = this.allInAllAzaguRajaStore.select();
+        Assertions.assertEquals(1, allinallazagurajaList.size(), "list of allinallazaghuraja");
+>>>>>>> 99720a355689c54690ae6e8094e91cfcfdc0cf00
 
         List<AllInAllAzaguRaja> allinallazagurajaList = this.allInAllAzaguRajaStore.select();
         Assertions.assertEquals(1, allinallazagurajaList.size(), "list of allinallazaghuraja");
