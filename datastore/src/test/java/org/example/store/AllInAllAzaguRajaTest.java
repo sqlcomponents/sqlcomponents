@@ -29,10 +29,7 @@ class AllInAllAzaguRajaTest {
 
     @Test
     void testAllInAllAzaguRaja() throws SQLException {
-//        this.allInAllAzaguRajaStore.deleteAll();
-//        this.allAzaguRajaReferenceStore.deleteAll();
-//        List<AllInAllAzaguRaja> allinallazagurajaList = this.allInAllAzaguRajaStore.select();
-//        Assertions.assertEquals(1, allinallazagurajaList.size(), "list of allinallazaghuraja");
+
 
         //This is to check reference,--> insert by setting parameters.
         AllInAllAzaguRajaReference azagurajaobject = new AllInAllAzaguRajaReference();
@@ -43,19 +40,21 @@ class AllInAllAzaguRajaTest {
         //this is to check mymodel, --> insert by setting parameter.
         AllInAllAzaguRaja allInAllAzaguRaja = new AllInAllAzaguRaja();
         allInAllAzaguRaja.setReferenceCode("A110");
-        this.allInAllAzaguRajaStore.insert(allInAllAzaguRaja);
+        Integer returnedId = this.allInAllAzaguRajaStore.insertAndGet(allInAllAzaguRaja);
 
         //this is to check reference, --> find with a given code.
         AllInAllAzaguRajaReference insertedObject = this.allAzaguRajaReferenceStore.find("A110");
 
-        //this is to check mymodel, --> find with a given reference_code.
-        AllInAllAzaguRaja insertedAllinallazaguraja = this.allInAllAzaguRajaStore.find("A110");
-        Assertions.assertNotNull(insertedAllinallazaguraja, "record found");
-        
-        //this is to check reference, --> update by updating a parameter.
-        insertedObject.setName("Priya");
-        this.allAzaguRajaReferenceStore.update(insertedObject);
-        Assertions.assertEquals("Priya", this.allAzaguRajaReferenceStore.find("A110").getName(), "reference updated successfully");
+        //this is to check mymodel, --> find with a given id.
+        AllInAllAzaguRaja insertedAllinallazaguraja = this.allInAllAzaguRajaStore.find(returnedId);
+        Assertions.assertEquals("A110", insertedAllinallazaguraja.getReferenceCode(), "found successfully");
+//
+//        //this is to check reference, --> update by updating a parameter.
+//        insertedObject.setName("Priya");
+//        this.allAzaguRajaReferenceStore.update(insertedObject);
+//        Assertions.assertEquals("Priya", this.allAzaguRajaReferenceStore.find("A110").getName(), "reference updated successfully");
 
+        //List<AllInAllAzaguRaja> allinallazagurajaList = this.allInAllAzaguRajaStore.select();
+        //Assertions.assertEquals(1, allinallazagurajaList.size(), "list of allinallazaghuraja");
     }
 }

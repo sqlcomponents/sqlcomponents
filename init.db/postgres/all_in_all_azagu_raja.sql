@@ -17,17 +17,3 @@ CREATE TABLE all_in_all_azagu_raja(
       FOREIGN KEY(reference_code) 
 	  REFERENCES all_in_all_azagu_raja_reference(code)
 );
-
-
-INSERT INTO all_in_all_azagu_raja_reference
-(code, name)
-VALUES
-('A110', 'Hari')
-,('A210', 'Priya')
-,('A310', 'Hansini');
-
-INSERT INTO all_in_all_azagu_raja
-(reference_code)
-VALUES('A110');
-
-
