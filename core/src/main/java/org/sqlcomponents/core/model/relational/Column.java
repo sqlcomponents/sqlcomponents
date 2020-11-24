@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.sqlcomponents.core.model.relational.enumeration.Flag;
 
+import java.sql.JDBCType;
 import java.util.SortedSet;
 
 @Setter
@@ -24,7 +25,7 @@ public class Column  {
     private String tableCategory;
     private String tableSchema;
     private String typeName;
-    private int type;
+    private JDBCType jdbcType;
     private int bufferLength;
     private int numberPrecisionRadix;
     private String columnDefinition;
