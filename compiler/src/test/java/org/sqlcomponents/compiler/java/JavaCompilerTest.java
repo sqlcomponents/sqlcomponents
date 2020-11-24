@@ -69,7 +69,6 @@ class JavaCompilerTest {
         }
 
         void writeCode() throws IOException, ScubeException {
-            application.setTablePatterns(Arrays.asList("all_in_all_azagu_raja_reference"));
             application.setSrcFolder("../datastore/target/generated-sources/movie-db");
             application.compile(new JavaCompiler());
             System.out.println("Code is compiled into " + application.getSrcFolder());

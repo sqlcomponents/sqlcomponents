@@ -47,20 +47,20 @@
         }
 	}
 
-	public final InsertBuilder insert() {
-        return new InsertBuilder(this);
+	public final InsertStatement insert() {
+        return new InsertStatement(this);
     }
 
-    public static class InsertBuilder {
+    public static class InsertStatement {
         private final ${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix};
 
         private ${name} ${name?uncap_first};
 
-        private InsertBuilder(${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix}) {
+        private InsertStatement(${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix}) {
             this.${name?uncap_first}Store${orm.daoSuffix} = ${name?uncap_first}Store${orm.daoSuffix};
         }
 
-        public InsertBuilder value(${name} ${name?uncap_first}) {
+        public InsertStatement value(${name} ${name?uncap_first}) {
             this.${name?uncap_first} = ${name?uncap_first};
             return this;
         }
