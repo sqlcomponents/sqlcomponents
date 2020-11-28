@@ -30,8 +30,6 @@ class AllInAllAzaguRajaTest {
     @Test
     void testAllInAllAzaguRaja() throws SQLException {
 
-
-        //This is to check reference,--> insert by setting parameters.
         AllInAllAzaguRajaReference azagurajaobject = new AllInAllAzaguRajaReference();
         azagurajaobject.setCode("A110");
         azagurajaobject.setName("Hari");
@@ -40,21 +38,11 @@ class AllInAllAzaguRajaTest {
         //this is to check mymodel, --> insert by setting parameter.
         AllInAllAzaguRaja allInAllAzaguRaja = new AllInAllAzaguRaja();
         allInAllAzaguRaja.setReferenceCode("A110");
-        Integer returnedId = this.allInAllAzaguRajaStore.insertAndGet(allInAllAzaguRaja);
+        AllInAllAzaguRaja insertedAllInAllAzaguRaja = this.allInAllAzaguRajaStore.insert()
+                .value(allInAllAzaguRaja).returning();
 
-        //this is to check reference, --> find with a given code.
-        AllInAllAzaguRajaReference insertedObject = this.allAzaguRajaReferenceStore.find("A110");
 
-        //this is to check mymodel, --> find with a given id.
-        AllInAllAzaguRaja insertedAllinallazaguraja = this.allInAllAzaguRajaStore.find(returnedId);
-        Assertions.assertEquals("A110", insertedAllinallazaguraja.getReferenceCode(), "found successfully");
-//
-//        //this is to check reference, --> update by updating a parameter.
-//        insertedObject.setName("Priya");
-//        this.allAzaguRajaReferenceStore.update(insertedObject);
-//        Assertions.assertEquals("Priya", this.allAzaguRajaReferenceStore.find("A110").getName(), "reference updated successfully");
+        Assertions.assertEquals("A110", insertedAllInAllAzaguRaja.getReferenceCode(), "found successfully");
 
-        //List<AllInAllAzaguRaja> allinallazagurajaList = this.allInAllAzaguRajaStore.select();
-        //Assertions.assertEquals(1, allinallazagurajaList.size(), "list of allinallazaghuraja");
     }
 }
