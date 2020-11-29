@@ -1,7 +1,7 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-title: "[Component] Title"
+title: "[Mapper|Compiler|Crawler|Misc] Title"
 labels: enhancement
 assignees: ''
 
@@ -10,12 +10,12 @@ assignees: ''
 Feature: Describe Your Feature
 
   # The first example has two steps
-  Scenario: Maker starts a game
-    When the Maker starts a game
-    Then the Maker waits for a Breaker to join
+  Scenario: DBA created a DDL
+    When the DBA runs the Compiler
+    Then the DBA waits for a Generated Code
 
   # The second example has three steps
-  Scenario: Breaker joins a game
+  Scenario: DBA created a DDL
     Given the Maker has started a game with the word "silky"
     When the Breaker joins the Maker's game
     Then the Breaker must guess a word with 5 characters

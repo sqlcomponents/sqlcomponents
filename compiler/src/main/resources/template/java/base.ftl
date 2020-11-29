@@ -1,7 +1,5 @@
 <#assign importStatementsList = []>
 
-<#assign methodSignatureList = []>
-
 <#function getClassName str> 
 	<#return str?split(".")?last>
 </#function>

@@ -1,4 +1,4 @@
-<#include "/template/java/jdbc/jdbcbase.ftl">
+<#include "/template/java/jdbcbase.ftl">
 package <#if daoPackage?? && daoPackage?length != 0 >${daoPackage}</#if>;
 
 import javax.sql.DataSource;
@@ -22,7 +22,7 @@ public final class ${name}Store${orm.daoSuffix}  {
     }
 
 	<#list orm.methodSpecification as method>
-		<#include "/template/java/jdbc/method/${method}.ftl">
+		<#include "/template/java/method/${method}.ftl">
 	</#list>
 
 	<#--

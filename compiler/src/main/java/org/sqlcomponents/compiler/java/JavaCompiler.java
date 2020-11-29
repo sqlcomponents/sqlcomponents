@@ -29,7 +29,7 @@ public class JavaCompiler implements Compiler {
 		formatter = new Formatter();
 
 		try {
-			daoTemplate = new Template<>("template/java/jdbc/jdbcdao.ftl");
+			daoTemplate = new Template<>("template/java/jdbcdao.ftl");
 
 			beanTemplate = new Template<>("template/java/bean.ftl");
 		} catch (IOException e) {
