@@ -1,48 +1,47 @@
 package org.example.store;
 
-import org.example.model.AllInAllAzaguRaja;
-import org.example.model.AllInAllAzaguRajaReference;
+import org.example.model.AzaguRaja;
+import org.example.model.AzaguRajaReference;
 import org.junit.jupiter.api.*;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import static org.example.util.DataSourceProvider.dataSource;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class AllInAllAzaguRajaTest {
+class AzaguRajaTest {
 
-    private final AllInAllAzaguRajaReferenceStore allAzaguRajaReferenceStore;
-    private final AllInAllAzaguRajaStore allInAllAzaguRajaStore;
+    private final AzaguRajaReferenceStore azaguRajaReferenceStore;
+    private final AzaguRajaStore allInAllAzaguRajaStore;
 
 
-    AllInAllAzaguRajaTest() {
-        this.allAzaguRajaReferenceStore = new AllInAllAzaguRajaReferenceStore(dataSource());
-        this.allInAllAzaguRajaStore = new AllInAllAzaguRajaStore(dataSource());
+    AzaguRajaTest() {
+        this.azaguRajaReferenceStore = new AzaguRajaReferenceStore(dataSource());
+        this.allInAllAzaguRajaStore = new AzaguRajaStore(dataSource());
     }
 
     @BeforeEach
     void init() throws SQLException {
         this.allInAllAzaguRajaStore.deleteAll();
-        this.allAzaguRajaReferenceStore.deleteAll();
+        this.azaguRajaReferenceStore.deleteAll();
     }
 
     @Test
-    void testAllInAllAzaguRaja() throws SQLException {
+    void testAzaguRaja() throws SQLException {
 
-        AllInAllAzaguRajaReference azagurajaobject = new AllInAllAzaguRajaReference();
+        AzaguRajaReference azagurajaobject = new AzaguRajaReference();
         azagurajaobject.setCode("A110");
         azagurajaobject.setName("Hari");
-        this.allAzaguRajaReferenceStore.insert(azagurajaobject);
+        this.azaguRajaReferenceStore.insert(azagurajaobject);
 
         //this is to check mymodel, --> insert by setting parameter.
-        AllInAllAzaguRaja allInAllAzaguRaja = new AllInAllAzaguRaja();
+        AzaguRaja allInAllAzaguRaja = new AzaguRaja();
         allInAllAzaguRaja.setReferenceCode("A110");
-        AllInAllAzaguRaja insertedAllInAllAzaguRaja = this.allInAllAzaguRajaStore.insert()
+        AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore.insert()
                 .value(allInAllAzaguRaja).returning();
 
 
-        Assertions.assertEquals("A110", insertedAllInAllAzaguRaja.getReferenceCode(), "found successfully");
+        Assertions.assertEquals("A110", insertedAzaguRaja.getReferenceCode(), "found successfully");
 
     }
 }
