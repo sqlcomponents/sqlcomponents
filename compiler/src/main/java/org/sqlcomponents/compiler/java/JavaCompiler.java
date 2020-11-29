@@ -1,9 +1,8 @@
 package org.sqlcomponents.compiler.java;
 
 import com.google.googlejavaformat.java.FormatterException;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.sqlcomponents.compiler.base.Template;
 import org.sqlcomponents.compiler.java.mapper.JavaMapper;
 import org.sqlcomponents.core.compiler.Compiler;
 import org.sqlcomponents.core.crawler.Crawler;
@@ -14,7 +13,6 @@ import org.sqlcomponents.core.model.relational.Table;
 import org.sqlcomponents.core.model.relational.enumeration.TableType;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.file.Files;
@@ -24,20 +22,17 @@ import com.google.googlejavaformat.java.Formatter;
 
 public class JavaCompiler implements Compiler {
 
-	private final Configuration cfg;
 	private final Formatter formatter;
-	private Template daoTemplate;
-	private Template beanTemplate;
+	private Template<Entity> daoTemplate;
+	private Template<Entity> beanTemplate;
 
 	public JavaCompiler() {
 		formatter = new Formatter();
-		cfg = new Configuration(Configuration.VERSION_2_3_29);
-		cfg.setClassForTemplateLoading(
-				JavaCompiler.class, "/");
+
 		try {
-			daoTemplate = cfg
-					.getTemplate("template/dao/java/jdbc/jdbcdao.ftl");
-			beanTemplate = cfg.getTemplate("template/dao/java/bean.ftl");
+			daoTemplate = new Template<>("template/dao/java/jdbc/jdbcdao.ftl");
+
+			beanTemplate = new Template<>("template/dao/java/bean.ftl");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -55,7 +50,7 @@ public class JavaCompiler implements Compiler {
 			try {
 				writeDaoImplementation(entity, application.getSrcFolder(),application.getDaoSuffix());
 				writeBeanSpecification(entity, application.getSrcFolder());
-			} catch (IOException | TemplateException | FormatterException e) {
+			} catch (IOException | FormatterException | TemplateException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -64,33 +59,23 @@ public class JavaCompiler implements Compiler {
 	}
 
 	private void writeDaoImplementation(Entity entity, String srcFolder,String daoSuffix)
-			throws IOException, TemplateException, FormatterException {
+			throws IOException, FormatterException, TemplateException {
 		String packageFolder = getPackageAsFolder(srcFolder, entity
 				.getDaoPackage());
 		new File(packageFolder).mkdirs();
-		processTemplates(entity, packageFolder + File.separator
-				+ entity.getName() + "Store"  + daoSuffix.trim() + ".java", daoTemplate);
+		Files.write(new File(packageFolder + File.separator
+						+ entity.getName() + "Store"  + daoSuffix.trim() + ".java").toPath(),
+				formatter.formatSource(daoTemplate.getContent(entity)).getBytes());
 	}
 	private void writeBeanSpecification(Entity entity, String srcFolder)
-			throws IOException, TemplateException, FormatterException {
+			throws IOException, FormatterException, TemplateException {
 		String packageFolder = getPackageAsFolder(srcFolder, entity
 				.getBeanPackage());
 		new File(packageFolder).mkdirs();
-		processTemplates(entity, packageFolder + File.separator
-				+ entity.getName() + ".java", beanTemplate);
-	}
 
-
-	private void processTemplates(Object model, String targetFile,
-			Template template) throws IOException, TemplateException, FormatterException {
-		StringWriter stringWriter = new StringWriter();
-		template.process(model, stringWriter);
-
-		Files.write(new File(targetFile).toPath(),
-				formatter.formatSource(stringWriter.getBuffer().toString()).getBytes());
-
-		stringWriter.flush();
-		stringWriter.close();
+		Files.write(new File(packageFolder + File.separator
+						+ entity.getName() + ".java").toPath(),
+				formatter.formatSource(beanTemplate.getContent(entity)).getBytes());
 	}
 
 	private String getPackageAsFolder(String rootDir, String packageStr) {
