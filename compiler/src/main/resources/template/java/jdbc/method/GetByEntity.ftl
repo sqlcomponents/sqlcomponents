@@ -14,7 +14,7 @@
 	}<#assign a=addImportStatement(beanPackage+"."+name)><#assign a=addImportStatement("java.sql.PreparedStatement")>
 <#if orm.pagination >
 
-<#include "/template/dao/java/method/signature/GetByEntity_Paginated.ftl"> {
+<#include "/template/java/method/signature/GetByEntity_Paginated.ftl"> {
 		List<${name}> ${pluralName?uncap_first} = null ;
 		HashMap<String, Object> map = new HashMap<String, Object>(3);
 		map.put("${name?uncap_first}", search${name});

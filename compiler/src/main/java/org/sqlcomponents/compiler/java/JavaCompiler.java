@@ -14,7 +14,6 @@ import org.sqlcomponents.core.model.relational.enumeration.TableType;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +29,9 @@ public class JavaCompiler implements Compiler {
 		formatter = new Formatter();
 
 		try {
-			daoTemplate = new Template<>("template/dao/java/jdbc/jdbcdao.ftl");
+			daoTemplate = new Template<>("template/java/jdbc/jdbcdao.ftl");
 
-			beanTemplate = new Template<>("template/dao/java/bean.ftl");
+			beanTemplate = new Template<>("template/java/bean.ftl");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

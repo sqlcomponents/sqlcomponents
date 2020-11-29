@@ -4,7 +4,7 @@
 <#assign capturedOutput>
 <#if remarks?exists>
 /**
- * ${remarks}  
+ * ${remarks}
  *
  */ 
 </#if>
@@ -33,7 +33,6 @@ public class ${name} {
 	</#if>
 	private ${getClassName(property.dataType)} ${property.name};	
 	<#assign a=addImportStatement(property.dataType)>
-	
 </#list>
 <#list properties as property>
 	public ${getClassName(property.dataType)} get${property.name?cap_first}() {
