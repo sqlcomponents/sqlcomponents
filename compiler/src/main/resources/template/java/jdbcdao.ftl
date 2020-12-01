@@ -56,6 +56,9 @@ public final class ${name}Store${orm.daoSuffix}  {
     <#case "java.lang.Float">
     public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>NumberField<Float> ${property.name}() {
     <#break>
+    <#case "java.lang.Boolean">
+    public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>BooleanField ${property.name}() {
+    <#break>
     <#case "java.util.Date">
     public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>DateField ${property.name}() {
     <#break>
@@ -140,6 +143,13 @@ public final class ${name}Store${orm.daoSuffix}  {
             return query;
         }
         <#break>
+    <#case "java.lang.Boolean">
+        public <#if property.column.isNullable??>Nullable</#if>BooleanField ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>BooleanField query = new <#if property.column.isNullable??>Nullable</#if>BooleanField("${property.column.columnName}",this);
+            this.nodes.add(query);
+            return query;
+        }
+        <#break>
     <#case "java.util.Date">
         public <#if property.column.isNullable??>Nullable</#if>DateField ${property.name}() {
             <#if property.column.isNullable??>Nullable</#if>DateField query = new <#if property.column.isNullable??>Nullable</#if>DateField("${property.column.columnName}",this);
@@ -191,9 +201,47 @@ public final class ${name}Store${orm.daoSuffix}  {
             }
         }
 
+
+
         public class NullableStringField extends StringField {
 
             public NullableStringField(final String columnName, final PartialCriteria criteria) {
+                super(columnName, criteria);
+            }
+
+            public Criteria isNull() {
+                sql = columnName + " IS NULL";
+                return getCriteria();
+            }
+
+            public Criteria isNotNull() {
+                sql = columnName + " IS NOT NULL";
+                return getCriteria();
+            }
+        }
+
+
+        public class BooleanField extends Field {
+            protected String sql;
+
+            public BooleanField(final String columnName, final PartialCriteria criteria) {
+                super(columnName, criteria);
+            }
+
+            public Criteria eq(final Boolean value) {
+                sql = columnName + "=" + value ;
+                return getCriteria();
+            }
+
+            @Override
+            protected String asSql() {
+                return sql;
+            }
+        }
+
+        public class NullableBooleanField extends BooleanField {
+
+            public NullableBooleanField(final String columnName, final PartialCriteria criteria) {
                 super(columnName, criteria);
             }
 

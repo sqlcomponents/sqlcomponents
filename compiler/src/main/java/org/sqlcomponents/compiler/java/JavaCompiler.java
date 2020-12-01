@@ -30,13 +30,11 @@ public class JavaCompiler implements Compiler {
 
 		try {
 			daoTemplate = new Template<>("template/java/jdbcdao.ftl");
-
 			beanTemplate = new Template<>("template/java/bean.ftl");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	@Override
