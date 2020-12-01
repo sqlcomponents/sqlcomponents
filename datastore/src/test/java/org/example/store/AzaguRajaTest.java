@@ -32,16 +32,21 @@ class AzaguRajaTest {
         AzaguRajaReference azagurajaobject = new AzaguRajaReference();
         azagurajaobject.setCode("A110");
         azagurajaobject.setName("Hari");
+
         this.azaguRajaReferenceStore.insert(azagurajaobject);
 
         //this is to check mymodel, --> insert by setting parameter.
-        AzaguRaja allInAllAzaguRaja = new AzaguRaja();
-        allInAllAzaguRaja.setReferenceCode("A110");
+        AzaguRaja azaguRaja = new AzaguRaja();
+        azaguRaja.setReferenceCode("A110");
+        azaguRaja.setABoolean(true);
+
+
         AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore.insert()
-                .value(allInAllAzaguRaja).returning();
+                .value(azaguRaja).returning();
 
 
         Assertions.assertEquals("A110", insertedAzaguRaja.getReferenceCode(), "found successfully");
+
 
     }
 }

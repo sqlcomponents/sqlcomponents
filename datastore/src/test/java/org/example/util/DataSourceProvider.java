@@ -9,6 +9,7 @@ public final class DataSourceProvider {
         PGSimpleDataSource ds = new PGSimpleDataSource();
         ds.setServerNames(new String[]{"localhost"});
         ds.setUser("moviedb");
+        
         ds.setPassword("moviedb");
         return ds;
     }

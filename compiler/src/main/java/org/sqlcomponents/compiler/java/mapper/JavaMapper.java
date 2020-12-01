@@ -15,6 +15,8 @@ public class JavaMapper extends Mapper {
                 return chooseIntegerType(column);
             case VARCHAR:
                 return "java.lang.String";
+            case BIT:
+                return "java.lang.Boolean";
         }
         throw new RuntimeException("Datatype not found for column "+ column);
     }
@@ -22,4 +24,6 @@ public class JavaMapper extends Mapper {
     private String chooseIntegerType(Column column) {
         return column.getSize() > 2 ? "java.lang.Integer" : "java.lang.Byte";
     }
+
+
 }
