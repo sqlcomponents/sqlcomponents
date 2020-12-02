@@ -8,21 +8,25 @@ public class JavaMapper extends Mapper {
 
     @Override
     public String getDataType(Column column) {
+        return getDataTypeClass(column).getName();
+    }
+
+    private Class getDataTypeClass(Column column) {
         switch (column.getJdbcType()) {
             case INTEGER:
                 return chooseIntegerType(column);
             case NUMERIC:
                 return chooseIntegerType(column);
             case VARCHAR:
-                return "java.lang.String";
+                return String.class;
             case BIT:
-                return "java.lang.Boolean";
+                return Boolean.class;
         }
         throw new RuntimeException("Datatype not found for column "+ column);
     }
 
-    private String chooseIntegerType(Column column) {
-        return column.getSize() > 2 ? "java.lang.Integer" : "java.lang.Byte";
+    private Class<? extends Number> chooseIntegerType(Column column) {
+        return column.getSize() > 2 ? Integer.class : Byte.class;
     }
 
 

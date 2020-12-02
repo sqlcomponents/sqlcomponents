@@ -46,7 +46,7 @@ public class JavaCompiler implements Compiler {
 		orm.getEntities().parallelStream().forEach(entity -> {
 			try {
 				writeDaoImplementation(entity, application.getSrcFolder(),application.getDaoSuffix());
-				writeBeanSpecification(entity, application.getSrcFolder());
+				writeBeanSpecification(entity, application.getSrcFolder(),application.getBeanSuffix());
 			} catch (IOException | FormatterException | TemplateException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -64,14 +64,14 @@ public class JavaCompiler implements Compiler {
 						+ entity.getName() + "Store"  + daoSuffix.trim() + ".java").toPath(),
 				(daoTemplate.getContent(entity)).getBytes());
 	}
-	private void writeBeanSpecification(Entity entity, String srcFolder)
+	private void writeBeanSpecification(Entity entity, String srcFolder,String beanSuffix)
 			throws IOException, FormatterException, TemplateException {
 		String packageFolder = getPackageAsFolder(srcFolder, entity
 				.getBeanPackage());
 		new File(packageFolder).mkdirs();
 
 		Files.write(new File(packageFolder + File.separator
-						+ entity.getName() + ".java").toPath(),
+						+ entity.getName() + (beanSuffix == null ? "" : beanSuffix.trim() )+ ".java").toPath(),
 				(beanTemplate.getContent(entity)).getBytes());
 	}
 
