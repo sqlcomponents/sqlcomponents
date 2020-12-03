@@ -3,6 +3,7 @@ package org.sqlcomponents.compiler.java.mapper;
 import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.relational.Column;
 
+import java.math.BigInteger;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -11,14 +12,20 @@ public final class JavaMapper extends Mapper {
 
     private final Map<Class<? extends Number>,Integer> integerTypes;
 
+    private final Map<Class<? extends Number>,Integer> decimalTypes;
+
     public JavaMapper() {
         integerTypes = new IdentityHashMap<>();
-        // Holds Map of Unteger Types and Max digits they can hold
+        // Holds Map of Integer Types and Max digits they can hold
         integerTypes.put(Byte.class,String.valueOf(Byte.MAX_VALUE).length()-1);
         integerTypes.put(Short.class,String.valueOf(Short.MAX_VALUE).length()-1);
         integerTypes.put(Integer.class,String.valueOf(Integer.MAX_VALUE).length()-1);
         integerTypes.put(Long.class,String.valueOf(Long.MAX_VALUE).length()-1);
 
+        decimalTypes = new IdentityHashMap<>();
+        // Holds Map of Decimal Types and Max digits they can hold
+        decimalTypes.put(Float.class,String.valueOf(Float.MAX_VALUE).indexOf('.')-1);
+        decimalTypes.put(Double.class,String.valueOf(Double.MAX_VALUE).indexOf('.')-1);
     }
 
     @Override
@@ -31,7 +38,9 @@ public final class JavaMapper extends Mapper {
             case INTEGER:
                 return chooseIntegerType(column);
             case NUMERIC:
-                return chooseIntegerType(column);
+                return chooseNumberType(column);
+            case DECIMAL:
+                return chooseDecimalType(column);
             case VARCHAR:
                 return String.class;
             case BIT:
@@ -41,8 +50,19 @@ public final class JavaMapper extends Mapper {
         throw new RuntimeException("Datatype not found for column "+ column);
     }
 
+    private Class<? extends Number> chooseNumberType(Column column) {
+        return column.getDecimalDigits() == 0 ? chooseIntegerType(column) : chooseDecimalType(column);
+    }
+
     private Class<? extends Number> chooseIntegerType(Column column) {
         return integerTypes.entrySet().stream()
+                .filter( entry -> entry.getValue() <= column.getSize())
+                .max((entry1, entry2) -> entry1.getValue().compareTo(entry2.getValue()))
+                .get().getKey();
+    }
+
+    private Class<? extends Number> chooseDecimalType(Column column) {
+        return decimalTypes.entrySet().stream()
                 .filter( entry -> entry.getValue() <= column.getSize())
                 .max((entry1, entry2) -> entry1.getValue().compareTo(entry2.getValue()))
                 .get().getKey();
