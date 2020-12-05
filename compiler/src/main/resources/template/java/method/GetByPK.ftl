@@ -1,5 +1,6 @@
 <#if table.hasPrimaryKey>
     public ${name} find(${getPrimaryKeysAsParameterString()}) throws SQLException  {
+        ${name} ${name?uncap_first} = null;
 		final String query = """
                 SELECT
 		<@columnSelection/> 
@@ -17,8 +18,8 @@
             ${getPrimaryKeysAsPreparedStatements()}
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) return rowMapper(resultSet);
+            if (resultSet.next()) ${name?uncap_first} = rowMapper(resultSet);
         } 
-        return null;
+        return ${name?uncap_first};
 	}
 </#if>

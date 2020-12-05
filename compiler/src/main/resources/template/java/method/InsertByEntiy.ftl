@@ -36,16 +36,7 @@
 			</#list>
 </#macro>
 <#if table.tableType == 'TABLE' >
-	public final int insert(final ${name} ${name?uncap_first}) throws SQLException  {
-        <@insertquery/>
 
-		try (Connection conn = dataSource.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(query))
-        {
-			<@insertqueryprepared/>
-			return preparedStatement.executeUpdate();
-        }
-	}
 
 	public final InsertStatement insert() {
         return new InsertStatement(this);
@@ -63,6 +54,19 @@
         public InsertStatement values(${name} ${name?uncap_first}) {
             this.${name?uncap_first} = ${name?uncap_first};
             return this;
+        }
+
+        public final int execute() throws SQLException  {
+            int insertedRows = 0;
+            <@insertquery/>
+
+            try (Connection conn = ${name?uncap_first}Store${orm.daoSuffix}.dataSource.getConnection();
+                 PreparedStatement preparedStatement = conn.prepareStatement(query))
+            {
+                <@insertqueryprepared/>
+                insertedRows = preparedStatement.executeUpdate();
+            }
+            return insertedRows;
         }
 
         public ${name} returning() throws SQLException  {
