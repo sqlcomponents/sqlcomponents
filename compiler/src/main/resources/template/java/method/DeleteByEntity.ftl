@@ -2,7 +2,6 @@
     public int delete(Criteria criteria) throws SQLException  {
         String whereClause = criteria.asSql() ;
     	final String query = "DELETE FROM ${table.tableName}" + (whereClause == null ? "" : (" WHERE " + whereClause));
-    	System.out.println(query);
         try (Connection connection = dataSource.getConnection();
 			Statement statement = connection.createStatement()) {
             return statement.executeUpdate(query);
