@@ -1,7 +1,7 @@
 <#if table.hasPrimaryKey>
     public ${name} find(${getPrimaryKeysAsParameterString()}) throws SQLException  {
         ${name} ${name?uncap_first} = null;
-		final String query = """
+		final String query = <@compress single_line=true>"
                 SELECT
 		<@columnSelection/> 
 		FROM ${table.tableName}
@@ -12,7 +12,7 @@
 			<#if index == 0><#assign index=1><#else>AND </#if>${property.column.columnName} = ?
 			</#if>
 		</#list>
-                """;
+                </@compress>";
         try (Connection conn = dataSource.getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(query)) {
             ${getPrimaryKeysAsPreparedStatements()}

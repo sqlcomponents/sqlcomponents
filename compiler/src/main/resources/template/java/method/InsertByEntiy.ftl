@@ -1,6 +1,5 @@
 <#macro insertquery>
-  final String query = """
-  		INSERT INTO ${table.escapedName} (
+  final String query = <@compress single_line=true>"INSERT INTO ${table.escapedName} (
   		<#assign index=0>
   		<#list insertableProperties as property>
   			<#if index == 0><#assign index=1><#else>,</#if>${property.column.escapedName}
@@ -16,7 +15,7 @@
   			 <#else>    ?</#if><#assign index=1><#else>            ,?</#if>
   		</#list>
   	    )
-  		""";
+  		"</@compress>;
 </#macro>
 <#macro insertqueryprepared>
 <#assign index=0>
@@ -42,16 +41,16 @@
         return new InsertStatement(this);
     }
 
-    public static class InsertStatement {
+    public static final class InsertStatement {
         private final ${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix};
 
         private ${name} ${name?uncap_first};
 
-        private InsertStatement(${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix}) {
+        private InsertStatement(final ${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix}) {
             this.${name?uncap_first}Store${orm.daoSuffix} = ${name?uncap_first}Store${orm.daoSuffix};
         }
 
-        public InsertStatement values(${name} ${name?uncap_first}) {
+        public InsertStatement values(final ${name} ${name?uncap_first}) {
             this.${name?uncap_first} = ${name?uncap_first};
             return this;
         }
