@@ -3,7 +3,6 @@ package org.sqlcomponents.compiler.java.mapper;
 import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.relational.Column;
 
-import java.math.BigInteger;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -42,7 +41,7 @@ public final class JavaMapper extends Mapper {
             case DECIMAL:
                 return chooseDecimalType(column);
             case VARCHAR:
-                return String.class;
+                return column.getSize() == 1 ? Character.class : String.class;
             case BIT:
             case BOOLEAN:
                 return Boolean.class;
@@ -67,6 +66,5 @@ public final class JavaMapper extends Mapper {
                 .max((entry1, entry2) -> entry1.getValue().compareTo(entry2.getValue()))
                 .get().getKey();
     }
-
 
 }

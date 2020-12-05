@@ -1,21 +1,21 @@
 <#if table.tableType == 'TABLE' >
     public int update(${name} ${name?uncap_first}) throws SQLException {
-        final String query = """
+        final String query = <@compress single_line=true>"
 		UPDATE ${table.tableName} SET
         		<#assign index=0>
         		<#list properties as property>
         			<#if property.column.primaryKeyIndex == 0>
-        			<#if index == 0><#assign index=1><#else>,</#if>"${property.column.columnName}" = ?
+        			<#if index == 0><#assign index=1><#else>,</#if>${property.column.columnName} = ?
         			</#if>
         		</#list>
         		WHERE
         	    <#assign index=0>
         		<#list properties as property>
         			<#if property.column.primaryKeyIndex != 0>
-        			<#if index == 0><#assign index=1><#else> AND </#if>"${property.column.columnName}" = ?
+        			<#if index == 0><#assign index=1><#else> AND </#if>${property.column.columnName} = ?
         			</#if>
         		</#list>
-		""";
+		</@compress>";
 
 		try (Connection conn = dataSource.getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(query))
