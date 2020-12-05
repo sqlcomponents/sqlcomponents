@@ -14,7 +14,6 @@ class AzaguRajaTest {
     private final AzaguRajaReferenceStore azaguRajaReferenceStore;
     private final AzaguRajaStore allInAllAzaguRajaStore;
 
-
     AzaguRajaTest() {
         this.azaguRajaReferenceStore = new AzaguRajaReferenceStore(dataSource());
         this.allInAllAzaguRajaStore = new AzaguRajaStore(dataSource());
@@ -33,18 +32,16 @@ class AzaguRajaTest {
         azagurajaobject.setCode("A110");
         azagurajaobject.setName("Hari");
 
-        Integer insertedRajas = this.azaguRajaReferenceStore.insert().values(azagurajaobject).execute();
-        Assertions.assertEquals(1, insertedRajas, "1 Raja Reference inserted");
+        Integer noOfInsertedRajaRefs = this.azaguRajaReferenceStore.insert().values(azagurajaobject).execute();
+        Assertions.assertEquals(1, noOfInsertedRajaRefs, "1 Raja Reference inserted");
 
         //this is to check mymodel, --> insert by setting parameter.
         AzaguRaja azaguRaja = new AzaguRaja();
         azaguRaja.setReferenceCode("A110");
         azaguRaja.setABoolean(true);
 
-
         AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore.insert()
                 .values(azaguRaja).returning();
-
 
         Assertions.assertEquals("A110", insertedAzaguRaja.getReferenceCode(), "found successfully");
 

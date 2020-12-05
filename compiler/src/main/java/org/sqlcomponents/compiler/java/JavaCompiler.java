@@ -62,7 +62,7 @@ public class JavaCompiler implements Compiler {
 		new File(packageFolder).mkdirs();
 		Files.write(new File(packageFolder + File.separator
 						+ entity.getName() + "Store"  + daoSuffix.trim() + ".java").toPath(),
-				(daoTemplate.getContent(entity)).getBytes());
+				getJavaContent(daoTemplate.getContent(entity)).getBytes());
 	}
 	private void writeBeanSpecification(Entity entity, String srcFolder,String beanSuffix)
 			throws IOException, FormatterException, TemplateException {
@@ -72,7 +72,15 @@ public class JavaCompiler implements Compiler {
 
 		Files.write(new File(packageFolder + File.separator
 						+ entity.getName() + (beanSuffix == null ? "" : beanSuffix.trim() )+ ".java").toPath(),
-				(beanTemplate.getContent(entity)).getBytes());
+				getJavaContent(beanTemplate.getContent(entity)).getBytes());
+	}
+
+	private String getJavaContent(final String content) {
+		try {
+			return formatter.formatSource(content);
+		} catch (FormatterException e) {
+			return content;
+		}
 	}
 
 	private String getPackageAsFolder(String rootDir, String packageStr) {
