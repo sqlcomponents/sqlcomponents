@@ -21,11 +21,7 @@
             <artifactId>postgresql</artifactId>
             <version>42.2.18</version>
         </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>2.0.1.Final</version>
-        </dependency>
+
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>

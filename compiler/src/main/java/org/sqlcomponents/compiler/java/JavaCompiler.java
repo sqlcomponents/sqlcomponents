@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.google.googlejavaformat.java.Formatter;
 
-public class JavaCompiler implements Compiler {
+public final class JavaCompiler implements Compiler {
 
 	private final Formatter formatter;
 	private Template<Entity> daoTemplate;
@@ -27,7 +27,6 @@ public class JavaCompiler implements Compiler {
 
 	public JavaCompiler() {
 		formatter = new Formatter();
-
 		try {
 			daoTemplate = new Template<>("template/java/jdbcdao.ftl");
 			beanTemplate = new Template<>("template/java/bean.ftl");
@@ -64,6 +63,7 @@ public class JavaCompiler implements Compiler {
 						+ entity.getName() + "Store"  + daoSuffix.trim() + ".java").toPath(),
 				getJavaContent(daoTemplate.getContent(entity)).getBytes());
 	}
+
 	private void writeBeanSpecification(Entity entity, String srcFolder,String beanSuffix)
 			throws IOException, FormatterException, TemplateException {
 		String packageFolder = getPackageAsFolder(srcFolder, entity
@@ -75,6 +75,11 @@ public class JavaCompiler implements Compiler {
 				getJavaContent(beanTemplate.getContent(entity)).getBytes());
 	}
 
+	/**
+	 * formats content using google java formatter.
+	 * @param content
+	 * @return formattedContent
+	 */
 	private String getJavaContent(final String content) {
 		try {
 			return formatter.formatSource(content);

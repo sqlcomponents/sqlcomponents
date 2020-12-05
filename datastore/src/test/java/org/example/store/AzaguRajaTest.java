@@ -4,7 +4,9 @@ import org.example.model.AzaguRaja;
 import org.example.model.AzaguRajaReference;
 import org.junit.jupiter.api.*;
 
+import java.sql.SQLDataException;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 import static org.example.util.DataSourceProvider.dataSource;
 
