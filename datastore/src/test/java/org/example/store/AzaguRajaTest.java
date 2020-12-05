@@ -41,6 +41,8 @@ class AzaguRajaTest {
         AzaguRaja azaguRaja = new AzaguRaja();
         azaguRaja.setReferenceCode("A110");
         azaguRaja.setABoolean(true);
+        azaguRaja.setAChar('A');
+        azaguRaja.setAText("Text");
 
         AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore.insert()
                 .values(azaguRaja).returning();

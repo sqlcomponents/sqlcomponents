@@ -24,12 +24,12 @@
 			<#if index == 0>
 				<#if sequenceName?? && property.column.primaryKeyIndex == 1>
 				<#else>
-				preparedStatement.set${getJDBCClassName(property.dataType)}(${column_index},${wrapGet(name?uncap_first,property)});
+				preparedStatement.set${getJDBCClassName(property.dataType)}(${column_index},${wrapSet(name?uncap_first,property)});
 				<#assign column_index = column_index + 1>
 				</#if>
 			<#assign index=1>
 			<#else>
-			preparedStatement.set${getJDBCClassName(property.dataType)}(${column_index},${wrapGet(name?uncap_first,property)});
+			preparedStatement.set${getJDBCClassName(property.dataType)}(${column_index},${wrapSet(name?uncap_first,property)});
 			<#assign column_index = column_index + 1>
 			</#if>
 			</#list>

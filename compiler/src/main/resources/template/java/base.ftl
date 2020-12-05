@@ -8,19 +8,32 @@
 	<#local pkAsParameterStr="${getClassName(str)}">
 	<#if pkAsParameterStr == "Integer">
 			<#local pkAsParameterStr="Int">
+	<#elseif pkAsParameterStr == "Character">
+	    <#local pkAsParameterStr="String">
 	</#if>
 	<#return pkAsParameterStr>
 </#function>
 
-<#function wrapGet wText property > 
+<#function wrapSet wText property >
 <#switch property.dataType>
   <#case "java.util.Date">
 	 <#return "${wText}.get${property.name?cap_first}() == null ? null : new java.sql.Date(${wText}.get${property.name?cap_first}().getTime())">
+  <#case "java.lang.Character">
+  	 <#return "String.valueOf(${wText}.get${property.name?cap_first}())">
   <#default>
   <#return "${wText}.get${property.name?cap_first}()">
 </#switch>
+</#function>
 
-	
+<#function wrapGet wText property >
+<#switch property.dataType>
+  <#case "java.util.Date">
+	 <#return "${wText}.get${property.name?cap_first}() == null ? null : new java.sql.Date(${wText}.get${property.name?cap_first}().getTime())">
+  <#case "java.lang.Character">
+  	 <#return "${wText} == null ? null : ${wText}.charAt(0)">
+  <#default>
+  <#return "${wText}">
+</#switch>
 </#function>
 
 <#function getProperty propertyName> 
@@ -124,24 +137,9 @@
 </#function>
 
 
-<#function addMethodSignature methodSignature>
-<#if methodSignature?contains(".") 
-		&& !methodSignature?contains("java.lang")
-		&& !methodSignaturesList?seq_contains(methodSignature)>
-<#assign methodSignaturesList = methodSignaturesList + [methodSignature]>
-</#if>
-<#return methodSignature>
-</#function>
-
 <#function addImportStatement importStatement>
 <#if importStatement?contains(".") 
-		&& !importStatement?contains("java.lang.String")
-		&& !importStatement?contains("java.lang.Integer")
-		&& !importStatement?contains("java.lang.Long")
-		&& !importStatement?contains("java.lang.Float")
-		&& !importStatement?contains("java.lang.Double")
-		&& !importStatement?contains("java.lang.Short")
-		&& !importStatement?contains("java.lang.Byte")
+		&& !importStatement?contains("java.lang.")
 		&& !importStatementsList?seq_contains(importStatement)>
 <#assign importStatementsList = importStatementsList + [importStatement]>
 </#if>

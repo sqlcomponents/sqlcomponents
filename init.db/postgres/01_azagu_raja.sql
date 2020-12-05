@@ -11,6 +11,8 @@ CREATE TABLE azagu_raja(
    id SERIAL PRIMARY KEY,
    a_boolean boolean,
    reference_code VARCHAR(80),
+   a_char CHAR(1),
+   a_text text,
    CONSTRAINT fk_code
       FOREIGN KEY(reference_code) 
 	  REFERENCES azagu_raja_reference(code)

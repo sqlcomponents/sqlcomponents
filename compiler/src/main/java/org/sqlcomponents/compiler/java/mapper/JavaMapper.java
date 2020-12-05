@@ -3,6 +3,7 @@ package org.sqlcomponents.compiler.java.mapper;
 import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.relational.Column;
 
+import java.util.Comparator;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -41,12 +42,13 @@ public final class JavaMapper extends Mapper {
             case DECIMAL:
                 return chooseDecimalType(column);
             case VARCHAR:
+            case CHAR:
                 return column.getSize() == 1 ? Character.class : String.class;
             case BIT:
             case BOOLEAN:
                 return Boolean.class;
         }
-        throw new RuntimeException("Datatype not found for column "+ column);
+        throw new RuntimeException("Datatype not found for column "+ column.getColumnName() + " of jdbc type " + column.getJdbcType());
     }
 
     private Class<? extends Number> chooseNumberType(Column column) {
@@ -56,14 +58,14 @@ public final class JavaMapper extends Mapper {
     private Class<? extends Number> chooseIntegerType(Column column) {
         return integerTypes.entrySet().stream()
                 .filter( entry -> entry.getValue() <= column.getSize())
-                .max((entry1, entry2) -> entry1.getValue().compareTo(entry2.getValue()))
+                .max(Comparator.comparing(Map.Entry::getValue))
                 .get().getKey();
     }
 
     private Class<? extends Number> chooseDecimalType(Column column) {
         return decimalTypes.entrySet().stream()
                 .filter( entry -> entry.getValue() <= column.getSize())
-                .max((entry1, entry2) -> entry1.getValue().compareTo(entry2.getValue()))
+                .max(Comparator.comparing(Map.Entry::getValue))
                 .get().getKey();
     }
 
