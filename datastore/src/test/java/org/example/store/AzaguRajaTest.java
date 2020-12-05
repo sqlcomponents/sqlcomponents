@@ -33,7 +33,8 @@ class AzaguRajaTest {
         azagurajaobject.setCode("A110");
         azagurajaobject.setName("Hari");
 
-        this.azaguRajaReferenceStore.insert(azagurajaobject);
+        Integer insertedRajas = this.azaguRajaReferenceStore.insert(azagurajaobject);
+        Assertions.assertEquals(1, insertedRajas, "1 Raja inserted");
 
         //this is to check mymodel, --> insert by setting parameter.
         AzaguRaja azaguRaja = new AzaguRaja();
@@ -42,7 +43,7 @@ class AzaguRajaTest {
 
 
         AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore.insert()
-                .value(azaguRaja).returning();
+                .values(azaguRaja).returning();
 
 
         Assertions.assertEquals("A110", insertedAzaguRaja.getReferenceCode(), "found successfully");

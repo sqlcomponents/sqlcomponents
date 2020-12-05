@@ -60,7 +60,7 @@
             this.${name?uncap_first}Store${orm.daoSuffix} = ${name?uncap_first}Store${orm.daoSuffix};
         }
 
-        public InsertStatement value(${name} ${name?uncap_first}) {
+        public InsertStatement values(${name} ${name?uncap_first}) {
             this.${name?uncap_first} = ${name?uncap_first};
             return this;
         }
