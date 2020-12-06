@@ -19,7 +19,7 @@
   <#case "java.util.Date">
 	 <#return "${wText}.get${property.name?cap_first}() == null ? null : new java.sql.Date(${wText}.get${property.name?cap_first}().getTime())">
   <#case "java.lang.Character">
-  	 <#return "String.valueOf(${wText}.get${property.name?cap_first}())">
+  	 <#return "${wText}.get${property.name?cap_first}() == null ? null : String.valueOf(${wText}.get${property.name?cap_first}())">
   <#default>
   <#return "${wText}.get${property.name?cap_first}()">
 </#switch>

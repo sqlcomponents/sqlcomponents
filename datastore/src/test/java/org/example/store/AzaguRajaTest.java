@@ -37,11 +37,10 @@ class AzaguRajaTest {
         Integer noOfInsertedRajaRefs = this.azaguRajaReferenceStore.insert().values(azagurajaobject).execute();
         Assertions.assertEquals(1, noOfInsertedRajaRefs, "1 Raja Reference inserted");
 
-        //this is to check mymodel, --> insert by setting parameter.
         AzaguRaja azaguRaja = new AzaguRaja();
         azaguRaja.setReferenceCode("A110");
         azaguRaja.setABoolean(true);
-        azaguRaja.setAChar('A');
+        // azaguRaja.setAChar('A');
         azaguRaja.setAText("Text");
 
         AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore.insert()
