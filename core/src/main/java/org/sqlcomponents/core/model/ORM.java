@@ -1,229 +1,216 @@
 package org.sqlcomponents.core.model;
 
 
-
 import org.sqlcomponents.core.model.relational.Database;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class ORM  {
+public class ORM {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	private String userName;
+    private String userName;
 
-	private String password;
+    private String password;
 
-	private String schemaName;
+    private String schemaName;
 
-	private Database database;
+    private Database database;
 
-	private String url;
-	
-	private String daoIdentifier;
+    private String url;
 
-	private String beanIdentifier;
-	
-	private String daoSuffix;
+    private String daoIdentifier;
 
-	private String beanSuffix;
+    private String beanIdentifier;
 
-	public String getDaoIdentifier() {
-		return daoIdentifier;
-	}
+    private String daoSuffix;
 
-	public void setDaoIdentifier(String daoIdentifier) {
-		this.daoIdentifier = daoIdentifier;
-	}
+    private String beanSuffix;
+    private HashMap<String, String> wordsMap;
+    private HashMap<String, String> modulesMap;
+    private HashMap<String, String> updateMap;
+    private HashMap<String, String> insertMap;
+    private HashMap<String, String> validationMap;
+    private List<Entity> entities;
+    private List<Service> services;
+    private List<Method> methods;
+    private List<Default> defaults;
+    private boolean pagination;
+    private List<String> methodSpecification;
 
-	public String getBeanIdentifier() {
-		return beanIdentifier;
-	}
+    public String getDaoIdentifier() {
+        return daoIdentifier;
+    }
 
-	public void setBeanIdentifier(String beanIdentifier) {
-		this.beanIdentifier = beanIdentifier;
-	}
+    public void setDaoIdentifier(String daoIdentifier) {
+        this.daoIdentifier = daoIdentifier;
+    }
 
-	public String getDaoSuffix() {
-		return daoSuffix;
-	}
+    public String getBeanIdentifier() {
+        return beanIdentifier;
+    }
 
-	public void setDaoSuffix(String daoSuffix) {
-		this.daoSuffix = daoSuffix;
-	}
+    public void setBeanIdentifier(String beanIdentifier) {
+        this.beanIdentifier = beanIdentifier;
+    }
 
-	public String getBeanSuffix() {
-		return beanSuffix;
-	}
+    public String getDaoSuffix() {
+        return daoSuffix;
+    }
 
-	public void setBeanSuffix(String beanSuffix) {
-		this.beanSuffix = beanSuffix;
-	}
+    public void setDaoSuffix(String daoSuffix) {
+        this.daoSuffix = daoSuffix;
+    }
 
-	private HashMap<String, String> wordsMap;
+    public String getBeanSuffix() {
+        return beanSuffix;
+    }
 
-	private HashMap<String, String> modulesMap;
+    public void setBeanSuffix(String beanSuffix) {
+        this.beanSuffix = beanSuffix;
+    }
 
-	private HashMap<String, String> updateMap;
+    public HashMap<String, String> getValidationMap() {
+        return validationMap;
+    }
 
-	private HashMap<String, String> insertMap;
-	
-	private HashMap<String, String> validationMap;
+    public void setValidationMap(HashMap<String, String> validationMap) {
+        this.validationMap = validationMap;
+    }
 
-	public HashMap<String, String> getValidationMap() {
-		return validationMap;
-	}
+    public List<Service> getServices() {
+        return services;
+    }
 
-	public void setValidationMap(HashMap<String, String> validationMap) {
-		this.validationMap = validationMap;
-	}
+    public void setServices(List<Service> services) {
+        this.services = services;
+    }
 
-	private List<Entity> entities;
-	
-	private List<Service> services ;
+    public boolean isPagination() {
+        return pagination;
+    }
 
-	public List<Service> getServices() {
-		return services;
-	}
+    public void setPagination(boolean pagination) {
+        this.pagination = pagination;
+    }
 
-	public void setServices(List<Service> services) {
-		this.services = services;
-	}
+    public List<Default> getDefaults() {
+        return defaults;
+    }
 
-	private List<Method> methods;
+    public void setDefaults(List<Default> defaults) {
+        this.defaults = defaults;
+    }
 
-	private List<Default> defaults;
+    public List<Method> getMethods() {
+        return methods;
+    }
 
-	private boolean pagination ;
-	
-	public boolean isPagination() {
-		return pagination;
-	}
+    public void setMethods(List<Method> methods) {
+        this.methods = methods;
+    }
 
-	public void setPagination(boolean pagination) {
-		this.pagination = pagination;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	public List<Default> getDefaults() {
-		return defaults;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public void setDefaults(List<Default> defaults) {
-		this.defaults = defaults;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public List<Method> getMethods() {
-		return methods;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public void setMethods(List<Method> methods) {
-		this.methods = methods;
-	}
+    public Database getSchema() {
+        return database;
+    }
 
-	private List<String> methodSpecification;
+    public void setSchema(Database database) {
+        this.database = database;
+    }
 
-	public String getUserName() {
-		return userName;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public String getPassword() {
-		return password;
-	}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public HashMap<String, String> getWordsMap() {
+        return wordsMap;
+    }
 
-	public Database getSchema() {
-		return database;
-	}
+    public void setWordsMap(HashMap<String, String> wordsMap) {
+        this.wordsMap = wordsMap;
+    }
 
-	public void setSchema(Database database) {
-		this.database = database;
-	}
+    public HashMap<String, String> getModulesMap() {
+        return modulesMap;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public void setModulesMap(HashMap<String, String> modulesMap) {
+        this.modulesMap = modulesMap;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public HashMap<String, String> getUpdateMap() {
+        return updateMap;
+    }
 
-	
+    public void setUpdateMap(HashMap<String, String> updateMap) {
+        this.updateMap = updateMap;
+    }
 
-	public HashMap<String, String> getWordsMap() {
-		return wordsMap;
-	}
+    public HashMap<String, String> getInsertMap() {
+        return insertMap;
+    }
 
-	public void setWordsMap(HashMap<String, String> wordsMap) {
-		this.wordsMap = wordsMap;
-	}
+    public void setInsertMap(HashMap<String, String> insertMap) {
+        this.insertMap = insertMap;
+    }
 
-	public HashMap<String, String> getModulesMap() {
-		return modulesMap;
-	}
+    public List<Entity> getEntities() {
+        return entities;
+    }
 
-	public void setModulesMap(HashMap<String, String> modulesMap) {
-		this.modulesMap = modulesMap;
-	}
+    public void setEntities(List<Entity> entities) {
+        this.entities = entities;
+    }
 
-	public HashMap<String, String> getUpdateMap() {
-		return updateMap;
-	}
+    public Entity getEntity(String tableName) {
+        Entity entity = null;
+        for (Entity entity2 : getEntities()) {
+            if (entity2.getTable().getTableName().equals(tableName)) {
+                return entity2;
+            }
+        }
+        return entity;
+    }
 
-	public void setUpdateMap(HashMap<String, String> updateMap) {
-		this.updateMap = updateMap;
-	}
+    public List<String> getMethodSpecification() {
+        return methodSpecification;
+    }
 
-	public HashMap<String, String> getInsertMap() {
-		return insertMap;
-	}
+    public void setMethodSpecification(List<String> methodSpecification) {
+        this.methodSpecification = methodSpecification;
+    }
 
-	public void setInsertMap(HashMap<String, String> insertMap) {
-		this.insertMap = insertMap;
-	}
+    public String getSchemaName() {
+        return schemaName;
+    }
 
-	public List<Entity> getEntities() {
-		return entities;
-	}
-	
-	public Entity getEntity(String tableName) {
-		Entity entity = null ;
-		for (Entity entity2 : getEntities()) {
-			if(entity2.getTable().getTableName().equals(tableName)) {
-				return entity2;
-			}
-		}
-		return entity;
-	}
-
-	public void setEntities(List<Entity> entities) {
-		this.entities = entities;
-	}
-
-	public List<String> getMethodSpecification() {
-		return methodSpecification;
-	}
-
-	public void setMethodSpecification(List<String> methodSpecification) {
-		this.methodSpecification = methodSpecification;
-	}
-
-	public String getSchemaName() {
-		return schemaName;
-	}
-
-	public void setSchemaName(String schemaName) {
-		this.schemaName = schemaName;
-	}
+    public void setSchemaName(String schemaName) {
+        this.schemaName = schemaName;
+    }
 
 }

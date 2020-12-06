@@ -10,8 +10,9 @@ import java.util.SortedSet;
 
 @Setter
 @Getter
-public class Column  {
+public class Column {
 
+    private final Table table;
     private String columnName;
     private String tableName;
     private int size;
@@ -21,7 +22,6 @@ public class Column  {
     private boolean isAutoIncrement;
     private String uniqueConstraintName;
     private int primaryKeyIndex;
-
     private String tableCategory;
     private String tableSchema;
     private String typeName;
@@ -35,10 +35,7 @@ public class Column  {
     private String scopeTable;
     private String sourceDataType;
     private Flag generatedColumn;
-
     private SortedSet<Key> exportedKeys;
-
-    private final Table table;
 
     public Column(final Table table) {
         this.table = table;

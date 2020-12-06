@@ -3,36 +3,34 @@ package org.sqlcomponents.core.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.sqlcomponents.core.model.relational.Column;
 import org.sqlcomponents.core.model.relational.Table;
-import org.sqlcomponents.core.model.relational.enumeration.Flag;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class Entity  {
+public class Entity {
 
-	private Table table;
+    private Table table;
 
-	private String name;
-	private String pluralName;
-	private String beanPackage;
-	private String daoPackage;
+    private String name;
+    private String pluralName;
+    private String beanPackage;
+    private String daoPackage;
 
-	private ORM orm;
-	
-	private List<Property> properties;
+    private ORM orm;
 
-	public Entity(ORM orm, Table table) {
-		setOrm(orm);
-		setTable(table);
-	}
+    private List<Property> properties;
 
-	public List<Property> getInsertableProperties() {
-		return this.getProperties().stream().filter(property -> {
-			return property.getColumn().isInsertable();
-		}).collect(Collectors.toList());
-	}
+    public Entity(ORM orm, Table table) {
+        setOrm(orm);
+        setTable(table);
+    }
+
+    public List<Property> getInsertableProperties() {
+        return this.getProperties().stream().filter(property -> {
+            return property.getColumn().isInsertable();
+        }).collect(Collectors.toList());
+    }
 }

@@ -3,8 +3,8 @@ package org.sqlcomponents.core.mapper;
 import org.sqlcomponents.core.crawler.Crawler;
 import org.sqlcomponents.core.exception.ScubeException;
 import org.sqlcomponents.core.model.*;
-import org.sqlcomponents.core.model.relational.*;
 import org.sqlcomponents.core.model.relational.Package;
+import org.sqlcomponents.core.model.relational.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -103,7 +103,7 @@ public abstract class Mapper {
         Entity entity;
 
         for (Table table : database.getTables()) {
-            entity = new Entity(application.getOrm(),table);
+            entity = new Entity(application.getOrm(), table);
             entity.setName(getEntityName(application, table.getTableName()));
             entity.setPluralName(getPluralName(application, entity.getName()));
             entity
@@ -123,7 +123,6 @@ public abstract class Mapper {
         }
         return entities;
     }
-
 
 
     protected String getServiceName(Application application, String packageName) {

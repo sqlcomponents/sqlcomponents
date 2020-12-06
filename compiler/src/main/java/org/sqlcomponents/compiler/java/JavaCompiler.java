@@ -1,5 +1,6 @@
 package org.sqlcomponents.compiler.java;
 
+import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
 import freemarker.template.TemplateException;
 import org.sqlcomponents.compiler.base.Template;
@@ -8,97 +9,95 @@ import org.sqlcomponents.core.compiler.Compiler;
 import org.sqlcomponents.core.crawler.Crawler;
 import org.sqlcomponents.core.exception.ScubeException;
 import org.sqlcomponents.core.mapper.Mapper;
-import org.sqlcomponents.core.model.*;
-import org.sqlcomponents.core.model.relational.Table;
-import org.sqlcomponents.core.model.relational.enumeration.TableType;
+import org.sqlcomponents.core.model.Application;
+import org.sqlcomponents.core.model.Entity;
+import org.sqlcomponents.core.model.ORM;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-import com.google.googlejavaformat.java.Formatter;
 
 public final class JavaCompiler implements Compiler {
 
-	private final Formatter formatter;
-	private Template<Entity> daoTemplate;
-	private Template<Entity> beanTemplate;
+    private final Formatter formatter;
+    private Template<Entity> daoTemplate;
+    private Template<Entity> beanTemplate;
 
-	public JavaCompiler() {
-		formatter = new Formatter();
-		try {
-			daoTemplate = new Template<>("template/java/jdbcdao.ftl");
-			beanTemplate = new Template<>("template/java/bean.ftl");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+    public JavaCompiler() {
+        formatter = new Formatter();
+        try {
+            daoTemplate = new Template<>("template/java/jdbcdao.ftl");
+            beanTemplate = new Template<>("template/java/bean.ftl");
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public void compile(Application application) throws ScubeException {
-		Mapper mapper = new JavaMapper();
-		application.setOrm(mapper.getOrm(application,new Crawler()));
-		ORM orm = application.getOrm();
+    @Override
+    public void compile(Application application) throws ScubeException {
+        Mapper mapper = new JavaMapper();
+        application.setOrm(mapper.getOrm(application, new Crawler()));
+        ORM orm = application.getOrm();
 
-		orm.getEntities().parallelStream().forEach(entity -> {
-			try {
-				writeDaoImplementation(entity, application.getSrcFolder(),application.getDaoSuffix());
-				writeBeanSpecification(entity, application.getSrcFolder(),application.getBeanSuffix());
-			} catch (IOException | FormatterException | TemplateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
+        orm.getEntities().parallelStream().forEach(entity -> {
+            try {
+                writeDaoImplementation(entity, application.getSrcFolder(), application.getDaoSuffix());
+                writeBeanSpecification(entity, application.getSrcFolder(), application.getBeanSuffix());
+            } catch (IOException | FormatterException | TemplateException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
 
-	}
+    }
 
-	private void writeDaoImplementation(Entity entity, String srcFolder,String daoSuffix)
-			throws IOException, FormatterException, TemplateException {
-		String packageFolder = getPackageAsFolder(srcFolder, entity
-				.getDaoPackage());
-		new File(packageFolder).mkdirs();
-		Files.write(new File(packageFolder + File.separator
-						+ entity.getName() + "Store"  + daoSuffix.trim() + ".java").toPath(),
-				getJavaContent(daoTemplate.getContent(entity)).getBytes());
-	}
+    private void writeDaoImplementation(Entity entity, String srcFolder, String daoSuffix)
+            throws IOException, FormatterException, TemplateException {
+        String packageFolder = getPackageAsFolder(srcFolder, entity
+                .getDaoPackage());
+        new File(packageFolder).mkdirs();
+        Files.write(new File(packageFolder + File.separator
+                        + entity.getName() + "Store" + daoSuffix.trim() + ".java").toPath(),
+                getJavaContent(daoTemplate.getContent(entity)).getBytes());
+    }
 
-	private void writeBeanSpecification(Entity entity, String srcFolder,String beanSuffix)
-			throws IOException, FormatterException, TemplateException {
-		String packageFolder = getPackageAsFolder(srcFolder, entity
-				.getBeanPackage());
-		new File(packageFolder).mkdirs();
+    private void writeBeanSpecification(Entity entity, String srcFolder, String beanSuffix)
+            throws IOException, FormatterException, TemplateException {
+        String packageFolder = getPackageAsFolder(srcFolder, entity
+                .getBeanPackage());
+        new File(packageFolder).mkdirs();
 
-		Files.write(new File(packageFolder + File.separator
-						+ entity.getName() + (beanSuffix == null ? "" : beanSuffix.trim() )+ ".java").toPath(),
-				getJavaContent(beanTemplate.getContent(entity)).getBytes());
-	}
+        Files.write(new File(packageFolder + File.separator
+                        + entity.getName() + (beanSuffix == null ? "" : beanSuffix.trim()) + ".java").toPath(),
+                getJavaContent(beanTemplate.getContent(entity)).getBytes());
+    }
 
-	/**
-	 * formats content using google java formatter.
-	 * @param content
-	 * @return formattedContent
-	 */
-	private String getJavaContent(final String content) {
-		try {
-			return formatter.formatSource(content);
-		} catch (FormatterException e) {
-			return content;
-		}
-	}
+    /**
+     * formats content using google java formatter.
+     *
+     * @param content
+     * @return formattedContent
+     */
+    private String getJavaContent(final String content) {
+        try {
+            return formatter.formatSource(content);
+        } catch (FormatterException e) {
+            return content;
+        }
+    }
 
-	private String getPackageAsFolder(String rootDir, String packageStr) {
-		char[] charArray = packageStr.toCharArray();
-		StringBuffer filePath = new StringBuffer();
-		for (int i = 0; i < charArray.length; i++) {
-			if (charArray[i] == '.') {
-				filePath.append(File.separatorChar);
-			} else {
-				filePath.append(charArray[i]);
-			}
-		}
-		return rootDir + File.separatorChar + filePath.toString();
-	}
+    private String getPackageAsFolder(String rootDir, String packageStr) {
+        char[] charArray = packageStr.toCharArray();
+        StringBuffer filePath = new StringBuffer();
+        for (int i = 0; i < charArray.length; i++) {
+            if (charArray[i] == '.') {
+                filePath.append(File.separatorChar);
+            } else {
+                filePath.append(charArray[i]);
+            }
+        }
+        return rootDir + File.separatorChar + filePath.toString();
+    }
 
 }

@@ -174,12 +174,13 @@ public class Database {
 
     /**
      * Used to get Escaped Name for tableName or columnName
+     *
      * @param name
      * @return escapedName
      */
     public String escapedName(final String name) {
         Boolean shouldEscape = this.getSqlKeywords().stream()
-                .filter(keyword->keyword.equalsIgnoreCase(name))
+                .filter(keyword -> keyword.equalsIgnoreCase(name))
                 .findFirst().isPresent();
         return shouldEscape ? this.identifierQuoteString + name + this.identifierQuoteString : name;
     }

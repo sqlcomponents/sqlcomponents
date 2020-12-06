@@ -2,28 +2,28 @@ package org.sqlcomponents.core.model.relational;
 
 public class Key implements Comparable<Key> {
 
-	private String tableName;
-	private String columnName;
+    private String tableName;
+    private String columnName;
 
-	public String getTableName() {
-		return tableName;
-	}
+    public String getTableName() {
+        return tableName;
+    }
 
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
-	}
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
 
-	public String getColumnName() {
-		return columnName;
-	}
+    public String getColumnName() {
+        return columnName;
+    }
 
-	public void setColumnName(String columnName) {
-		this.columnName = columnName;
-	}
+    public void setColumnName(String columnName) {
+        this.columnName = columnName;
+    }
 
-	@Override
-	public int compareTo(Key o) {
-		return this.getTableName().compareTo(o.getTableName());
-	}
+    @Override
+    public int compareTo(Key o) {
+        return this.getTableName().compareTo(o.getTableName());
+    }
 
 }
