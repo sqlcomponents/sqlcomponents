@@ -12,6 +12,8 @@
 	    <#local pkAsParameterStr="String">
 	<#elseif pkAsParameterStr == "LocalDate">
     	<#local pkAsParameterStr="Date">
+    <#elseif pkAsParameterStr == "LocalTime">
+        <#local pkAsParameterStr="Time">
 	</#if>
 	<#return pkAsParameterStr>
 </#function>
@@ -20,6 +22,8 @@
 <#switch property.dataType>
   <#case "java.time.LocalDate">
 	 <#return "${wText}.get${property.name?cap_first}() == null ? null : java.sql.Date.valueOf(${wText}.get${property.name?cap_first}())">
+  <#case "java.time.LocalTime">
+  	 <#return "${wText}.get${property.name?cap_first}() == null ? null : java.sql.Time.valueOf(${wText}.get${property.name?cap_first}())">
   <#case "java.lang.Character">
   	 <#return "${wText}.get${property.name?cap_first}() == null ? null : String.valueOf(${wText}.get${property.name?cap_first}())">
   <#default>
@@ -31,6 +35,8 @@
 <#switch property.dataType>
   <#case "java.time.LocalDate">
 	 <#return "${wText} == null ? null : ${wText}.toLocalDate()">
+  <#case "java.time.LocalTime">
+	 <#return "${wText} == null ? null : ${wText}.toLocalTime()">
   <#case "java.lang.Character">
   	 <#return "${wText} == null ? null : ${wText}.charAt(0)">
   <#default>

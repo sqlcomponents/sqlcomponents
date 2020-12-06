@@ -15,6 +15,7 @@ CREATE TABLE azagu_raja(
    a_text text,
 
    a_date date,
+      a_time time,
    CONSTRAINT fk_code
       FOREIGN KEY(reference_code) 
 	  REFERENCES azagu_raja_reference(code)

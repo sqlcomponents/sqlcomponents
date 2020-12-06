@@ -8,6 +8,7 @@ import org.junit.jupiter.api.*;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static org.example.util.DataSourceProvider.dataSource;
 
@@ -44,6 +45,7 @@ class AzaguRajaTest {
         // azaguRaja.setAChar('A');
         azaguRaja.setAText("Text");
         azaguRaja.setADate(LocalDate.now());
+        azaguRaja.setATime(LocalTime.now());
 
         AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore.insert()
                 .values(azaguRaja).returning();

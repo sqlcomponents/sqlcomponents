@@ -66,6 +66,9 @@ public final class ${name}Store${orm.daoSuffix}  {
     <#case "java.time.LocalDate">
     public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>DateField ${property.name}() {
     <#break>
+    <#case "java.time.LocalTime">
+    public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>TimeField ${property.name}() {
+    <#break>
     </#switch>
         return new Criteria().${property.name}();
     }
@@ -164,6 +167,13 @@ public final class ${name}Store${orm.daoSuffix}  {
     <#case "java.time.LocalDate">
         public <#if property.column.isNullable??>Nullable</#if>DateField ${property.name}() {
             <#if property.column.isNullable??>Nullable</#if>DateField query = new <#if property.column.isNullable??>Nullable</#if>DateField("${property.column.columnName}",this);
+            this.nodes.add(query);
+            return query;
+        }
+        <#break>
+    <#case "java.time.LocalTime">
+        public <#if property.column.isNullable??>Nullable</#if>TimeField ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>TimeField query = new <#if property.column.isNullable??>Nullable</#if>TimeField("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
@@ -369,7 +379,7 @@ public final class ${name}Store${orm.daoSuffix}  {
             }
         }
 
-        public class DateField<Date> extends Field {
+        public class DateField<LocalDate> extends Field {
         
             protected String sql;
 
@@ -411,6 +421,62 @@ public final class ${name}Store${orm.daoSuffix}  {
         public class NullableDateField extends DateField {
 
             public NullableDateField(final String columnName, final PartialCriteria criteria) {
+                super(columnName, criteria);
+            }
+
+            public Criteria isNull() {
+                sql = columnName + " IS NULL";
+                return getCriteria();
+            }
+
+            public Criteria isNotNull() {
+                sql = columnName + " IS NOT NULL";
+                return getCriteria();
+            }
+        }
+
+        public class TimeField<LocalTime> extends Field {
+
+            protected String sql;
+
+            public TimeField(final String columnName, final PartialCriteria criteria) {
+                super(columnName, criteria);
+            }
+
+            public Criteria eq(final LocalTime value) {
+                sql = columnName + "=" + value;
+                return getCriteria();
+            }
+
+            public Criteria gt(final LocalTime value) {
+                sql = columnName + ">" + value;
+                return getCriteria();
+            }
+
+            public Criteria gte(final LocalTime value) {
+                sql = columnName + ">=" + value;
+                return getCriteria();
+            }
+
+            public Criteria lt(final LocalTime value) {
+                sql = columnName + "<" + value;
+                return getCriteria();
+            }
+
+            public Criteria lte(final LocalTime value) {
+                sql = columnName + "<=" + value;
+                return getCriteria();
+            }
+
+            @Override
+            protected String asSql() {
+                return sql;
+            }
+        }
+
+        public class NullableTimeField extends TimeField {
+
+            public NullableTimeField(final String columnName, final PartialCriteria criteria) {
                 super(columnName, criteria);
             }
 
