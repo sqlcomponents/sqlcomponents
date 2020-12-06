@@ -14,6 +14,8 @@
     	<#local pkAsParameterStr="Date">
     <#elseif pkAsParameterStr == "LocalTime">
         <#local pkAsParameterStr="Time">
+        <#elseif pkAsParameterStr == "LocalDateTime">
+            <#local pkAsParameterStr="Timestamp">
 	</#if>
 	<#return pkAsParameterStr>
 </#function>
@@ -24,6 +26,8 @@
 	 <#return "${wText}.get${property.name?cap_first}() == null ? null : java.sql.Date.valueOf(${wText}.get${property.name?cap_first}())">
   <#case "java.time.LocalTime">
   	 <#return "${wText}.get${property.name?cap_first}() == null ? null : java.sql.Time.valueOf(${wText}.get${property.name?cap_first}())">
+  <#case "java.time.LocalDateTime">
+  	 <#return "${wText}.get${property.name?cap_first}() == null ? null : java.sql.Timestamp.valueOf(${wText}.get${property.name?cap_first}())">
   <#case "java.lang.Character">
   	 <#return "${wText}.get${property.name?cap_first}() == null ? null : String.valueOf(${wText}.get${property.name?cap_first}())">
   <#default>
@@ -37,6 +41,8 @@
 	 <#return "${wText} == null ? null : ${wText}.toLocalDate()">
   <#case "java.time.LocalTime">
 	 <#return "${wText} == null ? null : ${wText}.toLocalTime()">
+   <#case "java.time.LocalDateTime">
+     <#return "${wText} == null ? null : ${wText}.toLocalDateTime()">
   <#case "java.lang.Character">
   	 <#return "${wText} == null ? null : ${wText}.charAt(0)">
   <#default>

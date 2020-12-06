@@ -69,6 +69,9 @@ public final class ${name}Store${orm.daoSuffix}  {
     <#case "java.time.LocalTime">
     public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>TimeField ${property.name}() {
     <#break>
+    <#case "java.time.LocalDateTime">
+    public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>DateTimeField ${property.name}() {
+    <#break>
     </#switch>
         return new Criteria().${property.name}();
     }
@@ -174,6 +177,13 @@ public final class ${name}Store${orm.daoSuffix}  {
     <#case "java.time.LocalTime">
         public <#if property.column.isNullable??>Nullable</#if>TimeField ${property.name}() {
             <#if property.column.isNullable??>Nullable</#if>TimeField query = new <#if property.column.isNullable??>Nullable</#if>TimeField("${property.column.columnName}",this);
+            this.nodes.add(query);
+            return query;
+        }
+        <#break>
+    <#case "java.time.LocalDateTime">
+        public <#if property.column.isNullable??>Nullable</#if>DateTimeField ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>DateTimeField query = new <#if property.column.isNullable??>Nullable</#if>DateTimeField("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
@@ -490,6 +500,64 @@ public final class ${name}Store${orm.daoSuffix}  {
                 return getCriteria();
             }
         }
+
+
+        public class DateTimeField<LocalDateTime> extends Field {
+
+            protected String sql;
+
+            public DateTimeField(final String columnName, final PartialCriteria criteria) {
+                super(columnName, criteria);
+            }
+
+            public Criteria eq(final LocalDateTime value) {
+                sql = columnName + "=" + value;
+                return getCriteria();
+            }
+
+            public Criteria gt(final LocalDateTime value) {
+                sql = columnName + ">" + value;
+                return getCriteria();
+            }
+
+            public Criteria gte(final LocalDateTime value) {
+                sql = columnName + ">=" + value;
+                return getCriteria();
+            }
+
+            public Criteria lt(final LocalDateTime value) {
+                sql = columnName + "<" + value;
+                return getCriteria();
+            }
+
+            public Criteria lte(final LocalDateTime value) {
+                sql = columnName + "<=" + value;
+                return getCriteria();
+            }
+
+            @Override
+            protected String asSql() {
+                return sql;
+            }
+        }
+
+        public class NullableDateTimeField extends DateTimeField {
+
+            public NullableDateTimeField(final String columnName, final PartialCriteria criteria) {
+                super(columnName, criteria);
+            }
+
+            public Criteria isNull() {
+                sql = columnName + " IS NULL";
+                return getCriteria();
+            }
+
+            public Criteria isNotNull() {
+                sql = columnName + " IS NOT NULL";
+                return getCriteria();
+            }
+        }
+
     }
 
 }<#assign a=addImportStatement("java.util.ArrayList")><#assign a=addImportStatement("java.time.LocalDate")>
