@@ -1,12 +1,13 @@
 package org.example.store;
 
+
 import org.example.model.AzaguRaja;
 import org.example.model.AzaguRajaReference;
 import org.junit.jupiter.api.*;
 
-import java.sql.SQLDataException;
+
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalDate;
 
 import static org.example.util.DataSourceProvider.dataSource;
 
@@ -42,6 +43,7 @@ class AzaguRajaTest {
         azaguRaja.setABoolean(true);
         // azaguRaja.setAChar('A');
         azaguRaja.setAText("Text");
+        azaguRaja.setADate(LocalDate.now());
 
         AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore.insert()
                 .values(azaguRaja).returning();

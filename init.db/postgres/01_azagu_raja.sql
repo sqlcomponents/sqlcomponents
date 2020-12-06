@@ -13,6 +13,8 @@ CREATE TABLE azagu_raja(
    reference_code VARCHAR(80),
    a_char CHAR(1),
    a_text text,
+
+   a_date date,
    CONSTRAINT fk_code
       FOREIGN KEY(reference_code) 
 	  REFERENCES azagu_raja_reference(code)

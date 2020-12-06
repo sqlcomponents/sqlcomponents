@@ -3,6 +3,9 @@ package org.sqlcomponents.compiler.java.mapper;
 import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.relational.Column;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -47,6 +50,12 @@ public final class JavaMapper extends Mapper {
             case BIT:
             case BOOLEAN:
                 return Boolean.class;
+            case TIME:
+                return LocalTime.class;
+            case DATE:
+                return LocalDate.class;
+            case TIMESTAMP:
+                return Instant.class;
         }
         throw new RuntimeException("Datatype not found for column "+ column.getColumnName() + " of jdbc type " + column.getJdbcType());
     }

@@ -10,14 +10,16 @@
 			<#local pkAsParameterStr="Int">
 	<#elseif pkAsParameterStr == "Character">
 	    <#local pkAsParameterStr="String">
+	<#elseif pkAsParameterStr == "LocalDate">
+    	<#local pkAsParameterStr="Date">
 	</#if>
 	<#return pkAsParameterStr>
 </#function>
 
 <#function wrapSet wText property >
 <#switch property.dataType>
-  <#case "java.util.Date">
-	 <#return "${wText}.get${property.name?cap_first}() == null ? null : new java.sql.Date(${wText}.get${property.name?cap_first}().getTime())">
+  <#case "java.time.LocalDate">
+	 <#return "${wText}.get${property.name?cap_first}() == null ? null : java.sql.Date.valueOf(${wText}.get${property.name?cap_first}())">
   <#case "java.lang.Character">
   	 <#return "${wText}.get${property.name?cap_first}() == null ? null : String.valueOf(${wText}.get${property.name?cap_first}())">
   <#default>
@@ -27,8 +29,8 @@
 
 <#function wrapGet wText property >
 <#switch property.dataType>
-  <#case "java.util.Date">
-	 <#return "${wText}.get${property.name?cap_first}() == null ? null : new java.sql.Date(${wText}.get${property.name?cap_first}().getTime())">
+  <#case "java.time.LocalDate">
+	 <#return "${wText} == null ? null : ${wText}.toLocalDate()">
   <#case "java.lang.Character">
   	 <#return "${wText} == null ? null : ${wText}.charAt(0)">
   <#default>

@@ -63,7 +63,7 @@ public final class ${name}Store${orm.daoSuffix}  {
     <#case "java.lang.Boolean">
     public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>BooleanField ${property.name}() {
     <#break>
-    <#case "java.util.Date">
+    <#case "java.time.LocalDate">
     public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>DateField ${property.name}() {
     <#break>
     </#switch>
@@ -161,7 +161,7 @@ public final class ${name}Store${orm.daoSuffix}  {
             return query;
         }
         <#break>
-    <#case "java.util.Date">
+    <#case "java.time.LocalDate">
         public <#if property.column.isNullable??>Nullable</#if>DateField ${property.name}() {
             <#if property.column.isNullable??>Nullable</#if>DateField query = new <#if property.column.isNullable??>Nullable</#if>DateField("${property.column.columnName}",this);
             this.nodes.add(query);
@@ -377,27 +377,27 @@ public final class ${name}Store${orm.daoSuffix}  {
                 super(columnName, criteria);
             }
 
-            public Criteria eq(final Date value) {
+            public Criteria eq(final LocalDate value) {
                 sql = columnName + "=" + value;
                 return getCriteria();
             }
 
-            public Criteria gt(final Date value) {
+            public Criteria gt(final LocalDate value) {
                 sql = columnName + ">" + value;
                 return getCriteria();
             }
 
-            public Criteria gte(final Date value) {
+            public Criteria gte(final LocalDate value) {
                 sql = columnName + ">=" + value;
                 return getCriteria();
             }
 
-            public Criteria lt(final Date value) {
+            public Criteria lt(final LocalDate value) {
                 sql = columnName + "<" + value;
                 return getCriteria();
             }
 
-            public Criteria lte(final Date value) {
+            public Criteria lte(final LocalDate value) {
                 sql = columnName + "<=" + value;
                 return getCriteria();
             }
@@ -426,7 +426,7 @@ public final class ${name}Store${orm.daoSuffix}  {
         }
     }
 
-}<#assign a=addImportStatement("java.util.ArrayList")>
+}<#assign a=addImportStatement("java.util.ArrayList")><#assign a=addImportStatement("java.time.LocalDate")>
 </#assign>
 <@importStatements/>
 
