@@ -68,5 +68,17 @@ class AzaguRajaTest {
         Assertions.assertEquals("A110", insertedAzaguRaja.getReferenceCode(), "found successfully");
 
 
+        List<AzaguRaja> listOfRajas = new ArrayList<>();
+        for (int i = 1; i < 6; i++) {
+            listOfRajas.add(azaguRaja);
+        }
+
+        List<AzaguRaja> insertedAzaguRajas = this.allInAllAzaguRajaStore.insert()
+                .values(listOfRajas).returning();
+
+        Assertions.assertEquals(listOfRajas.size(),insertedAzaguRajas.size(),  "all raja found successfully");
+
+
+
     }
 }
