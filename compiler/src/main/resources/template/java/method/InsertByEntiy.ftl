@@ -115,10 +115,10 @@
                 this.insertStatement = insertStatement;
             }
 
-            public final int execute() throws SQLException  {
-                int insertedRows = 0;
+            public final int[] execute() throws SQLException  {
+                int[] insertedRows = null;
                 <@insertquery/>
-
+                
                 try (Connection conn = insertStatement.${name?uncap_first}Store${orm.daoSuffix}.dataSource.getConnection();
                      PreparedStatement preparedStatement = conn.prepareStatement(query))
                 {
@@ -126,7 +126,7 @@
                         this.insertStatement.prepare(preparedStatement, ${name?uncap_first});
                         preparedStatement.addBatch();
                     }
-                    insertedRows = preparedStatement.executeUpdate();
+                    insertedRows = preparedStatement.executeBatch();
                 }
                 return insertedRows;
             }

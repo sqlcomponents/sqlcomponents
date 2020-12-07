@@ -60,7 +60,7 @@ class AzaguRajaTest {
         azaguRaja.setAText("Text");
         azaguRaja.setADate(LocalDate.now());
         azaguRaja.setATime(LocalTime.now());
-        azaguRaja.setATimestamp(LocalDateTime.now());
+
 
         AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore.insert()
                 .values(azaguRaja).returning();
