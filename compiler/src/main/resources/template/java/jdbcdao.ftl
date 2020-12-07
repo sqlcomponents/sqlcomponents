@@ -46,45 +46,45 @@ public final class ${name}Store${orm.daoSuffix}  {
 <#list properties as property>
     <#switch property.dataType>
     <#case "java.lang.String">
-    public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>StringField ${property.name}() {
+    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>StringField ${property.name}() {
     <#break>
     <#case "java.lang.Character">
-    public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>CharacterField ${property.name}() {
+    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>CharacterField ${property.name}() {
     <#break>
     <#case "java.lang.Integer">
-    public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>NumberField<Integer> ${property.name}() {
+    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>NumberField<Integer> ${property.name}() {
     <#break>
     <#case "java.lang.Long">
-    public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>NumberField<Long> ${property.name}() {
+    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>NumberField<Long> ${property.name}() {
     <#break>
     <#case "java.lang.Float">
-    public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>NumberField<Float> ${property.name}() {
+    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>NumberField<Float> ${property.name}() {
     <#break>
     <#case "java.lang.Boolean">
-    public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>BooleanField ${property.name}() {
+    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>BooleanField ${property.name}() {
     <#break>
     <#case "java.time.LocalDate">
-    public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>DateField ${property.name}() {
+    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>DateField ${property.name}() {
     <#break>
     <#case "java.time.LocalTime">
-    public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>TimeField ${property.name}() {
+    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>TimeField ${property.name}() {
     <#break>
     <#case "java.time.LocalDateTime">
-    public static PartialCriteria.<#if property.column.isNullable??>Nullable</#if>DateTimeField ${property.name}() {
+    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>DateTimeField ${property.name}() {
     <#break>
     </#switch>
-        return new Criteria().${property.name}();
+        return new WhereClause ().${property.name}();
     }
     </#list>
 
-    public static class Criteria extends PartialCriteria {
+    public static class WhereClause  extends PartialWhereClause  {
         private String asSql() {
             return nodes.isEmpty() ? null : nodes.stream().map(node -> {
                 String asSql;
                 if (node instanceof Field) {
                     asSql = ((Field) node).asSql();
-                } else if (node instanceof Criteria) {
-                    asSql = "(" + ((Criteria) node).asSql() + ")";
+                } else if (node instanceof WhereClause ) {
+                    asSql = "(" + ((WhereClause ) node).asSql() + ")";
                 } else {
                     asSql = (String) node;
                 }
@@ -92,35 +92,35 @@ public final class ${name}Store${orm.daoSuffix}  {
             }).collect(Collectors.joining(" "));
         }
 
-        public PartialCriteria and() {
+        public PartialWhereClause  and() {
             this.nodes.add("AND");
             return this;
         }
 
-        public PartialCriteria or() {
+        public PartialWhereClause  or() {
             this.nodes.add("OR");
             return this;
         }
 
-        public Criteria and(final Criteria criteria) {
+        public WhereClause  and(final WhereClause  whereClause ) {
             this.nodes.add("AND");
-            this.nodes.add(criteria);
-            return (Criteria) this;
+            this.nodes.add(whereClause );
+            return (WhereClause ) this;
         }
 
-        public Criteria or(final Criteria criteria) {
+        public WhereClause  or(final WhereClause  whereClause ) {
             this.nodes.add("OR");
-            this.nodes.add(criteria);
-            return (Criteria) this;
+            this.nodes.add(whereClause );
+            return (WhereClause ) this;
         }
 
     }
 
-    public static class PartialCriteria {
+    public static class PartialWhereClause  {
 
         protected final List<Object> nodes;
 
-        public PartialCriteria() {
+        public PartialWhereClause () {
             this.nodes = new ArrayList<>();
         }
 <#list properties as property>
@@ -194,15 +194,15 @@ public final class ${name}Store${orm.daoSuffix}  {
         public abstract class Field {
 
             protected final String columnName;
-            private final PartialCriteria criteria;
+            private final PartialWhereClause  whereClause ;
 
-            public Field(final String columnName, final PartialCriteria criteria) {
+            public Field(final String columnName, final PartialWhereClause  whereClause ) {
                 this.columnName = columnName;
-                this.criteria = criteria;
+                this.whereClause  = whereClause ;
             }
 
-            protected Criteria getCriteria() {
-                return (Criteria) criteria;
+            protected WhereClause  getWhereClause () {
+                return (WhereClause ) whereClause ;
             }
 
             protected abstract String asSql();
@@ -212,18 +212,18 @@ public final class ${name}Store${orm.daoSuffix}  {
         public class StringField extends Field {
             protected String sql;
 
-            public StringField(final String columnName, final PartialCriteria criteria) {
-                super(columnName, criteria);
+            public StringField(final String columnName, final PartialWhereClause  whereClause ) {
+                super(columnName, whereClause );
             }
 
-            public Criteria eq(final String value) {
+            public WhereClause  eq(final String value) {
                 sql = columnName + "='" + value + "'";
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria like(final String value) {
+            public WhereClause  like(final String value) {
                 sql = columnName + " LIKE '" + value + "'";
-                return getCriteria();
+                return getWhereClause ();
             }
 
             @Override
@@ -236,18 +236,18 @@ public final class ${name}Store${orm.daoSuffix}  {
 
         public class NullableStringField extends StringField {
 
-            public NullableStringField(final String columnName, final PartialCriteria criteria) {
-                super(columnName, criteria);
+            public NullableStringField(final String columnName, final PartialWhereClause  whereClause ) {
+                super(columnName, whereClause );
             }
 
-            public Criteria isNull() {
+            public WhereClause  isNull() {
                 sql = columnName + " IS NULL";
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria isNotNull() {
+            public WhereClause  isNotNull() {
                 sql = columnName + " IS NOT NULL";
-                return getCriteria();
+                return getWhereClause ();
             }
         }
 
@@ -257,18 +257,18 @@ public final class ${name}Store${orm.daoSuffix}  {
         public class CharacterField extends Field {
             protected String sql;
 
-            public CharacterField(final String columnName, final PartialCriteria criteria) {
-                super(columnName, criteria);
+            public CharacterField(final String columnName, final PartialWhereClause  whereClause ) {
+                super(columnName, whereClause );
             }
 
-            public Criteria eq(final String value) {
+            public WhereClause  eq(final String value) {
                 sql = columnName + "='" + value + "'";
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria like(final String value) {
+            public WhereClause  like(final String value) {
                 sql = columnName + " LIKE '" + value + "'";
-                return getCriteria();
+                return getWhereClause ();
             }
 
             @Override
@@ -281,18 +281,18 @@ public final class ${name}Store${orm.daoSuffix}  {
 
         public class NullableCharacterField extends CharacterField {
 
-            public NullableCharacterField(final String columnName, final PartialCriteria criteria) {
-                super(columnName, criteria);
+            public NullableCharacterField(final String columnName, final PartialWhereClause  whereClause ) {
+                super(columnName, whereClause );
             }
 
-            public Criteria isNull() {
+            public WhereClause  isNull() {
                 sql = columnName + " IS NULL";
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria isNotNull() {
+            public WhereClause  isNotNull() {
                 sql = columnName + " IS NOT NULL";
-                return getCriteria();
+                return getWhereClause ();
             }
         }
 
@@ -301,13 +301,13 @@ public final class ${name}Store${orm.daoSuffix}  {
         public class BooleanField extends Field {
             protected String sql;
 
-            public BooleanField(final String columnName, final PartialCriteria criteria) {
-                super(columnName, criteria);
+            public BooleanField(final String columnName, final PartialWhereClause  whereClause ) {
+                super(columnName, whereClause );
             }
 
-            public Criteria eq(final Boolean value) {
+            public WhereClause  eq(final Boolean value) {
                 sql = columnName + "=" + value ;
-                return getCriteria();
+                return getWhereClause ();
             }
 
             @Override
@@ -318,18 +318,18 @@ public final class ${name}Store${orm.daoSuffix}  {
 
         public class NullableBooleanField extends BooleanField {
 
-            public NullableBooleanField(final String columnName, final PartialCriteria criteria) {
-                super(columnName, criteria);
+            public NullableBooleanField(final String columnName, final PartialWhereClause  whereClause ) {
+                super(columnName, whereClause );
             }
 
-            public Criteria isNull() {
+            public WhereClause  isNull() {
                 sql = columnName + " IS NULL";
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria isNotNull() {
+            public WhereClause  isNotNull() {
                 sql = columnName + " IS NOT NULL";
-                return getCriteria();
+                return getWhereClause ();
             }
         }
 
@@ -337,33 +337,33 @@ public final class ${name}Store${orm.daoSuffix}  {
 
             protected String sql;
 
-            public NumberField(final String columnName, final PartialCriteria criteria) {
-                super(columnName, criteria);
+            public NumberField(final String columnName, final PartialWhereClause  whereClause ) {
+                super(columnName, whereClause );
             }
 
-            public Criteria eq(final T value) {
+            public WhereClause  eq(final T value) {
                 sql = columnName + "=" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria gt(final T value) {
+            public WhereClause  gt(final T value) {
                 sql = columnName + ">" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria gte(final T value) {
+            public WhereClause  gte(final T value) {
                 sql = columnName + ">=" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria lt(final T value) {
+            public WhereClause  lt(final T value) {
                 sql = columnName + "<" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria lte(final T value) {
+            public WhereClause  lte(final T value) {
                 sql = columnName + "<=" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
             @Override
@@ -374,18 +374,18 @@ public final class ${name}Store${orm.daoSuffix}  {
 
         public class NullableNumberField<T extends Number> extends NumberField<T> {
 
-            public NullableNumberField(final String columnName, final PartialCriteria criteria) {
-                super(columnName, criteria);
+            public NullableNumberField(final String columnName, final PartialWhereClause  whereClause ) {
+                super(columnName, whereClause );
             }
 
-            public Criteria isNull() {
+            public WhereClause  isNull() {
                 sql = columnName + " IS NULL";
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria isNotNull() {
+            public WhereClause  isNotNull() {
                 sql = columnName + " IS NOT NULL";
-                return getCriteria();
+                return getWhereClause ();
             }
         }
 
@@ -393,33 +393,33 @@ public final class ${name}Store${orm.daoSuffix}  {
         
             protected String sql;
 
-            public DateField(final String columnName, final PartialCriteria criteria) {
-                super(columnName, criteria);
+            public DateField(final String columnName, final PartialWhereClause  whereClause ) {
+                super(columnName, whereClause );
             }
 
-            public Criteria eq(final LocalDate value) {
+            public WhereClause  eq(final LocalDate value) {
                 sql = columnName + "=" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria gt(final LocalDate value) {
+            public WhereClause  gt(final LocalDate value) {
                 sql = columnName + ">" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria gte(final LocalDate value) {
+            public WhereClause  gte(final LocalDate value) {
                 sql = columnName + ">=" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria lt(final LocalDate value) {
+            public WhereClause  lt(final LocalDate value) {
                 sql = columnName + "<" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria lte(final LocalDate value) {
+            public WhereClause  lte(final LocalDate value) {
                 sql = columnName + "<=" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
             @Override
@@ -430,18 +430,18 @@ public final class ${name}Store${orm.daoSuffix}  {
 
         public class NullableDateField extends DateField {
 
-            public NullableDateField(final String columnName, final PartialCriteria criteria) {
-                super(columnName, criteria);
+            public NullableDateField(final String columnName, final PartialWhereClause  whereClause ) {
+                super(columnName, whereClause );
             }
 
-            public Criteria isNull() {
+            public WhereClause  isNull() {
                 sql = columnName + " IS NULL";
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria isNotNull() {
+            public WhereClause  isNotNull() {
                 sql = columnName + " IS NOT NULL";
-                return getCriteria();
+                return getWhereClause ();
             }
         }
 
@@ -449,33 +449,33 @@ public final class ${name}Store${orm.daoSuffix}  {
 
             protected String sql;
 
-            public TimeField(final String columnName, final PartialCriteria criteria) {
-                super(columnName, criteria);
+            public TimeField(final String columnName, final PartialWhereClause  whereClause ) {
+                super(columnName, whereClause );
             }
 
-            public Criteria eq(final LocalTime value) {
+            public WhereClause  eq(final LocalTime value) {
                 sql = columnName + "=" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria gt(final LocalTime value) {
+            public WhereClause  gt(final LocalTime value) {
                 sql = columnName + ">" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria gte(final LocalTime value) {
+            public WhereClause  gte(final LocalTime value) {
                 sql = columnName + ">=" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria lt(final LocalTime value) {
+            public WhereClause  lt(final LocalTime value) {
                 sql = columnName + "<" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria lte(final LocalTime value) {
+            public WhereClause  lte(final LocalTime value) {
                 sql = columnName + "<=" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
             @Override
@@ -486,18 +486,18 @@ public final class ${name}Store${orm.daoSuffix}  {
 
         public class NullableTimeField extends TimeField {
 
-            public NullableTimeField(final String columnName, final PartialCriteria criteria) {
-                super(columnName, criteria);
+            public NullableTimeField(final String columnName, final PartialWhereClause  whereClause ) {
+                super(columnName, whereClause );
             }
 
-            public Criteria isNull() {
+            public WhereClause  isNull() {
                 sql = columnName + " IS NULL";
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria isNotNull() {
+            public WhereClause  isNotNull() {
                 sql = columnName + " IS NOT NULL";
-                return getCriteria();
+                return getWhereClause ();
             }
         }
 
@@ -506,33 +506,33 @@ public final class ${name}Store${orm.daoSuffix}  {
 
             protected String sql;
 
-            public DateTimeField(final String columnName, final PartialCriteria criteria) {
-                super(columnName, criteria);
+            public DateTimeField(final String columnName, final PartialWhereClause  whereClause ) {
+                super(columnName, whereClause );
             }
 
-            public Criteria eq(final LocalDateTime value) {
+            public WhereClause  eq(final LocalDateTime value) {
                 sql = columnName + "=" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria gt(final LocalDateTime value) {
+            public WhereClause  gt(final LocalDateTime value) {
                 sql = columnName + ">" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria gte(final LocalDateTime value) {
+            public WhereClause  gte(final LocalDateTime value) {
                 sql = columnName + ">=" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria lt(final LocalDateTime value) {
+            public WhereClause  lt(final LocalDateTime value) {
                 sql = columnName + "<" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria lte(final LocalDateTime value) {
+            public WhereClause  lte(final LocalDateTime value) {
                 sql = columnName + "<=" + value;
-                return getCriteria();
+                return getWhereClause ();
             }
 
             @Override
@@ -543,18 +543,18 @@ public final class ${name}Store${orm.daoSuffix}  {
 
         public class NullableDateTimeField extends DateTimeField {
 
-            public NullableDateTimeField(final String columnName, final PartialCriteria criteria) {
-                super(columnName, criteria);
+            public NullableDateTimeField(final String columnName, final PartialWhereClause  whereClause ) {
+                super(columnName, whereClause );
             }
 
-            public Criteria isNull() {
+            public WhereClause  isNull() {
                 sql = columnName + " IS NULL";
-                return getCriteria();
+                return getWhereClause ();
             }
 
-            public Criteria isNotNull() {
+            public WhereClause  isNotNull() {
                 sql = columnName + " IS NOT NULL";
-                return getCriteria();
+                return getWhereClause ();
             }
         }
 

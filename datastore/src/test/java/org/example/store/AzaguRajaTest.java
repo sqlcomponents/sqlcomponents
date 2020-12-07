@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.example.util.DataSourceProvider.dataSource;
 
@@ -39,6 +41,17 @@ class AzaguRajaTest {
 
         Integer noOfInsertedRajaRefs = this.azaguRajaReferenceStore.insert().values(azagurajaobject).execute();
         Assertions.assertEquals(1, noOfInsertedRajaRefs, "1 Raja Reference inserted");
+
+        List<AzaguRajaReference> list = new ArrayList<>();
+        for (int i = 1; i < 6; i++) {
+            azagurajaobject = new AzaguRajaReference();
+            azagurajaobject.setCode("A11"+i);
+            azagurajaobject.setName("Hari"+i);
+            list.add(azagurajaobject);
+        }
+        int[] noOfInsertedRajaRefsArray = this.azaguRajaReferenceStore.insert().values(list).execute();
+        Assertions.assertEquals(5, noOfInsertedRajaRefsArray.length, "5 Raja Reference inserted");
+
 
         AzaguRaja azaguRaja = new AzaguRaja();
         azaguRaja.setReferenceCode("A110");

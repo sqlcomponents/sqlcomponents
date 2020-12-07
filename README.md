@@ -8,3 +8,6 @@ This is SQL Bridge R&amp;D work
 4. https://www.tutorialspoint.com/jdbc/jdbc-data-types.htm
 5. https://www.progress.com/blogs/jdbc-tutorial-extracting-database-metadata-via-jdbc-driver
 6. http://techdoc.kvindesland.no/java/docs/guide/jdbc/getstart/mapping.doc.html
+7. https://www.progress.com/tutorials/jdbc/designing-performance
+8. https://jdbc.postgresql.org/documentation/81/geometric.html
+9. https://jdbc.postgresql.org/documentation/head/escapes.html#escape-use-example
