@@ -6,37 +6,48 @@ import org.sqlcomponents.core.model.relational.Column;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Comparator;
-import java.util.IdentityHashMap;
-import java.util.Map;
 
-
+/**
+ * Java Mapper which is responsible for converting Database Types
+ * into appropriaye Java Data type.
+ */
 public final class JavaMapper extends Mapper {
-
-    private final Map<Class<? extends Number>, Integer> integerTypes;
-
-    private final Map<Class<? extends Number>, Integer> decimalTypes;
-
-    public JavaMapper() {
-        integerTypes = new IdentityHashMap<>();
-        // Holds Map of Integer Types and Max digits they can hold
-        integerTypes.put(Byte.class, String.valueOf(Byte.MAX_VALUE).length() - 1);
-        integerTypes.put(Short.class, String.valueOf(Short.MAX_VALUE).length() - 1);
-        integerTypes.put(Integer.class, String.valueOf(Integer.MAX_VALUE).length() - 1);
-        integerTypes.put(Long.class, String.valueOf(Long.MAX_VALUE).length() - 1);
-
-        decimalTypes = new IdentityHashMap<>();
-        // Holds Map of Decimal Types and Max digits they can hold
-        decimalTypes.put(Float.class, String.valueOf(Float.MAX_VALUE).indexOf('.') - 1);
-        decimalTypes.put(Double.class, String.valueOf(Double.MAX_VALUE).indexOf('.') - 1);
-    }
-
+    /**
+     * varaible declaration.
+     */
+    private static final int MAX_DIGITS_FOR_FLOAT
+            = String.valueOf(Float.MAX_VALUE).indexOf('.');
+    /**
+     * varaible declaration.
+     */
+    private static final int MAX_DIGITS_FOR_DOUBLE
+            = String.valueOf(Double.MAX_VALUE).indexOf('.');
+    /**
+     * varaible declaration.
+     */
+    private static final int MAX_DIGITS_FOR_BYTE
+            = String.valueOf(Byte.MAX_VALUE).length() - 1;
+    /**
+     * varaible declaration.
+     */
+    private static final int MAX_DIGITS_FOR_SHORT
+            = String.valueOf(Short.MAX_VALUE).length() - 1;
+    /**
+     * varaible declaration.
+     */
+    private static final int MAX_DIGITS_FOR_INTEGER
+            = String.valueOf(Integer.MAX_VALUE).length() - 1;
+    /**
+     * varaible declaration.
+     */
+    private static final int MAX_DIGITS_FOR_LONG
+            = String.valueOf(Long.MAX_VALUE).length() - 1;
     @Override
-    public String getDataType(Column column) {
+    public String getDataType(final Column column) {
         return getDataTypeClass(column).getName();
     }
 
-    private Class getDataTypeClass(Column column) {
+    private Class getDataTypeClass(final Column column) {
         switch (column.getJdbcType()) {
             case INTEGER:
                 return chooseIntegerType(column);
@@ -56,26 +67,41 @@ public final class JavaMapper extends Mapper {
                 return LocalDate.class;
             case TIMESTAMP:
                 return LocalDateTime.class;
+            default:
+                throw new RuntimeException("Datatype not found for column "
+                        + column.getColumnName() + " of jdbc type "
+                        + column.getJdbcType());
         }
-        throw new RuntimeException("Datatype not found for column " + column.getColumnName() + " of jdbc type " + column.getJdbcType());
+
     }
 
-    private Class<? extends Number> chooseNumberType(Column column) {
-        return column.getDecimalDigits() == 0 ? chooseIntegerType(column) : chooseDecimalType(column);
+    private Class<? extends Number> chooseNumberType(final Column column) {
+        return column.getDecimalDigits() == 0
+                ? chooseIntegerType(column) : chooseDecimalType(column);
     }
 
-    private Class<? extends Number> chooseIntegerType(Column column) {
-        return integerTypes.entrySet().stream()
-                .filter(entry -> entry.getValue() <= column.getSize())
-                .max(Comparator.comparing(Map.Entry::getValue))
-                .get().getKey();
+    private Class<? extends Number> chooseIntegerType(final Column column) {
+        Class<? extends Number> integerType;
+        if (column.getSize() <= MAX_DIGITS_FOR_BYTE) {
+            integerType = Byte.class;
+        } else if (column.getSize() <= MAX_DIGITS_FOR_SHORT) {
+            integerType = Short.class;
+        } else if (column.getSize() <= MAX_DIGITS_FOR_INTEGER) {
+            integerType = Integer.class;
+        } else {
+            integerType = Long.class;
+        }
+        return integerType;
     }
 
-    private Class<? extends Number> chooseDecimalType(Column column) {
-        return decimalTypes.entrySet().stream()
-                .filter(entry -> entry.getValue() <= column.getSize())
-                .max(Comparator.comparing(Map.Entry::getValue))
-                .get().getKey();
+    private Class<? extends Number> chooseDecimalType(final Column column) {
+        Class<? extends Number> decimalType;
+        if (column.getSize() <= MAX_DIGITS_FOR_FLOAT) {
+            decimalType = Float.class;
+        } else {
+            decimalType = Double.class;
+        }
+        return decimalType;
     }
 
 }
