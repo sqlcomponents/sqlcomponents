@@ -68,7 +68,7 @@ class JavaCompilerTest {
         }
 
         void writeCode() throws IOException, ScubeException {
-            application.setSrcFolder("../datastore/target/generated-sources/movie-db");
+            application.setSrcFolder("../datastore/src/main/java");
             application.compile(new JavaCompiler());
             System.out.println("Code is compiled into " + application.getSrcFolder());
         }
