@@ -1,5 +1,7 @@
 package org.sqlcomponents;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +16,8 @@ import org.apache.maven.project.MavenProject;
 import org.sqlcomponents.compiler.java.JavaCompiler;
 import org.sqlcomponents.core.exception.ScubeException;
 import org.sqlcomponents.core.model.Application;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
 
 /**
  * Counts the number of maven dependencies of a project.
@@ -49,24 +53,15 @@ public class SQLComponentsMojo
 
         Application application = getApplication();
 
+        application.compile(new JavaCompiler());
+
         getLog().info("Code is compiled into " + application.getSrcFolder());
 
     }
 
     private Application getApplication() throws IOException, ScubeException {
-        Application application = new Application();
-        application.setName("Movie");
-        application.setUrl("jdbc:postgresql://localhost:5432/moviedb");
-        application.setUserName("moviedb");
-        application.setPassword("moviedb");
-        application.setSchemaName("moviedb");
-
-        application.setOnline(true);
-        application.setBeanIdentifier("model");
-        application.setDaoIdentifier("store");
-        application.setDaoSuffix("");
-        application.setRootPackage("org.example");
-        application.setCleanSource(true);
+        Yaml yaml = new Yaml(new Constructor(Application.class));
+        Application application =  yaml.load(new FileReader(project.getBasedir().getAbsolutePath()+File.separator+"sql-components.yml"));
 
         application.setMethodSpecification(Arrays.asList(
                 "InsertByEntiy",
@@ -83,8 +78,8 @@ public class SQLComponentsMojo
                 "GetByPK"
         ));
 
-        application.setSrcFolder(project.getBasedir().getAbsolutePath()+ "/target/generated-sources/"+application.getName().toLowerCase());
-        application.compile(new JavaCompiler());
+        application.setSrcFolder(project.getBasedir().getAbsolutePath()+ File.separator+ "target"+ File.separator+"generated-sources"+ File.separator+application.getName().toLowerCase());
+
 
         return application;
     }
