@@ -25,7 +25,7 @@ import org.yaml.snakeyaml.constructor.Constructor;
  * It can be filtered by scope.
  *
  */
-@Mojo(name = "dependency-counter", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
+@Mojo(name = "generate-sources", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class SQLComponentsMojo
     extends AbstractMojo
 {
