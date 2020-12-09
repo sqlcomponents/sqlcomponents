@@ -15,10 +15,6 @@ class JavaMapperTest {
 
     @Test
     void test_GetIntegerDataTypes() {
-        System.out.println("Byte   " + Byte.MAX_VALUE   + "\t" + (String.valueOf(Byte.MAX_VALUE).length() - 1));
-        System.out.println("Short   " + Short.MAX_VALUE   + "\t" + (String.valueOf(Short.MAX_VALUE).length() - 1));
-        System.out.println("Integer " + Integer.MAX_VALUE + "\t" + (String.valueOf(Integer.MAX_VALUE).length() - 1));
-        System.out.println("Long " + Long.MAX_VALUE + "\t" + (String.valueOf(Long.MAX_VALUE).length() - 1));
 
         Column column = new Column(null);
 

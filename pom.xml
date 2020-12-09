@@ -80,8 +80,6 @@
       <artifactId>postgresql</artifactId>
                   
       <version>42.2.18</version>
-                  
-      <scope>test</scope>
               
     </dependency>
         
