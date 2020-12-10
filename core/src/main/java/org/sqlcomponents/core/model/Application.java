@@ -29,9 +29,9 @@ public class Application {
     private HashMap<String, String> modulesMap;
     private HashMap<String, String> pluralMap;
     private String sequenceTableMap;
-    private boolean online;
+    private boolean online = true;
     private boolean modulesFirst;
-    private boolean cleanSource;
+    private boolean cleanSource = true;
 
     private ORM orm;
 

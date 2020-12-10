@@ -1,17 +1,11 @@
 package org.sqlcomponents.core.model;
 
-
 import org.sqlcomponents.core.model.relational.Database;
 
 import java.util.HashMap;
 import java.util.List;
 
 public class ORM {
-
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
 
     private String userName;
 
@@ -23,18 +17,20 @@ public class ORM {
 
     private String url;
 
-    private String daoIdentifier;
+    private String daoIdentifier ="store";
 
-    private String beanIdentifier;
+    private String beanIdentifier="model";
 
-    private String daoSuffix;
+    private String daoSuffix="";
 
     private String beanSuffix;
+
     private HashMap<String, String> wordsMap;
     private HashMap<String, String> modulesMap;
     private HashMap<String, String> updateMap;
     private HashMap<String, String> insertMap;
     private HashMap<String, String> validationMap;
+
     private List<Entity> entities;
     private List<Service> services;
     private List<Method> methods;

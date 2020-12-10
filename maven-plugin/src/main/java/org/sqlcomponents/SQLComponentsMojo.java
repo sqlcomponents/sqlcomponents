@@ -1,13 +1,6 @@
 package org.sqlcomponents;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
 import lombok.SneakyThrows;
-import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -19,21 +12,19 @@ import org.sqlcomponents.core.model.Application;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
+
 /**
  * Counts the number of maven dependencies of a project.
- *
+ * <p>
  * It can be filtered by scope.
- *
  */
 @Mojo(name = "generate-sources", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class SQLComponentsMojo
-    extends AbstractMojo
-{
-    /**
-     * Scope to filter the dependencies.
-     */
-    @Parameter(property = "scope")
-    String scope;
+        extends AbstractMojo {
 
     /**
      * Gives access to the Maven project information.
@@ -42,15 +33,7 @@ public class SQLComponentsMojo
     MavenProject project;
 
     @SneakyThrows
-    public void execute()  {
-        List<Dependency> dependencies = project.getDependencies();
-
-        long numDependencies = dependencies.stream()
-                .filter(d -> (scope == null || scope.isEmpty()) || scope.equals(d.getScope()))
-                .count();
-
-        getLog().info("Number of dependencies: " + numDependencies);
-
+    public void execute() {
         Application application = getApplication();
 
         application.compile(new JavaCompiler());
@@ -61,8 +44,11 @@ public class SQLComponentsMojo
 
     private Application getApplication() throws IOException, ScubeException {
         Yaml yaml = new Yaml(new Constructor(Application.class));
-        Application application =  yaml.load(new FileReader(project.getBasedir().getAbsolutePath()+File.separator+"sql-components.yml"));
-
+        File file = new File(project.getBasedir().getAbsolutePath() + File.separator + "sql-components.yml");
+        if(!file.exists()) {
+            throw new IllegalArgumentException("sql-components.yml not found");
+        }
+        Application application = yaml.load(new FileReader(file));
         application.setMethodSpecification(Arrays.asList(
                 "InsertByEntiy",
                 "DeleteByPK",
@@ -77,9 +63,7 @@ public class SQLComponentsMojo
                 "UpdateByPK",
                 "GetByPK"
         ));
-
-        application.setSrcFolder(project.getBasedir().getAbsolutePath()+ File.separator+ "target"+ File.separator+"generated-sources"+ File.separator+application.getName().toLowerCase());
-
+        application.setSrcFolder(project.getBasedir().getAbsolutePath() + File.separator + "target" + File.separator + "generated-sources" + File.separator + application.getName().toLowerCase());
 
         return application;
     }
