@@ -6,6 +6,10 @@
 /**
  * ${table.remarks}.
  */
+ <#else>
+ /**
+  * Data Holder for the table - ${table.tableName}.
+  */
 </#if>
 public final class ${name} {
 

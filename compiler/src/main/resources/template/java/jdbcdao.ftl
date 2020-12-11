@@ -76,18 +76,18 @@ public final class ${name}Store${orm.daoSuffix}  {
     public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>DateTimeField ${property.name}() {
     <#break>
     </#switch>
-        return new WhereClause ().${property.name}();
+        return new WhereClause().${property.name}();
     }
     </#list>
 
-    public static class WhereClause  extends PartialWhereClause  {
+    private static class WhereClause  extends PartialWhereClause  {
         private String asSql() {
             return nodes.isEmpty() ? null : nodes.stream().map(node -> {
                 String asSql;
                 if (node instanceof Field) {
                     asSql = ((Field) node).asSql();
-                } else if (node instanceof WhereClause ) {
-                    asSql = "(" + ((WhereClause ) node).asSql() + ")";
+                } else if (node instanceof WhereClause) {
+                    asSql = "(" + ((WhereClause) node).asSql() + ")";
                 } else {
                     asSql = (String) node;
                 }
@@ -95,7 +95,7 @@ public final class ${name}Store${orm.daoSuffix}  {
             }).collect(Collectors.joining(" "));
         }
 
-        public PartialWhereClause  and() {
+        public PartialWhereClause and() {
             this.nodes.add("AND");
             return this;
         }
@@ -105,25 +105,25 @@ public final class ${name}Store${orm.daoSuffix}  {
             return this;
         }
 
-        public WhereClause  and(final WhereClause  whereClause ) {
+        public WhereClause  and(final WhereClause  whereClause) {
             this.nodes.add("AND");
-            this.nodes.add(whereClause );
-            return (WhereClause ) this;
+            this.nodes.add(whereClause);
+            return (WhereClause) this;
         }
 
-        public WhereClause  or(final WhereClause  whereClause ) {
+        public WhereClause  or(final WhereClause  whereClause) {
             this.nodes.add("OR");
-            this.nodes.add(whereClause );
-            return (WhereClause ) this;
+            this.nodes.add(whereClause);
+            return (WhereClause) this;
         }
 
     }
 
-    public static class PartialWhereClause  {
+    private static class PartialWhereClause  {
 
         protected final List<Object> nodes;
 
-        public PartialWhereClause () {
+        private PartialWhereClause () {
             this.nodes = new ArrayList<>();
         }
 <#list properties as property>
@@ -199,13 +199,13 @@ public final class ${name}Store${orm.daoSuffix}  {
             protected final String columnName;
             private final PartialWhereClause  whereClause ;
 
-            public Field(final String columnName, final PartialWhereClause  whereClause ) {
+            public Field(final String columnName, final PartialWhereClause  whereClause) {
                 this.columnName = columnName;
                 this.whereClause  = whereClause ;
             }
 
             protected WhereClause  getWhereClause () {
-                return (WhereClause ) whereClause ;
+                return (WhereClause) whereClause ;
             }
 
             protected abstract String asSql();
@@ -215,8 +215,8 @@ public final class ${name}Store${orm.daoSuffix}  {
         public class StringField extends Field {
             protected String sql;
 
-            public StringField(final String columnName, final PartialWhereClause  whereClause ) {
-                super(columnName, whereClause );
+            public StringField(final String columnName, final PartialWhereClause  whereClause) {
+                super(columnName, whereClause);
             }
 
             public WhereClause  eq(final String value) {
@@ -239,8 +239,8 @@ public final class ${name}Store${orm.daoSuffix}  {
 
         public class NullableStringField extends StringField {
 
-            public NullableStringField(final String columnName, final PartialWhereClause  whereClause ) {
-                super(columnName, whereClause );
+            public NullableStringField(final String columnName, final PartialWhereClause  whereClause) {
+                super(columnName, whereClause);
             }
 
             public WhereClause  isNull() {
@@ -260,8 +260,8 @@ public final class ${name}Store${orm.daoSuffix}  {
         public class CharacterField extends Field {
             protected String sql;
 
-            public CharacterField(final String columnName, final PartialWhereClause  whereClause ) {
-                super(columnName, whereClause );
+            public CharacterField(final String columnName, final PartialWhereClause  whereClause) {
+                super(columnName, whereClause);
             }
 
             public WhereClause  eq(final String value) {
@@ -284,8 +284,8 @@ public final class ${name}Store${orm.daoSuffix}  {
 
         public class NullableCharacterField extends CharacterField {
 
-            public NullableCharacterField(final String columnName, final PartialWhereClause  whereClause ) {
-                super(columnName, whereClause );
+            public NullableCharacterField(final String columnName, final PartialWhereClause  whereClause) {
+                super(columnName, whereClause);
             }
 
             public WhereClause  isNull() {
@@ -304,8 +304,8 @@ public final class ${name}Store${orm.daoSuffix}  {
         public class BooleanField extends Field {
             protected String sql;
 
-            public BooleanField(final String columnName, final PartialWhereClause  whereClause ) {
-                super(columnName, whereClause );
+            public BooleanField(final String columnName, final PartialWhereClause  whereClause) {
+                super(columnName, whereClause);
             }
 
             public WhereClause  eq(final Boolean value) {
@@ -321,8 +321,8 @@ public final class ${name}Store${orm.daoSuffix}  {
 
         public class NullableBooleanField extends BooleanField {
 
-            public NullableBooleanField(final String columnName, final PartialWhereClause  whereClause ) {
-                super(columnName, whereClause );
+            public NullableBooleanField(final String columnName, final PartialWhereClause  whereClause) {
+                super(columnName, whereClause);
             }
 
             public WhereClause  isNull() {
@@ -340,8 +340,8 @@ public final class ${name}Store${orm.daoSuffix}  {
 
             protected String sql;
 
-            public NumberField(final String columnName, final PartialWhereClause  whereClause ) {
-                super(columnName, whereClause );
+            public NumberField(final String columnName, final PartialWhereClause  whereClause) {
+                super(columnName, whereClause);
             }
 
             public WhereClause  eq(final T value) {
@@ -377,8 +377,8 @@ public final class ${name}Store${orm.daoSuffix}  {
 
         public class NullableNumberField<T extends Number> extends NumberField<T> {
 
-            public NullableNumberField(final String columnName, final PartialWhereClause  whereClause ) {
-                super(columnName, whereClause );
+            public NullableNumberField(final String columnName, final PartialWhereClause  whereClause) {
+                super(columnName, whereClause);
             }
 
             public WhereClause  isNull() {
@@ -396,8 +396,8 @@ public final class ${name}Store${orm.daoSuffix}  {
         
             protected String sql;
 
-            public DateField(final String columnName, final PartialWhereClause  whereClause ) {
-                super(columnName, whereClause );
+            public DateField(final String columnName, final PartialWhereClause  whereClause) {
+                super(columnName, whereClause);
             }
 
             public WhereClause  eq(final LocalDate value) {
@@ -433,8 +433,8 @@ public final class ${name}Store${orm.daoSuffix}  {
 
         public class NullableDateField extends DateField {
 
-            public NullableDateField(final String columnName, final PartialWhereClause  whereClause ) {
-                super(columnName, whereClause );
+            public NullableDateField(final String columnName, final PartialWhereClause  whereClause) {
+                super(columnName, whereClause);
             }
 
             public WhereClause  isNull() {
@@ -452,8 +452,8 @@ public final class ${name}Store${orm.daoSuffix}  {
 
             protected String sql;
 
-            public TimeField(final String columnName, final PartialWhereClause  whereClause ) {
-                super(columnName, whereClause );
+            public TimeField(final String columnName, final PartialWhereClause  whereClause) {
+                super(columnName, whereClause);
             }
 
             public WhereClause  eq(final LocalTime value) {
@@ -489,8 +489,8 @@ public final class ${name}Store${orm.daoSuffix}  {
 
         public class NullableTimeField extends TimeField {
 
-            public NullableTimeField(final String columnName, final PartialWhereClause  whereClause ) {
-                super(columnName, whereClause );
+            public NullableTimeField(final String columnName, final PartialWhereClause  whereClause) {
+                super(columnName, whereClause);
             }
 
             public WhereClause  isNull() {
@@ -509,8 +509,8 @@ public final class ${name}Store${orm.daoSuffix}  {
 
             protected String sql;
 
-            public DateTimeField(final String columnName, final PartialWhereClause  whereClause ) {
-                super(columnName, whereClause );
+            public DateTimeField(final String columnName, final PartialWhereClause  whereClause) {
+                super(columnName, whereClause);
             }
 
             public WhereClause  eq(final LocalDateTime value) {
@@ -546,8 +546,8 @@ public final class ${name}Store${orm.daoSuffix}  {
 
         public class NullableDateTimeField extends DateTimeField {
 
-            public NullableDateTimeField(final String columnName, final PartialWhereClause  whereClause ) {
-                super(columnName, whereClause );
+            public NullableDateTimeField(final String columnName, final PartialWhereClause  whereClause) {
+                super(columnName, whereClause);
             }
 
             public WhereClause  isNull() {
