@@ -7,6 +7,11 @@
     <groupId>org.example</groupId>
     <artifactId>datastore</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <parent>
+        <groupId>org.sqlcomponents</groupId>
+        <artifactId>sqlcomponents</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -14,23 +19,6 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
 
-    <dependencies>
-
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.2.18</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.6.2</version>
-            <scope>test</scope>
-        </dependency>
-
-    </dependencies>
 
 
 </project>

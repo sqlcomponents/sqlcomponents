@@ -3,9 +3,11 @@ package org.sqlcomponents.compiler.java;
 import org.junit.jupiter.api.Test;
 import org.sqlcomponents.core.exception.ScubeException;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Properties;
 
 class JavaCompilerTest {
     @Test
@@ -26,11 +28,20 @@ class JavaCompilerTest {
         }
 
         Application connectToPostgress() throws SQLException, ScubeException {
+            Properties props = new Properties();
+            try {
+                props.load(new FileReader("../database.properties"));
+            } catch (IOException e) {
+                // Unreachable
+                e.printStackTrace();
+            }
+            String databaseType = "postgres";
+
             application.setName("Movie");
-            application.setUrl("jdbc:postgresql://localhost:5432/moviedb");
-            application.setUserName("moviedb");
-            application.setPassword("moviedb");
-            application.setSchemaName("moviedb");
+            application.setUrl(props.getProperty(databaseType+".datasource.url"));
+            application.setUserName(props.getProperty(databaseType+".datasource.username"));
+            application.setPassword(props.getProperty(databaseType+".datasource.password"));
+            application.setSchemaName(props.getProperty(databaseType+".datasource.schema"));
             // daoProject.setTablePatterns(Arrays.asList("movie"));
 
             application.setOnline(true);

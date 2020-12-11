@@ -3,12 +3,13 @@ package org.example.store;
 
 import org.example.model.AzaguRaja;
 import org.example.model.AzaguRajaReference;
-import org.junit.jupiter.api.*;
-
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +46,8 @@ class AzaguRajaTest {
         List<AzaguRajaReference> list = new ArrayList<>();
         for (int i = 1; i < 6; i++) {
             azagurajaobject = new AzaguRajaReference();
-            azagurajaobject.setCode("A11"+i);
-            azagurajaobject.setName("Hari"+i);
+            azagurajaobject.setCode("A11" + i);
+            azagurajaobject.setName("Hari" + i);
             list.add(azagurajaobject);
         }
         int[] noOfInsertedRajaRefsArray = this.azaguRajaReferenceStore.insert().values(list).execute();
@@ -76,8 +77,7 @@ class AzaguRajaTest {
         List<AzaguRaja> insertedAzaguRajas = this.allInAllAzaguRajaStore.insert()
                 .values(listOfRajas).returning();
 
-        Assertions.assertEquals(listOfRajas.size(),insertedAzaguRajas.size(),  "all raja found successfully");
-
+        Assertions.assertEquals(listOfRajas.size(), insertedAzaguRajas.size(), "all raja found successfully");
 
 
     }
