@@ -11,12 +11,15 @@ import java.util.stream.Collectors;
 
 <#assign capturedOutput>
 /**
- * 
+ * Datastore for the table - ${table.tableName}.
  */
 public final class ${name}Store${orm.daoSuffix}  {
 
     private final DataSource dataSource;
 
+    /**
+     * Datastore
+     */
     public ${name}Store${orm.daoSuffix}(final DataSource dataSource) {
         this.dataSource = dataSource;
     }
