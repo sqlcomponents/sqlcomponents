@@ -3,6 +3,7 @@ package org.example.store;
 
 import org.example.model.AzaguRaja;
 import org.example.model.AzaguRajaReference;
+import org.example.util.JsonUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,23 +36,18 @@ class AzaguRajaTest {
 
     @Test
     void testAzaguRaja() throws SQLException {
+        String databaseType = "postgres";
 
-        AzaguRajaReference azagurajaobject = new AzaguRajaReference();
-        azagurajaobject.setCode("A110");
-        azagurajaobject.setName("Hari");
+        List<AzaguRajaReference> azaguRajaReferencesToTest = JsonUtil.getAzaguRajaReferences(databaseType);
 
-        Integer noOfInsertedRajaRefs = this.azaguRajaReferenceStore.insert().values(azagurajaobject).execute();
-        Assertions.assertEquals(1, noOfInsertedRajaRefs, "1 Raja Reference inserted");
+        Integer noOfInsertedRajaRefs = this.azaguRajaReferenceStore.insert().values(azaguRajaReferencesToTest.get(0)).execute();
+        Assertions.assertEquals(1, noOfInsertedRajaRefs, "1 Raja Reference not inserted");
 
-        List<AzaguRajaReference> list = new ArrayList<>();
-        for (int i = 1; i < 6; i++) {
-            azagurajaobject = new AzaguRajaReference();
-            azagurajaobject.setCode("A11" + i);
-            azagurajaobject.setName("Hari" + i);
-            list.add(azagurajaobject);
-        }
-        int[] noOfInsertedRajaRefsArray = this.azaguRajaReferenceStore.insert().values(list).execute();
-        Assertions.assertEquals(5, noOfInsertedRajaRefsArray.length, "5 Raja Reference inserted");
+
+        azaguRajaReferenceStore.deleteAll();
+
+        int[] noOfInsertedRajaRefsArray = this.azaguRajaReferenceStore.insert().values(azaguRajaReferencesToTest).execute();
+        Assertions.assertEquals(5, noOfInsertedRajaRefsArray.length, "All Raja Reference not inserted");
 
 
         AzaguRaja azaguRaja = new AzaguRaja();
