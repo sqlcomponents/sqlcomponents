@@ -16,7 +16,8 @@ public final class DataSourceProvider {
             // Unreachable
             e.printStackTrace();
         }
-        String databaseType = "postgres";
+        String databaseType = System.getenv("DATABASE_TYPE") == null
+                ? "postgres" : System.getenv("DATABASE_TYPE");
         if(databaseType.equals("postgres")) {
             PGSimpleDataSource ds = new PGSimpleDataSource();
             ds.setURL(props.getProperty(databaseType+".datasource.url"));

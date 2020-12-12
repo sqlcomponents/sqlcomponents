@@ -23,7 +23,8 @@ class CrawlerTest {
             // Unreachable
             e.printStackTrace();
         }
-        String databaseType = "postgres";
+        String databaseType = System.getenv("DATABASE_TYPE") == null
+                ? "postgres" : System.getenv("DATABASE_TYPE");
         Application application = new Application();
         application.setName("Movie");
         application.setUrl(props.getProperty(databaseType+".datasource.url"));

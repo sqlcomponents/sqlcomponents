@@ -11,4 +11,16 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./init.db/postgres:/docker-entrypoint-initdb.d
+      - ${PWD}/init.db/postgres:/docker-entrypoint-initdb.d
+
+  mariadb:
+    image: mariadb:10.5
+    environment:
+      MYSQL_ROOT_PASSWORD: moviedb
+      MYSQL_DATABASE: moviedb
+      MYSQL_USER: moviedb
+      MYSQL_PASSWORD: moviedb
+    ports:
+      - "3306:3306"
+    volumes:
+      - ${PWD}/init.db/mariadb:/docker-entrypoint-initdb.d

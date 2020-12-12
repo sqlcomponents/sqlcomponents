@@ -23,6 +23,7 @@ class AzaguRajaTest {
     private final AzaguRajaReferenceStore azaguRajaReferenceStore;
     private final AzaguRajaStore allInAllAzaguRajaStore;
 
+
     AzaguRajaTest() {
         this.azaguRajaReferenceStore = new AzaguRajaReferenceStore(dataSource());
         this.allInAllAzaguRajaStore = new AzaguRajaStore(dataSource());
@@ -36,11 +37,11 @@ class AzaguRajaTest {
 
     @Test
     void testAzaguRaja() throws SQLException {
-        String databaseType = "postgres";
 
-        List<AzaguRajaReference> azaguRajaReferencesToTest = JsonUtil.getAzaguRajaReferences(databaseType);
 
-        List<AzaguRaja> azaguRajasToTest = JsonUtil.getAzaguRajas(databaseType);
+        List<AzaguRajaReference> azaguRajaReferencesToTest = JsonUtil.getTestObjects(AzaguRajaReference.class);
+
+        List<AzaguRaja> azaguRajasToTest = JsonUtil.getTestObjects(AzaguRaja.class);
 
         Integer noOfInsertedRajaRefs = this.azaguRajaReferenceStore.insert().values(azaguRajaReferencesToTest.get(0)).execute();
         Assertions.assertEquals(1, noOfInsertedRajaRefs, "1 Raja Reference not inserted");
@@ -55,7 +56,7 @@ class AzaguRajaTest {
         AzaguRaja azaguRaja = new AzaguRaja();
         azaguRaja.setReferenceCode("A110");
         azaguRaja.setABoolean(true);
-        // azaguRaja.setAChar('A');
+        azaguRaja.setAChar('A');
         azaguRaja.setAText("Text");
         azaguRaja.setADate(LocalDate.now());
         azaguRaja.setATime(LocalTime.now());

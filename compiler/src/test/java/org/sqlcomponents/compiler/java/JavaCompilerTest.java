@@ -35,7 +35,8 @@ class JavaCompilerTest {
                 // Unreachable
                 e.printStackTrace();
             }
-            String databaseType = "postgres";
+            String databaseType = System.getenv("DATABASE_TYPE") == null
+                ? "postgres" : System.getenv("DATABASE_TYPE");
 
             application.setName("Movie");
             application.setUrl(props.getProperty(databaseType+".datasource.url"));

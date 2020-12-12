@@ -1,52 +1,47 @@
 package org.example.util;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.model.AzaguRaja;
 import org.example.model.AzaguRajaReference;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public final class JsonUtil {
-    public static List<AzaguRajaReference> getAzaguRajaReferences(final String databaseType)  {
-        List<AzaguRajaReference> azaguRajaReferences
-                = null;
-        try {
-            azaguRajaReferences = fromJSON(new TypeReference<List<AzaguRajaReference>>() {}
-            , new FileReader("../datastore/src/test/resources/data/"+databaseType+"/AzaguRajaReference.json"));
-        } catch (FileNotFoundException e) {
-            // Unreachable
-            e.printStackTrace();
-        }
-        return azaguRajaReferences;
-    }
+    public static <T> List<T> getTestObjects(Class<T> tClass)  {
+        String databaseType = System.getenv("DATABASE_TYPE") == null
+                ? "postgres" : System.getenv("DATABASE_TYPE");
 
-    public static List<AzaguRaja> getAzaguRajas(final String databaseType) {
-        List<AzaguRaja> azaguRajas = null;
-        try {
-            azaguRajas = fromJSON(new TypeReference<List<AzaguRaja>>() {}
-                    , new FileReader("../datastore/src/test/resources/data/"+databaseType+"/AzaguRaja.json"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return azaguRajas;
-    }
-
-    private static <T> T fromJSON(final TypeReference<T> type,
-                                 final Reader reader) {
-        T data = null;
-
+        List<T> list
+                = new ArrayList<>();
         ObjectMapper mapper = new ObjectMapper();
         mapper.findAndRegisterModules();
 
-        try {
-            data = mapper.readValue(reader, type);
-        } catch (Exception e) {
-            // Handle the problem
+
+        try (JsonParser jsonParser = mapper.getFactory()
+                .createParser(new File("../datastore/src/test/resources/data/"+databaseType+"/"+tClass.getName().substring(tClass.getName().lastIndexOf('.')+1)+".json"))) {
+            if (jsonParser.nextToken() != JsonToken.START_ARRAY) {
+                throw new IllegalArgumentException(
+                        "illicalstate of array", null);
+            }
+                while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
+                    T entity = mapper
+                            .readValue(jsonParser, tClass);
+                    list.add(entity);
+                }
+
+        } catch (IOException e) {
+            /* Unreachable */
+            e.printStackTrace();
         }
-        return data;
+        return list;
     }
+
+
 }
