@@ -49,6 +49,14 @@ public final class JavaMapper extends Mapper {
 
     private Class getDataTypeClass(final Column column) {
         switch (column.getJdbcType()) {
+            case SMALLINT:
+                return  Short.class;
+            case BIGINT:
+                return Long.class;
+            case REAL:
+                return Float.class;
+            case DOUBLE:
+                return Double.class;
             case INTEGER:
                 return chooseIntegerType(column);
             case NUMERIC:
