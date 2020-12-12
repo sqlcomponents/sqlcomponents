@@ -57,11 +57,20 @@ public final class ${name}Store${orm.daoSuffix}  {
     <#case "java.lang.Integer">
     public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>NumberField<Integer> ${property.name}() {
     <#break>
+    <#case "java.lang.Short">
+    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>NumberField<Short> ${property.name}() {
+    <#break>
+    <#case "java.lang.Byte">
+    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>NumberField<Byte> ${property.name}() {
+    <#break>
     <#case "java.lang.Long">
     public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>NumberField<Long> ${property.name}() {
     <#break>
     <#case "java.lang.Float">
     public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>NumberField<Float> ${property.name}() {
+    <#break>
+    <#case "java.lang.Double">
+    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>NumberField<Double> ${property.name}() {
     <#break>
     <#case "java.lang.Boolean">
     public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>BooleanField ${property.name}() {
@@ -149,6 +158,20 @@ public final class ${name}Store${orm.daoSuffix}  {
             return query;
         }
         <#break>
+    <#case "java.lang.Short">
+        public <#if property.column.isNullable??>Nullable</#if>NumberField<Short> ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>NumberField<Short> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.column.columnName}",this);
+            this.nodes.add(query);
+            return query;
+        }
+        <#break>
+    <#case "java.lang.Byte">
+        public <#if property.column.isNullable??>Nullable</#if>NumberField<Byte> ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>NumberField<Byte> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.column.columnName}",this);
+            this.nodes.add(query);
+            return query;
+        }
+        <#break>
     <#case "java.lang.Long">
         public <#if property.column.isNullable??>Nullable</#if>NumberField<Long> ${property.name}() {
             <#if property.column.isNullable??>Nullable</#if>NumberField<Long> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.column.columnName}",this);
@@ -159,6 +182,13 @@ public final class ${name}Store${orm.daoSuffix}  {
     <#case "java.lang.Float">
         public <#if property.column.isNullable??>Nullable</#if>NumberField<Float> ${property.name}() {
             <#if property.column.isNullable??>Nullable</#if>NumberField<Float> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.column.columnName}",this);
+            this.nodes.add(query);
+            return query;
+        }
+        <#break>
+    <#case "java.lang.Double">
+        public <#if property.column.isNullable??>Nullable</#if>NumberField<Double> ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>NumberField<Double> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
