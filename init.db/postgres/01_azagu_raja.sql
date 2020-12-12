@@ -13,7 +13,16 @@ CREATE TABLE azagu_raja(
    reference_code VARCHAR(80),
    a_char CHAR(1),
    a_text text,
-
+	a_smallint smallint,
+	a_integer	 integer,	
+	a_bigint	 bigint	,
+	a_decimal	 decimal,	
+	a_numeric	 numeric,	
+	a_real real,
+	a_double  DOUBLE PRECISION, 
+	a_smallserial	 smallserial,	
+	a_serial	 serial,	
+	a_bigserial bigserial,
    a_date date,
       a_time time,
    CONSTRAINT fk_code
