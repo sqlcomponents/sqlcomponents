@@ -2,6 +2,7 @@ package org.example.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.model.AzaguRaja;
 import org.example.model.AzaguRajaReference;
 
 import java.io.FileNotFoundException;
@@ -23,12 +24,26 @@ public final class JsonUtil {
         return azaguRajaReferences;
     }
 
+    public static List<AzaguRaja> getAzaguRajas(final String databaseType) {
+        List<AzaguRaja> azaguRajas = null;
+        try {
+            azaguRajas = fromJSON(new TypeReference<List<AzaguRaja>>() {}
+                    , new FileReader("../datastore/src/test/resources/data/"+databaseType+"/AzaguRaja.json"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return azaguRajas;
+    }
+
     private static <T> T fromJSON(final TypeReference<T> type,
                                  final Reader reader) {
         T data = null;
 
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.findAndRegisterModules();
+
         try {
-            data = new ObjectMapper().readValue(reader, type);
+            data = mapper.readValue(reader, type);
         } catch (Exception e) {
             // Handle the problem
         }

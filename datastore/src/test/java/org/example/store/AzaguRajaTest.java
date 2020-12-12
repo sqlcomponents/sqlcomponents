@@ -40,6 +40,8 @@ class AzaguRajaTest {
 
         List<AzaguRajaReference> azaguRajaReferencesToTest = JsonUtil.getAzaguRajaReferences(databaseType);
 
+        List<AzaguRaja> azaguRajasToTest = JsonUtil.getAzaguRajas(databaseType);
+
         Integer noOfInsertedRajaRefs = this.azaguRajaReferenceStore.insert().values(azaguRajaReferencesToTest.get(0)).execute();
         Assertions.assertEquals(1, noOfInsertedRajaRefs, "1 Raja Reference not inserted");
 
