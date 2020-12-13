@@ -1,6 +1,6 @@
 package org.example.util;
 
-import org.mariadb.jdbc.MySQLDataSource;
+import com.mysql.cj.jdbc.MysqlDataSource;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
@@ -28,16 +28,29 @@ public final class DataSourceProvider {
             return ds;
         }
         if(databaseType.equals("mysql")) {
-            MySQLDataSource mySQLDataSource = new MySQLDataSource();
-            try {
-                mySQLDataSource.setUrl(props.getProperty(databaseType+".datasource.url"));
-                mySQLDataSource.setUser(props.getProperty(databaseType+".datasource.username"));
-                mySQLDataSource.setPassword(props.getProperty(databaseType+".datasource.password"));
+            MysqlDataSource mySQLDataSource = new MysqlDataSource();
+            mySQLDataSource.setUrl(props.getProperty(databaseType+".datasource.url"));
+            mySQLDataSource.setUser(props.getProperty(databaseType+".datasource.username"));
+            mySQLDataSource.setPassword(props.getProperty(databaseType+".datasource.password"));
+            return mySQLDataSource;
+        }
+        return null;
+    }
 
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-             return mySQLDataSource;
+    public static DataSource getDataSource(final String url,final String userName,final String password) {
+        if(url.startsWith("jdbc:postgresql:")) {
+            PGSimpleDataSource ds = new PGSimpleDataSource();
+            ds.setURL(url);
+            ds.setUser(userName);
+            ds.setPassword(password);
+            return ds;
+        }
+        if(url.startsWith("jdbc:mysql:")) {
+            MysqlDataSource mySQLDataSource = new MysqlDataSource();
+            mySQLDataSource.setUrl(url);
+            mySQLDataSource.setUser(userName);
+            mySQLDataSource.setPassword(password);
+            return mySQLDataSource;
         }
         return null;
     }

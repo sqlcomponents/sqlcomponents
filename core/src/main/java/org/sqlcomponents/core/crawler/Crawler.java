@@ -1,11 +1,13 @@
 package org.sqlcomponents.core.crawler;
 
+import org.sqlcomponents.core.crawler.util.DataSourceUtil;
 import org.sqlcomponents.core.exception.ScubeException;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.*;
 import org.sqlcomponents.core.model.relational.enumeration.Flag;
 import org.sqlcomponents.core.model.relational.enumeration.TableType;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.*;
 import java.util.function.Predicate;
@@ -15,8 +17,9 @@ public class Crawler {
 
     public Database getDatabase(final Application application) throws ScubeException {
         Database database = new Database();
-        try (Connection connection = DriverManager.getConnection(application.getUrl(), application
-                .getUserName(), application.getPassword())) {
+        DataSource dataSource = DataSourceUtil.getDataSource(application.getUrl(), application
+                .getUserName(), application.getPassword());
+        try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databasemetadata = connection.getMetaData();
 
             database.setTableTypes(getTableTypes(databasemetadata));
@@ -206,8 +209,8 @@ public class Crawler {
             column.setSize(columnResultset.getInt("COLUMN_SIZE"));
             column.setDecimalDigits(columnResultset.getInt("DECIMAL_DIGITS"));
             column.setRemarks(columnResultset.getString("REMARKS"));
-            column.setNullable(columnResultset.getBoolean("IS_NULLABLE"));
-            column.setAutoIncrement(columnResultset.getBoolean("IS_AUTOINCREMENT"));
+            column.setNullable("YES".equalsIgnoreCase("IS_NULLABLE"));
+            column.setAutoIncrement("YES".equalsIgnoreCase(columnResultset.getString("IS_AUTOINCREMENT")));
             column.setTableCategory(columnResultset.getString("TABLE_CAT"));
             column.setTableSchema(columnResultset.getString("TABLE_SCHEM"));
             column.setBufferLength(columnResultset.getInt("BUFFER_LENGTH"));
