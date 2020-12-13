@@ -21,6 +21,20 @@ services:
       MYSQL_USER: moviedb
       MYSQL_PASSWORD: moviedb
     ports:
-      - "3306:3306"
+      - "1235:3306"
+    volumes:
+      - ${PWD}/init.db/mariadb:/docker-entrypoint-initdb.d
+
+  mysqldb:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: 'moviedb'
+      MYSQL_USER: 'moviedb'
+      MYSQL_PASSWORD: 'moviedb'
+      MYSQL_ROOT_PASSWORD: 'moviedb'
+    ports:
+      - '1234:3306'
+    expose:
+      - '3306'
     volumes:
       - ${PWD}/init.db/mariadb:/docker-entrypoint-initdb.d
