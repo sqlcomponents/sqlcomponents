@@ -10,21 +10,33 @@ import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.Entity;
 import org.sqlcomponents.core.model.ORM;
+import org.sqlcomponents.core.model.Property;
+import org.sqlcomponents.core.model.relational.enumeration.Flag;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class JavaCompiler implements Compiler {
 
     private Template<Entity> daoTemplate;
     private Template<Entity> beanTemplate;
+    private Template<Application> fieldTemplate;
+    private Template<Application> whereTemplate;
+    private Template<Application> partialWhereClauseTemplate;
+    private Map<String,Template<Property>> fieldsTemplate;
 
     public JavaCompiler() {
 
         try {
             daoTemplate = new Template<>("template/java/jdbcdao.ftl");
             beanTemplate = new Template<>("template/java/bean.ftl");
+            fieldTemplate = new Template<>("template/java/Field.ftl");
+            whereTemplate = new Template<>("template/java/WhereClause.ftl");
+            partialWhereClauseTemplate = new Template<>("template/java/PartialWhereClause.ftl");
+            fieldsTemplate = new HashMap<>();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -36,6 +48,21 @@ public final class JavaCompiler implements Compiler {
         Mapper mapper = new JavaMapper();
         application.setOrm(mapper.getOrm(application, new Crawler()));
         ORM orm = application.getOrm();
+
+        // Common Classes
+        String commonPackageFolder = getPackageAsFolder(application.getSrcFolder()
+                , application.getRootPackage()+".common");
+        new File(commonPackageFolder).mkdirs();
+        try {
+            Files.write(new File(commonPackageFolder+ File.separator + "Field.java").toPath(),
+                    getJavaContent(fieldTemplate.getContent(application)).getBytes());
+            Files.write(new File(commonPackageFolder+ File.separator + "WhereClause.java").toPath(),
+                    getJavaContent(whereTemplate.getContent(application)).getBytes());
+            Files.write(new File(commonPackageFolder+ File.separator + "PartialWhereClause.java").toPath(),
+                    getJavaContent(partialWhereClauseTemplate.getContent(application)).getBytes());
+        } catch (IOException | TemplateException e) {
+            e.printStackTrace();
+        }
 
         orm.getEntities().parallelStream().forEach(entity -> {
             try {
@@ -57,6 +84,46 @@ public final class JavaCompiler implements Compiler {
         Files.write(new File(packageFolder + File.separator
                         + entity.getName() + "Store" + daoSuffix.trim() + ".java").toPath(),
                 getJavaContent(daoTemplate.getContent(entity)).getBytes());
+
+
+        entity.getProperties().stream().forEach(property -> {
+            Template<Property> template = fieldsTemplate.get(property.getDataType());
+            if(template == null ) {
+
+                try{
+                    Class dataTypeClass = Class.forName(property.getDataType());
+                    if(!dataTypeClass.getSuperclass().equals(Object.class)) {
+                        dataTypeClass = dataTypeClass.getSuperclass();
+                    }
+                    String fieldPackageFolder = getPackageAsFolder("template/java/field", dataTypeClass.getName())+ ".ftl";
+
+                    template = new Template<>(fieldPackageFolder);
+                    fieldsTemplate.put(property.getDataType(),template);
+
+
+
+                    File file = new File(getPackageAsFolder(srcFolder, entity
+                            .getOrm().getApplication().getRootPackage() + ".common.field") + File.separator
+                            + (property.getColumn().getNullable() == Flag.YES ? "Nullable" : "" )
+                            + dataTypeClass.getName().substring(dataTypeClass.getName().lastIndexOf('.')+1) + "Field.java");
+                    if(!file.exists()) {
+                        file.getParentFile().mkdirs();
+                        Files.write(file.toPath(),
+                                getJavaContent(template.getContent(property)).getBytes());
+                    }else {
+                        System.out.println(property.getName() + template + " => " + file.getAbsolutePath());
+
+                    }
+
+
+                } catch (IOException | ClassNotFoundException | TemplateException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        });
+
     }
 
     private void writeBeanSpecification(Entity entity, String srcFolder, String beanSuffix)

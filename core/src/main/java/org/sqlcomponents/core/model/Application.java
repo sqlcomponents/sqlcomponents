@@ -37,7 +37,7 @@ public class Application {
 
 
     public Application() {
-        setOrm(new ORM());
+        setOrm(new ORM(this));
     }
 
     public String getDriverName() {

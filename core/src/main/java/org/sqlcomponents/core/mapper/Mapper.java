@@ -36,11 +36,11 @@ public abstract class Mapper {
         method.setName(getPropertyName(application, function.getFunctionName()));
 
         for (Column column : function.getParameters()) {
-            properties.add(getProperty(application, column));
+            properties.add(getProperty(application, null,column));
         }
         method.setInputParameters(properties);
 
-        method.setOutputProperty(getProperty(application, function.getOutput()));
+        method.setOutputProperty(getProperty(application,null, function.getOutput()));
         return method;
     }
 
@@ -76,9 +76,9 @@ public abstract class Mapper {
         return services;
     }
 
-    private Property getProperty(Application application, Column column) {
+    private Property getProperty(Application application,Entity entity, Column column) {
         if (column != null) {
-            Property property = new Property(column);
+            Property property = new Property(entity,column);
             if (column.getColumnName() != null) {
                 property.setName(getPropertyName(application, column
                         .getColumnName()));
@@ -116,7 +116,7 @@ public abstract class Mapper {
             properties = new ArrayList<Property>(table.getColumns().size());
 
             for (Column column : table.getColumns()) {
-                properties.add(getProperty(application, column));
+                properties.add(getProperty(application, entity,column));
             }
             entity.setProperties(properties);
             entities.add(entity);

@@ -1,10 +1,14 @@
-package rootPackage.common.field;
+package ${entity.orm.application.rootPackage}.common.field;
 
-public class NumberField<T extends Number> extends Field {
+import ${entity.orm.application.rootPackage}.common.Field;
+import ${entity.orm.application.rootPackage}.common.PartialWhereClause;
+import ${entity.orm.application.rootPackage}.common.WhereClause;
+
+public class <#if column.nullable == "YES">Nullable</#if>NumberField<T extends Number> extends Field {
 
     protected String sql;
 
-    public NumberField(final String columnName, final PartialWhereClause  whereClause) {
+    public <#if column.nullable == "YES">Nullable</#if>NumberField(final String columnName, final PartialWhereClause  whereClause) {
         super(columnName, whereClause);
     }
 

@@ -4,14 +4,23 @@ import org.sqlcomponents.core.model.relational.Column;
 
 public class Property {
 
-
+    private Entity entity;
     private Column column;
     private String name;
     private String dataType;
     private String uniqueConstraintGroup;
 
-    public Property(Column column) {
+    public Property(Entity entity,Column column) {
+        setEntity(entity);
         setColumn(column);
+    }
+
+    public Entity getEntity() {
+        return entity;
+    }
+
+    public void setEntity(Entity entity) {
+        this.entity = entity;
     }
 
     public String getUniqueConstraintGroup() {
