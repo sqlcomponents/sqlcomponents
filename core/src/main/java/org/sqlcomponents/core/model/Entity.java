@@ -4,6 +4,7 @@ package org.sqlcomponents.core.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.sqlcomponents.core.model.relational.Table;
+import org.sqlcomponents.core.model.relational.enumeration.Flag;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,7 +43,7 @@ public class Entity {
 
     public List<Property> getGeneratedPrimaryKeyProperties() {
         return this.getProperties().stream().filter(property -> {
-            return property.getColumn().isPrimaryKey() && property.getColumn().isAutoIncrement();
+            return property.getColumn().isPrimaryKey() && property.getColumn().getAutoIncrement() == Flag.YES;
         }).collect(Collectors.toList());
     }
 }

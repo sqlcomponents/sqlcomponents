@@ -209,8 +209,8 @@ public class Crawler {
             column.setSize(columnResultset.getInt("COLUMN_SIZE"));
             column.setDecimalDigits(columnResultset.getInt("DECIMAL_DIGITS"));
             column.setRemarks(columnResultset.getString("REMARKS"));
-            column.setNullable("YES".equalsIgnoreCase("IS_NULLABLE"));
-            column.setAutoIncrement("YES".equalsIgnoreCase(columnResultset.getString("IS_AUTOINCREMENT")));
+            column.setNullable(Flag.value(columnResultset.getString("IS_NULLABLE")));
+            column.setAutoIncrement(Flag.value(columnResultset.getString("IS_AUTOINCREMENT")));
             column.setTableCategory(columnResultset.getString("TABLE_CAT"));
             column.setTableSchema(columnResultset.getString("TABLE_SCHEM"));
             column.setBufferLength(columnResultset.getInt("BUFFER_LENGTH"));

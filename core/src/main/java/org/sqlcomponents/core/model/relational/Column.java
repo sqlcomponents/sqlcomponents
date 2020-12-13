@@ -1,6 +1,5 @@
 package org.sqlcomponents.core.model.relational;
 
-
 import lombok.Getter;
 import lombok.Setter;
 import org.sqlcomponents.core.model.relational.enumeration.Flag;
@@ -18,8 +17,8 @@ public class Column {
     private int size;
     private int decimalDigits;
     private String remarks;
-    private boolean isNullable;
-    private boolean isAutoIncrement;
+    private Flag nullable;
+    private Flag autoIncrement;
     private String uniqueConstraintName;
     private int primaryKeyIndex;
     private String tableCategory;
@@ -47,7 +46,7 @@ public class Column {
     }
 
     public boolean isInsertable() {
-        return !isAutoIncrement && generatedColumn != Flag.YES;
+        return autoIncrement != Flag.YES && generatedColumn != Flag.YES;
     }
 
     public boolean isPrimaryKey() {
