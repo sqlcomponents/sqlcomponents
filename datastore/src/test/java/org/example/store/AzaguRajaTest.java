@@ -53,30 +53,20 @@ class AzaguRajaTest {
         Assertions.assertEquals(5, noOfInsertedRajaRefsArray.length, "All Raja Reference not inserted");
 
 
-        AzaguRaja azaguRaja = new AzaguRaja();
-        azaguRaja.setReferenceCode("A110");
-        azaguRaja.setABoolean(true);
-        azaguRaja.setAChar('A');
-        azaguRaja.setAText("Text");
-        azaguRaja.setADate(LocalDate.now());
-        azaguRaja.setATime(LocalTime.now());
 
 
         AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore.insert()
-                .values(azaguRaja).returning();
+                .values(azaguRajasToTest.get(0)).returning();
 
-        Assertions.assertEquals("A110", insertedAzaguRaja.getReferenceCode(), "found successfully");
+        Assertions.assertEquals(azaguRajasToTest.get(0).getReferenceCode(), insertedAzaguRaja.getReferenceCode(), "found successfully");
 
 
-        List<AzaguRaja> listOfRajas = new ArrayList<>();
-        for (int i = 1; i < 6; i++) {
-            listOfRajas.add(azaguRaja);
-        }
+        this.allInAllAzaguRajaStore.deleteAll();
 
         List<AzaguRaja> insertedAzaguRajas = this.allInAllAzaguRajaStore.insert()
-                .values(listOfRajas).returning();
+                .values(azaguRajasToTest).returning();
 
-        Assertions.assertEquals(listOfRajas.size(), insertedAzaguRajas.size(), "all raja found successfully");
+        Assertions.assertEquals(azaguRajasToTest.size(), insertedAzaguRajas.size(), "all raja found successfully");
 
 
     }
