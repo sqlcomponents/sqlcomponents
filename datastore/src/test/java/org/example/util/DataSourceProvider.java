@@ -1,10 +1,12 @@
 package org.example.util;
 
+import org.mariadb.jdbc.MySQLDataSource;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Properties;
 
 public final class DataSourceProvider {
@@ -24,6 +26,18 @@ public final class DataSourceProvider {
             ds.setUser(props.getProperty(databaseType+".datasource.username"));
             ds.setPassword(props.getProperty(databaseType+".datasource.password"));
             return ds;
+        }
+        if(databaseType.equals("mysql")) {
+            MySQLDataSource mySQLDataSource = new MySQLDataSource();
+            try {
+                mySQLDataSource.setUrl(props.getProperty(databaseType+".datasource.url"));
+                mySQLDataSource.setUser(props.getProperty(databaseType+".datasource.username"));
+                mySQLDataSource.setPassword(props.getProperty(databaseType+".datasource.password"));
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+             return mySQLDataSource;
         }
         return null;
     }
