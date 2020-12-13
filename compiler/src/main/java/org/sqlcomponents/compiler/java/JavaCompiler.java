@@ -17,7 +17,6 @@ import java.nio.file.Files;
 
 public final class JavaCompiler implements Compiler {
 
-
     private Template<Entity> daoTemplate;
     private Template<Entity> beanTemplate;
 

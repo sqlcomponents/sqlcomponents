@@ -10,15 +10,4 @@ public enum Flag {
         this.value = value;
     }
 
-    public static Flag value(final String value) {
-
-        for (Flag flag :
-                Flag.values()) {
-            if (flag.value.equals(value)) {
-                return flag;
-            }
-        }
-        return null;
-    }
-
 }

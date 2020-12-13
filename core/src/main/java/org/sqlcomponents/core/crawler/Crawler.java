@@ -184,7 +184,7 @@ public class Crawler {
                         .stream()
                         .filter(sequenceName -> sequenceName.contains(tableName))
                         .findFirst()
-                        .ifPresent(sequenceName -> table.setSequenceName(sequenceName));
+                        .ifPresent(table::setSequenceName);
 
                 tables.add(table);
             }
@@ -254,13 +254,16 @@ public class Crawler {
             Key key = new Key();
             key.setTableName(foreignKeysResultSet.getString("FKTABLE_NAME"));
             key.setColumnName(foreignKeysResultSet.getString("FKCOLUMN_NAME"));
-            columns.stream().filter(column -> {
-                try {
-                    return column.getColumnName().equals(foreignKeysResultSet.getString("PKCOLUMN_NAME"));
-                } catch (SQLException throwables) {
-                    return false;
-                }
-            }).findFirst().get().getExportedKeys().add(key);
+            if(!columns.isEmpty()) {
+                columns.stream().filter(column -> {
+                    try {
+                        return column.getColumnName().equals(foreignKeysResultSet.getString("PKCOLUMN_NAME"));
+                    } catch (SQLException throwables) {
+                        return false;
+                    }
+                }).findFirst().ifPresent(column->column.getExportedKeys().add(key));
+            }
+
         }
         return columns;
     }
