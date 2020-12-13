@@ -49,4 +49,8 @@ public class Column {
     public boolean isInsertable() {
         return !isAutoIncrement && generatedColumn != Flag.YES;
     }
+
+    public boolean isPrimaryKey() {
+        return primaryKeyIndex != 0;
+    }
 }

@@ -26,7 +26,7 @@ public class Crawler {
 
             database.setSequences(getSequences(databasemetadata));
             database.setTables(getTables(databasemetadata, database, tableName -> application.getTablePatterns() == null || application.getTablePatterns().contains(tableName)));
-            database.setFunctions(getProcedures(databasemetadata));
+            // database.setFunctions(getProcedures(databasemetadata));
             database.setCatalogTerm(databasemetadata.getCatalogTerm());
             database.setCatalogSeperator(databasemetadata.getCatalogSeparator());
             database.setDatabaseProductName(databasemetadata.getDatabaseProductName());

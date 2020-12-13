@@ -33,4 +33,16 @@ public class Entity {
             return property.getColumn().isInsertable();
         }).collect(Collectors.toList());
     }
+
+    public List<Property> getPrimaryKeyProperties() {
+        return this.getProperties().stream().filter(property -> {
+            return property.getColumn().isPrimaryKey();
+        }).collect(Collectors.toList());
+    }
+
+    public List<Property> getGeneratedPrimaryKeyProperties() {
+        return this.getProperties().stream().filter(property -> {
+            return property.getColumn().isPrimaryKey() && property.getColumn().isAutoIncrement();
+        }).collect(Collectors.toList());
+    }
 }
