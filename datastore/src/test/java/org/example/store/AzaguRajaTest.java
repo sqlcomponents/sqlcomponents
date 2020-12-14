@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.example.util.DataSourceProvider.dataSource;
+import static org.example.store.AzaguRajaStore.referenceCode;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AzaguRajaTest {
@@ -52,9 +53,6 @@ class AzaguRajaTest {
         int[] noOfInsertedRajaRefsArray = this.azaguRajaReferenceStore.insert().values(azaguRajaReferencesToTest).execute();
         Assertions.assertEquals(5, noOfInsertedRajaRefsArray.length, "All Raja Reference not inserted");
 
-
-
-
         AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore.insert()
                 .values(azaguRajasToTest.get(0)).returning();
 
@@ -68,6 +66,8 @@ class AzaguRajaTest {
 
         Assertions.assertEquals(azaguRajasToTest.size(), insertedAzaguRajas.size(), "all raja found successfully");
 
+        List<AzaguRaja> selectedAzaguRajas = this.allInAllAzaguRajaStore.select(referenceCode().eq("A110"));
+        Assertions.assertEquals(azaguRajasToTest.size(), selectedAzaguRajas.size(), "all raja found successfully");
 
     }
 }
