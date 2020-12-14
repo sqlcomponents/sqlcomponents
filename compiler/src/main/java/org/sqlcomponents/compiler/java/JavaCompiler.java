@@ -91,11 +91,12 @@ public final class JavaCompiler implements Compiler {
             if(template == null ) {
 
                 try{
-                    Class dataTypeClass = Class.forName(property.getDataType());
-                    if(!dataTypeClass.getSuperclass().equals(Object.class)) {
-                        dataTypeClass = dataTypeClass.getSuperclass();
+                    String dataTypeClass = property.getDataType();
+                    if(Class.forName(dataTypeClass).getSuperclass().equals(Number.class)) {
+                        dataTypeClass = "java.lang.Number";
                     }
-                    String fieldPackageFolder = getPackageAsFolder("template/java/field", dataTypeClass.getName())+ "Field.ftl";
+
+                    String fieldPackageFolder = getPackageAsFolder("template/java/field", dataTypeClass)+ "Field.ftl";
 
                     template = new Template<>(fieldPackageFolder);
                     fieldsTemplate.put(property.getDataType(),template);
@@ -105,7 +106,7 @@ public final class JavaCompiler implements Compiler {
                     File file = new File(getPackageAsFolder(srcFolder, entity
                             .getOrm().getApplication().getRootPackage() + ".common.field") + File.separator
                             + (property.getColumn().getNullable() == Flag.YES ? "Nullable" : "" )
-                            + dataTypeClass.getName().substring(dataTypeClass.getName().lastIndexOf('.')+1) + "Field.java");
+                            + dataTypeClass.substring(dataTypeClass.lastIndexOf('.')+1) + "Field.java");
                     if(!file.exists()) {
                         file.getParentFile().mkdirs();
                         Files.write(file.toPath(),
