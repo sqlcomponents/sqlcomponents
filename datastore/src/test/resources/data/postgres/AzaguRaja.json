@@ -14,14 +14,10 @@
       11,
       16,
       291492000
-    ],
-    "asmallint": 2,
-    "ainteger": 1,
-    "abigint": 1,
-    "adecimal": 1,
-    "anumeric": 1,
-    "areal": 1.2,
-    "adouble": 1.222
+    ]
+
+
+
   },
   {
     "referenceCode": "A110",
@@ -38,13 +34,6 @@
       11,
       16,
       291492000
-    ],
-    "asmallint": 2,
-    "ainteger": 1,
-    "abigint": 1,
-    "adecimal": 1,
-    "anumeric": 1,
-    "areal": 1.2,
-    "adouble": 1.222
+    ]
   }
 ]

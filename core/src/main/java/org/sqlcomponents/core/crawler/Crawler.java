@@ -209,8 +209,8 @@ public class Crawler {
             column.setSize(columnResultset.getInt("COLUMN_SIZE"));
             column.setDecimalDigits(columnResultset.getInt("DECIMAL_DIGITS"));
             column.setRemarks(columnResultset.getString("REMARKS"));
-            column.setNullable(Flag.valueOf(columnResultset.getString("IS_NULLABLE")));
-            column.setAutoIncrement(Flag.valueOf(columnResultset.getString("IS_AUTOINCREMENT")));
+            column.setNullable(Flag.value(columnResultset.getString("IS_NULLABLE")));
+            column.setAutoIncrement(Flag.value(columnResultset.getString("IS_AUTOINCREMENT")));
             column.setTableCategory(columnResultset.getString("TABLE_CAT"));
             column.setTableSchema(columnResultset.getString("TABLE_SCHEM"));
             column.setBufferLength(columnResultset.getInt("BUFFER_LENGTH"));
@@ -221,7 +221,7 @@ public class Crawler {
             column.setScopeSchema(columnResultset.getString("SCOPE_SCHEMA"));
             column.setScopeTable(columnResultset.getString("SCOPE_TABLE"));
             column.setSourceDataType(columnResultset.getString("SOURCE_DATA_TYPE"));
-            column.setGeneratedColumn(Flag.valueOf(columnResultset.getString("IS_GENERATEDCOLUMN")));
+            column.setGeneratedColumn(Flag.value(columnResultset.getString("IS_GENERATEDCOLUMN")));
 
             column.setExportedKeys(new TreeSet<>());
 

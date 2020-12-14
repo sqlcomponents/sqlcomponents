@@ -1,4 +1,4 @@
-<#include "field-header.ftl">
+<#include "/template/java/field/field-header.ftl">
 
 public class <#if column.nullable == "YES">Nullable</#if>CharacterField extends Field {
     protected String sql;
