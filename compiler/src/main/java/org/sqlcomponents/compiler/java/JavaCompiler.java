@@ -95,7 +95,7 @@ public final class JavaCompiler implements Compiler {
                     if(!dataTypeClass.getSuperclass().equals(Object.class)) {
                         dataTypeClass = dataTypeClass.getSuperclass();
                     }
-                    String fieldPackageFolder = getPackageAsFolder("template/java/field", dataTypeClass.getName())+ ".ftl";
+                    String fieldPackageFolder = getPackageAsFolder("template/java/field", dataTypeClass.getName())+ "Field.ftl";
 
                     template = new Template<>(fieldPackageFolder);
                     fieldsTemplate.put(property.getDataType(),template);
