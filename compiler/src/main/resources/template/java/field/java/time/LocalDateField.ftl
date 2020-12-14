@@ -1,5 +1,5 @@
 <#include "/template/java/field/field-header.ftl">
-
+import java.time.LocalDate;
 public class <#if column.nullable == "YES">Nullable</#if>LocalDateField extends Field {
     protected String sql;
 

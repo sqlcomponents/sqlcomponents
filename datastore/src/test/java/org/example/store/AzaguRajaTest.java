@@ -44,6 +44,16 @@ class AzaguRajaTest {
 
         List<AzaguRaja> azaguRajasToTest = JsonUtil.getTestObjects(AzaguRaja.class);
 
+        AzaguRaja azaguRaja = azaguRajasToTest.get(0);
+        azaguRaja.setASmallint((short) 3);
+        azaguRaja.setABigint(9L);
+        azaguRaja.setADecimal(88L);
+        azaguRaja.setADouble(9.00);
+        azaguRaja.setANumeric(8L);
+        azaguRaja.setAReal(1.2F);
+        azaguRaja.setAInteger(8L);
+
+        System.out.println(JsonUtil.getJSONString(azaguRaja));
         Integer noOfInsertedRajaRefs = this.azaguRajaReferenceStore.insert().values(azaguRajaReferencesToTest.get(0)).execute();
         Assertions.assertEquals(1, noOfInsertedRajaRefs, "1 Raja Reference not inserted");
 
