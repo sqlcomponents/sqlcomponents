@@ -1,7 +1,5 @@
 package org.example.store;
 
-import org.example.model.AzaguRaja;
-import org.example.model.AzaguRajaReference;
 import org.example.model.Movie;
 import org.example.util.DataSourceProvider;
 import org.example.util.JsonUtil;
@@ -31,6 +29,5 @@ class MovieStoreTest {
         List<Movie> insertedMovies = this.movieStore.insert()
                 .values(moviesToTest).returning();
         Assertions.assertEquals(moviesToTest.size(), insertedMovies.size(), "Loading Movies");
-
     }
 }

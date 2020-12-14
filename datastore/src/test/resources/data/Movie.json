@@ -1,3 +1,9 @@
 [
-  {"name":"Memento","directedBy":"Christopher Nolan","yearOfRelease": 2000}
+  {
+    "name": "Memento",
+    "directedBy": "Christopher Nolan",
+    "yearOfRelease": 2000,
+    "genre": "Thriller",
+    "rating": 9.5
+  }
 ]
