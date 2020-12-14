@@ -22,9 +22,15 @@ public final class JsonUtil {
         ObjectMapper mapper = new ObjectMapper();
         mapper.findAndRegisterModules();
 
+        File jsonFile  = new File("../datastore/src/test/resources/data/"+databaseType+"/"
+                +tClass.getName().substring(tClass.getName().lastIndexOf('.')+1)+".json");
+        if(!jsonFile.exists()) {
+            jsonFile  = new File("../datastore/src/test/resources/data/"
+                    +tClass.getName().substring(tClass.getName().lastIndexOf('.')+1)+".json");
+        }
 
         try (JsonParser jsonParser = mapper.getFactory()
-                .createParser(new File("../datastore/src/test/resources/data/"+databaseType+"/"+tClass.getName().substring(tClass.getName().lastIndexOf('.')+1)+".json"))) {
+                .createParser(jsonFile)) {
             if (jsonParser.nextToken() != JsonToken.START_ARRAY) {
                 throw new IllegalArgumentException(
                         "illicalstate of array", null);

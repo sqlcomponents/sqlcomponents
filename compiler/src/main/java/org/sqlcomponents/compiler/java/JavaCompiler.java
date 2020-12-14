@@ -111,9 +111,6 @@ public final class JavaCompiler implements Compiler {
                         file.getParentFile().mkdirs();
                         Files.write(file.toPath(),
                                 getJavaContent(template.getContent(property)).getBytes());
-                    }else {
-                        System.out.println(property.getName() + template + " => " + file.getAbsolutePath());
-
                     }
 
 
