@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS movie;
+	DROP TABLE IF EXISTS movie;
 
 CREATE TABLE movie (
     id smallserial PRIMARY KEY,
