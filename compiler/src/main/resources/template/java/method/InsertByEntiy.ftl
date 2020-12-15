@@ -60,14 +60,23 @@
         }
 
         public static final class ValueClause  {
+            
+            private final InsertStatement insertStatement;
 
             private ${name} ${name?uncap_first};
-            private final InsertStatement insertStatement;
 
             ValueClause (final ${name} ${name?uncap_first},final InsertStatement insertStatement) {
                 this.${name?uncap_first} = ${name?uncap_first};
                 this.insertStatement = insertStatement;
             }
+
+            public final ValuesClause values(final ${name} the${name}) {
+                List<${name}> list = new ArrayList<>();
+                list.add(${name?uncap_first});
+                list.add(the${name});
+                return new ValuesClause(list,insertStatement);
+            }
+            
 
             public final int execute() throws SQLException  {
                 int insertedRows = 0;
@@ -107,12 +116,19 @@
 
         public static final class ValuesClause  {
 
-            private List<${name}> list;
+            
             private final InsertStatement insertStatement;
+
+            private List<${name}> list;
 
             ValuesClause(final List<${name}> list,final InsertStatement insertStatement) {
                 this.list = list;
                 this.insertStatement = insertStatement;
+            }
+
+            public final ValuesClause values(final ${name} the${name}) {
+                this.list.add(the${name});
+                return this;
             }
 
             public final int[] execute() throws SQLException  {

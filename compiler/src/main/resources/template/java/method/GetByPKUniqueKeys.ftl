@@ -5,6 +5,6 @@
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		${getUniqueKeysAsParameterStringNoTypeMap(uniqueConstraintGroupName)}
 				return null;
-	}<#assign a=addImportStatement("java.util.HashMap")>
+	}
 	</#list>
 </#if>

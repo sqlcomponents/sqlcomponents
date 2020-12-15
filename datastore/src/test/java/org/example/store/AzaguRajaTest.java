@@ -12,8 +12,6 @@ import org.junit.jupiter.api.TestInstance;
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.example.store.AzaguRajaStore.referenceCode;
-
 /**
  * Azaguraja
  * 1. Reference for all the data types.
@@ -52,7 +50,7 @@ class AzaguRajaTest {
                 insert()
                 .values(azaguRajaReferencesToTest.get(0))
                 .execute();
-        Assertions.assertEquals(1, noOfInsertedRajaRefs, "1 Raja Reference not inserted");
+        Assertions.assertEquals(1, noOfInsertedRajaRefs, "Single Insert Execution");
     }
 
     @Test
@@ -61,32 +59,57 @@ class AzaguRajaTest {
                 .insert()
                 .values(azaguRajaReferencesToTest)
                 .execute();
-        Assertions.assertEquals(5, noOfInsertedRajaRefsArray.length, "All Raja Reference not inserted");
-    }
-
-    @Test
-    void testSelectWithWhereClause() throws SQLException {
-        List<AzaguRaja> selectedAzaguRajas = this.allInAllAzaguRajaStore
-                .select(referenceCode().eq("A110"));
-        Assertions.assertEquals(azaguRajasToTest.size(), selectedAzaguRajas.size(), "Raja requested not found");
+        Assertions.assertEquals(5, noOfInsertedRajaRefsArray.length, "Multiple Insert Execution");
     }
 
     @Test
     void testSingleInsertAndGetInsertedObject() throws SQLException {
+
+        AzaguRajaReference azaguRajaReference = this.azaguRajaReferenceStore
+                .insert()
+                .values(azaguRajaReferencesToTest.get(0))
+                .returning();
+
+        AzaguRaja azaguRaja = azaguRajasToTest.get(0);
+        azaguRaja.setReferenceCode(azaguRajaReference.getCode());
+
         AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore
                 .insert()
-                .values(azaguRajasToTest.get(0))
+                .values(azaguRaja)
                 .returning();
-        Assertions.assertEquals(azaguRajasToTest.get(0).getReferenceCode(), insertedAzaguRaja.getReferenceCode(), "AzaguRaja not found");
+        Assertions.assertEquals(azaguRaja.getReferenceCode()
+                , insertedAzaguRaja.getReferenceCode()
+                , "Single Insert Returning");
     }
 
 
     @Test
     void testMultiInsertAndGetInsertedObjects() throws SQLException {
+        this.azaguRajaReferenceStore
+                .insert()
+                .values(azaguRajaReferencesToTest)
+                .execute();
+
         List<AzaguRaja> insertedAzaguRajas = this.allInAllAzaguRajaStore
                 .insert()
                 .values(azaguRajasToTest)
                 .returning();
-        Assertions.assertEquals(azaguRajasToTest.size(), insertedAzaguRajas.size(), "List of AzaguRaja not found");
+        Assertions.assertEquals(azaguRajasToTest.size(), insertedAzaguRajas.size(), "Multi Insert Returning");
+    }
+
+    @Test
+    void testMultiSequenceInsertAndGetInsertedObjects() throws SQLException {
+        this.azaguRajaReferenceStore
+                .insert()
+                .values(azaguRajaReferencesToTest)
+                .execute();
+
+        List<AzaguRaja> insertedAzaguRajas = this.allInAllAzaguRajaStore
+                .insert()
+                .values(azaguRajasToTest.get(0))
+                .values(azaguRajasToTest.get(1))
+                .values(azaguRajasToTest.get(2))
+                .returning();
+        Assertions.assertEquals(3, insertedAzaguRajas.size(), "Multi Sequence Insert Returning");
     }
 }
