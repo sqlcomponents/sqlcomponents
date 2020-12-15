@@ -5,6 +5,7 @@ import org.sqlcomponents.core.exception.ScubeException;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.*;
 import org.sqlcomponents.core.model.relational.enumeration.Flag;
+import org.sqlcomponents.core.model.relational.enumeration.Order;
 import org.sqlcomponents.core.model.relational.enumeration.TableType;
 
 import javax.sql.DataSource;
@@ -179,6 +180,7 @@ public class Crawler {
 
                 table.setColumns(getColumns(databasemetadata, table));
 
+                table.setIndices(getIndices(databasemetadata, table));
                 // Set Sequence
                 database.getSequences()
                         .stream()
@@ -193,6 +195,34 @@ public class Crawler {
         }
 
         return tables;
+    }
+
+    private List<Index> getIndices(DatabaseMetaData databasemetadata, final Table table) throws SQLException {
+        List<Index> indices = new ArrayList<>();
+
+        ResultSet indexResultset = databasemetadata.getIndexInfo(null, null, table.getTableName(), true,true);
+
+        while (indexResultset.next()) {
+            Index index = new Index(table);
+            index.setColumnName(indexResultset.getString("COLUMN_NAME"));
+            index.setOrdinalPosition(indexResultset.getShort("ORDINAL_POSITION"));
+
+            index.setIndexName(indexResultset.getString("INDEX_NAME"));
+            index.setIndexQualifier(indexResultset.getString("INDEX_QUALIFIER"));
+            index.setCardinality(indexResultset.getInt("CARDINALITY"));
+            String ascDesc = indexResultset.getString("ASC_OR_DESC");
+            if(ascDesc != null) {
+                index.setOrder(Order.value(ascDesc));
+            }
+            index.setFilterCondition(indexResultset.getString("FILTER_CONDITION"));
+            index.setPages(indexResultset.getInt("PAGES"));
+            index.setType(indexResultset.getShort("TYPE"));
+            index.setNonUnique(indexResultset.getBoolean("NON_UNIQUE"));
+
+
+            indices.add(index);
+        }
+        return indices;
     }
 
     private List<Column> getColumns(DatabaseMetaData databasemetadata, final Table table) throws SQLException {

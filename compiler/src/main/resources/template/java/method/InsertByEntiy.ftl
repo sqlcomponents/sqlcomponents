@@ -71,10 +71,10 @@
             }
 
             public final ValuesClause values(final ${name} the${name}) {
-                List<${name}> list = new ArrayList<>();
-                list.add(${name?uncap_first});
-                list.add(the${name});
-                return new ValuesClause(list,insertStatement);
+                List<${name}> listOf${name} = new ArrayList<>();
+                listOf${name}.add(${name?uncap_first});
+                listOf${name}.add(the${name});
+                return new ValuesClause(listOf${name},insertStatement);
             }
             
 
@@ -127,7 +127,7 @@
             }
 
             public final ValuesClause values(final ${name} the${name}) {
-                this.list.add(the${name});
+                this.listOf${name}.add(the${name});
                 return this;
             }
 
@@ -177,7 +177,7 @@
                           }
                           <#else>
                           if (insertedRows == 1) {
-                            insertedList.add(insertStatement.${name?uncap_first}Store${orm.daoSuffix}.find(${getPrimaryKeysFromModel("list.get(i)")}));
+                            insertedList.add(insertStatement.${name?uncap_first}Store${orm.daoSuffix}.find(${getPrimaryKeysFromModel("listOf${name}.get(i)")}));
                           }
                           </#if>
                           else {

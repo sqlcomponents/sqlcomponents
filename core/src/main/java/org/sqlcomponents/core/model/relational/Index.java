@@ -8,7 +8,9 @@ import org.sqlcomponents.core.model.relational.enumeration.Order;
 @Setter
 public class Index {
 
-    private boolean unique;
+    private final Table table;
+
+    private boolean nonUnique;
     private String indexQualifier;
     private String indexName;
     private short type;
@@ -18,5 +20,9 @@ public class Index {
     private int cardinality;
     private int pages;
     private String filterCondition;
+
+    public Index(final Table table) {
+        this.table = table;
+    }
 
 }
