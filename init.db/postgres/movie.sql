@@ -5,6 +5,6 @@ CREATE TABLE movie (
     name VARCHAR(80),
     directed_by VARCHAR(80),
     year_of_release NUMERIC(4),
-    rating NUMERIC(1,1),
+    rating NUMERIC(2,1),
     genre VARCHAR(150)
 );
