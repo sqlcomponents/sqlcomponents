@@ -25,6 +25,7 @@ public class Table {
     private String selfReferencingColumnName;
     private String referenceGeneration;
     private List<Column> columns;
+    private List<Index> indices;
 
     public Table(final Database database) {
         this.database = database;

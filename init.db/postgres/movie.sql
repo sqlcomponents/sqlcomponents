@@ -6,5 +6,7 @@ CREATE TABLE movie (
     directed_by VARCHAR(80),
     year_of_release NUMERIC(4),
     rating NUMERIC(2,1),
-    genre VARCHAR(150)
+    genre VARCHAR(150),
+    imdb_id VARCHAR(15),
+    UNIQUE(imdb_id)
 );

@@ -56,7 +56,7 @@ public final class JavaMapper extends Mapper {
             case REAL:
                 return Float.class;
             case DOUBLE:
-                return Double.class;
+                return chooseDecimalType(column);
             case INTEGER:
                 return chooseIntegerType(column);
             case NUMERIC:

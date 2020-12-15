@@ -4,132 +4,151 @@
     "directedBy": "Christopher Nolan",
     "yearOfRelease": 2000,
     "genre": "Thriller",
-    "rating": 9.5
+    "rating": 9.5,
+    "imdbId": "tt0116630"
   },
   {
     "title": "Interstellar",
     "directedBy": "Christopher Nolan",
     "yearOfRelease": 2014,
     "genre": "science fiction",
-    "rating": 8.6
+    "rating": 8.6,
+    "imdbId": "tt0116632"
   },
   {
     "title": "Inception",
     "directedBy": "Christopher Nolan",
     "yearOfRelease": 2010,
     "genre": "Science fiction",
-    "rating": 8.8
+    "rating": 8.8,
+    "imdbId": "tt0116633"
   },
   {
     "title": "The Prestige",
     "directedBy": "Christopher Nolan",
     "yearOfRelease": 2006,
     "genre": "Thriller",
-    "rating": 8.5
+    "rating": 8.5,
+    "imdbId": "tt0116634"
   },
   {
     "title": "The Dark Knight Rises",
     "directedBy": "Christopher Nolan",
     "yearOfRelease": 2012,
     "genre": "crime",
-    "rating": 8.4
+    "rating": 8.4,
+    "imdbId": "tt0116636"
   },
   {
     "title": "Tenet",
     "directedBy": "Christopher Nolan",
     "yearOfRelease": 2020,
     "genre": "Action",
-    "rating": 7.6
+    "rating": 7.6,
+    "imdbId": "tt0116620"
   },
   {
     "title": "Dunkirk",
     "directedBy": "Christopher Nolan",
     "yearOfRelease": 2017,
     "genre": "Action",
-    "rating": 7.9
+    "rating": 7.9,
+    "imdbId": "tt1113630"
   },
   {
     "title": "The Dark Knight",
     "directedBy": "Christopher Nolan",
     "yearOfRelease": 2008,
     "genre": "crime",
-    "rating": 9
+    "rating": 9,
+    "imdbId": "t30116630"
   },
  {
   "title": "Batman Begins",
   "directedBy": "Christopher Nolan",
   "yearOfRelease": 2005,
   "genre": "Action",
-  "rating": 8.2
+  "rating": 8.2,
+   "imdbId": "3t0116630"
 },
   {
     "title": "Following",
     "directedBy": "Christopher Nolan",
     "yearOfRelease": 1998,
     "genre": "Drama",
-    "rating":7.5
+    "rating":7.5,
+    "imdbId": "tt0416630"
   },
   {
     "title": "insomnia",
     "directedBy": "Christopher Nolan",
     "yearOfRelease": 2002,
     "genre": "Thriller",
-    "rating": 7.2
+    "rating": 7.2,
+    "imdbId": "tte116630"
   },
   {
     "title": "Terminator 2 : Judgement day (3D)",
     "directedBy": "James Cameron",
     "yearOfRelease": 2017,
     "genre": "Action",
-    "rating": 8.5
+    "rating": 8.5,
+    "imdbId": "tt0113630"
   },
   {
     "title": "Avatar",
     "directedBy": "James Cameron",
     "yearOfRelease": 2009,
     "genre": "Action",
-    "rating": 7.8
+    "rating": 7.8,
+    "imdbId": "tt0116330"
   },
   {
     "title": "True Lies",
     "directedBy": "James Cameron",
     "yearOfRelease": 1994,
     "genre": "Adventure",
-    "rating": 7.2
+    "rating": 7.2,
+    "imdbId": "t50116630"
   },
   {
     "title": "Terminator 2 : Judgement day ",
     "directedBy": "James Cameron",
     "yearOfRelease": 1991,
     "genre": "Thriller",
-    "rating": 8.5
+    "rating": 8.5,
+    "imdbId": "3t4116630"
   },
   {
     "title": "The Abyss",
     "directedBy": "James Cameron",
     "yearOfRelease": 1989,
     "genre": "Thriller",
-    "rating": 7.5
+    "rating": 7.5,
+    "imdbId": "t33016630"
   },
   {
     "title": "Titanic",
     "directedBy": "James Cameron",
     "yearOfRelease": 1997,
     "genre": "Romantic",
-    "rating": 7.8
+    "rating": 7.8,
+    "imdbId": "t40116630"
   },
   {
     "title": "The Terminator",
     "directedBy": "James Cameron",
     "yearOfRelease": 1984,
     "genre": "Drama",
-    "rating": 8
+    "rating": 8,
+    "imdbId": "tt4e6630"
   },
   {
     "title": "Piranha II: The Spawning",
     "directedBy": "James Cameron",
     "yearOfRelease": 1981,
     "genre": "Horror",
-    "rating": 3.7
+    "rating": 3.7,
+    "imdbId": "tt0444430"
   }
 ]

@@ -29,6 +29,13 @@ class MovieStoreTest {
     }
 
     @Test
+    void testFindWithUnique() throws SQLException {
+        List<Movie> insertedMovies = this.movieStore.insert()
+                .values(moviesToTest).returning();
+        Assertions.assertEquals(moviesToTest.size(), this.movieStore.find(), "Loading Movies");
+    }
+
+    @Test
     void testWhereClause() throws SQLException {
         List<Movie> insertedMovies = this.movieStore.insert()
                 .values(moviesToTest).returning();
