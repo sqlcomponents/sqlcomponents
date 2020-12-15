@@ -12,59 +12,81 @@ import org.junit.jupiter.api.TestInstance;
 import java.sql.SQLException;
 import java.util.List;
 
-
 import static org.example.store.AzaguRajaStore.referenceCode;
 
+/**
+ * Azaguraja
+ * 1. Reference for all the data types.
+ * 2. All Persistance Intefaces.
+ */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AzaguRajaTest {
 
     private final AzaguRajaReferenceStore azaguRajaReferenceStore;
     private final AzaguRajaStore allInAllAzaguRajaStore;
 
+    private final List<AzaguRajaReference> azaguRajaReferencesToTest;
+    private final List<AzaguRaja> azaguRajasToTest;
+
 
     AzaguRajaTest() {
+        // Stores used for testing
         this.azaguRajaReferenceStore = new AzaguRajaReferenceStore(DataSourceProvider.dataSource());
         this.allInAllAzaguRajaStore = new AzaguRajaStore(DataSourceProvider.dataSource());
+
+        // Data used for testing
+        this.azaguRajaReferencesToTest = JsonUtil.getTestObjects(AzaguRajaReference.class);
+        this.azaguRajasToTest = JsonUtil.getTestObjects(AzaguRaja.class);
     }
 
     @BeforeEach
     void init() throws SQLException {
+        // Clean Up
         this.allInAllAzaguRajaStore.deleteAll();
         this.azaguRajaReferenceStore.deleteAll();
     }
 
     @Test
-    void testAzaguRaja() throws SQLException {
-
-
-        List<AzaguRajaReference> azaguRajaReferencesToTest = JsonUtil.getTestObjects(AzaguRajaReference.class);
-
-        List<AzaguRaja> azaguRajasToTest = JsonUtil.getTestObjects(AzaguRaja.class);
-
-
-        Integer noOfInsertedRajaRefs = this.azaguRajaReferenceStore.insert().values(azaguRajaReferencesToTest.get(0)).execute();
+    void testSingleInsertAndGetNumberOfRows() throws SQLException {
+        Integer noOfInsertedRajaRefs = this.azaguRajaReferenceStore.
+                insert()
+                .values(azaguRajaReferencesToTest.get(0))
+                .execute();
         Assertions.assertEquals(1, noOfInsertedRajaRefs, "1 Raja Reference not inserted");
+    }
 
-
-        azaguRajaReferenceStore.deleteAll();
-
-        int[] noOfInsertedRajaRefsArray = this.azaguRajaReferenceStore.insert().values(azaguRajaReferencesToTest).execute();
+    @Test
+    void testMultipleInsertAndGetNumberOfRows() throws SQLException {
+        int[] noOfInsertedRajaRefsArray = this.azaguRajaReferenceStore
+                .insert()
+                .values(azaguRajaReferencesToTest)
+                .execute();
         Assertions.assertEquals(5, noOfInsertedRajaRefsArray.length, "All Raja Reference not inserted");
+    }
 
-        AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore.insert()
-                .values(azaguRajasToTest.get(0)).returning();
+    @Test
+    void testSelectWithWhereClause() throws SQLException {
+        List<AzaguRaja> selectedAzaguRajas = this.allInAllAzaguRajaStore
+                .select(referenceCode().eq("A110"));
+        Assertions.assertEquals(azaguRajasToTest.size(), selectedAzaguRajas.size(), "Raja requested not found");
+    }
 
-        Assertions.assertEquals(azaguRajasToTest.get(0).getReferenceCode(), insertedAzaguRaja.getReferenceCode(), "found successfully");
+    @Test
+    void testSingleInsertAndGetInsertedObject() throws SQLException {
+        AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore
+                .insert()
+                .values(azaguRajasToTest.get(0))
+                .returning();
+        Assertions.assertEquals(azaguRajasToTest.get(0).getReferenceCode(), insertedAzaguRaja.getReferenceCode(), "AzaguRaja not found");
+    }
 
-        this.allInAllAzaguRajaStore.deleteAll();
 
-        List<AzaguRaja> insertedAzaguRajas = this.allInAllAzaguRajaStore.insert()
-                .values(azaguRajasToTest).returning();
-
-        Assertions.assertEquals(azaguRajasToTest.size(), insertedAzaguRajas.size(), "all raja found successfully");
-
-        List<AzaguRaja> selectedAzaguRajas = this.allInAllAzaguRajaStore.select(referenceCode().eq("A110"));
-        Assertions.assertEquals(azaguRajasToTest.size(), selectedAzaguRajas.size(), "all raja found successfully");
-
+    @Test
+    void testMultiInsertAndGetInsertedObjects() throws SQLException {
+        List<AzaguRaja> insertedAzaguRajas = this.allInAllAzaguRajaStore
+                .insert()
+                .values(azaguRajasToTest)
+                .returning();
+        Assertions.assertEquals(azaguRajasToTest.size(), insertedAzaguRajas.size(), "List of AzaguRaja not found");
     }
 }

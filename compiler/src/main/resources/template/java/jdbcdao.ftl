@@ -20,8 +20,8 @@ public final class ${name}Store${orm.daoSuffix}  {
     /**
      * Datastore
      */
-    public ${name}Store${orm.daoSuffix}(final DataSource dataSource) {
-        this.dataSource = dataSource;
+    public ${name}Store${orm.daoSuffix}(final DataSource theDataSource) {
+        this.dataSource = theDataSource;
     }
 
 	<#list orm.methodSpecification as method>

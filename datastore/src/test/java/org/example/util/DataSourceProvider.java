@@ -20,24 +20,15 @@ public final class DataSourceProvider {
         }
         String databaseType = System.getenv("DATABASE_TYPE") == null
                 ? "postgres" : System.getenv("DATABASE_TYPE");
-        if(databaseType.equals("postgres")) {
-            PGSimpleDataSource ds = new PGSimpleDataSource();
-            ds.setURL(props.getProperty(databaseType+".datasource.url"));
-            ds.setUser(props.getProperty(databaseType+".datasource.username"));
-            ds.setPassword(props.getProperty(databaseType+".datasource.password"));
-            return ds;
-        }
-        if(databaseType.equals("mysql")) {
-            MysqlDataSource mySQLDataSource = new MysqlDataSource();
-            mySQLDataSource.setUrl(props.getProperty(databaseType+".datasource.url"));
-            mySQLDataSource.setUser(props.getProperty(databaseType+".datasource.username"));
-            mySQLDataSource.setPassword(props.getProperty(databaseType+".datasource.password"));
-            return mySQLDataSource;
-        }
-        return null;
+
+        return getDataSource(props.getProperty(databaseType+".datasource.url")
+        ,props.getProperty(databaseType+".datasource.username"),
+                props.getProperty(databaseType+".datasource.password"));
     }
 
-    public static DataSource getDataSource(final String url,final String userName,final String password) {
+    public static DataSource getDataSource(final String url
+            ,final String userName
+            ,final String password) {
         if(url.startsWith("jdbc:postgresql:")) {
             PGSimpleDataSource ds = new PGSimpleDataSource();
             ds.setURL(url);

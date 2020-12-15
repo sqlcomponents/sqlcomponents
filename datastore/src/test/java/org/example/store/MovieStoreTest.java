@@ -13,9 +13,14 @@ import java.util.List;
 class MovieStoreTest {
 
     private final MovieStore movieStore;
+    private final List<Movie> moviesToTest;
 
     MovieStoreTest() {
+        // Stores used for testing
         this.movieStore = new MovieStore(DataSourceProvider.dataSource());
+
+        // Data used for testing
+        this.moviesToTest = JsonUtil.getTestObjects(Movie.class);
     }
 
     @BeforeEach
@@ -25,7 +30,6 @@ class MovieStoreTest {
 
     @Test
     void testWhereClause() throws SQLException {
-        List<Movie> moviesToTest = JsonUtil.getTestObjects(Movie.class);
         List<Movie> insertedMovies = this.movieStore.insert()
                 .values(moviesToTest).returning();
         Assertions.assertEquals(moviesToTest.size(), insertedMovies.size(), "Loading Movies");
