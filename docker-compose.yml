@@ -33,6 +33,6 @@ services:
       MYSQL_PASSWORD: moviedb
       MYSQL_ROOT_PASSWORD: moviedb
     ports:
-      - '3307:3306'
+      - '3307:3307'
     volumes:
       - ${PWD}/init.db/mysql:/docker-entrypoint-initdb.d
