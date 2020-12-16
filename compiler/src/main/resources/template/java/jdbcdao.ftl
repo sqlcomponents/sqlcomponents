@@ -89,7 +89,9 @@ public final class ${name}Store${orm.daoSuffix}  {
     }
     </#list>
 
-    private static class WhereClause  extends PartialWhereClause  {
+    public static class WhereClause  extends PartialWhereClause  {
+        private WhereClause(){
+        }
         private String asSql() {
             return nodes.isEmpty() ? null : nodes.stream().map(node -> {
                 String asSql;
@@ -125,10 +127,9 @@ public final class ${name}Store${orm.daoSuffix}  {
             this.nodes.add(whereClause);
             return (WhereClause) this;
         }
-
     }
 
-    private static class PartialWhereClause  {
+    public static class PartialWhereClause  {
 
         protected final List<Object> nodes;
 
