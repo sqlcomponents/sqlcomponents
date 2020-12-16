@@ -172,11 +172,11 @@ public class Crawler {
                 table.setSchemaName(resultset.getString("table_schem"));
                 table.setTableType(TableType.value(resultset.getString("table_type")));
                 table.setRemarks(resultset.getString("remarks"));
-                table.setCategoryType(resultset.getString("type_cat"));
-                table.setSchemaType(resultset.getString("type_schem"));
-                table.setNameType(resultset.getString("type_name"));
-                table.setSelfReferencingColumnName(resultset.getString("self_referencing_col_name"));
-                table.setReferenceGeneration(resultset.getString("ref_generation"));
+                // table.setCategoryType(resultset.getString("type_cat"));
+                // table.setSchemaType(resultset.getString("type_schem"));
+                // table.setNameType(resultset.getString("type_name"));
+                // table.setSelfReferencingColumnName(resultset.getString("self_referencing_col_name"));
+                // table.setReferenceGeneration(resultset.getString("ref_generation"));
 
                 table.setColumns(getColumns(databasemetadata, table));
 

@@ -64,6 +64,7 @@ public final class JavaMapper extends Mapper {
             case DECIMAL:
                 return chooseDecimalType(column);
             case VARCHAR:
+            case NVARCHAR:
             case CHAR:
                 return column.getSize() == 1 ? Character.class : String.class;
             case BIT:

@@ -37,3 +37,25 @@ services:
     volumes:
          - ${PWD}/init.db/mysql:/var/lib/mysql
 
+  sqlserverdb:
+    image: boxfuse/flyway
+    command: -c 'sleep 30; flyway migrate -user=sa -password=$${SA_PASSWORD} -url="jdbc:sqlserver://sqlserver:1433;databaseName=$${DATABASE}"'
+    entrypoint: sh
+    volumes:
+      - ${PWD}/init.db/sqlserver:/flyway/sql
+    environment:
+      SA_PASSWORD: P@ssw0rd
+      DATABASE: moviedb
+    depends_on:
+      - sqlserver
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+      - 5433:1433
+    entrypoint: sh
+    command: -c '/opt/mssql/bin/sqlservr & /opt/mssql-tools/bin/sqlcmd -l 30 -S localhost -U sa -P $${SA_PASSWORD} -d tempdb -q "CREATE DATABASE $${DATABASE}"; wait'
+    environment:
+      ACCEPT_EULA: 'Y'
+      SA_PASSWORD: P@ssw0rd
+      DATABASE: moviedb
