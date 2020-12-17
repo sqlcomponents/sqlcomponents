@@ -21,7 +21,7 @@ services:
       MYSQL_USER: moviedb
       MYSQL_PASSWORD: moviedb
     ports:
-      - "3308:3306"
+      - "3306:3306"
     volumes:
       - ${PWD}/init.db/mariadb:/docker-entrypoint-initdb.d
 
@@ -33,7 +33,7 @@ services:
        MYSQL_PASSWORD: moviedb
        MYSQL_ROOT_PASSWORD: moviedb
     ports:
-        - '3306:3306'
+        - '3308:3306'
     volumes:
          - ${PWD}/init.db/mysql:/var/lib/mysql
 
