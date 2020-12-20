@@ -49,40 +49,40 @@ public final class ${name}Store${orm.daoSuffix}  {
 <#list properties as property>
     <#switch property.dataType>
     <#case "java.lang.String">
-    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>StringField ${property.name}() {
+    public static PartialWhereClause.<#if property.column.isNullable??>Nullable</#if>StringColumn ${property.name}() {
     <#break>
     <#case "java.lang.Character">
-    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>CharacterField ${property.name}() {
+    public static PartialWhereClause.<#if property.column.isNullable??>Nullable</#if>CharacterColumn ${property.name}() {
     <#break>
     <#case "java.lang.Integer">
-    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>NumberField<Integer> ${property.name}() {
+    public static PartialWhereClause.<#if property.column.isNullable??>Nullable</#if>NumberColumn<Integer> ${property.name}() {
     <#break>
     <#case "java.lang.Short">
-    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>NumberField<Short> ${property.name}() {
+    public static PartialWhereClause.<#if property.column.isNullable??>Nullable</#if>NumberColumn<Short> ${property.name}() {
     <#break>
     <#case "java.lang.Byte">
-    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>NumberField<Byte> ${property.name}() {
+    public static PartialWhereClause.<#if property.column.isNullable??>Nullable</#if>NumberColumn<Byte> ${property.name}() {
     <#break>
     <#case "java.lang.Long">
-    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>NumberField<Long> ${property.name}() {
+    public static PartialWhereClause.<#if property.column.isNullable??>Nullable</#if>NumberColumn<Long> ${property.name}() {
     <#break>
     <#case "java.lang.Float">
-    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>NumberField<Float> ${property.name}() {
+    public static PartialWhereClause.<#if property.column.isNullable??>Nullable</#if>NumberColumn<Float> ${property.name}() {
     <#break>
     <#case "java.lang.Double">
-    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>NumberField<Double> ${property.name}() {
+    public static PartialWhereClause.<#if property.column.isNullable??>Nullable</#if>NumberColumn<Double> ${property.name}() {
     <#break>
     <#case "java.lang.Boolean">
-    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>BooleanField ${property.name}() {
+    public static PartialWhereClause.<#if property.column.isNullable??>Nullable</#if>BooleanColumn ${property.name}() {
     <#break>
     <#case "java.time.LocalDate">
-    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>DateField ${property.name}() {
+    public static PartialWhereClause.<#if property.column.isNullable??>Nullable</#if>DateColumn ${property.name}() {
     <#break>
     <#case "java.time.LocalTime">
-    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>TimeField ${property.name}() {
+    public static PartialWhereClause.<#if property.column.isNullable??>Nullable</#if>TimeColumn ${property.name}() {
     <#break>
     <#case "java.time.LocalDateTime">
-    public static PartialWhereClause .<#if property.column.isNullable??>Nullable</#if>DateTimeField ${property.name}() {
+    public static PartialWhereClause.<#if property.column.isNullable??>Nullable</#if>DateTimeColumn ${property.name}() {
     <#break>
     </#switch>
         return new WhereClause().${property.name}();
@@ -95,8 +95,8 @@ public final class ${name}Store${orm.daoSuffix}  {
         private String asSql() {
             return nodes.isEmpty() ? null : nodes.stream().map(node -> {
                 String asSql;
-                if (node instanceof Field) {
-                    asSql = ((Field) node).asSql();
+                if (node instanceof Column) {
+                    asSql = ((Column) node).asSql();
                 } else if (node instanceof WhereClause) {
                     asSql = "(" + ((WhereClause) node).asSql() + ")";
                 } else {
@@ -133,91 +133,91 @@ public final class ${name}Store${orm.daoSuffix}  {
 
         protected final List<Object> nodes;
 
-        private PartialWhereClause () {
+        private PartialWhereClause() {
             this.nodes = new ArrayList<>();
         }
 <#list properties as property>
     <#switch property.dataType>
     <#case "java.lang.String">
-        public <#if property.column.isNullable??>Nullable</#if>StringField ${property.name}() {
-            <#if property.column.isNullable??>Nullable</#if>StringField query = new <#if property.column.isNullable??>Nullable</#if>StringField("${property.column.columnName}",this);
+        public <#if property.column.isNullable??>Nullable</#if>StringColumn ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>StringColumn query = new <#if property.column.isNullable??>Nullable</#if>StringColumn("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
         <#break>
     <#case "java.lang.Character">
-        public <#if property.column.isNullable??>Nullable</#if>CharacterField ${property.name}() {
-            <#if property.column.isNullable??>Nullable</#if>CharacterField query = new <#if property.column.isNullable??>Nullable</#if>CharacterField("${property.column.columnName}",this);
+        public <#if property.column.isNullable??>Nullable</#if>CharacterColumn ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>CharacterColumn query = new <#if property.column.isNullable??>Nullable</#if>CharacterColumn("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
         <#break>
     <#case "java.lang.Integer">
-        public <#if property.column.isNullable??>Nullable</#if>NumberField<Integer> ${property.name}() {
-            <#if property.column.isNullable??>Nullable</#if>NumberField<Integer> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.column.columnName}",this);
+        public <#if property.column.isNullable??>Nullable</#if>NumberColumn<Integer> ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>NumberColumn<Integer> query = new <#if property.column.isNullable??>Nullable</#if>NumberColumn("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
         <#break>
     <#case "java.lang.Short">
-        public <#if property.column.isNullable??>Nullable</#if>NumberField<Short> ${property.name}() {
-            <#if property.column.isNullable??>Nullable</#if>NumberField<Short> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.column.columnName}",this);
+        public <#if property.column.isNullable??>Nullable</#if>NumberColumn<Short> ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>NumberColumn<Short> query = new <#if property.column.isNullable??>Nullable</#if>NumberColumn("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
         <#break>
     <#case "java.lang.Byte">
-        public <#if property.column.isNullable??>Nullable</#if>NumberField<Byte> ${property.name}() {
-            <#if property.column.isNullable??>Nullable</#if>NumberField<Byte> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.column.columnName}",this);
+        public <#if property.column.isNullable??>Nullable</#if>NumberColumn<Byte> ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>NumberColumn<Byte> query = new <#if property.column.isNullable??>Nullable</#if>NumberColumn("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
         <#break>
     <#case "java.lang.Long">
-        public <#if property.column.isNullable??>Nullable</#if>NumberField<Long> ${property.name}() {
-            <#if property.column.isNullable??>Nullable</#if>NumberField<Long> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.column.columnName}",this);
+        public <#if property.column.isNullable??>Nullable</#if>NumberColumn<Long> ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>NumberColumn<Long> query = new <#if property.column.isNullable??>Nullable</#if>NumberColumn("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
         <#break>
     <#case "java.lang.Float">
-        public <#if property.column.isNullable??>Nullable</#if>NumberField<Float> ${property.name}() {
-            <#if property.column.isNullable??>Nullable</#if>NumberField<Float> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.column.columnName}",this);
+        public <#if property.column.isNullable??>Nullable</#if>NumberColumn<Float> ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>NumberColumn<Float> query = new <#if property.column.isNullable??>Nullable</#if>NumberColumn("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
         <#break>
     <#case "java.lang.Double">
-        public <#if property.column.isNullable??>Nullable</#if>NumberField<Double> ${property.name}() {
-            <#if property.column.isNullable??>Nullable</#if>NumberField<Double> query = new <#if property.column.isNullable??>Nullable</#if>NumberField("${property.column.columnName}",this);
+        public <#if property.column.isNullable??>Nullable</#if>NumberColumn<Double> ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>NumberColumn<Double> query = new <#if property.column.isNullable??>Nullable</#if>NumberColumn("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
         <#break>
     <#case "java.lang.Boolean">
-        public <#if property.column.isNullable??>Nullable</#if>BooleanField ${property.name}() {
-            <#if property.column.isNullable??>Nullable</#if>BooleanField query = new <#if property.column.isNullable??>Nullable</#if>BooleanField("${property.column.columnName}",this);
+        public <#if property.column.isNullable??>Nullable</#if>BooleanColumn ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>BooleanColumn query = new <#if property.column.isNullable??>Nullable</#if>BooleanColumn("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
         <#break>
     <#case "java.time.LocalDate">
-        public <#if property.column.isNullable??>Nullable</#if>DateField ${property.name}() {
-            <#if property.column.isNullable??>Nullable</#if>DateField query = new <#if property.column.isNullable??>Nullable</#if>DateField("${property.column.columnName}",this);
+        public <#if property.column.isNullable??>Nullable</#if>DateColumn ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>DateColumn query = new <#if property.column.isNullable??>Nullable</#if>DateColumn("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
         <#break>
     <#case "java.time.LocalTime">
-        public <#if property.column.isNullable??>Nullable</#if>TimeField ${property.name}() {
-            <#if property.column.isNullable??>Nullable</#if>TimeField query = new <#if property.column.isNullable??>Nullable</#if>TimeField("${property.column.columnName}",this);
+        public <#if property.column.isNullable??>Nullable</#if>TimeColumn ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>TimeColumn query = new <#if property.column.isNullable??>Nullable</#if>TimeColumn("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
         <#break>
     <#case "java.time.LocalDateTime">
-        public <#if property.column.isNullable??>Nullable</#if>DateTimeField ${property.name}() {
-            <#if property.column.isNullable??>Nullable</#if>DateTimeField query = new <#if property.column.isNullable??>Nullable</#if>DateTimeField("${property.column.columnName}",this);
+        public <#if property.column.isNullable??>Nullable</#if>DateTimeColumn ${property.name}() {
+            <#if property.column.isNullable??>Nullable</#if>DateTimeColumn query = new <#if property.column.isNullable??>Nullable</#if>DateTimeColumn("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
@@ -225,17 +225,17 @@ public final class ${name}Store${orm.daoSuffix}  {
     </#switch>
 		</#list>
 
-        public abstract class Field {
+        public abstract class Column {
 
             protected final String columnName;
             private final PartialWhereClause  whereClause ;
 
-            public Field(final String columnName, final PartialWhereClause  whereClause) {
+            public Column(final String columnName, final PartialWhereClause  whereClause) {
                 this.columnName = columnName;
                 this.whereClause  = whereClause ;
             }
 
-            protected WhereClause  getWhereClause () {
+            protected WhereClause  getWhereClause() {
                 return (WhereClause) whereClause ;
             }
 
@@ -243,21 +243,21 @@ public final class ${name}Store${orm.daoSuffix}  {
 
         }
 
-        public class StringField extends Field {
+        public class StringColumn extends Column {
             protected String sql;
 
-            public StringField(final String columnName, final PartialWhereClause  whereClause) {
+            public StringColumn(final String columnName, final PartialWhereClause  whereClause) {
                 super(columnName, whereClause);
             }
 
             public WhereClause  eq(final String value) {
                 sql = columnName + "='" + value + "'";
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  like(final String value) {
                 sql = columnName + " LIKE '" + value + "'";
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             @Override
@@ -268,41 +268,41 @@ public final class ${name}Store${orm.daoSuffix}  {
 
 
 
-        public class NullableStringField extends StringField {
+        public class NullableStringColumn extends StringColumn {
 
-            public NullableStringField(final String columnName, final PartialWhereClause  whereClause) {
+            public NullableStringColumn(final String columnName, final PartialWhereClause  whereClause) {
                 super(columnName, whereClause);
             }
 
             public WhereClause  isNull() {
                 sql = columnName + " IS NULL";
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  isNotNull() {
                 sql = columnName + " IS NOT NULL";
-                return getWhereClause ();
+                return getWhereClause();
             }
         }
 
 
 
 
-        public class CharacterField extends Field {
+        public class CharacterColumn extends Column {
             protected String sql;
 
-            public CharacterField(final String columnName, final PartialWhereClause  whereClause) {
+            public CharacterColumn(final String columnName, final PartialWhereClause  whereClause) {
                 super(columnName, whereClause);
             }
 
             public WhereClause  eq(final String value) {
                 sql = columnName + "='" + value + "'";
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  like(final String value) {
                 sql = columnName + " LIKE '" + value + "'";
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             @Override
@@ -313,35 +313,35 @@ public final class ${name}Store${orm.daoSuffix}  {
 
 
 
-        public class NullableCharacterField extends CharacterField {
+        public class NullableCharacterColumn extends CharacterColumn {
 
-            public NullableCharacterField(final String columnName, final PartialWhereClause  whereClause) {
+            public NullableCharacterColumn(final String columnName, final PartialWhereClause  whereClause) {
                 super(columnName, whereClause);
             }
 
             public WhereClause  isNull() {
                 sql = columnName + " IS NULL";
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  isNotNull() {
                 sql = columnName + " IS NOT NULL";
-                return getWhereClause ();
+                return getWhereClause();
             }
         }
 
 
 
-        public class BooleanField extends Field {
+        public class BooleanColumn extends Column {
             protected String sql;
 
-            public BooleanField(final String columnName, final PartialWhereClause  whereClause) {
+            public BooleanColumn(final String columnName, final PartialWhereClause  whereClause) {
                 super(columnName, whereClause);
             }
 
             public WhereClause  eq(final Boolean value) {
                 sql = columnName + "=" + value ;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             @Override
@@ -350,54 +350,54 @@ public final class ${name}Store${orm.daoSuffix}  {
             }
         }
 
-        public class NullableBooleanField extends BooleanField {
+        public class NullableBooleanColumn extends BooleanColumn {
 
-            public NullableBooleanField(final String columnName, final PartialWhereClause  whereClause) {
+            public NullableBooleanColumn(final String columnName, final PartialWhereClause  whereClause) {
                 super(columnName, whereClause);
             }
 
             public WhereClause  isNull() {
                 sql = columnName + " IS NULL";
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  isNotNull() {
                 sql = columnName + " IS NOT NULL";
-                return getWhereClause ();
+                return getWhereClause();
             }
         }
 
-        public class NumberField<T extends Number> extends Field {
+        public class NumberColumn<T extends Number> extends Column {
 
             protected String sql;
 
-            public NumberField(final String columnName, final PartialWhereClause  whereClause) {
+            public NumberColumn(final String columnName, final PartialWhereClause  whereClause) {
                 super(columnName, whereClause);
             }
 
             public WhereClause  eq(final T value) {
                 sql = columnName + "=" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  gt(final T value) {
                 sql = columnName + ">" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  gte(final T value) {
                 sql = columnName + ">=" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  lt(final T value) {
                 sql = columnName + "<" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  lte(final T value) {
                 sql = columnName + "<=" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             @Override
@@ -406,54 +406,54 @@ public final class ${name}Store${orm.daoSuffix}  {
             }
         }
 
-        public class NullableNumberField<T extends Number> extends NumberField<T> {
+        public class NullableNumberColumn<T extends Number> extends NumberColumn<T> {
 
-            public NullableNumberField(final String columnName, final PartialWhereClause  whereClause) {
+            public NullableNumberColumn(final String columnName, final PartialWhereClause  whereClause) {
                 super(columnName, whereClause);
             }
 
             public WhereClause  isNull() {
                 sql = columnName + " IS NULL";
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  isNotNull() {
                 sql = columnName + " IS NOT NULL";
-                return getWhereClause ();
+                return getWhereClause();
             }
         }
 
-        public class DateField<LocalDate> extends Field {
+        public class DateColumn<LocalDate> extends Column {
         
             protected String sql;
 
-            public DateField(final String columnName, final PartialWhereClause  whereClause) {
+            public DateColumn(final String columnName, final PartialWhereClause  whereClause) {
                 super(columnName, whereClause);
             }
 
             public WhereClause  eq(final LocalDate value) {
                 sql = columnName + "=" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  gt(final LocalDate value) {
                 sql = columnName + ">" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  gte(final LocalDate value) {
                 sql = columnName + ">=" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  lt(final LocalDate value) {
                 sql = columnName + "<" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  lte(final LocalDate value) {
                 sql = columnName + "<=" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             @Override
@@ -462,54 +462,54 @@ public final class ${name}Store${orm.daoSuffix}  {
             }
         }
 
-        public class NullableDateField extends DateField {
+        public class NullableDateColumn extends DateColumn {
 
-            public NullableDateField(final String columnName, final PartialWhereClause  whereClause) {
+            public NullableDateColumn(final String columnName, final PartialWhereClause  whereClause) {
                 super(columnName, whereClause);
             }
 
             public WhereClause  isNull() {
                 sql = columnName + " IS NULL";
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  isNotNull() {
                 sql = columnName + " IS NOT NULL";
-                return getWhereClause ();
+                return getWhereClause();
             }
         }
 
-        public class TimeField<LocalTime> extends Field {
+        public class TimeColumn<LocalTime> extends Column {
 
             protected String sql;
 
-            public TimeField(final String columnName, final PartialWhereClause  whereClause) {
+            public TimeColumn(final String columnName, final PartialWhereClause  whereClause) {
                 super(columnName, whereClause);
             }
 
             public WhereClause  eq(final LocalTime value) {
                 sql = columnName + "=" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  gt(final LocalTime value) {
                 sql = columnName + ">" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  gte(final LocalTime value) {
                 sql = columnName + ">=" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  lt(final LocalTime value) {
                 sql = columnName + "<" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  lte(final LocalTime value) {
                 sql = columnName + "<=" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             @Override
@@ -518,55 +518,55 @@ public final class ${name}Store${orm.daoSuffix}  {
             }
         }
 
-        public class NullableTimeField extends TimeField {
+        public class NullableTimeColumn extends TimeColumn {
 
-            public NullableTimeField(final String columnName, final PartialWhereClause  whereClause) {
+            public NullableTimeColumn(final String columnName, final PartialWhereClause  whereClause) {
                 super(columnName, whereClause);
             }
 
             public WhereClause  isNull() {
                 sql = columnName + " IS NULL";
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  isNotNull() {
                 sql = columnName + " IS NOT NULL";
-                return getWhereClause ();
+                return getWhereClause();
             }
         }
 
 
-        public class DateTimeField<LocalDateTime> extends Field {
+        public class DateTimeColumn<LocalDateTime> extends Column {
 
             protected String sql;
 
-            public DateTimeField(final String columnName, final PartialWhereClause  whereClause) {
+            public DateTimeColumn(final String columnName, final PartialWhereClause  whereClause) {
                 super(columnName, whereClause);
             }
 
             public WhereClause  eq(final LocalDateTime value) {
                 sql = columnName + "=" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  gt(final LocalDateTime value) {
                 sql = columnName + ">" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  gte(final LocalDateTime value) {
                 sql = columnName + ">=" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  lt(final LocalDateTime value) {
                 sql = columnName + "<" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  lte(final LocalDateTime value) {
                 sql = columnName + "<=" + value;
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             @Override
@@ -575,20 +575,20 @@ public final class ${name}Store${orm.daoSuffix}  {
             }
         }
 
-        public class NullableDateTimeField extends DateTimeField {
+        public class NullableDateTimeColumn extends DateTimeColumn {
 
-            public NullableDateTimeField(final String columnName, final PartialWhereClause  whereClause) {
+            public NullableDateTimeColumn(final String columnName, final PartialWhereClause  whereClause) {
                 super(columnName, whereClause);
             }
 
             public WhereClause  isNull() {
                 sql = columnName + " IS NULL";
-                return getWhereClause ();
+                return getWhereClause();
             }
 
             public WhereClause  isNotNull() {
                 sql = columnName + " IS NOT NULL";
-                return getWhereClause ();
+                return getWhereClause();
             }
         }
 
