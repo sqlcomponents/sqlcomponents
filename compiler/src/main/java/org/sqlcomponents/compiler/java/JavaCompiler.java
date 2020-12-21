@@ -23,20 +23,14 @@ public final class JavaCompiler implements Compiler {
 
     private Template<Entity> daoTemplate;
     private Template<Entity> beanTemplate;
-    private Template<Application> fieldTemplate;
-    private Template<Application> whereTemplate;
-    private Template<Application> partialWhereClauseTemplate;
-    private Map<String,Template<Property>> fieldsTemplate;
+
 
     public JavaCompiler() {
 
         try {
             daoTemplate = new Template<>("template/java/jdbcdao.ftl");
             beanTemplate = new Template<>("template/java/bean.ftl");
-            fieldTemplate = new Template<>("template/java/Field.ftl");
-            whereTemplate = new Template<>("template/java/WhereClause.ftl");
-            partialWhereClauseTemplate = new Template<>("template/java/PartialWhereClause.ftl");
-            fieldsTemplate = new HashMap<>();
+
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -49,20 +43,7 @@ public final class JavaCompiler implements Compiler {
         application.setOrm(mapper.getOrm(application, new Crawler()));
         ORM orm = application.getOrm();
 
-        // Common Classes
-        String commonPackageFolder = getPackageAsFolder(application.getSrcFolder()
-                , application.getRootPackage()+".common");
-        new File(commonPackageFolder).mkdirs();
-        try {
-            Files.write(new File(commonPackageFolder+ File.separator + "Field.java").toPath(),
-                    getJavaContent(fieldTemplate.getContent(application)).getBytes());
-            Files.write(new File(commonPackageFolder+ File.separator + "WhereClause.java").toPath(),
-                    getJavaContent(whereTemplate.getContent(application)).getBytes());
-            Files.write(new File(commonPackageFolder+ File.separator + "PartialWhereClause.java").toPath(),
-                    getJavaContent(partialWhereClauseTemplate.getContent(application)).getBytes());
-        } catch (IOException | TemplateException e) {
-            e.printStackTrace();
-        }
+
 
         orm.getEntities().parallelStream().forEach(entity -> {
             try {
@@ -86,41 +67,7 @@ public final class JavaCompiler implements Compiler {
                 getJavaContent(daoTemplate.getContent(entity)).getBytes());
 
 
-        entity.getProperties().stream().forEach(property -> {
-            Template<Property> template = fieldsTemplate.get(property.getDataType());
-            if(template == null ) {
 
-                try{
-                    String dataTypeClass = property.getDataType();
-                    if(Class.forName(dataTypeClass).getSuperclass().equals(Number.class)) {
-                        dataTypeClass = "java.lang.Number";
-                    }
-
-                    String fieldPackageFolder = getPackageAsFolder("template/java/field", dataTypeClass)+ "Field.ftl";
-
-                    template = new Template<>(fieldPackageFolder);
-                    fieldsTemplate.put(property.getDataType(),template);
-
-
-
-                    File file = new File(getPackageAsFolder(srcFolder, entity
-                            .getOrm().getApplication().getRootPackage() + ".common.field") + File.separator
-                            + (property.getColumn().getNullable() == Flag.YES ? "Nullable" : "" )
-                            + dataTypeClass.substring(dataTypeClass.lastIndexOf('.')+1) + "Field.java");
-                    if(!file.exists()) {
-                        file.getParentFile().mkdirs();
-                        Files.write(file.toPath(),
-                                getJavaContent(template.getContent(property)).getBytes());
-                    }
-
-
-                } catch (IOException | ClassNotFoundException | TemplateException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-        });
 
     }
 
