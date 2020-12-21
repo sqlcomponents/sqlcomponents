@@ -35,6 +35,17 @@ public class Entity {
         }).collect(Collectors.toList());
     }
 
+    /**
+     * Get Not Null Insertable Properties
+     * @return properties
+     */
+    public List<Property> getMustInsertableProperties() {
+        return this.getProperties().stream().filter(property -> {
+            return property.getColumn().isInsertable()
+                    && property.getColumn().getNullable() !=  Flag.YES;
+        }).collect(Collectors.toList());
+    }
+
     public List<Property> getPrimaryKeyProperties() {
         return this.getProperties().stream().filter(property -> {
             return property.getColumn().isPrimaryKey();

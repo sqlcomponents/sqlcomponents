@@ -25,6 +25,16 @@
         return new InsertStatement(this);
     }
 
+    <#if mustInsertableProperties?size != 0>
+    public final InsertStatement insert(<#assign index=0>
+            <#list mustInsertableProperties as property>
+            <#if index != 0>,</#if>
+            final Column.${property.name?cap_first}Column ${property.name}Column 
+            <#assign index=1>
+            </#list>) {
+        return new InsertStatement(this);
+    }
+    </#if>
     public static final class InsertStatement {
         private final ${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix};
 
