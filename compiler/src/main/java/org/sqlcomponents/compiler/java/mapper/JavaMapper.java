@@ -3,9 +3,7 @@ package org.sqlcomponents.compiler.java.mapper;
 import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.relational.Column;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 
 /**
  * Java Mapper which is responsible for converting Database Types
@@ -76,12 +74,26 @@ public final class JavaMapper extends Mapper {
                 return LocalDate.class;
             case TIMESTAMP:
                 return LocalDateTime.class;
+            case TIMESTAMP_WITH_TIMEZONE:
+                return OffsetDateTime.class;
+            case OTHER:
+                return getDataTypeClassForSpecialType(column);
             default:
                 throw new RuntimeException("Datatype not found for column "
                         + column.getColumnName() + " of jdbc type "
                         + column.getJdbcType());
         }
 
+    }
+
+    private Class getDataTypeClassForSpecialType(final Column column) {
+        if(column.getTypeName().equalsIgnoreCase("interval")) {
+            return Duration.class;
+        }else {
+            throw new RuntimeException("Datatype not found for column "
+                    + column.getColumnName() + " of jdbc type "
+                    + column.getJdbcType());
+        }
     }
 
     private Class<? extends Number> chooseNumberType(final Column column) {
