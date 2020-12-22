@@ -25,9 +25,20 @@ public final class ${name}Store${orm.daoSuffix}  {
         this.dataSource = theDataSource;
     }
 
+    	<#list distinctColumnTypeNames as typeName>
+    	    <#switch typeName>
+            <#case "json">
+                <#include "/template/java/custom-object/json.ftl">
+                <#break>
+             </#switch>
+
+        </#list>
+
 	<#list orm.methodSpecification as method>
 		<#include "/template/java/method/${method}.ftl">
 	</#list>
+
+
 
 	<#--
 	<#if exportedKeys?size != 0>

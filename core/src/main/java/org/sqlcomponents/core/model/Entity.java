@@ -29,6 +29,12 @@ public class Entity {
         setTable(table);
     }
 
+    public List<String> getDistinctColumnTypeNames() {
+        return this.getProperties().stream()
+                .map(property -> property.getColumn().getTypeName())
+                .distinct().collect(Collectors.toList());
+    }
+
     public List<Property> getInsertableProperties() {
         return this.getProperties().stream().filter(property -> {
             return property.getColumn().isInsertable();
