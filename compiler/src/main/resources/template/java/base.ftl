@@ -14,8 +14,10 @@
     	<#local pkAsParameterStr="Date">
     <#elseif pkAsParameterStr == "LocalTime">
         <#local pkAsParameterStr="Time">
-        <#elseif pkAsParameterStr == "LocalDateTime">
-            <#local pkAsParameterStr="Timestamp">
+	<#elseif pkAsParameterStr == "LocalDateTime">
+		<#local pkAsParameterStr="Timestamp">
+	<#elseif pkAsParameterStr == "JSONObject">
+	<#local pkAsParameterStr="Object">
 	</#if>
 	<#return pkAsParameterStr>
 </#function>
@@ -30,6 +32,8 @@
   	 <#return "${wText}.get${property.name?cap_first}() == null ? null : java.sql.Timestamp.valueOf(${wText}.get${property.name?cap_first}())">
   <#case "java.lang.Character">
   	 <#return "${wText}.get${property.name?cap_first}() == null ? null : String.valueOf(${wText}.get${property.name?cap_first}())">
+  <#case "org.json.JSONObject">
+  	 <#return "${wText}.get${property.name?cap_first}() == null ? null : ${wText}.get${property.name?cap_first}().toString()">
   <#default>
   <#return "${wText}.get${property.name?cap_first}()">
 </#switch>
@@ -45,6 +49,8 @@
      <#return "${wText} == null ? null : ${wText}.toLocalDateTime()">
   <#case "java.lang.Character">
   	 <#return "${wText} == null ? null : ${wText}.charAt(0)">
+	   <#case "org.json.JSONObject">
+	   <#return "${wText} == null ? null : ${wText}.charAt(0)">
   <#default>
   <#return "${wText}">
 </#switch>

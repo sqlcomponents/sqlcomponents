@@ -42,11 +42,16 @@ public final class JavaMapper extends Mapper {
             = String.valueOf(Long.MAX_VALUE).length() - 1;
     @Override
     public String getDataType(final Column column) {
-        return getDataTypeClass(column).getName();
+        switch (column.getColumnType()) {
+            case JSON:
+                return "org.json.JSONObject";
+            default:
+                return getDataTypeClass(column).getName();
+        }
     }
 
     private Class getDataTypeClass(final Column column) {
-        switch (column.getJdbcType()) {
+        switch (column.getColumnType()) {
             case SMALLINT:
                 return  Short.class;
             case BIGINT:
@@ -79,21 +84,26 @@ public final class JavaMapper extends Mapper {
             case OTHER:
                 return getDataTypeClassForSpecialType(column);
             default:
-                throw new RuntimeException("Datatype not found for column "
-                        + column.getColumnName() + " of jdbc type "
-                        + column.getJdbcType());
+                throwRuntimeException(column);
         }
-
+        return null;
     }
 
     private Class getDataTypeClassForSpecialType(final Column column) {
         if(column.getTypeName().equalsIgnoreCase("interval")) {
             return Duration.class;
         }else {
-            throw new RuntimeException("Datatype not found for column "
-                    + column.getColumnName() + " of jdbc type "
-                    + column.getJdbcType());
+            throwRuntimeException(column);
         }
+        return null;
+    }
+
+    private void throwRuntimeException(final Column column) {
+        throw new RuntimeException("Datatype not found for column "
+                + column.getColumnName()
+                + " of table " + column.getTable().getTableName()
+                + " of type name " + column.getTypeName()
+                + " of column type " + column.getColumnType());
     }
 
     private Class<? extends Number> chooseNumberType(final Column column) {

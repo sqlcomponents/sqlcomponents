@@ -2,9 +2,9 @@ package org.sqlcomponents.core.model.relational;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.sqlcomponents.core.model.relational.enumeration.ColumnType;
 import org.sqlcomponents.core.model.relational.enumeration.Flag;
 
-import java.sql.JDBCType;
 import java.util.SortedSet;
 
 @Setter
@@ -24,7 +24,7 @@ public class Column {
     private String tableCategory;
     private String tableSchema;
     private String typeName;
-    private JDBCType jdbcType;
+    private ColumnType columnType;
     private int bufferLength;
     private int numberPrecisionRadix;
     private String columnDefinition;

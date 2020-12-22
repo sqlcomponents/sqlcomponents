@@ -4,6 +4,7 @@ import org.sqlcomponents.core.crawler.util.DataSourceUtil;
 import org.sqlcomponents.core.exception.ScubeException;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.*;
+import org.sqlcomponents.core.model.relational.enumeration.ColumnType;
 import org.sqlcomponents.core.model.relational.enumeration.Flag;
 import org.sqlcomponents.core.model.relational.enumeration.Order;
 import org.sqlcomponents.core.model.relational.enumeration.TableType;
@@ -229,13 +230,14 @@ public class Crawler {
         List<Column> columns = new ArrayList<>();
 
         ResultSet columnResultset = databasemetadata.getColumns(null, null, table.getTableName(), null);
-
+        ColumnType columnType;
         while (columnResultset.next()) {
             Column column = new Column(table);
             column.setColumnName(columnResultset.getString("COLUMN_NAME"));
             column.setTableName(columnResultset.getString("TABLE_NAME"));
             column.setTypeName(columnResultset.getString("TYPE_NAME"));
-            column.setJdbcType(JDBCType.valueOf(columnResultset.getInt("DATA_TYPE")));
+            columnType = ColumnType.value(JDBCType.valueOf(columnResultset.getInt("DATA_TYPE")));
+            column.setColumnType(columnType == ColumnType.OTHER ? getColumnTypeForOthers(column) : columnType);
             column.setSize(columnResultset.getInt("COLUMN_SIZE"));
             column.setDecimalDigits(columnResultset.getInt("DECIMAL_DIGITS"));
             column.setRemarks(columnResultset.getString("REMARKS"));
@@ -296,6 +298,13 @@ public class Crawler {
 
         }
         return columns;
+    }
+
+    private ColumnType getColumnTypeForOthers(final Column column) {
+        if(column.getTypeName().equalsIgnoreCase("json")) {
+            return ColumnType.JSON;
+        }
+        return null;
     }
 
     private List<Procedure> getProcedures(DatabaseMetaData databasemetadata) throws SQLException {

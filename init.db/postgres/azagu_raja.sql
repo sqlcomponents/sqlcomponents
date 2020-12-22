@@ -23,8 +23,9 @@ CREATE TABLE azagu_raja(
 	a_smallserial	 smallserial,	
 	a_serial	 serial,	
 	a_bigserial bigserial,
-   a_date date,
-      a_time time,
+   	a_date date,
+   	a_json json,
+    a_time time,
    CONSTRAINT fk_code
       FOREIGN KEY(reference_code) 
 	  REFERENCES azagu_raja_reference(code)
