@@ -4,6 +4,9 @@
     "ajson": {
       "a": 3
     },
+    "ajsonb": {
+      "a": 3
+    },
     "asmallint": 3,
     "abigint": 9,
     "adecimal": 88,
@@ -32,6 +35,9 @@
     "ajson": {
       "a": 3
     },
+    "ajsonb": {
+      "a": 3
+    },
     "abigint": 9,
     "adecimal": 88,
     "adouble": 9.0,
@@ -57,6 +63,9 @@
     "referenceCode": "A110",
     "asmallint": 3,
     "ajson": {
+      "a": 3
+    },
+    "ajsonb": {
       "a": 3
     },
     "abigint": 9,

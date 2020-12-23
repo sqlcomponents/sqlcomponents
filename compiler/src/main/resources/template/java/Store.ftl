@@ -77,7 +77,7 @@ public final class ${name}Store${orm.daoSuffix}  {
           	 ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).charAt(0));
            <#break>
         	   <#case "org.json.JSONObject">
-        	    ${name?uncap_first}.set${property.name?cap_first}(this.getJson.apply(rs,${index}));
+        	    ${name?uncap_first}.set${property.name?cap_first}(this.get${property.column.typeName?cap_first}.apply(rs,${index}));
                  <#break>
           <#default>
           ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}));

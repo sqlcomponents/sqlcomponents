@@ -303,6 +303,8 @@ public class Crawler {
     private ColumnType getColumnTypeForOthers(final Column column) {
         if(column.getTypeName().equalsIgnoreCase("json")) {
             return ColumnType.JSON;
+        }else if(column.getTypeName().equalsIgnoreCase("jsonb")) {
+            return ColumnType.JSONB;
         }
         return null;
     }

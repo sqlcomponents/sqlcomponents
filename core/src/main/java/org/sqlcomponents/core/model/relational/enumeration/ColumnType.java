@@ -175,7 +175,11 @@ public enum ColumnType {
     /**
      * Identifies the generic JSON type {@code TIMESTAMP_WITH_TIMEZONE}.
      */
-    JSON("JSON");
+    JSON("JSON"),
+    /**
+     * Identifies the generic JSON type {@code TIMESTAMP_WITH_TIMEZONE}.
+     */
+    JSONB("JSONB");
 
     private final String value;
 

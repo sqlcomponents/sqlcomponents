@@ -44,6 +44,7 @@ public final class JavaMapper extends Mapper {
     public String getDataType(final Column column) {
         switch (column.getColumnType()) {
             case JSON:
+            case JSONB:
                 return "org.json.JSONObject";
             default:
                 return getDataTypeClass(column).getName();
