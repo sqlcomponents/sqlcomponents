@@ -25,6 +25,8 @@ CREATE TABLE azagu_raja(
 	a_bigserial bigserial,
    	a_date date,
    	a_json json,
+   	a_jsonb jsonb,
+   	a_xml xml,
     a_time time,
    CONSTRAINT fk_code
       FOREIGN KEY(reference_code) 

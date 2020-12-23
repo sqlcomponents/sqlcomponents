@@ -12,7 +12,7 @@
   			<#list properties as property>
   			    <#if property.column.primaryKeyIndex == 1>nextval('${sequenceName}')</#if>
   			 </#list>
-  			 <#else>    ?</#if><#assign index=1><#else>            ,?</#if>
+  			 <#else>    ${getPreparedValue(property)}</#if><#assign index=1><#else>            ,${getPreparedValue(property)}</#if>
   		</#list>
   	    )
   		"</@compress>;

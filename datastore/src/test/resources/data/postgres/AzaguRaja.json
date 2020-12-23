@@ -1,5 +1,6 @@
 [
   {
+    "axml": "<foo><bar>Hello</bar></foo>",
     "referenceCode": "A110",
     "ajson": {
       "a": 3
@@ -29,7 +30,7 @@
       291492000
     ]
   },
-  {
+  {"axml": "<foo><bar>Hello</bar></foo>",
     "referenceCode": "A110",
     "asmallint": 3,
     "ajson": {
@@ -59,7 +60,7 @@
       291492000
     ]
   },
-  {
+  {"axml": "<foo><bar>Hello</bar></foo>",
     "referenceCode": "A110",
     "asmallint": 3,
     "ajson": {

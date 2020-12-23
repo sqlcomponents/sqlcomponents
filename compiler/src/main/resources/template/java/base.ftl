@@ -4,6 +4,16 @@
 	<#return str?split(".")?last>
 </#function>
 
+<#function getPreparedValue property> 
+	
+	<#if property.entity.table.database.databaseProductName == 'PostgreSQL'>
+		<#if property.column.typeName == 'xml'>
+			<#return "XMLPARSE(document ?)">
+		</#if>
+	</#if>		
+	<#return "?">
+</#function>
+
 <#function getJDBCClassName str> 
 	<#local pkAsParameterStr="${getClassName(str)}">
 	<#if pkAsParameterStr == "Integer">
@@ -33,7 +43,7 @@
   <#case "java.lang.Character">
   	 <#return "${wText}.get${property.name?cap_first}() == null ? null : String.valueOf(${wText}.get${property.name?cap_first}())">
   <#case "org.json.JSONObject">
-  	 <#return "this.convertJson.apply(${wText}.get${property.name?cap_first}())">
+  	 <#return "this.convert${property.column.typeName?cap_first}.apply(${wText}.get${property.name?cap_first}())">
   <#default>
   <#return "${wText}.get${property.name?cap_first}()">
 </#switch>
