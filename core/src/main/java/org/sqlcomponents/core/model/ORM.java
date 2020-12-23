@@ -15,7 +15,6 @@ public class ORM {
         setApplication(application);
     }
 
-    private Database schema;
     private Application application;
 
     private String userName;

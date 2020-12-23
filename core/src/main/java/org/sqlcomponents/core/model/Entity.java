@@ -6,7 +6,7 @@ import lombok.Setter;
 import org.sqlcomponents.core.model.relational.Table;
 import org.sqlcomponents.core.model.relational.enumeration.Flag;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -29,11 +29,6 @@ public class Entity {
         setTable(table);
     }
 
-    public List<String> getDistinctColumnTypeNames() {
-        return this.getProperties().stream()
-                .map(property -> property.getColumn().getTypeName())
-                .distinct().collect(Collectors.toList());
-    }
 
     public List<Property> getInsertableProperties() {
         return this.getProperties().stream().filter(property -> {
@@ -62,5 +57,20 @@ public class Entity {
         return this.getProperties().stream().filter(property -> {
             return property.getColumn().isPrimaryKey() && property.getColumn().getAutoIncrement() == Flag.YES;
         }).collect(Collectors.toList());
+    }
+
+    public List<Property> getSampleDistinctCustomColumnTypeProperties() {
+        SortedSet<String> distinctColumnTypeNames = table.getDistinctCustomColumnTypeNames();
+
+        List<Property> sampleDistinctCustomColumnTypeProperties = new ArrayList<>(distinctColumnTypeNames.size());
+
+        distinctColumnTypeNames.stream().forEach(typeName -> {
+            sampleDistinctCustomColumnTypeProperties.add(this.getProperties()
+                    .stream()
+                    .filter(property -> property.getColumn().getTypeName().equals(typeName))
+                    .findFirst().get());
+        });
+
+        return sampleDistinctCustomColumnTypeProperties;
     }
 }

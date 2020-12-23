@@ -192,13 +192,8 @@ public class Application {
         orm.setPassword(password);
     }
 
-    public Database getSchema() {
-        return orm.getSchema();
-    }
 
-    public void setSchema(Database database) {
-        orm.setSchema(database);
-    }
+
 
     public HashMap<String, String> getUpdateMap() {
         return orm.getUpdateMap();

@@ -5,8 +5,8 @@ import lombok.Setter;
 import org.sqlcomponents.core.model.relational.enumeration.Flag;
 import org.sqlcomponents.core.model.relational.enumeration.TableType;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -71,6 +71,31 @@ public class Table {
             }
         }
         return uniqueConstraintGroupNames;
+    }
+
+    public SortedSet<String> getDistinctCustomColumnTypeNames() {
+        SortedSet<String> distinctColumnTypeNames = new TreeSet<>();
+
+        distinctColumnTypeNames.addAll(columns
+                .stream()
+                .filter(column -> Table.class.getResource("/template/java/custom-object/"+column.getTypeName().toLowerCase()+".ftl") != null )
+                .map(column -> column.getTypeName()).distinct()
+                .collect(Collectors.toList()));
+
+
+        return distinctColumnTypeNames;
+    }
+
+    public SortedSet<String> getDistinctColumnTypeNames() {
+        SortedSet<String> distinctColumnTypeNames = new TreeSet<>();
+
+        distinctColumnTypeNames.addAll(columns
+                .stream()
+                .map(column -> column.getTypeName()).distinct()
+                .collect(Collectors.toList()));
+
+
+        return distinctColumnTypeNames;
     }
 
     @Override

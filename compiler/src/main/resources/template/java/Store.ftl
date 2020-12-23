@@ -18,21 +18,34 @@ public final class ${name}Store${orm.daoSuffix}  {
 
     private final DataSource dataSource;
 
+    private final ${orm.application.name}Manager ${orm.application.name?uncap_first}Manager;
+    <#assign a=addImportStatement(orm.application.rootPackage+ "." + orm.application.name + "Manager")>
+
+
+    <#list sampleDistinctCustomColumnTypeProperties as property>
+    <#assign a=addImportStatement(property.dataType)>
+    <#assign a=addImportStatement("java.sql.ResultSet")>
+    private final ${orm.application.name}Manager.GetFunction<ResultSet, Integer, ${getClassName(property.dataType)}> get${property.column.typeName?cap_first};
+    private final ${orm.application.name}Manager.ConvertFunction<${getClassName(property.dataType)},Object> convert${property.column.typeName?cap_first};
+    </#list>
+
     /**
      * Datastore
      */
-    public ${name}Store${orm.daoSuffix}(final DataSource theDataSource) {
+    public ${name}Store${orm.daoSuffix}(final DataSource theDataSource
+                ,final ${orm.application.name}Manager the${orm.application.name}Manager
+                    <#list sampleDistinctCustomColumnTypeProperties as property>
+                    ,final ${orm.application.name}Manager.GetFunction<ResultSet, Integer, ${getClassName(property.dataType)}> theGet${property.column.typeName?cap_first}
+                    ,final ${orm.application.name}Manager.ConvertFunction<${getClassName(property.dataType)},Object> theConvert${property.column.typeName?cap_first}
+                    </#list>
+                ) {
         this.dataSource = theDataSource;
-    }
-
-    	<#list distinctColumnTypeNames as typeName>
-    	    <#switch typeName>
-            <#case "json">
-                <#include "/template/java/custom-object/json.ftl">
-                <#break>
-             </#switch>
-
+        this.${orm.application.name?uncap_first}Manager = the${orm.application.name}Manager;
+        <#list sampleDistinctCustomColumnTypeProperties as property>
+        this.get${property.column.typeName?cap_first} =  theGet${property.column.typeName?cap_first};
+        this.convert${property.column.typeName?cap_first} =  theConvert${property.column.typeName?cap_first};
         </#list>
+    }
 
 	<#list orm.methodSpecification as method>
 		<#include "/template/java/method/${method}.ftl">
@@ -50,8 +63,27 @@ public final class ${name}Store${orm.daoSuffix}  {
 	private ${name} rowMapper(ResultSet rs) throws SQLException {
         final ${name} ${name?uncap_first} = new ${name}();<#assign index=1>
 		<#list properties as property>
-		<#assign rsGet = "rs.get" + getJDBCClassName(property.dataType) + "("+ index + ")" >
-		${name?uncap_first}.set${property.name?cap_first}(${wrapGet(rsGet,property)});<#assign index = index + 1>
+		<#switch property.dataType>
+          <#case "java.time.LocalDate">
+            ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalDate());
+        	 <#break>
+          <#case "java.time.LocalTime">
+        	 ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalTime());
+              <#break>
+           <#case "java.time.LocalDateTime">
+             ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalDateTime());
+          <#break>
+          <#case "java.lang.Character">
+          	 ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).charAt(0));
+           <#break>
+        	   <#case "org.json.JSONObject">
+        	    ${name?uncap_first}.set${property.name?cap_first}(this.getJson.apply(rs,${index}));
+                 <#break>
+          <#default>
+          ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}));
+          <#break>
+        </#switch>
+		<#assign index = index + 1>
 		</#list>
         return ${name?uncap_first};
     }

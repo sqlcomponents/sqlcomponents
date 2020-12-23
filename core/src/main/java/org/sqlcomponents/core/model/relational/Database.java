@@ -8,6 +8,8 @@ import org.sqlcomponents.core.model.relational.enumeration.TableType;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -183,5 +185,23 @@ public class Database {
                 .filter(keyword -> keyword.equalsIgnoreCase(name))
                 .findFirst().isPresent();
         return shouldEscape ? this.identifierQuoteString + name + this.identifierQuoteString : name;
+    }
+
+    public SortedSet<String> getDistinctColumnTypeNames() {
+        SortedSet<String> distinctColumnTypeNames = new TreeSet<>();
+        this.tables.stream().forEach(table -> {
+            distinctColumnTypeNames.addAll(table.getDistinctColumnTypeNames());
+        });
+
+        return distinctColumnTypeNames;
+    }
+
+    public SortedSet<String> getDistinctCustomColumnTypeNames() {
+        SortedSet<String> distinctColumnTypeNames = new TreeSet<>();
+        this.tables.stream().forEach(table -> {
+            distinctColumnTypeNames.addAll(table.getDistinctCustomColumnTypeNames());
+        });
+
+        return distinctColumnTypeNames;
     }
 }

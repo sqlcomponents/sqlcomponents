@@ -33,28 +33,12 @@
   <#case "java.lang.Character">
   	 <#return "${wText}.get${property.name?cap_first}() == null ? null : String.valueOf(${wText}.get${property.name?cap_first}())">
   <#case "org.json.JSONObject">
-  	 <#return "${wText}.get${property.name?cap_first}() == null ? null : ${wText}.get${property.name?cap_first}().toString()">
+  	 <#return "this.convertJson.apply(${wText}.get${property.name?cap_first}())">
   <#default>
   <#return "${wText}.get${property.name?cap_first}()">
 </#switch>
 </#function>
 
-<#function wrapGet wText property >
-<#switch property.dataType>
-  <#case "java.time.LocalDate">
-	 <#return "${wText} == null ? null : ${wText}.toLocalDate()">
-  <#case "java.time.LocalTime">
-	 <#return "${wText} == null ? null : ${wText}.toLocalTime()">
-   <#case "java.time.LocalDateTime">
-     <#return "${wText} == null ? null : ${wText}.toLocalDateTime()">
-  <#case "java.lang.Character">
-  	 <#return "${wText} == null ? null : ${wText}.charAt(0)">
-	   <#case "org.json.JSONObject">
-	   <#return "${wText} == null ? null : ${wText}.charAt(0)">
-  <#default>
-  <#return "${wText}">
-</#switch>
-</#function>
 
 <#function getProperty propertyName> 
 	<#list properties as property>

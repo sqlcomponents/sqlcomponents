@@ -1,5 +1,6 @@
 package org.example.store;
 
+import org.example.MovieManager;
 import org.example.model.Movie;
 import org.example.util.DataSourceProvider;
 import org.example.util.JsonUtil;
@@ -20,8 +21,9 @@ class MovieStoreTest {
     private List<Movie> moviesToTest;
 
     MovieStoreTest() {
+        MovieManager movieManager = MovieManager.getManager(DataSourceProvider.dataSource());
         // Stores used for testing
-        this.movieStore = new MovieStore(DataSourceProvider.dataSource());
+        this.movieStore = movieManager.getMovieStore();
     }
 
     @BeforeAll

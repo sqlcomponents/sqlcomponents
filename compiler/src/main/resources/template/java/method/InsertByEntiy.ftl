@@ -22,7 +22,10 @@
 
 
 	public final InsertStatement insert() {
-        return new InsertStatement(this);
+        return new InsertStatement(this
+        <#list sampleDistinctCustomColumnTypeProperties as property>
+                                                      ,this.convert${property.column.typeName?cap_first}
+                                               </#list>);
     }
 
     <#if mustInsertableProperties?size != 0>
@@ -32,15 +35,28 @@
             final Column.${property.name?cap_first}Column ${property.name}Column 
             <#assign index=1>
             </#list>) {
-        return new InsertStatement(this);
+        return new InsertStatement(this
+        <#list sampleDistinctCustomColumnTypeProperties as property>
+               ,this.convert${property.column.typeName?cap_first}
+        </#list>);
     }
     </#if>
     public static final class InsertStatement {
         private final ${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix};
 
+        <#list sampleDistinctCustomColumnTypeProperties as property>
+        private final ${orm.application.name}Manager.ConvertFunction<${getClassName(property.dataType)},Object> convert${property.column.typeName?cap_first};
+        </#list>
 
-        private InsertStatement(final ${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix}) {
+        private InsertStatement(final ${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix}
+        <#list sampleDistinctCustomColumnTypeProperties as property>
+         ,final ${orm.application.name}Manager.ConvertFunction<${getClassName(property.dataType)},Object> theConvert${property.column.typeName?cap_first}
+        </#list>
+                ) {
             this.${name?uncap_first}Store${orm.daoSuffix} = ${name?uncap_first}Store${orm.daoSuffix};
+            <#list sampleDistinctCustomColumnTypeProperties as property>
+            this.convert${property.column.typeName?cap_first} =  theConvert${property.column.typeName?cap_first};
+            </#list>
         }
 
         private void prepare(final PreparedStatement preparedStatement,final ${name} ${name?uncap_first}) throws SQLException {

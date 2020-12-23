@@ -1,5 +1,6 @@
 package org.example.store;
 
+import org.example.MovieManager;
 import org.example.model.AzaguRaja;
 import org.example.model.AzaguRajaReference;
 import org.example.util.DataSourceProvider;
@@ -28,9 +29,10 @@ class AzaguRajaTest {
 
 
     AzaguRajaTest() {
+        MovieManager movieManager = MovieManager.getManager(DataSourceProvider.dataSource());
         // Stores used for testing
-        this.azaguRajaReferenceStore = new AzaguRajaReferenceStore(DataSourceProvider.dataSource());
-        this.allInAllAzaguRajaStore = new AzaguRajaStore(DataSourceProvider.dataSource());
+        this.azaguRajaReferenceStore = movieManager.getAzaguRajaReferenceStore();
+        this.allInAllAzaguRajaStore = movieManager.getAzaguRajaStore();
 
         // Data used for testing
         this.azaguRajaReferencesToTest = JsonUtil.getTestObjects(AzaguRajaReference.class);

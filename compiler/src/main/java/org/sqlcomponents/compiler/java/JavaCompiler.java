@@ -10,26 +10,25 @@ import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.Entity;
 import org.sqlcomponents.core.model.ORM;
-import org.sqlcomponents.core.model.Property;
-import org.sqlcomponents.core.model.relational.enumeration.Flag;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.Map;
+
 
 public final class JavaCompiler implements Compiler {
 
-    private Template<Entity> daoTemplate;
-    private Template<Entity> beanTemplate;
+    private Template<Application> managerTemplate;
+    private Template<Entity> storeTemplate;
+    private Template<Entity> modelTemplate;
 
 
     public JavaCompiler() {
 
         try {
-            daoTemplate = new Template<>("template/java/jdbcdao.ftl");
-            beanTemplate = new Template<>("template/java/bean.ftl");
+            managerTemplate = new Template<>("template/java/Manager.ftl");
+            storeTemplate = new Template<>("template/java/Store.ftl");
+            modelTemplate = new Template<>("template/java/Model.ftl");
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -43,7 +42,16 @@ public final class JavaCompiler implements Compiler {
         application.setOrm(mapper.getOrm(application, new Crawler()));
         ORM orm = application.getOrm();
 
-
+        String packageFolder = getPackageAsFolder(application.getSrcFolder(), application
+                .getRootPackage());
+        new File(packageFolder).mkdirs();
+        try {
+            Files.write(new File(packageFolder + File.separator
+                            + application.getName() + "Manager" +".java").toPath(),
+                    getJavaContent(managerTemplate.getContent(application)).getBytes());
+        } catch (IOException | TemplateException e) {
+            e.printStackTrace();
+        }
 
         orm.getEntities().parallelStream().forEach(entity -> {
             try {
@@ -64,7 +72,7 @@ public final class JavaCompiler implements Compiler {
         new File(packageFolder).mkdirs();
         Files.write(new File(packageFolder + File.separator
                         + entity.getName() + "Store" + daoSuffix.trim() + ".java").toPath(),
-                getJavaContent(daoTemplate.getContent(entity)).getBytes());
+                getJavaContent(storeTemplate.getContent(entity)).getBytes());
 
 
 
@@ -79,7 +87,7 @@ public final class JavaCompiler implements Compiler {
 
         Files.write(new File(packageFolder + File.separator
                         + entity.getName() + (beanSuffix == null ? "" : beanSuffix.trim()) + ".java").toPath(),
-                getJavaContent(beanTemplate.getContent(entity)).getBytes());
+                getJavaContent(modelTemplate.getContent(entity)).getBytes());
     }
 
     /**

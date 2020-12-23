@@ -18,9 +18,9 @@ public abstract class Mapper {
 
         ORM orm = application.getOrm();
 
-        if (application.getOrm().getSchema() == null || application.isOnline()) {
+        if (application.getOrm().getDatabase() == null || application.isOnline()) {
             Database database = crawler.getDatabase(application);
-            application.getOrm().setSchema(database);
+            application.getOrm().setDatabase(database);
         }
 
         orm.setEntities(getEntities(application));
@@ -45,7 +45,7 @@ public abstract class Mapper {
     }
 
     private List<Method> getMethods(Application application) {
-        Database database = application.getSchema();
+        Database database = application.getOrm().getDatabase();
         ArrayList<Method> methods = new ArrayList<Method>();
         if (database.getFunctions() != null) {
             for (Procedure function : database.getFunctions()) {
@@ -58,9 +58,9 @@ public abstract class Mapper {
     private List<Service> getServices(Application application) {
         ArrayList<Service> services = new ArrayList<Service>();
         if (application
-                .getSchema().getPackages() != null) {
+                .getOrm().getDatabase().getPackages() != null) {
             Service service = null;
-            for (Package package1 : application.getSchema().getPackages()) {
+            for (Package package1 : application.getOrm().getDatabase().getPackages()) {
                 service = new Service();
                 service.setPackage(package1);
                 service.setServiceName(getServiceName(application, service.getName()));
@@ -94,7 +94,7 @@ public abstract class Mapper {
 
     private List<Entity> getEntities(Application application) {
 
-        Database database = application.getSchema();
+        Database database = application.getOrm().getDatabase();
 
         ArrayList<Entity> entities = new ArrayList<Entity>(database.getTables()
                 .size());
