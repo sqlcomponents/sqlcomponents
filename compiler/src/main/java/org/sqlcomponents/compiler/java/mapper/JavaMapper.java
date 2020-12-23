@@ -4,6 +4,7 @@ import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.relational.Column;
 
 import java.time.*;
+import java.util.UUID;
 
 /**
  * Java Mapper which is responsible for converting Database Types
@@ -84,6 +85,8 @@ public final class JavaMapper extends Mapper {
                 return LocalDateTime.class;
             case TIMESTAMP_WITH_TIMEZONE:
                 return OffsetDateTime.class;
+            case UUID:
+                return UUID.class;
             case OTHER:
                 return getDataTypeClassForSpecialType(column);
             default:

@@ -47,6 +47,9 @@ public final class ${name}Manager {
             <#case "jsonb">
         <#include "/template/java/custom-object/jsonb.ftl">
         <#break>
+        <#case "uuid">
+        <#include "/template/java/custom-object/uuid.ftl">
+        <#break>
      </#switch>
 </#list>
 

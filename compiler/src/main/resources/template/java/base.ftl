@@ -28,6 +28,8 @@
 		<#local pkAsParameterStr="Timestamp">
 	<#elseif pkAsParameterStr == "JSONObject">
 	<#local pkAsParameterStr="Object">
+	<#elseif pkAsParameterStr == "UUID">
+	<#local pkAsParameterStr="Object">
 	</#if>
 	<#return pkAsParameterStr>
 </#function>
@@ -43,6 +45,8 @@
   <#case "java.lang.Character">
   	 <#return "${wText}.get${property.name?cap_first}() == null ? null : String.valueOf(${wText}.get${property.name?cap_first}())">
   <#case "org.json.JSONObject">
+  	 <#return "this.convert${property.column.typeName?cap_first}.apply(${wText}.get${property.name?cap_first}())">
+    <#case "java.util.UUID">
   	 <#return "this.convert${property.column.typeName?cap_first}.apply(${wText}.get${property.name?cap_first}())">
   <#default>
   <#return "${wText}.get${property.name?cap_first}()">

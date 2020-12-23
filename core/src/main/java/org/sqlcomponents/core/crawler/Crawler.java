@@ -305,6 +305,8 @@ public class Crawler {
             return ColumnType.JSON;
         }else if(column.getTypeName().equalsIgnoreCase("jsonb")) {
             return ColumnType.JSONB;
+        }else if(column.getTypeName().equalsIgnoreCase("uuid")) {
+            return ColumnType.UUID;
         }
         return null;
     }

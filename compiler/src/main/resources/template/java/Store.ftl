@@ -79,6 +79,9 @@ public final class ${name}Store${orm.daoSuffix}  {
         	   <#case "org.json.JSONObject">
         	    ${name?uncap_first}.set${property.name?cap_first}(this.get${property.column.typeName?cap_first}.apply(rs,${index}));
                  <#break>
+           <#case "java.util.UUID">
+        	    ${name?uncap_first}.set${property.name?cap_first}(this.get${property.column.typeName?cap_first}.apply(rs,${index}));
+                 <#break>
           <#default>
           ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}));
           <#break>
@@ -92,7 +95,7 @@ public final class ${name}Store${orm.daoSuffix}  {
 
 <#list properties as property>
 <#assign a=addImportStatement(property.dataType)>
-    <#if property.dataType != "org.json.JSONObject">
+    <#if property.dataType != "org.json.JSONObject" && property.dataType != "java.util.UUID">
     
     public static Column.${property.name?cap_first}Column ${property.name}() {
         return new WhereClause().${property.name}();
@@ -148,7 +151,7 @@ public final class ${name}Store${orm.daoSuffix}  {
             this.nodes = new ArrayList<>();
         }
 <#list properties as property>
-<#if property.dataType != "org.json.JSONObject">
+<#if property.dataType != "org.json.JSONObject" && property.dataType != "java.util.UUID">
         public Column.${property.name?cap_first}Column ${property.name}() {
             Column.${property.name?cap_first}Column query = new Column.${property.name?cap_first}Column("${property.column.columnName}",this);
             this.nodes.add(query);

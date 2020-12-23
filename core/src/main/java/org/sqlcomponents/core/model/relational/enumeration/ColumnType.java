@@ -179,7 +179,11 @@ public enum ColumnType {
     /**
      * Identifies the generic JSON type {@code TIMESTAMP_WITH_TIMEZONE}.
      */
-    JSONB("JSONB");
+    JSONB("JSONB"),
+    /**
+     * Identifies the generic UUID type {@code TIMESTAMP_WITH_TIMEZONE}.
+     */
+    UUID("UUID");
 
     private final String value;
 
