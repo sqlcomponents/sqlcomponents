@@ -1,5 +1,32 @@
 # sqlbridge
-This is SQL Bridge R&amp;D work
+
+Large
+
+Offload DB Techniques
+Validation
+Batch
+Optimize Dialects
+Cache
+
+Fantastic 4
+
+SQL
+Preventive - Wrong Queries
+Functions (String)
+
+- Build Time
+- Startup
+- Runtime
+- JDBC
+
+Clean Code
+= Opensource / Checkstyles/ Documented
+
+Upgrades
+JDK
+Postgress
+
+
 
 # reference
 1. https://dev.mysql.com/doc/index-other.html
