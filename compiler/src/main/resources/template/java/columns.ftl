@@ -36,9 +36,13 @@ public static class ${property.name?cap_first}Column extends Column {
         sql = columnName + "='" + value + "'";
         return getWhereClause();
     }
+<@columnfooter/>
+</#macro>
 
-    public WhereClause  like(final String value) {
-        sql = columnName + " LIKE '" + value + "'";
+<#macro JSONObjectColumn property>
+<@columnheader property=property/>
+    public WhereClause  eq(final String value) {
+        sql = columnName + "='" + value + "'";
         return getWhereClause();
     }
 <@columnfooter/>

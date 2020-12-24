@@ -95,12 +95,12 @@ public final class ${name}Store${orm.daoSuffix}  {
 
 <#list properties as property>
 <#assign a=addImportStatement(property.dataType)>
-    <#if property.dataType != "org.json.JSONObject" >
+
     
     public static Column.${property.name?cap_first}Column ${property.name}() {
         return new WhereClause().${property.name}();
     }
-    </#if>
+
 </#list>
 
     public static class WhereClause  extends PartialWhereClause  {
@@ -151,13 +151,13 @@ public final class ${name}Store${orm.daoSuffix}  {
             this.nodes = new ArrayList<>();
         }
 <#list properties as property>
-<#if property.dataType != "org.json.JSONObject" >
+
         public Column.${property.name?cap_first}Column ${property.name}() {
             Column.${property.name?cap_first}Column query = new Column.${property.name?cap_first}Column("${property.column.columnName}",this);
             this.nodes.add(query);
             return query;
         }
-         </#if>
+
 		</#list>
 
        
@@ -221,6 +221,9 @@ public final class ${name}Store${orm.daoSuffix}  {
         <#break>
     <#case "java.util.UUID">
         <@columns.UUIDColumn property=property/>
+        <#break>
+    <#case "org.json.JSONObject" >
+        <@columns.JSONObjectColumn property=property/>
         <#break>
     </#switch>
 		</#list>
