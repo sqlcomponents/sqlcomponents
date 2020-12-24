@@ -99,6 +99,9 @@ public final class ${name}Store${orm.daoSuffix}  {
 <#list properties as property>
 <#assign a=addImportStatement(property.dataType)>
 
+    public static Value<Column.${property.name?cap_first}Column,${getClassName(property.dataType)}> ${property.name}(final ${getClassName(property.dataType)} value) {
+        return new Value<>(${property.name}(),value);
+    }
     
     public static Column.${property.name?cap_first}Column ${property.name}() {
         return new WhereClause().${property.name}();
@@ -168,13 +171,24 @@ public final class ${name}Store${orm.daoSuffix}  {
         
 
     }
-    public static abstract class Column {
 
-            protected final String columnName;
+    public static class Value<T extends Column<R>,R> {
+        private final T column;
+        private final R value;
+
+        private Value(final T column,final R value) {
+            this.column =column;
+            this.value = value;
+        }
+    }
+
+
+    public static abstract class Column<T> {
+
+  
             private final PartialWhereClause  whereClause ;
 
-            public Column(final String columnName, final PartialWhereClause  whereClause) {
-                this.columnName = columnName;
+            protected Column(final PartialWhereClause  whereClause) {
                 this.whereClause  = whereClause ;
             }
 
@@ -183,6 +197,8 @@ public final class ${name}Store${orm.daoSuffix}  {
             }
 
             protected abstract String asSql();
+
+            protected abstract Boolean validate(T value);
 
             <#list properties as property>
     <#switch property.dataType>
