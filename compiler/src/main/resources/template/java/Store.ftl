@@ -18,7 +18,7 @@ public final class ${name}Store${orm.daoSuffix}  {
 
     private final DataSource dataSource;
 
-    private final ${orm.application.name}Manager ${orm.application.name?uncap_first}Manager;
+    private final ${orm.application.name}Manager.Observer observer;
     <#assign a=addImportStatement(orm.application.rootPackage+ "." + orm.application.name + "Manager")>
 
 
@@ -33,14 +33,14 @@ public final class ${name}Store${orm.daoSuffix}  {
      * Datastore
      */
     public ${name}Store${orm.daoSuffix}(final DataSource theDataSource
-                ,final ${orm.application.name}Manager the${orm.application.name}Manager
+                ,final ${orm.application.name}Manager.Observer theObserver
                     <#list sampleDistinctCustomColumnTypeProperties as property>
                     ,final ${orm.application.name}Manager.GetFunction<ResultSet, Integer, ${getClassName(property.dataType)}> theGet${property.column.typeName?cap_first}
                     ,final ${orm.application.name}Manager.ConvertFunction<${getClassName(property.dataType)},Object> theConvert${property.column.typeName?cap_first}
                     </#list>
                 ) {
         this.dataSource = theDataSource;
-        this.${orm.application.name?uncap_first}Manager = the${orm.application.name}Manager;
+        this.observer = theObserver;
         <#list sampleDistinctCustomColumnTypeProperties as property>
         this.get${property.column.typeName?cap_first} =  theGet${property.column.typeName?cap_first};
         this.convert${property.column.typeName?cap_first} =  theConvert${property.column.typeName?cap_first};

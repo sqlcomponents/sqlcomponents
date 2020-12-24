@@ -114,4 +114,17 @@ class AzaguRajaTest {
                 .returning();
         Assertions.assertEquals(3, insertedAzaguRajas.size(), "Multi Sequence Insert Returning");
     }
+
+
+    @Test
+    void testSingleUpdateAndGetNumberOfRows() throws SQLException {
+        Integer noOfInsertedRajaRefs
+                = this.azaguRajaReferenceStore
+                    .update()
+                    .set(azaguRajaReferencesToTest.get(0))
+                    .execute();
+        Assertions.assertEquals(0, noOfInsertedRajaRefs, "Single Update Execution");
+    }
+
+
 }

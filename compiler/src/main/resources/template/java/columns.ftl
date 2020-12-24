@@ -1,6 +1,6 @@
 <#macro columnheader property>
 public static class ${property.name?cap_first}Column extends Column {
-    protected String sql;
+    private String sql;
 
     public ${property.name?cap_first}Column(final String columnName, final PartialWhereClause  whereClause) {
         super(columnName, whereClause);
@@ -18,12 +18,12 @@ public static class ${property.name?cap_first}Column extends Column {
 
 <#macro StringColumn property>
 <@columnheader property=property/>
-    public WhereClause  eq(final String value) {
+    public final WhereClause  eq(final String value) {
         sql = columnName + "='" + value + "'";
         return getWhereClause();
     }
 
-    public WhereClause  like(final String value) {
+    public final WhereClause  like(final String value) {
         sql = columnName + " LIKE '" + value + "'";
         return getWhereClause();
     }
@@ -32,7 +32,7 @@ public static class ${property.name?cap_first}Column extends Column {
 
 <#macro UUIDColumn property>
 <@columnheader property=property/>
-    public WhereClause  eq(final String value) {
+    public final WhereClause  eq(final String value) {
         sql = columnName + "='" + value + "'";
         return getWhereClause();
     }
@@ -41,7 +41,7 @@ public static class ${property.name?cap_first}Column extends Column {
 
 <#macro DurationColumn property>
 <@columnheader property=property/>
-    public WhereClause  eq(final String value) {
+    public final WhereClause  eq(final String value) {
         sql = columnName + "='" + value + "'";
         return getWhereClause();
     }
@@ -50,7 +50,7 @@ public static class ${property.name?cap_first}Column extends Column {
 
 <#macro JSONObjectColumn property>
 <@columnheader property=property/>
-    public WhereClause  eq(final String value) {
+    public final WhereClause  eq(final String value) {
         sql = columnName + "='" + value + "'";
         return getWhereClause();
     }
@@ -59,12 +59,12 @@ public static class ${property.name?cap_first}Column extends Column {
 
 <#macro CharacterColumn property>
 <@columnheader property=property/>
-    public WhereClause  eq(final String value) {
+    public final WhereClause  eq(final String value) {
         sql = columnName + "='" + value + "'";
         return getWhereClause();
     }
 
-    public WhereClause  like(final String value) {
+    public final WhereClause  like(final String value) {
         sql = columnName + " LIKE '" + value + "'";
         return getWhereClause();
     }
@@ -74,7 +74,7 @@ public static class ${property.name?cap_first}Column extends Column {
 
 <#macro BooleanColumn property>
 <@columnheader property=property/>
-    public WhereClause  eq(final Boolean value) {
+    public final WhereClause  eq(final Boolean value) {
         sql = columnName + "=" + value ;
         return getWhereClause();
     }
@@ -82,27 +82,27 @@ public static class ${property.name?cap_first}Column extends Column {
 </#macro>
 
 <#macro numbercolumn type>
-    public WhereClause eq(final ${type} value) {
+    public final WhereClause eq(final ${type} value) {
         sql = columnName + "=" + value;
         return getWhereClause();
     }
 
-    public WhereClause gt(final ${type} value) {
+    public final WhereClause gt(final ${type} value) {
         sql = columnName + ">" + value;
         return getWhereClause();
     }
 
-    public WhereClause  gte(final ${type} value) {
+    public final WhereClause  gte(final ${type} value) {
         sql = columnName + ">=" + value;
         return getWhereClause();
     }
 
-    public WhereClause  lt(final ${type} value) {
+    public final WhereClause  lt(final ${type} value) {
         sql = columnName + "<" + value;
         return getWhereClause();
     }
 
-    public WhereClause  lte(final ${type} value) {
+    public final WhereClause  lte(final ${type} value) {
         sql = columnName + "<=" + value;
         return getWhereClause();
     }
@@ -157,27 +157,27 @@ public static class ${property.name?cap_first}Column extends Column {
 
 <#macro LocalDateColumn property>
 <@columnheader property=property/>
-    public WhereClause  eq(final LocalDate value) {
+    public final WhereClause  eq(final LocalDate value) {
         sql = columnName + "=" + value;
         return getWhereClause();
     }
 
-    public WhereClause  gt(final LocalDate value) {
+    public final WhereClause  gt(final LocalDate value) {
         sql = columnName + ">" + value;
         return getWhereClause();
     }
 
-    public WhereClause  gte(final LocalDate value) {
+    public final WhereClause  gte(final LocalDate value) {
         sql = columnName + ">=" + value;
         return getWhereClause();
     }
 
-    public WhereClause  lt(final LocalDate value) {
+    public final WhereClause  lt(final LocalDate value) {
         sql = columnName + "<" + value;
         return getWhereClause();
     }
 
-    public WhereClause  lte(final LocalDate value) {
+    public final WhereClause  lte(final LocalDate value) {
         sql = columnName + "<=" + value;
         return getWhereClause();
     }
@@ -189,27 +189,27 @@ public static class ${property.name?cap_first}Column extends Column {
 <@columnheader property=property/>
 
 
-    public WhereClause  eq(final LocalTime value) {
+    public final WhereClause  eq(final LocalTime value) {
         sql = columnName + "=" + value;
         return getWhereClause();
     }
 
-    public WhereClause  gt(final LocalTime value) {
+    public final WhereClause  gt(final LocalTime value) {
         sql = columnName + ">" + value;
         return getWhereClause();
     }
 
-    public WhereClause  gte(final LocalTime value) {
+    public final WhereClause  gte(final LocalTime value) {
         sql = columnName + ">=" + value;
         return getWhereClause();
     }
 
-    public WhereClause  lt(final LocalTime value) {
+    public final WhereClause  lt(final LocalTime value) {
         sql = columnName + "<" + value;
         return getWhereClause();
     }
 
-    public WhereClause  lte(final LocalTime value) {
+    public final WhereClause  lte(final LocalTime value) {
         sql = columnName + "<=" + value;
         return getWhereClause();
     }
@@ -221,27 +221,27 @@ public static class ${property.name?cap_first}Column extends Column {
 <#macro LocalDateTimeColumn property>
 <@columnheader property=property/>
 
-    public WhereClause  eq(final LocalDateTime value) {
+    public final WhereClause  eq(final LocalDateTime value) {
         sql = columnName + "=" + value;
         return getWhereClause();
     }
 
-    public WhereClause  gt(final LocalDateTime value) {
+    public final WhereClause  gt(final LocalDateTime value) {
         sql = columnName + ">" + value;
         return getWhereClause();
     }
 
-    public WhereClause  gte(final LocalDateTime value) {
+    public final WhereClause  gte(final LocalDateTime value) {
         sql = columnName + ">=" + value;
         return getWhereClause();
     }
 
-    public WhereClause  lt(final LocalDateTime value) {
+    public final WhereClause  lt(final LocalDateTime value) {
         sql = columnName + "<" + value;
         return getWhereClause();
     }
 
-    public WhereClause  lte(final LocalDateTime value) {
+    public final WhereClause  lte(final LocalDateTime value) {
         sql = columnName + "<=" + value;
         return getWhereClause();
     }

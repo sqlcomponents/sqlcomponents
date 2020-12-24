@@ -9,6 +9,8 @@ public final class ${name}Manager {
 
     private final DataSource dataSource;
 
+    private final Observer observer;
+
     <#list orm.entities as entity>
     <#assign a=addImportStatement(entity.daoPackage + "." + entity.name + "Store")>
     private final ${entity.name}Store ${entity.name?uncap_first}Store;
@@ -16,8 +18,9 @@ public final class ${name}Manager {
 
     private ${name}Manager(final DataSource dataSource) {
         this.dataSource = dataSource;
+        this.observer = new Observer();
         <#list orm.entities as entity>
-        this.${entity.name?uncap_first}Store = new ${entity.name}Store(dataSource,this
+        this.${entity.name?uncap_first}Store = new ${entity.name}Store(dataSource,this.observer
         <#list entity.sampleDistinctCustomColumnTypeProperties as property>
                                 ,this::get${property.column.typeName?cap_first}
                                 ,this::convert${property.column.typeName?cap_first}
@@ -56,6 +59,13 @@ public final class ${name}Manager {
      </#switch>
 </#list>
 
+    public class Observer {
+        // Observer is intenal
+        // This also prevents store creation ourtside ${name}Manager
+        private Observer() {
+
+        }
+    }
 
     @FunctionalInterface
     public interface ConvertFunction<T, Object> {

@@ -60,6 +60,7 @@ class JavaCompilerTest {
 
             application.setMethodSpecification(Arrays.asList(
                     "InsertByEntiy",
+                    "UpdateByEntiy",
                     "DeleteByPK",
                     "DeleteByEntity",
                     "DeleteAll",
@@ -69,7 +70,7 @@ class JavaCompilerTest {
                     "GetByPKUniqueKeys",
                     "IsExisting",
                     "MViewRefresh",
-                    "UpdateByPK",
+                    //"UpdateByPK",
                     "GetByPK"
             ));
             return this;
