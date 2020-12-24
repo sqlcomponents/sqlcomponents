@@ -95,7 +95,7 @@ public final class ${name}Store${orm.daoSuffix}  {
 
 <#list properties as property>
 <#assign a=addImportStatement(property.dataType)>
-    <#if property.dataType != "org.json.JSONObject" && property.dataType != "java.util.UUID">
+    <#if property.dataType != "org.json.JSONObject" >
     
     public static Column.${property.name?cap_first}Column ${property.name}() {
         return new WhereClause().${property.name}();
@@ -151,7 +151,7 @@ public final class ${name}Store${orm.daoSuffix}  {
             this.nodes = new ArrayList<>();
         }
 <#list properties as property>
-<#if property.dataType != "org.json.JSONObject" && property.dataType != "java.util.UUID">
+<#if property.dataType != "org.json.JSONObject" >
         public Column.${property.name?cap_first}Column ${property.name}() {
             Column.${property.name?cap_first}Column query = new Column.${property.name?cap_first}Column("${property.column.columnName}",this);
             this.nodes.add(query);
@@ -218,6 +218,9 @@ public final class ${name}Store${orm.daoSuffix}  {
         <#break>
     <#case "java.time.LocalDateTime">
         <@columns.LocalDateTimeColumn property=property/>
+        <#break>
+    <#case "java.util.UUID">
+        <@columns.UUIDColumn property=property/>
         <#break>
     </#switch>
 		</#list>

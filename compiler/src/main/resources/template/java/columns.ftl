@@ -30,6 +30,20 @@ public static class ${property.name?cap_first}Column extends Column {
 <@columnfooter/>
 </#macro>
 
+<#macro UUIDColumn property>
+<@columnheader property=property/>
+    public WhereClause  eq(final String value) {
+        sql = columnName + "='" + value + "'";
+        return getWhereClause();
+    }
+
+    public WhereClause  like(final String value) {
+        sql = columnName + " LIKE '" + value + "'";
+        return getWhereClause();
+    }
+<@columnfooter/>
+</#macro>
+
 <#macro CharacterColumn property>
 <@columnheader property=property/>
     public WhereClause  eq(final String value) {
