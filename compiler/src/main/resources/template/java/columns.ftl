@@ -39,6 +39,15 @@ public static class ${property.name?cap_first}Column extends Column {
 <@columnfooter/>
 </#macro>
 
+<#macro DurationColumn property>
+<@columnheader property=property/>
+    public WhereClause  eq(final String value) {
+        sql = columnName + "='" + value + "'";
+        return getWhereClause();
+    }
+<@columnfooter/>
+</#macro>
+
 <#macro JSONObjectColumn property>
 <@columnheader property=property/>
     public WhereClause  eq(final String value) {

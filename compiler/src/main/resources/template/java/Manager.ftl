@@ -50,6 +50,9 @@ public final class ${name}Manager {
         <#case "uuid">
         <#include "/template/java/custom-object/uuid.ftl">
         <#break>
+         <#case "interval">
+        <#include "/template/java/custom-object/interval.ftl">
+        <#break>
      </#switch>
 </#list>
 

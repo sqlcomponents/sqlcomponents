@@ -4,7 +4,7 @@
     "referenceCode": "A110",
     "json": {
       "a": 3
-    },
+    },"ainterval":60.000000000,
     "ajsonb": {
       "a": 3
     },
@@ -39,7 +39,7 @@
     },
     "ajsonb": {
       "a": 3
-    },
+    },"ainterval":60.000000000,
     "abigint": 9,
     "auuid":"cc8eca16-5ad8-4806-85be-658fbb04c47a",
     "adecimal": 88,
@@ -68,7 +68,7 @@
     "auuid":"767f308e-2874-4583-815e-608cb366bb30",
     "json": {
       "a": 3
-    },
+    },"ainterval":60.000000000,
     "ajsonb": {
       "a": 3
     },

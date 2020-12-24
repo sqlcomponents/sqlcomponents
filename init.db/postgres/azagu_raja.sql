@@ -29,6 +29,7 @@ CREATE TABLE azagu_raja(
    	a_uuid uuid,
    	a_xml xml,
     a_time time,
+    a_interval interval,
    CONSTRAINT fk_code
       FOREIGN KEY(reference_code) 
 	  REFERENCES azagu_raja_reference(code)

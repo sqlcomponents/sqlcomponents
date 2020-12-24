@@ -21,11 +21,7 @@ public class Crawler {
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databasemetadata = connection.getMetaData();
 
-            database.setTableTypes(getTableTypes(databasemetadata));
 
-            database.setSequences(getSequences(databasemetadata));
-            database.setTables(getTables(databasemetadata, database, tableName -> application.getTablePatterns() == null || application.getTablePatterns().contains(tableName)));
-            // database.setFunctions(getProcedures(databasemetadata));
             database.setCatalogTerm(databasemetadata.getCatalogTerm());
             database.setCatalogSeperator(databasemetadata.getCatalogSeparator());
 
@@ -132,6 +128,12 @@ public class Crawler {
             database.setSupportsCatalogsInProcedureCalls(databasemetadata.supportsCatalogsInProcedureCalls());
             database.setSupportsCatalogsInTableDefinitions(databasemetadata.supportsCatalogsInTableDefinitions());
             database.setSupportsColumnAliasing(databasemetadata.supportsColumnAliasing());
+
+            database.setTableTypes(getTableTypes(databasemetadata));
+
+            database.setSequences(getSequences(databasemetadata));
+            database.setTables(getTables(databasemetadata, database, tableName -> application.getTablePatterns() == null || application.getTablePatterns().contains(tableName)));
+            // database.setFunctions(getProcedures(databasemetadata));
         } catch (SQLException e) {
             throw new ScubeException(e);
         }
@@ -303,13 +305,21 @@ public class Crawler {
     }
 
     private ColumnType getColumnTypeForOthers(final Column column) {
-        if(column.getTypeName().equalsIgnoreCase("json")) {
-            return ColumnType.JSON;
-        }else if(column.getTypeName().equalsIgnoreCase("jsonb")) {
-            return ColumnType.JSONB;
-        }else if(column.getTypeName().equalsIgnoreCase("uuid")) {
-            return ColumnType.UUID;
+        switch (column.getTable().getDatabase().getDatabaseType()) {
+            case POSTGRES:
+                if(column.getTypeName().equalsIgnoreCase("json")) {
+                    return ColumnType.JSON;
+                }else if(column.getTypeName().equalsIgnoreCase("jsonb")) {
+                    return ColumnType.JSONB;
+                }else if(column.getTypeName().equalsIgnoreCase("uuid")) {
+                    return ColumnType.UUID;
+                }
+                else if(column.getTypeName().equalsIgnoreCase("interval")) {
+                    return ColumnType.INTERVAL;
+                }
+                break;
         }
+
         return null;
     }
 

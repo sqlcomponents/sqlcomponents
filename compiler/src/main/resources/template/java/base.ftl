@@ -30,6 +30,8 @@
 	<#local pkAsParameterStr="Object">
 	<#elseif pkAsParameterStr == "UUID">
 	<#local pkAsParameterStr="Object">
+		<#elseif pkAsParameterStr == "Duration">
+	<#local pkAsParameterStr="Object">
 	</#if>
 	<#return pkAsParameterStr>
 </#function>
@@ -48,6 +50,8 @@
   	 <#return "this.convert${property.column.typeName?cap_first}.apply(${wText}.get${property.name?cap_first}())">
     <#case "java.util.UUID">
   	 <#return "this.convert${property.column.typeName?cap_first}.apply(${wText}.get${property.name?cap_first}())">
+	<#case "java.time.Duration">
+	<#return "this.convert${property.column.typeName?cap_first}.apply(${wText}.get${property.name?cap_first}())">
   <#default>
   <#return "${wText}.get${property.name?cap_first}()">
 </#switch>

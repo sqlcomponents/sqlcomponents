@@ -87,6 +87,8 @@ public final class JavaMapper extends Mapper {
                 return OffsetDateTime.class;
             case UUID:
                 return UUID.class;
+            case INTERVAL:
+                return Duration.class;
             case OTHER:
                 return getDataTypeClassForSpecialType(column);
             default:

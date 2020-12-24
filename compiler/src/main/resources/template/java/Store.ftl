@@ -82,6 +82,9 @@ public final class ${name}Store${orm.daoSuffix}  {
            <#case "java.util.UUID">
         	    ${name?uncap_first}.set${property.name?cap_first}(this.get${property.column.typeName?cap_first}.apply(rs,${index}));
                  <#break>
+                        <#case "java.time.Duration">
+        	    ${name?uncap_first}.set${property.name?cap_first}(this.get${property.column.typeName?cap_first}.apply(rs,${index}));
+                 <#break>
           <#default>
           ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}));
           <#break>
@@ -225,6 +228,9 @@ public final class ${name}Store${orm.daoSuffix}  {
     <#case "org.json.JSONObject" >
         <@columns.JSONObjectColumn property=property/>
         <#break>
+    <#case "java.time.Duration" >
+        <@columns.DurationColumn property=property/>
+        <#break>    
     </#switch>
 		</#list>
 

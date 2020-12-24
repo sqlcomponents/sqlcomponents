@@ -183,7 +183,11 @@ public enum ColumnType {
     /**
      * Identifies the generic UUID type {@code TIMESTAMP_WITH_TIMEZONE}.
      */
-    UUID("UUID");
+    UUID("UUID"),
+    /**
+     * Identifies the generic INTERVAL type {@code TIMESTAMP_WITH_TIMEZONE}.
+     */
+    INTERVAL("INTERVAL");;
 
     private final String value;
 
