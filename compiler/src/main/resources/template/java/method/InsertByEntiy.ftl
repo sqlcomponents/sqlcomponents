@@ -1,8 +1,8 @@
 <#macro insertquery>
-  final String query = <@compress single_line=true>"INSERT INTO ${table.escapedName} (
+  final String query = <@compress single_line=true>"INSERT INTO ${table.escapedName?j_string} (
   		<#assign index=0>
   		<#list insertableProperties as property>
-  			<#if index == 0><#assign index=1><#else>,</#if>${property.column.escapedName}
+  			<#if index == 0><#assign index=1><#else>,</#if>${property.column.escapedName?j_string}
   		</#list>
   		)
   	    VALUES (
@@ -117,6 +117,8 @@
                 return insertedRows;
             }
 
+            <#if table.hasPrimaryKey>
+
             public final ${name} returning() throws SQLException  {
                 ${name} inserted${name} = null ;
                 <@insertquery/>
@@ -138,6 +140,7 @@
                 }
                 return inserted${name};
             }
+             </#if>
         }
 
         public static final class ValuesClause  {
@@ -172,7 +175,7 @@
                 }
                 return insertedRows;
             }
-
+            <#if table.hasPrimaryKey>
             public final List<${name}> returning() throws SQLException  {
                 List<${name}> insertedList = null ;
                 <@insertquery/>
@@ -219,6 +222,7 @@
                 }
                 return insertedList;
             }
+            </#if>
 
 
         }

@@ -295,7 +295,6 @@ public class Crawler {
                     }
                 }).findFirst().ifPresent(column->column.getExportedKeys().add(key));
             }
-
         }
         return columns;
     }

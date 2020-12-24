@@ -2,7 +2,7 @@
   {
     "axml": "<foo><bar>Hello</bar></foo>",
     "referenceCode": "A110",
-    "ajson": {
+    "json": {
       "a": 3
     },
     "ajsonb": {
@@ -34,7 +34,7 @@
   {"axml": "<foo><bar>Hello</bar></foo>",
     "referenceCode": "A110",
     "asmallint": 3,
-    "ajson": {
+    "json": {
       "a": 3
     },
     "ajsonb": {
@@ -66,7 +66,7 @@
     "referenceCode": "A110",
     "asmallint": 3,
     "auuid":"767f308e-2874-4583-815e-608cb366bb30",
-    "ajson": {
+    "json": {
       "a": 3
     },
     "ajsonb": {

@@ -24,8 +24,9 @@ CREATE TABLE azagu_raja(
 	a_serial	 serial,	
 	a_bigserial bigserial,
    	a_date date,
-   	a_json json,
+   	json json,
    	a_jsonb jsonb,
+   	a_uuid uuid,
    	a_xml xml,
     a_time time,
    CONSTRAINT fk_code

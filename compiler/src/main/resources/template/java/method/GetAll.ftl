@@ -3,7 +3,7 @@
 		final String query = <@compress single_line=true>"
                 SELECT
 		<@columnSelection/> 
-		FROM ${table.tableName}
+		FROM ${table.escapedName?j_string}
                 </@compress>";
         try (Connection conn = dataSource.getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(query)) {
