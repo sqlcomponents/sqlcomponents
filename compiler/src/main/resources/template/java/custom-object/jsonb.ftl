@@ -1,4 +1,4 @@
-<#if orm.database.databaseProductName == 'PostgreSQL' >
+<#if orm.database.databaseType == 'POSTGRES' >
     private final JSONObject getJsonb(final ResultSet rs,final int index) throws SQLException {
         PGobject pGobject = (PGobject) rs.getObject(index);
         return pGobject == null ? null : new JSONObject(pGobject.getValue());

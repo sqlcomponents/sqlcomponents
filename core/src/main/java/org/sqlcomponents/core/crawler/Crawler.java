@@ -4,10 +4,7 @@ import org.sqlcomponents.core.crawler.util.DataSourceUtil;
 import org.sqlcomponents.core.exception.ScubeException;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.*;
-import org.sqlcomponents.core.model.relational.enumeration.ColumnType;
-import org.sqlcomponents.core.model.relational.enumeration.Flag;
-import org.sqlcomponents.core.model.relational.enumeration.Order;
-import org.sqlcomponents.core.model.relational.enumeration.TableType;
+import org.sqlcomponents.core.model.relational.enumeration.*;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -31,7 +28,13 @@ public class Crawler {
             // database.setFunctions(getProcedures(databasemetadata));
             database.setCatalogTerm(databasemetadata.getCatalogTerm());
             database.setCatalogSeperator(databasemetadata.getCatalogSeparator());
-            database.setDatabaseProductName(databasemetadata.getDatabaseProductName());
+
+            switch (databasemetadata.getDatabaseProductName()) {
+                case "PostgreSQL":
+                    database.setDatabaseType(DatabaseType.POSTGRES);
+                break;
+            }
+
             database.setDatabaseMajorVersion(databasemetadata.getDatabaseMajorVersion());
             database.setDatabaseMinorVersion(databasemetadata.getDatabaseMinorVersion());
             database.setDatabaseProductVersion(databasemetadata.getDatabaseProductVersion());

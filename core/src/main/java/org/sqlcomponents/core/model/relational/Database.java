@@ -3,6 +3,7 @@ package org.sqlcomponents.core.model.relational;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.sqlcomponents.core.model.relational.enumeration.DatabaseType;
 import org.sqlcomponents.core.model.relational.enumeration.TableType;
 
 import java.util.List;
@@ -25,7 +26,8 @@ public class Database {
 
     private String catalogTerm;
     private String catalogSeperator;
-    private String databaseProductName;
+    // private String databaseProductName;
+    private DatabaseType databaseType;
     private int databaseMajorVersion;
     private int databaseMinorVersion;
     private String databaseProductVersion;
