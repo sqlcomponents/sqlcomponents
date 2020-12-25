@@ -118,12 +118,15 @@ class AzaguRajaTest {
 
     @Test
     void testSingleUpdateAndGetNumberOfRows() throws SQLException {
-        Integer noOfInsertedRajaRefs
+        AzaguRajaReference azaguRajaReference = this.azaguRajaReferenceStore
+        .insert().values(this.azaguRajaReferencesToTest.get(0)).returning();
+        azaguRajaReference.setName("Changed");
+        Integer noOfUpdatedRajaRefs
                 = this.azaguRajaReferenceStore
-                    .update()
-                    .set(azaguRajaReferencesToTest.get(0))
-                    .execute();
-        Assertions.assertEquals(0, noOfInsertedRajaRefs, "Single Update Execution");
+                .update()
+                .set(azaguRajaReference)
+                .execute();
+        Assertions.assertEquals(1, noOfUpdatedRajaRefs, "Single Update Execution");
     }
 
 
