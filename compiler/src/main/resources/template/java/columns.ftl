@@ -3,7 +3,7 @@
 public static class ${property.name?cap_first}Column extends Column<${getClassName(property.dataType)}> {
     private String sql;
 
-    public ${property.name?cap_first}Column(final String columnName, final PartialWhereClause  whereClause) {
+    public ${property.name?cap_first}Column(final PartialWhereClause  whereClause) {
         super(whereClause);
     }
 </#macro>
@@ -28,8 +28,8 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
         return getWhereClause();
     }
 
-    public final WhereClause  like(final String value) {
-        sql = "${property.column.escapedName?j_string}  LIKE '" + value + "'";
+    public final WhereClause LIKE(final String value) {
+        sql = "${property.column.escapedName?j_string} LIKE '" + value + "'";
         return getWhereClause();
     }
 <@columnfooter property=property/>
@@ -69,8 +69,8 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
         return getWhereClause();
     }
 
-    public final WhereClause  like(final String value) {
-        sql = "${property.column.escapedName?j_string}  LIKE '" + value + "'";
+    public final WhereClause LIKE(final String value) {
+        sql = "${property.column.escapedName?j_string} LIKE '" + value + "'";
         return getWhereClause();
     }
 <@columnfooter property=property/>

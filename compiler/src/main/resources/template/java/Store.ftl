@@ -159,7 +159,7 @@ public final class ${name}Store${orm.daoSuffix}  {
 <#list properties as property>
 
         public Column.${property.name?cap_first}Column ${property.name}() {
-            Column.${property.name?cap_first}Column query = new Column.${property.name?cap_first}Column("${property.column.columnName}",this);
+            Column.${property.name?cap_first}Column query = new Column.${property.name?cap_first}Column(this);
             this.nodes.add(query);
             return query;
         }
