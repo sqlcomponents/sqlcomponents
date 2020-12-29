@@ -11,7 +11,6 @@ CREATE TABLE azagu_raja(
    id INT NOT NULL AUTO_INCREMENT,
 
    reference_code VARCHAR(80),
-   null_string VARCHAR(80),
 
    PRIMARY KEY ( id ),
    CONSTRAINT fk_code

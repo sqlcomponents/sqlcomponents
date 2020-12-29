@@ -25,10 +25,13 @@ public class Crawler {
             database.setCatalogTerm(databasemetadata.getCatalogTerm());
             database.setCatalogSeperator(databasemetadata.getCatalogSeparator());
 
-            switch (databasemetadata.getDatabaseProductName()) {
-                case "PostgreSQL":
+            switch (databasemetadata.getDatabaseProductName().toLowerCase().trim()) {
+                case "postgresql":
                     database.setDatabaseType(DatabaseType.POSTGRES);
-                break;
+                    break;
+                case "mysql":
+                    database.setDatabaseType(DatabaseType.MYSQL);
+                    break;
             }
 
             database.setDatabaseMajorVersion(databasemetadata.getDatabaseMajorVersion());
