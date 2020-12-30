@@ -17,7 +17,9 @@ CREATE TABLE azagu_raja(
     a_decimal DECIMAL,
     a_decimal3 DECIMAL(10,3),
     a_float FLOAT,
-    a_bit BIT(8),
+    a_bit BIT(8 ),
+    a_text TEXT,
+    a_boolean BOOLEAN,
     PRIMARY KEY ( id ),
     CONSTRAINT fk_code
     FOREIGN KEY(reference_code)

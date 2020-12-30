@@ -73,6 +73,9 @@ public final class JavaMapper extends Mapper {
             case NVARCHAR:
             case CHAR:
                 return column.getSize() == 1 ? Character.class : String.class;
+            case TEXT:
+            case LONGVARCHAR:
+                return  String.class;
             case SQLXML:
                 return String.class;
             case BOOLEAN:
