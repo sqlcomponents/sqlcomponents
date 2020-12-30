@@ -54,6 +54,8 @@ public final class JavaMapper extends Mapper {
 
     private Class getDataTypeClass(final Column column) {
         switch (column.getColumnType()) {
+            case TINYINT:
+                return Short.class;
             case SMALLINT:
                 return  Short.class;
             case BIGINT:
