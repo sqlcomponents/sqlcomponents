@@ -32,6 +32,8 @@ public class Crawler {
                 case "mysql":
                     database.setDatabaseType(DatabaseType.MYSQL);
                     break;
+                case "mariadb":
+                    database.setDatabaseType(DatabaseType.MARIADB);
             }
 
             database.setDatabaseMajorVersion(databasemetadata.getDatabaseMajorVersion());

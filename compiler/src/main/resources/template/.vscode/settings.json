@@ -6,5 +6,20 @@
                 "cmd": "cd ../../../../../ && ./mvnw test -Dtest=JavaCompilerTest -DfailIfNoTests=false -pl compiler -am"
             }
         ]
-    }
+    },
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "askForPassword": true,
+            "driver": "MariaDB",
+            "name": "mariadb",
+            "database": "moviedb",
+            "username": "moviedb"
+        }
+    ]
 }
