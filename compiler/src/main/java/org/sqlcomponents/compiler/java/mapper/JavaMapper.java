@@ -55,7 +55,7 @@ public final class JavaMapper extends Mapper {
     private Class getDataTypeClass(final Column column) {
         switch (column.getColumnType()) {
             case TINYINT:
-                return Short.class;
+            case BIT:
             case SMALLINT:
                 return  Short.class;
             case BIGINT:
@@ -63,20 +63,18 @@ public final class JavaMapper extends Mapper {
             case REAL:
                 return Float.class;
             case DOUBLE:
+            case DECIMAL:
                 return chooseDecimalType(column);
             case INTEGER:
                 return chooseIntegerType(column);
             case NUMERIC:
                 return chooseNumberType(column);
-            case DECIMAL:
-                return chooseDecimalType(column);
             case VARCHAR:
             case NVARCHAR:
             case CHAR:
                 return column.getSize() == 1 ? Character.class : String.class;
             case SQLXML:
                 return String.class;
-            case BIT:
             case BOOLEAN:
                 return Boolean.class;
             case TIME:
