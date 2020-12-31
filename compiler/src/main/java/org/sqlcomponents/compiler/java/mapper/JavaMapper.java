@@ -96,6 +96,7 @@ public final class JavaMapper extends Mapper {
             case INTERVAL:
                 return Duration.class;
             case BLOB:
+            case LONGVARBINARY:
                 return ByteBuffer.class;
             case OTHER:
                 return getDataTypeClassForSpecialType(column);

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.TestInstance;
 
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -44,6 +45,7 @@ class AzaguRajaTest {
             byte[] bb = { 10, 20, 30 };
             azaguRaja.setABlob(ByteBuffer.wrap(bb));
         });
+
     }
 
     @BeforeEach
