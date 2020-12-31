@@ -54,10 +54,9 @@ public final class JavaMapper extends Mapper {
 
     private Class getDataTypeClass(final Column column) {
         switch (column.getColumnType()) {
-            case BIT:
-                return column.getSize() == 3 ? Boolean.class : Short.class;
             case TINYINT:
-
+                return column.getSize() == 1 ? Boolean.class : Short.class;
+            case BIT:
             case SMALLINT:
                 return  Short.class;
             case BIGINT:
@@ -85,6 +84,8 @@ public final class JavaMapper extends Mapper {
                 return LocalTime.class;
             case DATE:
                 return LocalDate.class;
+            case FLOAT:
+                return Float.class;
             case TIMESTAMP:
                 return LocalDateTime.class;
             case TIMESTAMP_WITH_TIMEZONE:
