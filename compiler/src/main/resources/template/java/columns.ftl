@@ -53,6 +53,15 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 <@columnfooter property=property/>
 </#macro>
 
+<#macro ByteBuffer property>
+<@columnheader property=property/>
+    public final WhereClause  eq(final String value) {
+        sql = "${property.column.escapedName?j_string} ='" + value + "'";
+        return getWhereClause();
+    }
+<@columnfooter property=property/>
+</#macro>
+
 <#macro JSONObjectColumn property>
 <@columnheader property=property/>
     public final WhereClause  eq(final String value) {

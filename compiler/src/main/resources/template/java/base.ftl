@@ -26,11 +26,13 @@
         <#local pkAsParameterStr="Time">
 	<#elseif pkAsParameterStr == "LocalDateTime">
 		<#local pkAsParameterStr="Timestamp">
+	<#elseif pkAsParameterStr == "ByteBuffer">
+		<#local pkAsParameterStr="Bytes">
 	<#elseif pkAsParameterStr == "JSONObject">
 	<#local pkAsParameterStr="Object">
 	<#elseif pkAsParameterStr == "UUID">
 	<#local pkAsParameterStr="Object">
-		<#elseif pkAsParameterStr == "Duration">
+	<#elseif pkAsParameterStr == "Duration">
 	<#local pkAsParameterStr="Object">
 	</#if>
 	<#return pkAsParameterStr>
@@ -46,6 +48,8 @@
   	 <#return "${wText}.get${property.name?cap_first}() == null ? null : java.sql.Timestamp.valueOf(${wText}.get${property.name?cap_first}())">
   <#case "java.lang.Character">
   	 <#return "${wText}.get${property.name?cap_first}() == null ? null : String.valueOf(${wText}.get${property.name?cap_first}())">
+<#case "java.nio.ByteBuffer">
+  	 <#return "${wText}.get${property.name?cap_first}() == null ? null : ${wText}.get${property.name?cap_first}().array()">
   <#case "org.json.JSONObject">
   	 <#return "this.convert${property.column.typeName?cap_first}.apply(${wText}.get${property.name?cap_first}())">
     <#case "java.util.UUID">

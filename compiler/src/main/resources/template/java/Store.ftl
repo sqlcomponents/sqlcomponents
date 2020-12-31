@@ -73,6 +73,9 @@ public final class ${name}Store${orm.daoSuffix}  {
            <#case "java.time.LocalDateTime">
              ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalDateTime());
           <#break>
+          <#case "java.nio.ByteBuffer">
+             ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : ByteBuffer.wrap(rs.get${getJDBCClassName(property.dataType)}(${index})));
+          <#break>
           <#case "java.lang.Character">
           	 ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).charAt(0));
            <#break>
@@ -243,6 +246,9 @@ public final class ${name}Store${orm.daoSuffix}  {
         <#break>
     <#case "org.json.JSONObject" >
         <@columns.JSONObjectColumn property=property/>
+        <#break>
+    <#case "java.nio.ByteBuffer" >
+        <@columns.ByteBuffer property=property/>
         <#break>
     <#case "java.time.Duration" >
         <@columns.DurationColumn property=property/>

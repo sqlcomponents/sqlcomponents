@@ -3,6 +3,7 @@ package org.sqlcomponents.compiler.java.mapper;
 import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.relational.Column;
 
+import java.nio.ByteBuffer;
 import java.time.*;
 import java.util.UUID;
 
@@ -94,6 +95,8 @@ public final class JavaMapper extends Mapper {
                 return UUID.class;
             case INTERVAL:
                 return Duration.class;
+            case BLOB:
+                return ByteBuffer.class;
             case OTHER:
                 return getDataTypeClassForSpecialType(column);
             default:

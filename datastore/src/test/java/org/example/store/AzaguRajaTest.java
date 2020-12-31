@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
+import java.nio.ByteBuffer;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -37,6 +38,12 @@ class AzaguRajaTest {
         // Data used for testing
         this.azaguRajaReferencesToTest = JsonUtil.getTestObjects(AzaguRajaReference.class);
         this.azaguRajasToTest = JsonUtil.getTestObjects(AzaguRaja.class);
+
+        this.azaguRajasToTest.parallelStream().forEach(azaguRaja -> {
+            // Declare and initialize the byte array
+            byte[] bb = { 10, 20, 30 };
+            azaguRaja.setABlob(ByteBuffer.wrap(bb));
+        });
     }
 
     @BeforeEach
