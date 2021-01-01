@@ -41,23 +41,23 @@
 <#function wrapSet wText property >
 <#switch property.dataType>
   <#case "java.time.LocalDate">
-	 <#return "${wText}.get${property.name?cap_first}() == null ? null : java.sql.Date.valueOf(${wText}.get${property.name?cap_first}())">
+	 <#return "${wText} == null ? null : java.sql.Date.valueOf(${wText})">
   <#case "java.time.LocalTime">
-  	 <#return "${wText}.get${property.name?cap_first}() == null ? null : java.sql.Time.valueOf(${wText}.get${property.name?cap_first}())">
+  	 <#return "${wText} == null ? null : java.sql.Time.valueOf(${wText})">
   <#case "java.time.LocalDateTime">
-  	 <#return "${wText}.get${property.name?cap_first}() == null ? null : java.sql.Timestamp.valueOf(${wText}.get${property.name?cap_first}())">
+  	 <#return "${wText} == null ? null : java.sql.Timestamp.valueOf(${wText})">
   <#case "java.lang.Character">
-  	 <#return "${wText}.get${property.name?cap_first}() == null ? null : String.valueOf(${wText}.get${property.name?cap_first}())">
+  	 <#return "${wText} == null ? null : String.valueOf(${wText})">
 <#case "java.nio.ByteBuffer">
-  	 <#return "${wText}.get${property.name?cap_first}() == null ? null : ${wText}.get${property.name?cap_first}().array()">
+  	 <#return "${wText} == null ? null : ${wText}.array()">
   <#case "org.json.JSONObject">
-  	 <#return "this.convert${property.column.typeName?cap_first}.apply(${wText}.get${property.name?cap_first}())">
+  	 <#return "this.convert${property.column.typeName?cap_first}.apply(${wText})">
     <#case "java.util.UUID">
-  	 <#return "this.convert${property.column.typeName?cap_first}.apply(${wText}.get${property.name?cap_first}())">
+  	 <#return "this.convert${property.column.typeName?cap_first}.apply(${wText})">
 	<#case "java.time.Duration">
-	<#return "this.convert${property.column.typeName?cap_first}.apply(${wText}.get${property.name?cap_first}())">
+	<#return "this.convert${property.column.typeName?cap_first}.apply(${wText})">
   <#default>
-  <#return "${wText}.get${property.name?cap_first}()">
+  <#return "${wText}">
 </#switch>
 </#function>
 
