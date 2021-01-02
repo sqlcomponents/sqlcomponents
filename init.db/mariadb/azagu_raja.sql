@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS azagu_raja;
-DROP TABLE IF EXISTS azagu_raja_reference;
+DROP TABLE IF EXISTS connection;
 
-CREATE TABLE azagu_raja_reference (
+CREATE TABLE connection (
     code VARCHAR(80) PRIMARY KEY,
     name VARCHAR(80),
     UNIQUE(name)
@@ -23,5 +23,5 @@ CREATE TABLE azagu_raja(
     PRIMARY KEY ( id ),
     CONSTRAINT fk_code
     FOREIGN KEY(reference_code)
-	REFERENCES azagu_raja_reference(code)
+	REFERENCES connection(code)
 );
