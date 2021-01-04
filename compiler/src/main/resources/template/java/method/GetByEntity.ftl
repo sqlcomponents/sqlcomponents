@@ -1,8 +1,8 @@
     public List<${name}> select(WhereClause whereClause) throws SQLException  {
         String whereSQL = whereClause.asSql() ;
 		final String query = "SELECT <@columnSelection/> FROM ${table.escapedName?j_string}"+ (whereSQL == null ? "" : (" WHERE " + whereSQL));
-        try (Connection conn = dataSource.getConnection();
-            PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+        try (java.sql.Connection dbConnection = dataSource.getConnection();
+            PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             List<${name}> arrays = new ArrayList();

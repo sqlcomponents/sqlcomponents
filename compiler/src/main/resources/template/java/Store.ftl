@@ -3,7 +3,6 @@
 package <#if daoPackage?? && daoPackage?length != 0 >${daoPackage}</#if>;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

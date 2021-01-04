@@ -2,7 +2,7 @@ package org.example.store;
 
 import org.example.MovieManager;
 import org.example.model.AzaguRaja;
-import org.example.model.AzaguRajaReference;
+import org.example.model.Connection;
 import org.example.util.DataSourceProvider;
 import org.example.util.JsonUtil;
 import org.junit.jupiter.api.Assertions;
@@ -23,21 +23,21 @@ import java.util.List;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AzaguRajaTest {
 
-    private final AzaguRajaReferenceStore azaguRajaReferenceStore;
+    private final ConnectionStore connectionStore;
     private final AzaguRajaStore allInAllAzaguRajaStore;
 
-    private final List<AzaguRajaReference> azaguRajaReferencesToTest;
+    private final List<Connection> connectionsToTest;
     private final List<AzaguRaja> azaguRajasToTest;
 
 
     AzaguRajaTest() {
         MovieManager movieManager = MovieManager.getManager(DataSourceProvider.dataSource());
         // Stores used for testing
-        this.azaguRajaReferenceStore = movieManager.getAzaguRajaReferenceStore();
+        this.connectionStore = movieManager.getConnectionStore();
         this.allInAllAzaguRajaStore = movieManager.getAzaguRajaStore();
 
         // Data used for testing
-        this.azaguRajaReferencesToTest = JsonUtil.getTestObjects(AzaguRajaReference.class);
+        this.connectionsToTest = JsonUtil.getTestObjects(Connection.class);
         this.azaguRajasToTest = JsonUtil.getTestObjects(AzaguRaja.class);
 
         this.azaguRajasToTest.parallelStream().forEach(azaguRaja -> {
@@ -52,23 +52,23 @@ class AzaguRajaTest {
     void init() throws SQLException {
         // Clean Up
         this.allInAllAzaguRajaStore.deleteAll();
-        this.azaguRajaReferenceStore.deleteAll();
+        this.connectionStore.deleteAll();
     }
 
     @Test
     void testSingleInsertAndGetNumberOfRows() throws SQLException {
-        Integer noOfInsertedRajaRefs = this.azaguRajaReferenceStore.
+        Integer noOfInsertedRajaRefs = this.connectionStore.
                 insert()
-                .values(azaguRajaReferencesToTest.get(0))
+                .values(connectionsToTest.get(0))
                 .execute();
         Assertions.assertEquals(1, noOfInsertedRajaRefs, "Single Insert Execution");
     }
 
     @Test
     void testMultipleInsertAndGetNumberOfRows() throws SQLException {
-        int[] noOfInsertedRajaRefsArray = this.azaguRajaReferenceStore
+        int[] noOfInsertedRajaRefsArray = this.connectionStore
                 .insert()
-                .values(azaguRajaReferencesToTest)
+                .values(connectionsToTest)
                 .execute();
         Assertions.assertEquals(5, noOfInsertedRajaRefsArray.length, "Multiple Insert Execution");
     }
@@ -76,13 +76,13 @@ class AzaguRajaTest {
     @Test
     void testSingleInsertAndGetInsertedObject() throws SQLException {
 
-        AzaguRajaReference azaguRajaReference = this.azaguRajaReferenceStore
+        Connection connection = this.connectionStore
                 .insert()
-                .values(azaguRajaReferencesToTest.get(0))
+                .values(connectionsToTest.get(0))
                 .returning();
 
         AzaguRaja azaguRaja = azaguRajasToTest.get(0);
-        azaguRaja.setReferenceCode(azaguRajaReference.getCode());
+        azaguRaja.setReferenceCode(connection.getCode());
 
         AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore
                 .insert()
@@ -96,9 +96,9 @@ class AzaguRajaTest {
 
     @Test
     void testMultiInsertAndGetInsertedObjects() throws SQLException {
-        this.azaguRajaReferenceStore
+        this.connectionStore
                 .insert()
-                .values(azaguRajaReferencesToTest)
+                .values(connectionsToTest)
                 .execute();
 
         List<AzaguRaja> insertedAzaguRajas = this.allInAllAzaguRajaStore
@@ -110,9 +110,9 @@ class AzaguRajaTest {
 
     @Test
     void testMultiSequenceInsertAndGetInsertedObjects() throws SQLException {
-        this.azaguRajaReferenceStore
+        this.connectionStore
                 .insert()
-                .values(azaguRajaReferencesToTest)
+                .values(connectionsToTest)
                 .execute();
 
         List<AzaguRaja> insertedAzaguRajas = this.allInAllAzaguRajaStore
@@ -127,13 +127,13 @@ class AzaguRajaTest {
 
     @Test
     void testSingleUpdateAndGetNumberOfRows() throws SQLException {
-        AzaguRajaReference azaguRajaReference = this.azaguRajaReferenceStore
-        .insert().values(this.azaguRajaReferencesToTest.get(0)).returning();
-        azaguRajaReference.setName("Changed");
+        Connection connection = this.connectionStore
+        .insert().values(this.connectionsToTest.get(0)).returning();
+        connection.setName("Changed");
         Integer noOfUpdatedRajaRefs
-                = this.azaguRajaReferenceStore
+                = this.connectionStore
                 .update()
-                .set(azaguRajaReference)
+                .set(connection)
                 .execute();
         Assertions.assertEquals(1, noOfUpdatedRajaRefs, "Single Update Execution");
     }

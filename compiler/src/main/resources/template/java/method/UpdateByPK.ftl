@@ -17,8 +17,8 @@
         		</#list>
 		</@compress>";
 
-		try (Connection conn = dataSource.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(query))
+		try (java.sql.Connection dbConnection = dataSource.getConnection();
+             PreparedStatement preparedStatement = dbConnection.prepareStatement(query))
         {
 
         <#assign index=0>
