@@ -7,7 +7,7 @@ public final class ${name}Manager {
 
     private static ${name}Manager ${name?uncap_first}Manager;
 
-    private final DataSource dataSource;
+    private final javax.sql.DataSource dbDataSource;
 
     private final Observer observer;
 
@@ -16,11 +16,11 @@ public final class ${name}Manager {
     private final ${entity.name}Store ${entity.name?uncap_first}Store;
     </#list>
 
-    private ${name}Manager(final DataSource dataSource) {
-        this.dataSource = dataSource;
+    private ${name}Manager(final javax.sql.DataSource dbDataSource) {
+        this.dbDataSource = dbDataSource;
         this.observer = new Observer();
         <#list orm.entities as entity>
-        this.${entity.name?uncap_first}Store = new ${entity.name}Store(dataSource,this.observer
+        this.${entity.name?uncap_first}Store = new ${entity.name}Store(dbDataSource,this.observer
         <#list entity.sampleDistinctCustomColumnTypeProperties as property>
                                 ,this::get${property.column.typeName?cap_first}
                                 ,this::convert${property.column.typeName?cap_first}
@@ -29,9 +29,9 @@ public final class ${name}Manager {
         </#list>
     }
 
-    public static final ${name}Manager getManager(final DataSource dataSource) {
+    public static final ${name}Manager getManager(final DataSource dbDataSource) {
         if(${name?uncap_first}Manager == null) {
-            ${name?uncap_first}Manager = new ${name}Manager(dataSource);
+            ${name?uncap_first}Manager = new ${name}Manager(dbDataSource);
         }
         return ${name?uncap_first}Manager;
     }

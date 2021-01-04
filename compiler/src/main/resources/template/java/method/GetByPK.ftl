@@ -13,7 +13,7 @@
 			</#if>
 		</#list>
                 </@compress>";
-        try (java.sql.Connection dbConnection = dataSource.getConnection();
+        try (java.sql.Connection dbConnection = dbDataSource.getConnection();
             PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
             ${getPrimaryKeysAsPreparedStatements()}
             ResultSet resultSet = preparedStatement.executeQuery();

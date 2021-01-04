@@ -12,7 +12,6 @@ import com.fasterxml.jackson.datatype.jsonorg.JsonOrgModule;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import com.fasterxml.jackson.datatype.jsr353.JSR353Module;
 import org.example.model.AzaguRaja;
-import org.example.model.AzaguRajaReference;
 import org.json.JSONObject;
 
 import java.io.*;

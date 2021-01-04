@@ -352,6 +352,7 @@ public class Crawler {
 
     private void repair(final Database database,final DatabaseMetaData databaseMetaData) {
         switch (database.getDatabaseType()) {
+            case MARIADB:
             case MYSQL:
                 repairMySQL(database,databaseMetaData);
                 break;

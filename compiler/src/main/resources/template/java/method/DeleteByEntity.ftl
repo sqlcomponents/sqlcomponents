@@ -2,7 +2,7 @@
     public int delete(WhereClause whereClause) throws SQLException  {
         String whereSQL = whereClause.asSql() ;
     	final String query = "DELETE FROM ${table.escapedName?j_string}" + (whereSQL == null ? "" : (" WHERE " + whereSQL));
-        try (java.sql.Connection dbConnection = dataSource.getConnection();
+        try (java.sql.Connection dbConnection = dbDataSource.getConnection();
 			Statement statement = dbConnection.createStatement()) {
             return statement.executeUpdate(query);
         }

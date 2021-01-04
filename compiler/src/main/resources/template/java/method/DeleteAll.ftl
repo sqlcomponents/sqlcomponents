@@ -2,7 +2,7 @@
     public int deleteAll() throws SQLException  {
         int deletedRows = 0 ;
     	final String query = "DELETE FROM ${table.escapedName?j_string}";
-        try (java.sql.Connection dbConnection = dataSource.getConnection();
+        try (java.sql.Connection dbConnection = dbDataSource.getConnection();
 			PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
             deletedRows = preparedStatement.executeUpdate();
         }
