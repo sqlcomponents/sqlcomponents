@@ -2,9 +2,17 @@ package org.sqlcomponents.core.mapper;
 
 import org.sqlcomponents.core.crawler.Crawler;
 import org.sqlcomponents.core.exception.ScubeException;
-import org.sqlcomponents.core.model.*;
+import org.sqlcomponents.core.model.Application;
+import org.sqlcomponents.core.model.Entity;
+import org.sqlcomponents.core.model.Method;
+import org.sqlcomponents.core.model.ORM;
+import org.sqlcomponents.core.model.Property;
+import org.sqlcomponents.core.model.Service;
+import org.sqlcomponents.core.model.relational.Column;
+import org.sqlcomponents.core.model.relational.Database;
 import org.sqlcomponents.core.model.relational.Package;
-import org.sqlcomponents.core.model.relational.*;
+import org.sqlcomponents.core.model.relational.Procedure;
+import org.sqlcomponents.core.model.relational.Table;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,11 +22,20 @@ public abstract class Mapper {
 
     public abstract String getDataType(Column column);
 
-    public ORM getOrm(Application application, Crawler crawler) throws ScubeException {
+    /**
+     *
+     * @param application
+     * @param crawler
+     * @return ORM
+     * @throws ScubeException
+     */
+    public ORM getOrm(final Application application, final Crawler crawler)
+            throws ScubeException {
 
         ORM orm = application.getOrm();
 
-        if (application.getOrm().getDatabase() == null || application.isOnline()) {
+        if (application.getOrm().getDatabase() == null || application
+                .isOnline()) {
             Database database = crawler.getDatabase(application);
             application.getOrm().setDatabase(database);
         }
@@ -29,22 +46,25 @@ public abstract class Mapper {
         return orm;
     }
 
-    private Method getMethod(Procedure function, Application application) {
+    private Method getMethod(final Procedure function,
+                             final Application application) {
         List<Property> properties = new ArrayList<Property>(function
                 .getParameters().size());
         Method method = new Method(function);
-        method.setName(getPropertyName(application, function.getFunctionName()));
+        method.setName(getPropertyName(application,
+                function.getFunctionName()));
 
         for (Column column : function.getParameters()) {
-            properties.add(getProperty(application, null,column));
+            properties.add(getProperty(application, null, column));
         }
         method.setInputParameters(properties);
 
-        method.setOutputProperty(getProperty(application,null, function.getOutput()));
+        method.setOutputProperty(getProperty(application, null,
+                function.getOutput()));
         return method;
     }
 
-    private List<Method> getMethods(Application application) {
+    private List<Method> getMethods(final Application application) {
         Database database = application.getOrm().getDatabase();
         ArrayList<Method> methods = new ArrayList<Method>();
         if (database.getFunctions() != null) {
@@ -55,19 +75,23 @@ public abstract class Mapper {
         return methods;
     }
 
-    private List<Service> getServices(Application application) {
+    private List<Service> getServices(final Application application) {
         ArrayList<Service> services = new ArrayList<Service>();
         if (application
                 .getOrm().getDatabase().getPackages() != null) {
             Service service = null;
-            for (Package package1 : application.getOrm().getDatabase().getPackages()) {
+            for (Package package1 : application.getOrm()
+                    .getDatabase().getPackages()) {
                 service = new Service();
                 service.setPackage(package1);
-                service.setServiceName(getServiceName(application, service.getName()));
-                service.setDaoPackage(getDaoPackage(application, service.getName()));
+                service.setServiceName(getServiceName(application,
+                        service.getName()));
+                service.setDaoPackage(getDaoPackage(application,
+                        service.getName()));
                 service.setMethods(new ArrayList<Method>());
                 for (Procedure function : package1.getFunctions()) {
-                    service.getMethods().add(getMethod(function, application));
+                    service.getMethods().add(getMethod(function,
+                            application));
                 }
                 services.add(service);
             }
@@ -76,9 +100,10 @@ public abstract class Mapper {
         return services;
     }
 
-    private Property getProperty(Application application,Entity entity, Column column) {
+    private Property getProperty(final Application application,
+                                 final Entity entity, final Column column) {
         if (column != null) {
-            Property property = new Property(entity,column);
+            Property property = new Property(entity, column);
             if (column.getColumnName() != null) {
                 property.setName(getPropertyName(application, column
                         .getColumnName()));
@@ -92,7 +117,7 @@ public abstract class Mapper {
 
     }
 
-    private List<Entity> getEntities(Application application) {
+    private List<Entity> getEntities(final Application application) {
 
         Database database = application.getOrm().getDatabase();
 
@@ -116,7 +141,7 @@ public abstract class Mapper {
             properties = new ArrayList<Property>(table.getColumns().size());
 
             for (Column column : table.getColumns()) {
-                properties.add(getProperty(application, entity,column));
+                properties.add(getProperty(application, entity, column));
             }
             entity.setProperties(properties);
             entities.add(entity);
@@ -125,7 +150,8 @@ public abstract class Mapper {
     }
 
 
-    protected String getServiceName(Application application, String packageName) {
+    protected String getServiceName(final Application application,
+                                    final String packageName) {
         if (packageName != null) {
             StringBuffer buffer = new StringBuffer();
             String[] relationalWords = packageName
@@ -141,7 +167,8 @@ public abstract class Mapper {
         return null;
     }
 
-    protected String getEntityName(Application application, String tableName) {
+    protected String getEntityName(final Application application,
+                                   final String tableName) {
         if (tableName != null) {
             StringBuffer buffer = new StringBuffer();
             String[] relationalWords = tableName
@@ -151,7 +178,8 @@ public abstract class Mapper {
                 buffer.append(toTileCase(getObjectOrientedWord(application,
                         relationalWords[index])));
             }
-            if (application.getBeanSuffix() != null && application.getBeanSuffix().trim().length() != 0) {
+            if (application.getBeanSuffix() != null
+                    && application.getBeanSuffix().trim().length() != 0) {
                 buffer.append(application.getBeanSuffix().trim());
             }
             return buffer.toString();
@@ -159,11 +187,12 @@ public abstract class Mapper {
         return null;
     }
 
-    protected String getObjectOrientedWord(Application application,
-                                           String relationalWord) {
+    protected String getObjectOrientedWord(final Application application,
+                                           final String relationalWord) {
         String objectOrientedWord = null;
         if (application.getWordsMap() != null) {
-            for (String relationalWordKey : application.getWordsMap().keySet()) {
+            for (String relationalWordKey : application
+                    .getWordsMap().keySet()) {
                 if (relationalWord.equalsIgnoreCase(relationalWordKey)) {
                     objectOrientedWord = application.getWordsMap().get(
                             relationalWordKey);
@@ -175,7 +204,8 @@ public abstract class Mapper {
 
     }
 
-    protected String getPluralName(Application application, String entityName) {
+    protected String getPluralName(final Application application,
+                                   final String entityName) {
         String pluralName = null;
         HashMap<String, String> pluralMap = application.getPluralMap();
         String pluralValue;
@@ -199,7 +229,8 @@ public abstract class Mapper {
     }
 
 
-    private String getPackage(Application application, String tableName, String identifier) {
+    private String getPackage(final Application application,
+                              final String tableName, final String identifier) {
         StringBuffer buffer = new StringBuffer();
 
         if (application.getRootPackage() != null) {
@@ -209,8 +240,8 @@ public abstract class Mapper {
         String moduleName = getModuleName(application, tableName);
 
         if (application.isModulesFirst()) {
-            if (moduleName != null &&
-                    moduleName.trim().length() != 0) {
+            if (moduleName != null
+                    && moduleName.trim().length() != 0) {
                 buffer.append(".");
                 buffer.append(moduleName.trim());
             }
@@ -225,8 +256,8 @@ public abstract class Mapper {
                 buffer.append(".");
                 buffer.append(identifier.trim());
             }
-            if (moduleName != null &&
-                    moduleName.trim().length() != 0) {
+            if (moduleName != null
+                    && moduleName.trim().length() != 0) {
                 buffer.append(".");
                 buffer.append(moduleName.trim());
             }
@@ -234,15 +265,20 @@ public abstract class Mapper {
         return buffer.toString().toLowerCase();
     }
 
-    protected String getDaoPackage(Application application, String tableName) {
-        return getPackage(application, tableName, application.getDaoIdentifier());
+    protected String getDaoPackage(final Application application,
+                                   final String tableName) {
+        return getPackage(application, tableName,
+                application.getDaoIdentifier());
     }
 
-    protected String getBeanPackage(Application application, String tableName) {
-        return getPackage(application, tableName, application.getBeanIdentifier());
+    protected String getBeanPackage(final Application application,
+                                    final String tableName) {
+        return getPackage(application, tableName,
+                application.getBeanIdentifier());
     }
 
-    protected String getModuleName(Application application, String tableName) {
+    protected String getModuleName(final Application application,
+                                   final String tableName) {
 
         String[] dbWords = tableName
                 .split(application.getDatabaseWordSeparator());
@@ -261,7 +297,8 @@ public abstract class Mapper {
         return null;
     }
 
-    protected String getPropertyName(Application application, String columnName) {
+    protected String getPropertyName(final Application application,
+                                     final String columnName) {
         StringBuffer buffer = new StringBuffer();
         String[] relationalWords = columnName
                 .split(application.getDatabaseWordSeparator());
@@ -278,7 +315,7 @@ public abstract class Mapper {
         return buffer.toString();
     }
 
-    protected String toTileCase(String word) {
+    protected String toTileCase(final String word) {
         char[] wordTemp = word.toLowerCase().toCharArray();
         int letterCount = wordTemp.length;
         for (int index = 0; index < letterCount; index++) {
