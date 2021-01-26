@@ -2,6 +2,7 @@ package org.sqlcomponents.core.model.relational.enumeration;
 
 public enum DatabaseType {
     POSTGRES("POSTGRES"),
+    MYSQL("MYSQL"),
     MARIADB("MARIADB");
 
     private final String value;

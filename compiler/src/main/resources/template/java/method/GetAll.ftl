@@ -5,8 +5,8 @@
 		<@columnSelection/> 
 		FROM ${table.escapedName?j_string}
                 </@compress>";
-        try (Connection conn = dataSource.getConnection();
-            PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+        try (java.sql.Connection dbConnection = dbDataSource.getConnection();
+            PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
             
             ResultSet resultSet = preparedStatement.executeQuery();
 			List<${name}> arrays = new ArrayList();

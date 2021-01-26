@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS azagu_raja;
-DROP TABLE IF EXISTS azagu_raja_reference;
+DROP TABLE IF EXISTS connection;
 
-CREATE TABLE azagu_raja_reference (
+CREATE TABLE connection (
     code VARCHAR(80) PRIMARY KEY,
     name VARCHAR(80),
     UNIQUE(name)
@@ -24,6 +24,7 @@ CREATE TABLE azagu_raja(
 	a_serial	 serial,	
 	a_bigserial bigserial,
    	a_date date,
+   	a_blob bytea,
    	json json,
    	a_jsonb jsonb,
    	a_uuid uuid,
@@ -32,5 +33,5 @@ CREATE TABLE azagu_raja(
     a_interval interval,
    CONSTRAINT fk_code
       FOREIGN KEY(reference_code) 
-	  REFERENCES azagu_raja_reference(code)
+	  REFERENCES connection(code)
 );

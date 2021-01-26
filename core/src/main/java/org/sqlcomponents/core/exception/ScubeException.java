@@ -2,23 +2,38 @@ package org.sqlcomponents.core.exception;
 
 public class ScubeException extends Exception {
 
-
+    /**
+     * Contructor with no arguements.
+     */
     public ScubeException() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-    public ScubeException(String arg0, Throwable arg1) {
+    /**
+     * constructor with arguements.
+     * @param arg0
+     * @param arg1
+     */
+    public ScubeException(final String arg0, final Throwable arg1) {
         super(arg0, arg1);
         // TODO Auto-generated constructor stub
     }
 
-    public ScubeException(String arg0) {
+    /**
+     * constructor with arguements.
+     * @param arg0
+     */
+    public ScubeException(final String arg0) {
         super(arg0);
         // TODO Auto-generated constructor stub
     }
 
-    public ScubeException(Throwable arg0) {
+    /**
+     * constructor with arguements.
+     * @param arg0
+     */
+    public ScubeException(final Throwable arg0) {
         super(arg0);
         // TODO Auto-generated constructor stub
     }

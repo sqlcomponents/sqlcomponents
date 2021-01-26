@@ -187,7 +187,8 @@ public enum ColumnType {
     /**
      * Identifies the generic INTERVAL type {@code TIMESTAMP_WITH_TIMEZONE}.
      */
-    INTERVAL("INTERVAL");;
+    INTERVAL("INTERVAL"),
+    TEXT("TEXT");
 
     private final String value;
 

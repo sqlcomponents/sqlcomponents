@@ -2,8 +2,6 @@
 <#import "/template/java/columns.ftl" as columns>
 package <#if daoPackage?? && daoPackage?length != 0 >${daoPackage}</#if>;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -16,7 +14,7 @@ import java.util.stream.Collectors;
  */
 public final class ${name}Store${orm.daoSuffix}  {
 
-    private final DataSource dataSource;
+    private final javax.sql.DataSource dbDataSource;
 
     private final ${orm.application.name}Manager.Observer observer;
     <#assign a=addImportStatement(orm.application.rootPackage+ "." + orm.application.name + "Manager")>
@@ -32,14 +30,14 @@ public final class ${name}Store${orm.daoSuffix}  {
     /**
      * Datastore
      */
-    public ${name}Store${orm.daoSuffix}(final DataSource theDataSource
+    public ${name}Store${orm.daoSuffix}(final javax.sql.DataSource theDataSource
                 ,final ${orm.application.name}Manager.Observer theObserver
                     <#list sampleDistinctCustomColumnTypeProperties as property>
                     ,final ${orm.application.name}Manager.GetFunction<ResultSet, Integer, ${getClassName(property.dataType)}> theGet${property.column.typeName?cap_first}
                     ,final ${orm.application.name}Manager.ConvertFunction<${getClassName(property.dataType)},Object> theConvert${property.column.typeName?cap_first}
                     </#list>
                 ) {
-        this.dataSource = theDataSource;
+        this.dbDataSource = theDataSource;
         this.observer = theObserver;
         <#list sampleDistinctCustomColumnTypeProperties as property>
         this.get${property.column.typeName?cap_first} =  theGet${property.column.typeName?cap_first};
@@ -72,6 +70,9 @@ public final class ${name}Store${orm.daoSuffix}  {
               <#break>
            <#case "java.time.LocalDateTime">
              ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalDateTime());
+          <#break>
+          <#case "java.nio.ByteBuffer">
+             ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : ByteBuffer.wrap(rs.get${getJDBCClassName(property.dataType)}(${index})));
           <#break>
           <#case "java.lang.Character">
           	 ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).charAt(0));
@@ -159,7 +160,7 @@ public final class ${name}Store${orm.daoSuffix}  {
 <#list properties as property>
 
         public Column.${property.name?cap_first}Column ${property.name}() {
-            Column.${property.name?cap_first}Column query = new Column.${property.name?cap_first}Column("${property.column.columnName}",this);
+            Column.${property.name?cap_first}Column query = new Column.${property.name?cap_first}Column(this);
             this.nodes.add(query);
             return query;
         }
@@ -243,6 +244,9 @@ public final class ${name}Store${orm.daoSuffix}  {
         <#break>
     <#case "org.json.JSONObject" >
         <@columns.JSONObjectColumn property=property/>
+        <#break>
+    <#case "java.nio.ByteBuffer" >
+        <@columns.ByteBuffer property=property/>
         <#break>
     <#case "java.time.Duration" >
         <@columns.DurationColumn property=property/>

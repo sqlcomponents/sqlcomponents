@@ -2,73 +2,54 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+
     <modelVersion>4.0.0</modelVersion>
-
-    <name>SQL Components</name>
-
+    <groupId>org.sqlcomponents</groupId>
+    <artifactId>sqlcomponents</artifactId>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <groupId>org.sqlcomponents</groupId>
+    <name>SQL Components</name>
+    <description>SQL Components Parent</description>
+    <url>http://sqlcomponents.org</url>
 
-    <artifactId>sqlcomponents</artifactId>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
-    <version>1.0-SNAPSHOT</version>
+    <scm>
+        <url>https://github.com/sqlcomponents/sqlcomponents</url>
+    </scm>
 
     <properties>
-
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
         <maven.compiler.source>1.8</maven.compiler.source>
-
         <maven.compiler.target>1.8</maven.compiler.target>
-
     </properties>
 
     <modules>
-
         <module>core</module>
-
         <module>compiler</module>
-
-        <!--        <module>java-test</module>-->
-
         <module>maven-plugin</module>
-
     </modules>
 
     <dependencies>
-
         <dependency>
-
             <groupId>org.projectlombok</groupId>
-
             <artifactId>lombok</artifactId>
-
             <version>1.18.16</version>
-
-            <scope>provided</scope>
-
+            <scope>compile</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.6.2</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest</artifactId>
-            <version>2.2</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>3.4.5</version>
         </dependency>
-
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -90,61 +71,50 @@
             <version>8.4.1.jre8</version>
         </dependency>
 
-
-
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.6.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
     <build>
-
         <plugins>
-
             <plugin>
-
                 <groupId>org.apache.maven.plugins</groupId>
-
                 <artifactId>maven-compiler-plugin</artifactId>
-
                 <version>3.8.1</version>
-
             </plugin>
 
             <plugin>
-
                 <groupId>org.apache.maven.plugins</groupId>
-
                 <artifactId>maven-surefire-plugin</artifactId>
-
                 <version>2.22.0</version>
-
                 <configuration>
-
                     <argLine>
                         --illegal-access=permit
                     </argLine>
-
                 </configuration>
-
             </plugin>
 
             <plugin>
-
                 <groupId>org.apache.maven.plugins</groupId>
-
                 <artifactId>maven-failsafe-plugin</artifactId>
-
                 <version>2.22.0</version>
-
                 <configuration>
-
                     <argLine>
                         --illegal-access=permit
                     </argLine>
-
                 </configuration>
-
             </plugin>
-
         </plugins>
 
     </build>

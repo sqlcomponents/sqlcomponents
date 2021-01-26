@@ -3,6 +3,7 @@ package org.sqlcomponents.compiler.java.mapper;
 import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.relational.Column;
 
+import java.nio.ByteBuffer;
 import java.time.*;
 import java.util.UUID;
 
@@ -53,34 +54,42 @@ public final class JavaMapper extends Mapper {
     }
 
     private Class getDataTypeClass(final Column column) {
+
+        if(column.getColumnName().equals("a_boolean")) {
+            System.out.println("S");
+        }
         switch (column.getColumnType()) {
+            case TINYINT:
+            case BIT:
             case SMALLINT:
-                return  Short.class;
+                return column.getSize() == 1 ? Boolean.class : Short.class;
             case BIGINT:
                 return Long.class;
             case REAL:
                 return Float.class;
             case DOUBLE:
+            case DECIMAL:
                 return chooseDecimalType(column);
             case INTEGER:
                 return chooseIntegerType(column);
             case NUMERIC:
                 return chooseNumberType(column);
-            case DECIMAL:
-                return chooseDecimalType(column);
             case VARCHAR:
             case NVARCHAR:
+            case LONGVARCHAR:
             case CHAR:
                 return column.getSize() == 1 ? Character.class : String.class;
+            case TEXT:
             case SQLXML:
                 return String.class;
-            case BIT:
             case BOOLEAN:
                 return Boolean.class;
             case TIME:
                 return LocalTime.class;
             case DATE:
                 return LocalDate.class;
+            case FLOAT:
+                return Float.class;
             case TIMESTAMP:
                 return LocalDateTime.class;
             case TIMESTAMP_WITH_TIMEZONE:
@@ -89,6 +98,10 @@ public final class JavaMapper extends Mapper {
                 return UUID.class;
             case INTERVAL:
                 return Duration.class;
+            case BLOB:
+            case LONGVARBINARY:
+            case BINARY:
+                return ByteBuffer.class;
             case OTHER:
                 return getDataTypeClassForSpecialType(column);
             default:

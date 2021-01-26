@@ -8,8 +8,8 @@
 						<#if index == 0><#assign index=1><#else>,</#if>${property.column.escapedName?j_string} = ?
 						</#if>
 					</#list></@compress>";
-        try (Connection connection = dataSource.getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try (java.sql.Connection dbConnection = dbDataSource.getConnection();
+			PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
 			${getPrimaryKeysAsPreparedStatements()}
             return preparedStatement.executeUpdate();
         }

@@ -35,7 +35,7 @@ services:
     ports:
         - '3308:3306'
     volumes:
-         - ${PWD}/init.db/mysql:/var/lib/mysql
+         - ${PWD}/init.db/mysql:/docker-entrypoint-initdb.d
 
   sqlserverdb:
     image: boxfuse/flyway

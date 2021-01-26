@@ -38,3 +38,4 @@ Postgress
 7. https://www.progress.com/tutorials/jdbc/designing-performance
 8. https://jdbc.postgresql.org/documentation/81/geometric.html
 9. https://jdbc.postgresql.org/documentation/head/escapes.html#escape-use-example
+10. https://github.com/bwajtr/java-persistence-frameworks-comparison

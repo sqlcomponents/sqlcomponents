@@ -13,8 +13,8 @@
 		</#list>
                 </@compress>";
         boolean isExists = false;
-        try (Connection conn = dataSource.getConnection();
-            PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+        try (java.sql.Connection dbConnection = dbDataSource.getConnection();
+            PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
             ${getPrimaryKeysAsPreparedStatements()}
             ResultSet resultSet = preparedStatement.executeQuery();
 

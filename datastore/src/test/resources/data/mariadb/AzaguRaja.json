@@ -1,0 +1,66 @@
+[
+  {
+    "referenceCode": "A110",
+    "atinyint": 1,
+    "asmallint": 4,
+    "ainteger": 123,
+    "abigint": 1234567909,
+    "adecimal": 12.3,
+    "adecimal3": 3,
+    "afloat": 1.3,
+    "abit": 123,
+    "atext": "sdd",
+    "aboolean": "TRUE"
+  },
+  {
+    "referenceCode": "A111",
+    "atinyint": 1,
+    "asmallint": 4,
+    "ainteger": 123,
+    "abigint": 1234567909,
+    "adecimal": 12.3,
+    "adecimal3": 3,
+    "afloat": 1.3,
+    "abit": 123,
+    "atext": "sdd",
+    "aboolean": "TRUE"
+  },
+  {
+    "referenceCode": "A112",
+    "atinyint": 1,
+    "asmallint": 4,
+    "ainteger": 123,
+    "abigint": 1234567909,
+    "adecimal": 12.3,
+    "adecimal3": 3,
+    "afloat": 1.3,
+    "abit": 123,
+    "atext": "sdd",
+    "aboolean": "TRUE"
+  },
+  {
+    "referenceCode": "A113",
+    "atinyint": 1,
+    "asmallint": 4,
+    "ainteger": 123,
+    "abigint": 1234567909,
+    "adecimal": 12.3,
+    "adecimal3": 3,
+    "afloat": 1.3,
+    "abit": 123,
+    "atext": "sdd",
+    "aboolean": "TRUE"
+  },{
+  "referenceCode": "A114",
+  "atinyint": 1,
+  "asmallint": 4,
+  "ainteger": 123,
+  "abigint": 1234567909,
+  "adecimal": 12.3,
+  "adecimal3": 3,
+  "afloat": 1.3,
+  "abit": 123,
+  "atext": "sdd",
+  "aboolean": "TRUE"
+}
+]
