@@ -54,12 +54,15 @@ public final class JavaMapper extends Mapper {
     }
 
     private Class getDataTypeClass(final Column column) {
+
+        if(column.getColumnName().equals("a_boolean")) {
+            System.out.println("S");
+        }
         switch (column.getColumnType()) {
             case TINYINT:
-                return column.getSize() == 1 ? Boolean.class : Short.class;
             case BIT:
             case SMALLINT:
-                return  Short.class;
+                return column.getSize() == 1 ? Boolean.class : Short.class;
             case BIGINT:
                 return Long.class;
             case REAL:
@@ -97,6 +100,7 @@ public final class JavaMapper extends Mapper {
                 return Duration.class;
             case BLOB:
             case LONGVARBINARY:
+            case BINARY:
                 return ByteBuffer.class;
             case OTHER:
                 return getDataTypeClassForSpecialType(column);

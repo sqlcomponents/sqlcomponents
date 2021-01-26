@@ -24,6 +24,7 @@ CREATE TABLE azagu_raja(
 	a_serial	 serial,	
 	a_bigserial bigserial,
    	a_date date,
+   	a_blob bytea,
    	json json,
    	a_jsonb jsonb,
    	a_uuid uuid,

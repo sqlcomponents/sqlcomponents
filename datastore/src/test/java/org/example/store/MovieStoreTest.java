@@ -52,14 +52,14 @@ class MovieStoreTest {
     @Test
     void testWhereClauseMultipleANDCriteria() throws SQLException {
         Assertions.assertEquals(1
-                , this.movieStore.select(yearOfRelease().eq((double) 2017).and().directedBy().eq("Christopher Nolan")).size()
+                , this.movieStore.select(yearOfRelease().eq((short) 2017).and().directedBy().eq("Christopher Nolan")).size()
                 , "Select All Single Criteria");
     }
 
     @Test
     void testWhereClauseMultipleORCriteria() throws SQLException {
         Assertions.assertEquals(12
-                , this.movieStore.select(yearOfRelease().eq((double) 2017).or().directedBy().eq("Christopher Nolan")).size()
+                , this.movieStore.select(yearOfRelease().eq((short) 2017).or().directedBy().eq("Christopher Nolan")).size()
                 , "Select All Single Criteria");
     }
 }
