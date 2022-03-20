@@ -1,5 +1,5 @@
 ---
-name: CI/CD report
+name: CI/CD Enhancement
 about: Create a report to help us in catch many bugs with proper CI/CD
 title: "[CI/CD] Title"
 labels: CI/CD
