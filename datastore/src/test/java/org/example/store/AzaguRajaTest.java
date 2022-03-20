@@ -12,7 +12,6 @@ import org.junit.jupiter.api.TestInstance;
 
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -42,7 +41,7 @@ class AzaguRajaTest {
 
         this.azaguRajasToTest.parallelStream().forEach(azaguRaja -> {
             // Declare and initialize the byte array
-            byte[] bb = { 10, 20, 30 };
+            byte[] bb = {10, 20, 30};
             azaguRaja.setABlob(ByteBuffer.wrap(bb));
         });
 
@@ -128,7 +127,7 @@ class AzaguRajaTest {
     @Test
     void testSingleUpdateAndGetNumberOfRows() throws SQLException {
         Connection connection = this.connectionStore
-        .insert().values(this.connectionsToTest.get(0)).returning();
+                .insert().values(this.connectionsToTest.get(0)).returning();
         connection.setName("Changed");
         Integer noOfUpdatedRajaRefs
                 = this.connectionStore
