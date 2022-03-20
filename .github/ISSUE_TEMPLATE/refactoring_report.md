@@ -1,6 +1,6 @@
 ---
 name: Refactoring report
-about: Create a report to help us code maintainability
+about: Create a report to help us in code maintainability
 title: "[Refactoring] Title"
 labels: refactoring
 assignees: ''
