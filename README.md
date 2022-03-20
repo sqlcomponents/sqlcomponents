@@ -26,8 +26,6 @@ Upgrades
 JDK
 Postgress
 
-
-
 # reference
 1. https://dev.mysql.com/doc/index-other.html
 2. https://blog.timescale.com/blog/why-sql-beating-nosql-what-this-means-for-future-of-data-time-series-database-348b777b847a/
@@ -39,3 +37,7 @@ Postgress
 8. https://jdbc.postgresql.org/documentation/81/geometric.html
 9. https://jdbc.postgresql.org/documentation/head/escapes.html#escape-use-example
 10. https://github.com/bwajtr/java-persistence-frameworks-comparison
+
+
+mvn package
+mvn package -Dmaven.test.skip=true
