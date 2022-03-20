@@ -199,7 +199,7 @@ public class Crawler {
 
             repair(database, databasemMetadata);
 
-        } catch (SQLException e) {
+        } catch (final Exception e) {
             throw new ScubeException(e);
         }
         return database;
@@ -210,7 +210,10 @@ public class Crawler {
         ResultSet resultset = databasemetadata.getTableTypes();
 
         while (resultset.next()) {
-            tableTypes.add(TableType.value(resultset.getString("TABLE_TYPE")));
+            String s = resultset.getString("TABLE_TYPE");
+            TableType lTableType = TableType.value(s);
+            assert(lTableType !=null) : "TableType can't be null for '" + s + "', Check if all tables are created in Database";
+            tableTypes.add(lTableType);
         }
 
         return tableTypes;
