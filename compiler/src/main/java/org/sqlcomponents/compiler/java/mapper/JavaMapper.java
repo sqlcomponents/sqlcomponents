@@ -55,9 +55,9 @@ public final class JavaMapper extends Mapper {
 
     private Class getDataTypeClass(final Column column) {
 
-        if(column.getColumnName().equals("a_boolean")) {
-            System.out.println("S");
-        }
+//        if(column.getColumnName().equals("a_boolean")) {
+//            System.out.println("S");
+//        }
         switch (column.getColumnType()) {
             case TINYINT:
             case BIT:
