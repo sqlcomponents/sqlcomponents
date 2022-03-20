@@ -37,7 +37,11 @@ Postgress
 8. https://jdbc.postgresql.org/documentation/81/geometric.html
 9. https://jdbc.postgresql.org/documentation/head/escapes.html#escape-use-example
 10. https://github.com/bwajtr/java-persistence-frameworks-comparison
+    
+From Directory sqlcomponents
 
-
-mvn package
-mvn package -Dmaven.test.skip=true
+docker-compose up -d
+docker-compose down --volumes
+mvn clean package
+mvn clean package -Dmaven.surefire.debug  -Dmaven.failsafe.debug verify
+mvn clean package -Dmaven.test.skip=true
