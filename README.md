@@ -1,4 +1,4 @@
-# sqlbridge
+#sqlbridge
 
 Large
 
@@ -45,3 +45,4 @@ docker-compose down --volumes
 mvn clean package
 mvn clean package -Dmaven.surefire.debug  -Dmaven.failsafe.debug verify
 mvn clean package -Dmaven.test.skip=true
+mvn versions:use-latest-releases

@@ -19,7 +19,7 @@ class JavaCompilerTest {
                 .writeCode();
     }
 
-    class Application {
+    static class Application {
 
         private final org.sqlcomponents.core.model.Application application;
 

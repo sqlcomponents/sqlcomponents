@@ -28,5 +28,4 @@ public final class Template<T> {
         stringWriter.close();
         return content;
     }
-
 }
