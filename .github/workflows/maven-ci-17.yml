@@ -4,26 +4,24 @@
 name: Maven Package
 
 on:
-  push:
-    branches: [ develop ]
-  pull_request:
-    branches: [ develop ]
+    push:
+        branches: [ develop ]
+    pull_request:
+        branches: [ develop ]
 
 jobs:
-  build:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/setup-java@v2
+                with:
+                    java-version: 17
+                    distribution: zulu
+                    server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+                    settings-path: ${{ github.workspace }} # location for the settings.xml file
 
-    runs-on: ubuntu-latest
-
-    steps:
-    -   uses: actions/setup-java@v2
-        with:
-          java-version: 17
-          distribution: zulu
-          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-          settings-path: ${{ github.workspace }} # location for the settings.xml file
-
-    - name: Build with Maven
-      run: mvn -DskipTests -B package --file pom.xml
+            -   name: Build with Maven
+                run: mvn -DskipTests -B package --file pom.xml
 
 #    - name: Publish to GitHub Packages Apache Maven
 #      run: mvn -DskipTests deploy -s $GITHUB_WORKSPACE/settings.xml
