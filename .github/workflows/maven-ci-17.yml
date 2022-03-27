@@ -8,7 +8,6 @@ on:
         branches: [ develop ]
     pull_request:
         branches: [ develop ]
-
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -16,11 +15,11 @@ jobs:
             -   uses: actions/setup-java@v2
                 with:
                     java-version: 17
+                    uses: actions/setup-java@v1
                     distribution: zulu
                     server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
                     settings-path: ${{ github.workspace }} # location for the settings.xml file
-
-            -   name: Build with Maven
+            -   name: Build with Maven, JDK-17
                 run: mvn -DskipTests -B package --file pom.xml
 
 #    - name: Publish to GitHub Packages Apache Maven
