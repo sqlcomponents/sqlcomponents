@@ -63,20 +63,20 @@
     "rating": 9,
     "imdbId": "tt0468569"
   },
- {
-  "title": "Batman Begins",
-  "directedBy": "Christopher Nolan",
-  "yearOfRelease": 2005,
-  "genre": "Action",
-  "rating": 8.2,
-   "imdbId": "tt0372784"
-},
+  {
+    "title": "Batman Begins",
+    "directedBy": "Christopher Nolan",
+    "yearOfRelease": 2005,
+    "genre": "Action",
+    "rating": 8.2,
+    "imdbId": "tt0372784"
+  },
   {
     "title": "Following",
     "directedBy": "Christopher Nolan",
     "yearOfRelease": 1998,
     "genre": "Drama",
-    "rating":7.5,
+    "rating": 7.5,
     "imdbId": "tt0154506"
   },
   {

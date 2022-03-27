@@ -38,6 +38,8 @@ public class SQLComponentsMojo
 
         application.compile(new JavaCompiler());
 
+        project.addCompileSourceRoot(application.getSrcFolder());
+
         getLog().info("Code is compiled into " + application.getSrcFolder());
 
     }

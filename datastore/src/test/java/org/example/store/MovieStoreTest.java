@@ -4,14 +4,16 @@ import org.example.MovieManager;
 import org.example.model.Movie;
 import org.example.util.DataSourceProvider;
 import org.example.util.JsonUtil;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import java.sql.SQLException;
 import java.util.List;
 
 import static org.example.store.MovieStore.title;
 import static org.example.store.MovieStore.yearOfRelease;
-import static org.example.store.MovieStore.directedBy;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MovieStoreTest {
