@@ -9,11 +9,11 @@ import org.sqlcomponents.core.model.relational.Index;
 import org.sqlcomponents.core.model.relational.Key;
 import org.sqlcomponents.core.model.relational.Procedure;
 import org.sqlcomponents.core.model.relational.Table;
-import org.sqlcomponents.core.model.relational.enumeration.ColumnType;
-import org.sqlcomponents.core.model.relational.enumeration.DatabaseType;
-import org.sqlcomponents.core.model.relational.enumeration.Flag;
-import org.sqlcomponents.core.model.relational.enumeration.Order;
-import org.sqlcomponents.core.model.relational.enumeration.TableType;
+import org.sqlcomponents.core.model.relational.enums.ColumnType;
+import org.sqlcomponents.core.model.relational.enums.DBType;
+import org.sqlcomponents.core.model.relational.enums.Flag;
+import org.sqlcomponents.core.model.relational.enums.Order;
+import org.sqlcomponents.core.model.relational.enums.TableType;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -56,13 +56,13 @@ public class Crawler {
             switch (databasemMetadata.getDatabaseProductName()
                     .toLowerCase().trim()) {
                 case "postgresql":
-                    database.setDatabaseType(DatabaseType.POSTGRES);
+                    database.setDbType(DBType.POSTGRES);
                     break;
                 case "mysql":
-                    database.setDatabaseType(DatabaseType.MYSQL);
+                    database.setDbType(DBType.MYSQL);
                     break;
                 case "mariadb":
-                    database.setDatabaseType(DatabaseType.MARIADB);
+                    database.setDbType(DBType.MARIADB);
             }
 
             database.setDatabaseMajorVersion(databasemMetadata
@@ -373,7 +373,7 @@ public class Crawler {
     }
 
     private ColumnType getColumnTypeForOthers(final Column column) {
-        switch (column.getTable().getDatabase().getDatabaseType()) {
+        switch (column.getTable().getDatabase().getDbType()) {
             case POSTGRES:
                 if (column.getTypeName().equalsIgnoreCase("json")) {
                     return ColumnType.JSON;
@@ -410,7 +410,7 @@ public class Crawler {
     }
 
     private void repair(final Database database, final DatabaseMetaData databaseMetaData) {
-        switch (database.getDatabaseType()) {
+        switch (database.getDbType()) {
             case MARIADB:
             case MYSQL:
                 repairMySQL(database, databaseMetaData);

@@ -4,7 +4,6 @@
 <#assign capturedOutput>
 public final class ${name}Manager {
 
-
     private static ${name}Manager ${name?uncap_first}Manager;
 
     private final javax.sql.DataSource dbDataSource;
@@ -59,21 +58,24 @@ public final class ${name}Manager {
      </#switch>
 </#list>
 
-    public class Observer {
-        // Observer is intenal
-        // This also prevents store creation ourtside ${name}Manager
+    public class Observer
+    {
+        // Observer is internal
+        // This also prevents store creation outside ${name}Manager
         private Observer() {
 
         }
     }
 
     @FunctionalInterface
-    public interface ConvertFunction<T, Object> {
+    public interface ConvertFunction<T, Object>
+    {
         Object apply(T t) throws SQLException;
     }
 
     @FunctionalInterface
-    public interface GetFunction<ResultSet, Integer, R> {
+    public interface GetFunction<ResultSet, Integer, R>
+    {
         R apply(ResultSet t, Integer u) throws SQLException;
     }
     <#assign a=addImportStatement("java.sql.ResultSet")>

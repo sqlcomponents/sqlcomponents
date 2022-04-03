@@ -1,6 +1,7 @@
-package org.sqlcomponents.core.model.relational.enumeration;
+package org.sqlcomponents.core.model.relational.enums;
 
-public enum TableType {
+public enum TableType
+{
 
     TABLE("TABLE"),
     FOREIGN_TABLE("FOREIGN TABLE"),
@@ -26,18 +27,22 @@ public enum TableType {
 
     private final String value;
 
-    TableType(final String value) {
-        this.value = value;
+    TableType(final String value)
+    {
+	this.value = value;
     }
 
-    public static TableType value(final String value) {
+    public static TableType value(final String value)
+    {
 
-        for (TableType tableType :
-                TableType.values()) {
-            if (tableType.value.equals(value)) {
-                return tableType;
-            }
-        }
-        return null;
+	for (TableType tableType :
+		TableType.values())
+	{
+	    if (tableType.value.equals(value))
+	    {
+		return tableType;
+	    }
+	}
+	return null;
     }
 }

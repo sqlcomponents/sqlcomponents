@@ -6,7 +6,7 @@
 
 <#function getPreparedValue property> 
 	
-	<#if property.entity.table.database.databaseType == 'POSTGRES'>
+	<#if property.entity.table.database.dbType == 'POSTGRES'>
 		<#if property.column.typeName == 'xml'>
 			<#return "XMLPARSE(document ?)">
 		</#if>

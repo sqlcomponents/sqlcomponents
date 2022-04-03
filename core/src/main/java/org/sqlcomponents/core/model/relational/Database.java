@@ -3,19 +3,18 @@ package org.sqlcomponents.core.model.relational;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.sqlcomponents.core.model.relational.enumeration.DatabaseType;
-import org.sqlcomponents.core.model.relational.enumeration.TableType;
+import org.sqlcomponents.core.model.relational.enums.DBType;
+import org.sqlcomponents.core.model.relational.enums.TableType;
 
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class Database {
-
+public class Database
+{
     private List<Table> tables;
     private List<Procedure> functions;
     private List<Package> packages;
@@ -27,7 +26,7 @@ public class Database {
     private String catalogTerm;
     private String catalogSeperator;
     // private String databaseProductName;
-    private DatabaseType databaseType;
+    private DBType dbType;
     private int databaseMajorVersion;
     private int databaseMinorVersion;
     private String databaseProductVersion;
@@ -182,28 +181,31 @@ public class Database {
      * @param name
      * @return escapedName
      */
-    public String escapedName(final String name) {
-        Boolean shouldEscape = this.getSqlKeywords().stream()
-                .filter(keyword -> keyword.equalsIgnoreCase(name))
-                .findFirst().isPresent();
-        return shouldEscape ? this.identifierQuoteString + name + this.identifierQuoteString : name;
+    public String escapedName(final String name)
+    {
+	Boolean shouldEscape = this.getSqlKeywords().stream()
+		.filter(keyword -> keyword.equalsIgnoreCase(name))
+		.findFirst().isPresent();
+	return shouldEscape ? this.identifierQuoteString + name + this.identifierQuoteString : name;
     }
 
-    public SortedSet<String> getDistinctColumnTypeNames() {
-        SortedSet<String> distinctColumnTypeNames = new TreeSet<>();
-        this.tables.stream().forEach(table -> {
-            distinctColumnTypeNames.addAll(table.getDistinctColumnTypeNames());
-        });
+    public SortedSet<String> getDistinctColumnTypeNames()
+    {
+	SortedSet<String> distinctColumnTypeNames = new TreeSet<>();
+	this.tables.stream().forEach(table -> {
+	    distinctColumnTypeNames.addAll(table.getDistinctColumnTypeNames());
+	});
 
-        return distinctColumnTypeNames;
+	return distinctColumnTypeNames;
     }
 
-    public SortedSet<String> getDistinctCustomColumnTypeNames() {
-        SortedSet<String> distinctColumnTypeNames = new TreeSet<>();
-        this.tables.stream().forEach(table -> {
-            distinctColumnTypeNames.addAll(table.getDistinctCustomColumnTypeNames());
-        });
+    public SortedSet<String> getDistinctCustomColumnTypeNames()
+    {
+	SortedSet<String> distinctColumnTypeNames = new TreeSet<>();
+	this.tables.stream().forEach(table -> {
+	    distinctColumnTypeNames.addAll(table.getDistinctCustomColumnTypeNames());
+	});
 
-        return distinctColumnTypeNames;
+	return distinctColumnTypeNames;
     }
 }
