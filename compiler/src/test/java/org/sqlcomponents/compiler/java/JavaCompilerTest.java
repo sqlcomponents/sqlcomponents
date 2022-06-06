@@ -6,72 +6,42 @@ import org.sqlcomponents.core.model.Application;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Properties;
 
-class JavaCompilerTest
-{
+class JavaCompilerTest {
     @Test
-    void writeCode() throws ScubeException, SQLException, IOException
-    {
-	new TestingTimeApplication().connectToPostgres().understand().mapToJava().writeCode();
-    }
+    void writeCode() throws ScubeException, IOException {
 
-    static class TestingTimeApplication
-    {
-	private final org.sqlcomponents.core.model.Application application;
+		final String srcFolder = System.getenv("SOURCE_FOLDER") == null
+				? "../datastore/src/main/java" : System.getenv("SOURCE_FOLDER");
 
-	TestingTimeApplication()
-	{
-	    this.application = new org.sqlcomponents.core.model.Application();
-	}
+		final Application application = new Application();
 
-	TestingTimeApplication connectToPostgres() throws SQLException, ScubeException
-	{
-	    Properties props = new Properties();
-	    try
-	    {
+		Properties props = new Properties();
 		props.load(new FileReader("../database.properties"));
-	    }
-	    catch (IOException e)
-	    {
-		// Unreachable
-		e.printStackTrace();
-	    }
-	    String databaseType = System.getenv("DATABASE_TYPE") == null ? "postgres" : System.getenv("DATABASE_TYPE");
 
-	    application.setName("Movie");
-	    application.setUrl(props.getProperty(databaseType + ".datasource.url"));
-	    application.setUserName(props.getProperty(databaseType + ".datasource.username"));
-	    application.setPassword(props.getProperty(databaseType + ".datasource.password"));
-	    application.setSchemaName(props.getProperty(databaseType + ".datasource.schema"));
-	    // daoProject.setTablePatterns(Arrays.asList("movie"));
+		String databaseType = System.getenv("DATABASE_TYPE") == null
+				? "postgres" : System.getenv("DATABASE_TYPE");
 
-	    application.setOnline(true);
-	    application.setBeanIdentifier("model");
-	    application.setDaoIdentifier("store");
-	    application.setDaoSuffix("");
-	    application.setRootPackage("org.example");
-	    application.setCleanSource(true);
-	    return this;
-	}
+		application.setName("Movie");
+		application.setUrl(props.getProperty(databaseType + ".datasource.url"));
+		application.setUserName(props.getProperty(databaseType + ".datasource.username"));
+		application.setPassword(props.getProperty(databaseType + ".datasource.password"));
+		application.setSchemaName(props.getProperty(databaseType + ".datasource.schema"));
+		// daoProject.setTablePatterns(Arrays.asList("movie"));
 
-	TestingTimeApplication understand()
-	{
-	    application.setMethodSpecification(Application.METHOD_SPECIFICATION);
-	    return this;
-	}
+		application.setOnline(true);
+		application.setBeanIdentifier("model");
+		application.setDaoIdentifier("store");
+		application.setDaoSuffix("");
+		application.setRootPackage("org.example");
+		application.setCleanSource(true);
 
-	TestingTimeApplication mapToJava()
-	{
-	    return this;
-	}
+		application.setMethodSpecification(Application.METHOD_SPECIFICATION);
 
-	void writeCode() throws IOException, ScubeException
-	{
-	    application.setSrcFolder("../datastore/src/main/java");
-	    application.compile(new JavaFTLCompiler());
-	    System.out.println("Code is compiled into " + application.getSrcFolder());
-	}
+		application.setSrcFolder(srcFolder);
+		application.compile(new JavaFTLCompiler());
+		System.out.println("Code is compiled into " + application.getSrcFolder());
     }
+
 }

@@ -9,16 +9,12 @@ import org.apache.maven.project.MavenProject;
 import org.sqlcomponents.compiler.java.JavaFTLCompiler;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.utils.CoreConsts;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 
 @Mojo(name = SQLComponentsMojo.GENERATED_SOURCES, defaultPhase = LifecyclePhase.GENERATE_SOURCES)
-public final class SQLComponentsMojo extends AbstractMojo
-{
+public final class SQLComponentsMojo extends AbstractMojo {
     static final String GENERATED_SOURCES = "generate-sources";
     private static final String GENERATE_SOURCES_DIR = CoreConsts.BACK_SLASH + GENERATED_SOURCES + CoreConsts.BACK_SLASH;
     private static final String YML_SPEC_FILE_NAME = "sql-components.yml";
@@ -27,25 +23,21 @@ public final class SQLComponentsMojo extends AbstractMojo
     MavenProject project;
 
     @SneakyThrows
-    public void execute()
-    {
-	Application lApplication = createApplicationFromYMLSpec();
-	lApplication.compile(new JavaFTLCompiler()); //todo: why compiler has to be passed, why not created within compile method, is Compiler Injectable?
+    public void execute() {
+        Application lApplication = createApplicationFromYMLSpec();
+        lApplication.compile(new JavaFTLCompiler()); //todo: why compiler has to be passed, why not created within compile method, is Compiler Injectable?
     }
 
     //todo: what if the name of yaml file customization to be supported?
-    private Application createApplicationFromYMLSpec() throws IOException
-    {
-	Application lApplication = new Yaml(new Constructor(Application.class))
-		.load(new FileReader(
-			new File(project.getBasedir(), YML_SPEC_FILE_NAME)));
+    private Application createApplicationFromYMLSpec() throws IOException {
 
-	lApplication.setMethodSpecification(Application.METHOD_SPECIFICATION);
-	lApplication.setSrcFolder(project.getBuild().getDirectory() + GENERATE_SOURCES_DIR + lApplication.getName().toLowerCase());
-	getLog().info("'" + GENERATED_SOURCES + "' directory is: " + lApplication.getSrcFolder());
+        Application lApplication = CoreConsts.buildApplication(new File(project.getBasedir(), YML_SPEC_FILE_NAME));
 
-	project.addCompileSourceRoot(lApplication.getSrcFolder());
+        lApplication.setSrcFolder(project.getBuild().getDirectory() + GENERATE_SOURCES_DIR + lApplication.getName().toLowerCase());
+        getLog().info("'" + GENERATED_SOURCES + "' directory is: " + lApplication.getSrcFolder());
 
-	return lApplication;
+        project.addCompileSourceRoot(lApplication.getSrcFolder());
+
+        return lApplication;
     }
 }

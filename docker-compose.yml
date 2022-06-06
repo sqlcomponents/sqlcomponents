@@ -13,49 +13,49 @@ services:
     volumes:
       - ${PWD}/init.db/postgres:/docker-entrypoint-initdb.d
 
-  mariadb:
-    image: mariadb:10.5
-    environment:
-      MYSQL_ROOT_PASSWORD: moviedb
-      MYSQL_DATABASE: moviedb
-      MYSQL_USER: moviedb
-      MYSQL_PASSWORD: moviedb
-    ports:
-      - "3306:3306"
-    volumes:
-      - ${PWD}/init.db/mariadb:/docker-entrypoint-initdb.d
-
-  mysqldb:
-    image: mysql:8.0
-    environment:
-       MYSQL_DATABASE: moviedb
-       MYSQL_USER: moviedb
-       MYSQL_PASSWORD: moviedb
-       MYSQL_ROOT_PASSWORD: moviedb
-    ports:
-        - '3308:3306'
-    volumes:
-         - ${PWD}/init.db/mysql:/docker-entrypoint-initdb.d
-
-  sqlserverdb:
-    image: boxfuse/flyway
-    command: -c 'sleep 30; flyway migrate -user=sa -password=$${SA_PASSWORD} -url="jdbc:sqlserver://sqlserver:1433;databaseName=$${DATABASE}"'
-    entrypoint: sh
-    volumes:
-      - ${PWD}/init.db/sqlserver:/flyway/sql
-    environment:
-      SA_PASSWORD: P@ssw0rd
-      DATABASE: moviedb
-    depends_on:
-      - sqlserver
-
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    ports:
-      - 5433:1433
-    entrypoint: sh
-    command: -c '/opt/mssql/bin/sqlservr & /opt/mssql-tools/bin/sqlcmd -l 30 -S localhost -U sa -P $${SA_PASSWORD} -d tempdb -q "CREATE DATABASE $${DATABASE}"; wait'
-    environment:
-      ACCEPT_EULA: 'Y'
-      SA_PASSWORD: P@ssw0rd
-      DATABASE: moviedb
+#  mariadb:
+#    image: mariadb:10.5
+#    environment:
+#      MYSQL_ROOT_PASSWORD: moviedb
+#      MYSQL_DATABASE: moviedb
+#      MYSQL_USER: moviedb
+#      MYSQL_PASSWORD: moviedb
+#    ports:
+#      - "3306:3306"
+#    volumes:
+#      - ${PWD}/init.db/mariadb:/docker-entrypoint-initdb.d
+#
+#  mysqldb:
+#    image: mysql:8.0
+#    environment:
+#       MYSQL_DATABASE: moviedb
+#       MYSQL_USER: moviedb
+#       MYSQL_PASSWORD: moviedb
+#       MYSQL_ROOT_PASSWORD: moviedb
+#    ports:
+#        - '3308:3306'
+#    volumes:
+#         - ${PWD}/init.db/mysql:/docker-entrypoint-initdb.d
+#
+#  sqlserverdb:
+#    image: boxfuse/flyway
+#    command: -c 'sleep 30; flyway migrate -user=sa -password=$${SA_PASSWORD} -url="jdbc:sqlserver://sqlserver:1433;databaseName=$${DATABASE}"'
+#    entrypoint: sh
+#    volumes:
+#      - ${PWD}/init.db/sqlserver:/flyway/sql
+#    environment:
+#      SA_PASSWORD: P@ssw0rd
+#      DATABASE: moviedb
+#    depends_on:
+#      - sqlserver
+#
+#  sqlserver:
+#    image: mcr.microsoft.com/mssql/server:2019-latest
+#    ports:
+#      - 5433:1433
+#    entrypoint: sh
+#    command: -c '/opt/mssql/bin/sqlservr & /opt/mssql-tools/bin/sqlcmd -l 30 -S localhost -U sa -P $${SA_PASSWORD} -d tempdb -q "CREATE DATABASE $${DATABASE}"; wait'
+#    environment:
+#      ACCEPT_EULA: 'Y'
+#      SA_PASSWORD: P@ssw0rd
+#      DATABASE: moviedb
