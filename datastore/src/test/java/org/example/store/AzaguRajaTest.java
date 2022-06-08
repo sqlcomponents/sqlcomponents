@@ -72,7 +72,7 @@ class AzaguRajaTest {
 
 		Connection connection2 = this.connectionStore.getConnectionByName(connection.getName());
 
-		Assertions.assertEquals(1, noOfInsertedRajaRefs, "Single Insert Execution");
+		Assertions.assertEquals(connection.getCode(), connection2.getCode(), "Get Unique Value Execution");
 	}
 
     @Test
