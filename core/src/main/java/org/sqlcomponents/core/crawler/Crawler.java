@@ -9,6 +9,7 @@ import org.sqlcomponents.core.model.relational.Index;
 import org.sqlcomponents.core.model.relational.Key;
 import org.sqlcomponents.core.model.relational.Procedure;
 import org.sqlcomponents.core.model.relational.Table;
+import org.sqlcomponents.core.model.relational.UniqueConstraint;
 import org.sqlcomponents.core.model.relational.enums.ColumnType;
 import org.sqlcomponents.core.model.relational.enums.DBType;
 import org.sqlcomponents.core.model.relational.enums.Flag;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Predicate;
@@ -255,6 +257,8 @@ public class Crawler {
                 table.setColumns(getColumns(databasemetadata, table));
 
                 table.setIndices(getIndices(databasemetadata, table));
+
+                table.setUniqueColumns(getUniqueConstraints(databasemetadata,table));
                 // Set Sequence
                 database.getSequences()
                         .stream()
@@ -416,6 +420,46 @@ public class Crawler {
                 repairMySQL(database, databaseMetaData);
                 break;
         }
+    }
+
+    public List<UniqueConstraint> getUniqueConstraints(final DatabaseMetaData databasemetadata,
+                                                              final Table table) throws SQLException {
+        List<UniqueConstraint> uniqueConstraints = new ArrayList<>();
+
+        ResultSet rs = databasemetadata.getIndexInfo(null, table.getSchemaName(),
+                table.getTableName(), true, true);
+
+        while(rs.next()) {
+            String indexName = rs.getString("index_name");
+            String columnName = rs.getString("column_name");
+
+            Optional<UniqueConstraint> uniqueConstraintOptional = uniqueConstraints.stream()
+                    .filter(uniqueConstraint -> uniqueConstraint.getName().equals(indexName))
+                    .findFirst();
+
+
+            if(uniqueConstraintOptional.isPresent()) {
+                uniqueConstraintOptional.get().getColumns().add(table.getColumns().stream()
+                        .filter(column -> column.getColumnName().equals(columnName)).findFirst().get());
+
+            } else {
+                UniqueConstraint uniqueConstraint = new UniqueConstraint();
+                uniqueConstraint.setName(indexName);
+
+                List<Column> columns = new ArrayList<>();
+
+                columns.add(table.getColumns().stream()
+                        .filter(column -> column.getColumnName().equals(columnName)).findFirst().get());
+                uniqueConstraint.setColumns(columns);
+
+                uniqueConstraints.add(uniqueConstraint);
+
+            }
+
+
+        }
+
+        return uniqueConstraints;
     }
 
 

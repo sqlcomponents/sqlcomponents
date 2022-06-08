@@ -5,6 +5,14 @@
 
     <modelVersion>4.0.0</modelVersion>
     <name>Core</name>
+    <artifactId>core</artifactId>
+
+    <parent>
+        <groupId>org.sqlcomponents</groupId>
+        <artifactId>sqlcomponents</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
     <dependencies>
         <dependency>
             <groupId>org.yaml</groupId>
@@ -14,16 +22,10 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
+            <version>23.0.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
-    <artifactId>core</artifactId>
 
-    <parent>
-        <groupId>org.sqlcomponents</groupId>
-        <artifactId>sqlcomponents</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
 
 </project>
