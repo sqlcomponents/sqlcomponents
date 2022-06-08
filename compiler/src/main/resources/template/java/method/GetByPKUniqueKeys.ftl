@@ -13,7 +13,7 @@
 <#if table.uniqueColumns?? && table.uniqueColumns?size != 0 >
 <#assign a=addImportStatement(beanPackage+"."+name)>
     <#list table.uniqueColumns as uniqueColumn>
-    public Object get${name}By${uniqueColumn.name}(final String a) {
+    public ${name} get${name}By${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(${getUniqueKeysAsParameterString(uniqueColumn.name)}) {
         return null;
     }
     </#list>

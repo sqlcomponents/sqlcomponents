@@ -71,6 +71,15 @@
 	<#return null> 
 </#function>
 
+<#function getPropertyByColumnName columnName>
+	<#list properties as property>
+		<#if property.column.columnName == columnName>
+			<#return property>
+		</#if>
+	</#list>
+	<#return null>
+</#function>
+
 <#function getNullablePropsAsParameterString>
 	<#local pkAsParameterStr="">
 	<#local index=0>
@@ -198,17 +207,39 @@ import ${importStatement};
 
 <#function getUniqueKeysAsParameterString uniqueConstraintGroupName>
 	<#local pkAsParameterStr="">
-	<#local index=0>
-	<#list properties as property>		
-		<#if property.uniqueConstraintGroup?? && property.uniqueConstraintGroup == uniqueConstraintGroupName>
-			<#if index == 0>
-				<#local index=1>
-			<#else>
-				<#local pkAsParameterStr = pkAsParameterStr + "," >
-			</#if>
-			<#local pkAsParameterStr = pkAsParameterStr + getClassName(property.dataType) + " " +property.name >
-			<#local a=addImportStatement(property.dataType)>
-		</#if>
+    <#local index=0>
+	<#list table.uniqueColumns as uniqueColumn>
+	    <#if uniqueColumn.name == uniqueConstraintGroupName>
+	        <#list uniqueColumn.columns as column>
+	            <#local property=getPropertyByColumnName(column.columnName)>
+	            <#if index == 0>
+                    <#local index=1>
+                <#else>
+                    <#local pkAsParameterStr = pkAsParameterStr + "," >
+                </#if>
+                <#local pkAsParameterStr = pkAsParameterStr + getClassName(property.dataType) + " " +property.name >
+                <#local a=addImportStatement(property.dataType)>
+	        </#list>
+	    </#if>
 	</#list>
 	<#return pkAsParameterStr> 
+</#function>
+
+<#function getUniqueKeysAsMethodSignature uniqueConstraintGroupName>
+	<#local pkAsParameterStr="">
+    <#local index=0>
+	<#list table.uniqueColumns as uniqueColumn>
+	    <#if uniqueColumn.name == uniqueConstraintGroupName>
+	        <#list uniqueColumn.columns as column>
+	            <#local property=getPropertyByColumnName(column.columnName)>
+	            <#if index == 0>
+                    <#local index=1>
+                <#else>
+                    <#local pkAsParameterStr = pkAsParameterStr + "And" >
+                </#if>
+                <#local pkAsParameterStr = pkAsParameterStr  + property.name?cap_first >
+	        </#list>
+	    </#if>
+	</#list>
+	<#return pkAsParameterStr>
 </#function>
