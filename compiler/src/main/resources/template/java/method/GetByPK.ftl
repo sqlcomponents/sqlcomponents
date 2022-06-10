@@ -1,5 +1,6 @@
 <#if table.hasPrimaryKey>
-    public ${name} find(${getPrimaryKeysAsParameterString()}) throws SQLException  {
+<#assign a=addImportStatement("java.util.Optional")>
+    public Optional<${name}> find(${getPrimaryKeysAsParameterString()}) throws SQLException  {
         ${name} ${name?uncap_first} = null;
 		final String query = <@compress single_line=true>"
                 SELECT
@@ -20,6 +21,6 @@
 
             if (resultSet.next()) ${name?uncap_first} = rowMapper(resultSet);
         } 
-        return ${name?uncap_first};
+        return Optional.ofNullable(${name?uncap_first});
 	}
 </#if>
