@@ -14,18 +14,19 @@ import java.util.List;
 
 public final class Application
 {
-    public static final List<String> METHOD_SPECIFICATION = Arrays.asList("InsertByEntity",
-									  "DeleteByPK",
-									  "DeleteByEntity",
-									  "DeleteAll",
-									  "GetAll",
-									  "GetByEntity",
-									  "GetByPKExceptHighest",
-									  "GetByPKUniqueKeys",
-									  "IsExisting",
-									  "MViewRefresh",
-									  "UpdateByPK",
-									  "GetByPK");
+    public static final List<String> METHOD_SPECIFICATION = Arrays.asList(
+                                        "InsertByEntity",
+									    "DeleteByPK",
+									    "DeleteByEntity",
+									    "DeleteAll",
+                                        "GetByPK",
+									    "GetAll",
+									    "GetByEntity",
+									    "GetByPKExceptHighest",
+									    "GetByUniqueKeys",
+									    "MViewRefresh",
+									    "UpdateByPK"
+									    );
     private String name;
     private String location;
     private String srcFolder;

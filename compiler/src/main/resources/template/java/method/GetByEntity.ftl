@@ -11,7 +11,9 @@
             }
             return arrays;
         }
-	}<#assign a=addImportStatement(beanPackage+"."+name)><#assign a=addImportStatement("java.sql.PreparedStatement")>
+	}
+	<#assign a=addImportStatement(beanPackage+"."+name)>
+	<#assign a=addImportStatement("java.sql.PreparedStatement")>
 <#if orm.pagination >
 
 <#include "/template/java/method/signature/GetByEntity_Paginated.ftl"> {

@@ -1,7 +1,8 @@
 <#if table.uniqueColumns?? && table.uniqueColumns?size != 0 >
 <#assign a=addImportStatement(beanPackage+"."+name)>
+<#assign a=addImportStatement("java.util.Optional")>
     <#list table.uniqueColumns as uniqueColumn>
-    public ${name} get${name}By${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws SQLException {
+    public Optional<${name}> findBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws SQLException {
         ${name} ${name?uncap_first} = null;
             final String query = <@compress single_line=true>"
                     SELECT
@@ -19,8 +20,31 @@
 
                 if (resultSet.next()) ${name?uncap_first} = rowMapper(resultSet);
             }
-            return ${name?uncap_first};
+            return Optional.ofNullable(${name?uncap_first});
     }
+
+    public boolean existsBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws SQLException {
+        
+            final String query = <@compress single_line=true>"
+                    SELECT
+            1
+            FROM ${table.escapedName?j_string}
+            WHERE
+
+            ${getUniqueKeysAsWhereClause(uniqueColumn.name)}
+
+                    </@compress>";
+            boolean isExists = false;
+            try (java.sql.Connection dbConnection = dbDataSource.getConnection();
+                PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
+                ${getUniqueKeysAsPreparedStatements(uniqueColumn.name)}
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                isExists = resultSet.next();
+            }
+            return isExists;
+    }
+
     </#list>
 </#if>
 

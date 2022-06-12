@@ -13,11 +13,12 @@ import org.junit.jupiter.api.TestInstance;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Azaguraja
  * 1. Reference for all the data types.
- * 2. All Persistance Intefaces.
+ * 2. All Persistence Interfaces.
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AzaguRajaTest {
@@ -70,10 +71,23 @@ class AzaguRajaTest {
 				.values(connection)
 				.execute();
 
-		Connection connection2 = this.connectionStore.getConnectionByName(connection.getName());
+		Optional<Connection> connection2 = this.connectionStore.findByName(connection.getName());
 
-		Assertions.assertEquals(connection.getCode(), connection2.getCode(), "Get Unique Value Execution");
+		Assertions.assertEquals(connection.getCode(), connection2.get().getCode(), "Get Unique Value Execution");
 	}
+
+
+    @Test
+    void testExists() throws SQLException {
+        Connection connection = connectionsToTest.get(0);
+        Integer noOfInsertedRajaRefs = this.connectionStore.
+                insert()
+                .values(connection)
+                .execute();
+
+        Assertions.assertTrue(this.connectionStore.exists(connection.getCode()), "Exists by PK");
+        Assertions.assertTrue(this.connectionStore.existsByName(connection.getName()), "Exists by Unique Key");
+    }
 
     @Test
     void testMultipleInsertAndGetNumberOfRows() throws SQLException {
