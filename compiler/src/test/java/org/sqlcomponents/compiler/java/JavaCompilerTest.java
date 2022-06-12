@@ -1,7 +1,7 @@
 package org.sqlcomponents.compiler.java;
 
 import org.junit.jupiter.api.Test;
-import org.sqlcomponents.core.exception.ScubeException;
+import org.sqlcomponents.core.exception.SQLComponentsException;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.utils.CoreConsts;
 
@@ -12,7 +12,7 @@ import java.util.Properties;
 
 class JavaCompilerTest {
     @Test
-    void writeCode() throws ScubeException, IOException {
+    void writeCode() throws SQLComponentsException, IOException {
 
 		Application application ;
 

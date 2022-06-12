@@ -5,7 +5,7 @@ import org.sqlcomponents.compiler.base.FTLTemplate;
 import org.sqlcomponents.compiler.java.mapper.DB2JavaDataTypeMapper;
 import org.sqlcomponents.core.compiler.Compiler;
 import org.sqlcomponents.core.crawler.Crawler;
-import org.sqlcomponents.core.exception.ScubeException;
+import org.sqlcomponents.core.exception.SQLComponentsException;
 import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.Entity;
@@ -30,7 +30,7 @@ public final class JavaFTLCompiler implements Compiler
     }
 
     @Override
-    public void compile(final Application aApplication) throws ScubeException
+    public void compile(final Application aApplication) throws SQLComponentsException
     {
 	Mapper mapper = new DB2JavaDataTypeMapper();
 	aApplication.setOrm(mapper.getOrm(aApplication, new Crawler()));

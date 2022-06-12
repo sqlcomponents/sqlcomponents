@@ -1,7 +1,7 @@
 package org.sqlcomponents.core.crawler;
 
 import org.sqlcomponents.core.crawler.util.DataSourceUtil;
-import org.sqlcomponents.core.exception.ScubeException;
+import org.sqlcomponents.core.exception.SQLComponentsException;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.Column;
 import org.sqlcomponents.core.model.relational.Database;
@@ -38,10 +38,10 @@ public class Crawler {
      *
      * @param application
      * @return Database
-     * @throws ScubeException
+     * @throws SQLComponentsException
      */
     public Database getDatabase(final Application application)
-            throws ScubeException {
+            throws SQLComponentsException {
         Database database = new Database();
         DataSource dataSource = DataSourceUtil.getDataSource(
                 application.getUrl(),
@@ -202,7 +202,7 @@ public class Crawler {
             repair(database, databasemMetadata);
 
         } catch (final Exception e) {
-            throw new ScubeException(e);
+            throw new SQLComponentsException(e);
         }
         return database;
     }

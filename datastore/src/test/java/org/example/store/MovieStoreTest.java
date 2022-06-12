@@ -37,7 +37,7 @@ class MovieStoreTest {
 
     @Test
     void testFind() throws SQLException {
-        Optional<Movie> movie = this.movieStore.find(this.movieStore.select(title().eq("Memento")).get(0).getId());
+        Optional<Movie> movie = this.movieStore.find(this.movieStore.select(title().eq("Memento")).execute().get(0).getId());
         Assertions.assertEquals("Memento"
                 , movie.get().getTitle()
                 , "Find By PK");
@@ -46,28 +46,28 @@ class MovieStoreTest {
     @Test
     void testWhereClause() throws SQLException {
         Assertions.assertEquals(moviesToTest.size()
-                , this.movieStore.select().size()
+                , this.movieStore.select().execute().size()
                 , "Select All");
     }
 
     @Test
     void testWhereClauseSingleCriteria() throws SQLException {
         Assertions.assertEquals(1
-                , this.movieStore.select(title().eq("Memento")).size()
+                , this.movieStore.select(title().eq("Memento")).execute().size()
                 , "Select All Single Criteria");
     }
 
     @Test
     void testWhereClauseMultipleANDCriteria() throws SQLException {
         Assertions.assertEquals(1
-                , this.movieStore.select(yearOfRelease().eq((short) 2017).and().directedBy().eq("Christopher Nolan")).size()
+                , this.movieStore.select(yearOfRelease().eq((short) 2017).and().directedBy().eq("Christopher Nolan")).execute().size()
                 , "Select All Single Criteria");
     }
 
     @Test
     void testWhereClauseMultipleORCriteria() throws SQLException {
         Assertions.assertEquals(12
-                , this.movieStore.select(yearOfRelease().eq((short) 2017).or().directedBy().eq("Christopher Nolan")).size()
+                , this.movieStore.select(yearOfRelease().eq((short) 2017).or().directedBy().eq("Christopher Nolan")).execute().size()
                 , "Select All Single Criteria");
     }
 }

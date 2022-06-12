@@ -2,7 +2,7 @@ package org.sqlcomponents.core.crawler;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.sqlcomponents.core.exception.ScubeException;
+import org.sqlcomponents.core.exception.SQLComponentsException;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.Database;
 
@@ -13,7 +13,7 @@ import java.util.Properties;
 class CrawlerTest {
 
     @Test
-    void getDatabase() throws ScubeException, IOException {
+    void getDatabase() throws SQLComponentsException, IOException {
         Properties props = new Properties();
         props.load(new FileReader("../database.properties"));
         String databaseType = System.getenv("DATABASE_TYPE") == null
