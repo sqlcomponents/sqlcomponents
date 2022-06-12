@@ -1,11 +1,11 @@
 package org.sqlcomponents.core.exception;
 
-public class ScubeException extends Exception {
+public class SQLComponentsException extends Exception {
 
     /**
      * Constructor with no arguments.
      */
-    public ScubeException() {
+    public SQLComponentsException() {
         super();
     }
 
@@ -14,7 +14,7 @@ public class ScubeException extends Exception {
      * @param arg0
      * @param arg1
      */
-    public ScubeException(final String arg0, final Throwable arg1) {
+    public SQLComponentsException(final String arg0, final Throwable arg1) {
         super(arg0, arg1);
     }
 
@@ -22,7 +22,7 @@ public class ScubeException extends Exception {
      * constructor with arguments.
      * @param arg0
      */
-    public ScubeException(final String arg0) {
+    public SQLComponentsException(final String arg0) {
         super(arg0);
     }
 
@@ -30,7 +30,7 @@ public class ScubeException extends Exception {
      * constructor with arguments.
      * @param arg0
      */
-    public ScubeException(final Throwable arg0) {
+    public SQLComponentsException(final Throwable arg0) {
         super(arg0);
     }
 }
