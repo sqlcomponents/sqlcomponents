@@ -51,6 +51,17 @@ class MovieStoreTest {
     }
 
     @Test
+    void testLimitClause() throws SQLException {
+        Assertions.assertEquals(2
+                , this.movieStore.select().limit(2).execute().size()
+                , "Select With Limit");
+
+        Assertions.assertEquals(2
+                , this.movieStore.select().limit(2).offset(3).execute().size()
+                , "Select With Limit");
+    }
+
+    @Test
     void testWhereClauseSingleCriteria() throws SQLException {
         Assertions.assertEquals(1
                 , this.movieStore.select(title().eq("Memento")).execute().size()

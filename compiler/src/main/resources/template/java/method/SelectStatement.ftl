@@ -14,6 +14,13 @@ public static final class SelectStatement {
         private final ${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix};
         private final WhereClause whereClause;
 
+        private LimitClause limitClause;
+        private LimitClause.OffsetClause offsetClause;
+
+        public LimitClause limit(final int limit) {
+                return new LimitClause(this,limit);
+        }
+
         private SelectStatement(final ${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix}) {
             this(${name?uncap_first}Store${orm.daoSuffix},null);
         }
@@ -25,11 +32,14 @@ public static final class SelectStatement {
         }
 
         public List<${name}> execute() throws SQLException {
-		final String query = this.whereClause == null ? <@compress single_line=true>"
+		final String query = <@compress single_line=true>"
                 SELECT
 		<@columnSelection/> 
 		FROM ${table.escapedName?j_string}
-                </@compress>" : "SELECT <@columnSelection/> FROM ${table.escapedName?j_string}"+ (" WHERE " + this.whereClause.asSql());
+                </@compress>" 
+                + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) )
+                + ( this.limitClause == null ? "" : this.limitClause.asSql() )
+                + ( this.offsetClause == null ? "" : this.offsetClause.asSql() );
                 try (java.sql.Connection dbConnection = this.${name?uncap_first}Store${orm.daoSuffix}.dbDataSource.getConnection();
                 PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
                 
@@ -41,6 +51,52 @@ public static final class SelectStatement {
                                 return arrays;
                 } 
 	}
+
+        public static final class LimitClause  {
+                private final SelectStatement selectStatement;
+                private final String asSql;
+
+                private LimitClause(final SelectStatement selectStatement,final int limit) {
+                        this.selectStatement = selectStatement;
+                        asSql = " LIMIT " + limit;
+
+                        this.selectStatement.limitClause = this;
+                }
+
+                private String asSql() {
+                        return asSql ;
+                }
+
+                public List<${name}> execute() throws SQLException {
+                        return this.selectStatement.execute();
+                }
+
+                public OffsetClause offset(final int offset) {
+                        return new OffsetClause(this.selectStatement,offset);
+                }
+
+                public static final class OffsetClause  {
+                        private final SelectStatement selectStatement;
+                        private final String asSql;
+
+                        private OffsetClause(final SelectStatement selectStatement,final int offset) {
+                                this.selectStatement = selectStatement;
+                                asSql = " OFFSET " + offset;
+
+                                this.selectStatement.offsetClause = this;
+                        }
+
+                        private String asSql() {
+                                return asSql ;
+                        }
+
+                        public List<${name}> execute() throws SQLException {
+                                return this.selectStatement.execute();
+                        }
+
+        }
+
+        }
 }
 
 
