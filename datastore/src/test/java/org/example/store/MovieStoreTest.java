@@ -57,8 +57,12 @@ class MovieStoreTest {
                 , "Select With Limit");
 
         Assertions.assertEquals(2
-                , this.movieStore.select().limit(2).offset(3).execute().size()
+                , this.movieStore.select().limit(2).offset(3).page().getContent().size()
                 , "Select With Limit");
+
+        Assertions.assertEquals(moviesToTest.size()
+                , this.movieStore.select().limit(2).page().getTotalElements()
+                , "Select All Count");
     }
 
     @Test

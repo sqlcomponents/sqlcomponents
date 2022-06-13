@@ -80,6 +80,30 @@ public final class ${name}Manager {
     }
     <#assign a=addImportStatement("java.sql.ResultSet")>
     <#assign a=addImportStatement("java.sql.SQLException")>
+    <#assign a=addImportStatement("java.util.List")>
+
+    public static <T> Page<T> page(List<T> content, int totalElements) {
+        return new Page(content,totalElements);
+    }
+
+    public static class Page<T> {
+        final List<T> content;
+        final int totalElements;
+
+        private Page(List<T> content, int totalElements) {
+            this.content = content;
+            this.totalElements = totalElements;
+        }
+
+        public List<T> getContent() {
+            return content;
+        }
+
+        public int getTotalElements() {
+            return totalElements;
+        }
+    }
+
 }
 </#assign>
 <@importStatements/>

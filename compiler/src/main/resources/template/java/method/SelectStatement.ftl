@@ -7,7 +7,7 @@ public SelectStatement select() {
 }
 public SelectStatement select(WhereClause whereClause) throws SQLException  {
         return new SelectStatement(this,whereClause);
-	}
+}
 
 public static final class SelectStatement {
 
@@ -52,6 +52,28 @@ public static final class SelectStatement {
                 } 
 	}
 
+        public int count() throws SQLException {
+                int count = 0;
+		final String query = <@compress single_line=true>"
+                SELECT
+		COUNT(*)
+		FROM ${table.escapedName?j_string}
+                </@compress>" 
+                + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
+                try (java.sql.Connection dbConnection = this.${name?uncap_first}Store${orm.daoSuffix}.dbDataSource.getConnection();
+                PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
+                
+                ResultSet resultSet = preparedStatement.executeQuery();
+                                List<${name}> arrays = new ArrayList();
+                while (resultSet.next()) {
+                                        count = resultSet.getInt(1);
+                                }
+                                return count;
+                } 
+	}
+
+
+
         public static final class LimitClause  {
                 private final SelectStatement selectStatement;
                 private final String asSql;
@@ -72,18 +94,22 @@ public static final class SelectStatement {
                 }
 
                 public OffsetClause offset(final int offset) {
-                        return new OffsetClause(this.selectStatement,offset);
+                        return new OffsetClause(this,offset);
+                }
+
+                public ${orm.application.name}Manager.Page<${name}> page() throws SQLException {
+                    return ${orm.application.name}Manager.page(execute(), selectStatement.count());
                 }
 
                 public static final class OffsetClause  {
-                        private final SelectStatement selectStatement;
+                        private final LimitClause limitClause;
                         private final String asSql;
 
-                        private OffsetClause(final SelectStatement selectStatement,final int offset) {
-                                this.selectStatement = selectStatement;
+                        private OffsetClause(final LimitClause limitClause,final int offset) {
+                                this.limitClause = limitClause;
                                 asSql = " OFFSET " + offset;
 
-                                this.selectStatement.offsetClause = this;
+                                this.limitClause.selectStatement.offsetClause = this;
                         }
 
                         private String asSql() {
@@ -91,7 +117,11 @@ public static final class SelectStatement {
                         }
 
                         public List<${name}> execute() throws SQLException {
-                                return this.selectStatement.execute();
+                                return this.limitClause.execute();
+                        }
+
+                        public ${orm.application.name}Manager.Page<${name}> page() throws SQLException {
+                                return this.limitClause.page();
                         }
 
         }
