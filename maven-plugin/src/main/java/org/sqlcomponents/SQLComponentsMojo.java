@@ -15,7 +15,7 @@ import java.io.IOException;
 
 @Mojo(name = SQLComponentsMojo.GENERATED_SOURCES, defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public final class SQLComponentsMojo extends AbstractMojo {
-    static final String GENERATED_SOURCES = "generate-sources";
+    static final String GENERATED_SOURCES = "generated-sources";
     private static final String GENERATE_SOURCES_DIR = CoreConsts.BACK_SLASH + GENERATED_SOURCES + CoreConsts.BACK_SLASH;
     private static final String YML_SPEC_FILE_NAME = "sql-components.yml";
 
