@@ -184,6 +184,9 @@ public static final class SelectStatement {
 		return isExists;
 	}
 
+    public List<${name}> selectBy(${getPrimaryKeysAsParameterStringExceptHighest()}) throws SQLException  {
+        return null;
+	}
 </#if>
 
 
