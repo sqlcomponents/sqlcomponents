@@ -37,7 +37,7 @@ class MovieStoreTest {
 
     @Test
     void testFind() throws SQLException {
-        Optional<Movie> movie = this.movieStore.find(this.movieStore.select(title().eq("Memento")).execute().get(0).getId());
+        Optional<Movie> movie = this.movieStore.select(this.movieStore.select(title().eq("Memento")).execute().get(0).getId());
         Assertions.assertEquals("Memento"
                 , movie.get().getTitle()
                 , "Find By PK");

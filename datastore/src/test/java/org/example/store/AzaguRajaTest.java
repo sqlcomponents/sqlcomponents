@@ -71,7 +71,7 @@ class AzaguRajaTest {
 				.values(connection)
 				.execute();
 
-		Optional<Connection> connection2 = this.connectionStore.findByName(connection.getName());
+		Optional<Connection> connection2 = this.connectionStore.selectByName(connection.getName());
 
 		Assertions.assertEquals(connection.getCode(), connection2.get().getCode(), "Get Unique Value Execution");
 	}

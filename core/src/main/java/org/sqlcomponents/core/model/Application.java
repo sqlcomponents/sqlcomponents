@@ -14,10 +14,8 @@ import java.util.List;
 
 public final class Application {
     public static final List<String> METHOD_SPECIFICATION = Arrays.asList(
-            "GetByPK",
             "SelectStatement",
             "GetByPKExceptHighest",
-            "GetByUniqueKeys",
             "InsertStatement",
             "DeleteByPK",
             "DeleteByEntity",
