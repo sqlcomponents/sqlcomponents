@@ -149,6 +149,28 @@ class AzaguRajaTest {
     }
 
     @Test
+    void testDeleteWhereClause() throws SQLException {
+        this.connectionStore
+                .insert()
+                .values(connectionsToTest)
+                .execute();
+
+        List<AzaguRaja> insertedAzaguRajas = this.allInAllAzaguRajaStore
+                .insert()
+                .values(azaguRajasToTest.get(0))
+                .values(azaguRajasToTest.get(1))
+                .values(azaguRajasToTest.get(2))
+                .returning();
+
+        AzaguRajaStore.WhereClause whereClause = AzaguRajaStore.aBoolean().eq(true);
+        int deletedRows = this.allInAllAzaguRajaStore.delete(whereClause).execute();
+
+
+
+        Assertions.assertEquals(azaguRajasToTest.size()-deletedRows, this.allInAllAzaguRajaStore.select(whereClause).count(), "Multi Delete Where Clause");
+    }
+
+    @Test
     void testSingleUpdateAndGetNumberOfRows() throws SQLException {
         Connection connection = this.connectionStore
                 .insert().values(this.connectionsToTest.get(0)).returning();
