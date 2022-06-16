@@ -16,9 +16,7 @@ public final class Application {
     public static final List<String> METHOD_SPECIFICATION = Arrays.asList(
             "SelectStatement",
             "InsertStatement",
-            "DeleteByPK",
-            "DeleteByEntity",
-            "DeleteAll",
+            "DeleteStatement",
             "MViewRefresh",
             "UpdateStatement"
     );

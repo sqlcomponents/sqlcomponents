@@ -29,7 +29,7 @@ class MovieStoreTest {
 
     @BeforeAll
     void init() throws SQLException {
-        this.movieStore.deleteAll();
+        this.movieStore.delete().execute();
         // Data used for testing
         this.moviesToTest = this.movieStore.insert()
                 .values(JsonUtil.getTestObjects(Movie.class)).returning();

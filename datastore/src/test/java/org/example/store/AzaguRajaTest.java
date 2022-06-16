@@ -50,8 +50,8 @@ class AzaguRajaTest {
     @BeforeEach
     void init() throws SQLException {
         // Clean Up
-        this.allInAllAzaguRajaStore.deleteAll();
-        this.connectionStore.deleteAll();
+        this.allInAllAzaguRajaStore.delete().execute();
+        this.connectionStore.delete().execute();
     }
 
     @Test
@@ -165,9 +165,10 @@ class AzaguRajaTest {
         AzaguRajaStore.WhereClause whereClause = AzaguRajaStore.aBoolean().eq(true);
         int deletedRows = this.allInAllAzaguRajaStore.delete(whereClause).execute();
 
-
-
         Assertions.assertEquals(azaguRajasToTest.size()-deletedRows, this.allInAllAzaguRajaStore.select(whereClause).count(), "Multi Delete Where Clause");
+
+        Assertions.assertEquals(1,
+        this.connectionStore.delete(connectionsToTest.get(0).getCode()),"Delete By Id");
     }
 
     @Test
