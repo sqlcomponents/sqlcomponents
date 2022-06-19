@@ -89,16 +89,12 @@ public static final class SelectStatement {
                         return asSql ;
                 }
 
-                public List<${name}> execute() throws SQLException {
-                        return this.selectStatement.execute();
-                }
-
                 public OffsetClause offset(final int offset) {
                         return new OffsetClause(this,offset);
                 }
 
-                public ${orm.application.name}Manager.Page<${name}> page() throws SQLException {
-                    return ${orm.application.name}Manager.page(execute(), selectStatement.count());
+                public ${orm.application.name}Manager.Page<${name}> execute() throws SQLException {
+                    return ${orm.application.name}Manager.page(this.selectStatement.execute(), selectStatement.count());
                 }
 
                 public static final class OffsetClause  {
@@ -116,12 +112,10 @@ public static final class SelectStatement {
                                 return asSql ;
                         }
 
-                        public List<${name}> execute() throws SQLException {
-                                return this.limitClause.execute();
-                        }
 
-                        public ${orm.application.name}Manager.Page<${name}> page() throws SQLException {
-                                return this.limitClause.page();
+
+                        public ${orm.application.name}Manager.Page<${name}> execute() throws SQLException {
+                                return this.limitClause.execute();
                         }
 
         }
