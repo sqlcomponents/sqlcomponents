@@ -123,7 +123,7 @@ public static final class SelectStatement {
                         }
 
                         <#if hasJavaClass("org.springframework.data.domain.Page") >
-                        public ${orm.application.name}Manager.Page<${name}> execute(final Pageable pageable) throws SQLException {
+                        public Page<${name}> execute(final Pageable pageable) throws SQLException {
                                 return this.limitClause.execute(pageable);
                         }
                         <#else>
