@@ -82,6 +82,10 @@ public final class ${name}Manager {
     <#assign a=addImportStatement("java.sql.SQLException")>
     <#assign a=addImportStatement("java.util.List")>
 
+    <#if orm.hasJavaClass("org.springframework.data.domain.Page") >
+    //
+    <#else>
+
     public static <T> Page<T> page(List<T> content, int totalElements) {
         return new Page(content,totalElements);
     }
@@ -103,6 +107,7 @@ public final class ${name}Manager {
             return totalElements;
         }
     }
+    </#if>
 
 }
 </#assign>

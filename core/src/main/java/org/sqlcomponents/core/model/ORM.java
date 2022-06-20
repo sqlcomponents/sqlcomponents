@@ -48,4 +48,22 @@ public class ORM
     private List<Default> defaults;
     private boolean pagination;
     private List<String> methodSpecification;
+
+    private ClassLoader applicationClassLoader;
+
+    public void setApplicationClassLoader(final ClassLoader applicationClassLoader) {
+        this.applicationClassLoader = applicationClassLoader;
+    }
+
+    public boolean hasJavaClass(final String className) {
+        if(applicationClassLoader != null) {
+            try {
+                applicationClassLoader.loadClass(className);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        return false;
+    }
 }

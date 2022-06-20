@@ -93,9 +93,19 @@ public static final class SelectStatement {
                         return new OffsetClause(this,offset);
                 }
 
+                <#if hasJavaClass("org.springframework.data.domain.Page") >
+                <#assign a=addImportStatement("org.springframework.data.domain.Page")>
+                <#assign a=addImportStatement("org.springframework.data.domain.PageImpl")>
+                <#assign a=addImportStatement("org.springframework.data.domain.Pageable")>
+                public Page<${name}> execute(final Pageable pageable) throws SQLException {
+                    return new PageImpl(this.selectStatement.execute(), pageable,
+                                selectStatement.count());
+                }
+                <#else>
                 public ${orm.application.name}Manager.Page<${name}> execute() throws SQLException {
                     return ${orm.application.name}Manager.page(this.selectStatement.execute(), selectStatement.count());
                 }
+                </#if>
 
                 public static final class OffsetClause  {
                         private final LimitClause limitClause;
@@ -112,11 +122,16 @@ public static final class SelectStatement {
                                 return asSql ;
                         }
 
-
-
+                        <#if hasJavaClass("org.springframework.data.domain.Page") >
+                        public ${orm.application.name}Manager.Page<${name}> execute(final Pageable pageable) throws SQLException {
+                                return this.limitClause.execute(pageable);
+                        }
+                        <#else>
                         public ${orm.application.name}Manager.Page<${name}> execute() throws SQLException {
                                 return this.limitClause.execute();
                         }
+                        </#if>
+
 
         }
 
