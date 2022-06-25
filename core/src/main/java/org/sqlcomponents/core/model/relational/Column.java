@@ -2,14 +2,15 @@ package org.sqlcomponents.core.model.relational;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.sqlcomponents.core.model.relational.enumeration.ColumnType;
-import org.sqlcomponents.core.model.relational.enumeration.Flag;
+import org.sqlcomponents.core.model.relational.enums.ColumnType;
+import org.sqlcomponents.core.model.relational.enums.Flag;
 
 import java.util.SortedSet;
 
 @Setter
 @Getter
-public class Column {
+public class Column
+{
 
     private final Table table;
     private String columnName;
@@ -36,20 +37,23 @@ public class Column {
     private Flag generatedColumn;
     private SortedSet<Key> exportedKeys;
 
-    public Column(final Table table) {
-        this.table = table;
+    public Column(final Table aTable)
+    {
+	this.table = aTable;
     }
 
-
-    public String getEscapedName() {
-        return this.table.getDatabase().escapedName(this.getColumnName());
+    public String getEscapedName()
+    {
+	return this.table.getDatabase().escapedName(this.getColumnName());
     }
 
-    public boolean isInsertable() {
-        return autoIncrement != Flag.YES && generatedColumn != Flag.YES;
+    public boolean isInsertable()
+    {
+	return autoIncrement != Flag.YES && generatedColumn != Flag.YES;
     }
 
-    public boolean isPrimaryKey() {
-        return primaryKeyIndex != 0;
+    public boolean isPrimaryKey()
+    {
+	return primaryKeyIndex != 0;
     }
 }

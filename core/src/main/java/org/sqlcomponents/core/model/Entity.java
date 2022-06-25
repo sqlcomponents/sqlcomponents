@@ -4,9 +4,11 @@ package org.sqlcomponents.core.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.sqlcomponents.core.model.relational.Table;
-import org.sqlcomponents.core.model.relational.enumeration.Flag;
+import org.sqlcomponents.core.model.relational.enums.Flag;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 @Getter
@@ -30,6 +32,10 @@ public class Entity {
     }
 
 
+    public boolean hasJavaClass(String className) {
+        return orm.hasJavaClass(className);
+    }
+
     public List<Property> getInsertableProperties() {
         return this.getProperties().stream().filter(property -> {
             return property.getColumn().isInsertable();
@@ -38,12 +44,13 @@ public class Entity {
 
     /**
      * Get Not Null Insertable Properties
+     *
      * @return properties
      */
     public List<Property> getMustInsertableProperties() {
         return this.getProperties().stream().filter(property -> {
             return property.getColumn().isInsertable()
-                    && property.getColumn().getNullable() !=  Flag.YES;
+                    && property.getColumn().getNullable() != Flag.YES;
         }).collect(Collectors.toList());
     }
 

@@ -1,17 +1,17 @@
 package org.sqlcomponents.core.model.relational;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.sqlcomponents.core.model.relational.enumeration.Flag;
-import org.sqlcomponents.core.model.relational.enumeration.TableType;
 
-import java.util.*;
+import org.sqlcomponents.core.model.relational.enums.Flag;
+import org.sqlcomponents.core.model.relational.enums.TableType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-@Setter
-@Getter
-public class Table {
 
+public class Table {
     private final Database database;
     private String tableName;
     private String sequenceName;
@@ -26,6 +26,15 @@ public class Table {
     private String referenceGeneration;
     private List<Column> columns;
     private List<Index> indices;
+    private List<UniqueConstraint> uniqueColumns;
+
+    public List<UniqueConstraint> getUniqueColumns() {
+        return uniqueColumns;
+    }
+
+    public void setUniqueColumns(List<UniqueConstraint> uniqueColumns) {
+        this.uniqueColumns = uniqueColumns;
+    }
 
     public Table(final Database database) {
         this.database = database;
@@ -78,7 +87,7 @@ public class Table {
 
         distinctColumnTypeNames.addAll(columns
                 .stream()
-                .filter(column -> Table.class.getResource("/template/java/custom-object/"+column.getTypeName().toLowerCase()+".ftl") != null )
+                .filter(column -> Table.class.getResource("/template/java/custom-object/" + column.getTypeName().toLowerCase() + ".ftl") != null)
                 .map(column -> column.getTypeName()).distinct()
                 .collect(Collectors.toList()));
 
@@ -96,6 +105,114 @@ public class Table {
 
 
         return distinctColumnTypeNames;
+    }
+
+    public Database getDatabase() {
+        return database;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public String getSequenceName() {
+        return sequenceName;
+    }
+
+    public void setSequenceName(String sequenceName) {
+        this.sequenceName = sequenceName;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getSchemaName() {
+        return schemaName;
+    }
+
+    public void setSchemaName(String schemaName) {
+        this.schemaName = schemaName;
+    }
+
+    public TableType getTableType() {
+        return tableType;
+    }
+
+    public void setTableType(TableType tableType) {
+        this.tableType = tableType;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getCategoryType() {
+        return categoryType;
+    }
+
+    public void setCategoryType(String categoryType) {
+        this.categoryType = categoryType;
+    }
+
+    public String getSchemaType() {
+        return schemaType;
+    }
+
+    public void setSchemaType(String schemaType) {
+        this.schemaType = schemaType;
+    }
+
+    public String getNameType() {
+        return nameType;
+    }
+
+    public void setNameType(String nameType) {
+        this.nameType = nameType;
+    }
+
+    public String getSelfReferencingColumnName() {
+        return selfReferencingColumnName;
+    }
+
+    public void setSelfReferencingColumnName(String selfReferencingColumnName) {
+        this.selfReferencingColumnName = selfReferencingColumnName;
+    }
+
+    public String getReferenceGeneration() {
+        return referenceGeneration;
+    }
+
+    public void setReferenceGeneration(String referenceGeneration) {
+        this.referenceGeneration = referenceGeneration;
+    }
+
+    public List<Column> getColumns() {
+        return columns;
+    }
+
+    public void setColumns(List<Column> columns) {
+        this.columns = columns;
+    }
+
+    public List<Index> getIndices() {
+        return indices;
+    }
+
+    public void setIndices(List<Index> indices) {
+        this.indices = indices;
     }
 
     @Override

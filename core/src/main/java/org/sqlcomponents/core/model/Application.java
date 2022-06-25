@@ -1,25 +1,28 @@
 package org.sqlcomponents.core.model;
 
 import org.sqlcomponents.core.compiler.Compiler;
-import org.sqlcomponents.core.exception.ScubeException;
-import org.sqlcomponents.core.model.relational.Database;
+import org.sqlcomponents.core.exception.SQLComponentsException;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-public class Application {
-
+public final class Application {
+    public static final List<String> METHOD_SPECIFICATION = Arrays.asList(
+            "SelectStatement",
+            "InsertStatement",
+            "DeleteStatement",
+            "MViewRefresh",
+            "UpdateStatement"
+    );
     private String name;
-
     private String location;
-
     private String srcFolder;
-
     private String driverName;
     private List<String> tablePatterns;
     private List<String> sequencePatterns;
@@ -32,9 +35,7 @@ public class Application {
     private boolean online = true;
     private boolean modulesFirst;
     private boolean cleanSource = true;
-
     private ORM orm;
-
 
     public Application() {
         setOrm(new ORM(this));
@@ -193,8 +194,6 @@ public class Application {
     }
 
 
-
-
     public HashMap<String, String> getUpdateMap() {
         return orm.getUpdateMap();
     }
@@ -275,19 +274,11 @@ public class Application {
         this.srcFolder = srcFolder;
     }
 
-
-    public void compile(Compiler compiler) throws IOException, ScubeException {
-
+    public void compile(final Compiler aCompiler) throws IOException, SQLComponentsException {
         if (this.isCleanSource() && new File(this.getSrcFolder()).exists()) {
-            Files.walk(new File(this.getSrcFolder()).toPath())
-                    .sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .forEach(File::delete);
+            Files.walk(new File(this.getSrcFolder()).toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
         }
 
-        compiler.compile(this);
-
-
+        aCompiler.compile(this);
     }
-
 }

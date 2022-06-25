@@ -1,4 +1,4 @@
-<#if orm.database.databaseType == 'POSTGRES' >
+<#if orm.database.dbType == 'POSTGRES' >
     private final Duration getInterval(final ResultSet rs,final int index) throws SQLException {
         final PGInterval interval = (PGInterval) rs.getObject(index);
 

@@ -2,29 +2,23 @@ package org.sqlcomponents.core.crawler;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.sqlcomponents.core.exception.ScubeException;
+import org.sqlcomponents.core.exception.SQLComponentsException;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.Database;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Properties;
-
 
 class CrawlerTest {
 
     @Test
-    void getDatabase() throws SQLException, ScubeException {
+    void getDatabase() throws SQLComponentsException, IOException {
         Properties props = new Properties();
-        try {
-            props.load(new FileReader("../database.properties"));
-        } catch (IOException e) {
-            // Unreachable
-            e.printStackTrace();
-        }
+        props.load(new FileReader("../database.properties"));
         String databaseType = System.getenv("DATABASE_TYPE") == null
                 ? "postgres" : System.getenv("DATABASE_TYPE");
+
         Application application = new Application();
         application.setName("Movie");
         application.setUrl(props.getProperty(databaseType+".datasource.url"));

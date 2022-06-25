@@ -1,7 +1,7 @@
 package org.sqlcomponents.core.crawler;
 
 import org.sqlcomponents.core.crawler.util.DataSourceUtil;
-import org.sqlcomponents.core.exception.ScubeException;
+import org.sqlcomponents.core.exception.SQLComponentsException;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.Column;
 import org.sqlcomponents.core.model.relational.Database;
@@ -9,11 +9,12 @@ import org.sqlcomponents.core.model.relational.Index;
 import org.sqlcomponents.core.model.relational.Key;
 import org.sqlcomponents.core.model.relational.Procedure;
 import org.sqlcomponents.core.model.relational.Table;
-import org.sqlcomponents.core.model.relational.enumeration.ColumnType;
-import org.sqlcomponents.core.model.relational.enumeration.DatabaseType;
-import org.sqlcomponents.core.model.relational.enumeration.Flag;
-import org.sqlcomponents.core.model.relational.enumeration.Order;
-import org.sqlcomponents.core.model.relational.enumeration.TableType;
+import org.sqlcomponents.core.model.relational.UniqueConstraint;
+import org.sqlcomponents.core.model.relational.enums.ColumnType;
+import org.sqlcomponents.core.model.relational.enums.DBType;
+import org.sqlcomponents.core.model.relational.enums.Flag;
+import org.sqlcomponents.core.model.relational.enums.Order;
+import org.sqlcomponents.core.model.relational.enums.TableType;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Predicate;
@@ -36,10 +38,10 @@ public class Crawler {
      *
      * @param application
      * @return Database
-     * @throws ScubeException
+     * @throws SQLComponentsException
      */
     public Database getDatabase(final Application application)
-            throws ScubeException {
+            throws SQLComponentsException {
         Database database = new Database();
         DataSource dataSource = DataSourceUtil.getDataSource(
                 application.getUrl(),
@@ -56,13 +58,13 @@ public class Crawler {
             switch (databasemMetadata.getDatabaseProductName()
                     .toLowerCase().trim()) {
                 case "postgresql":
-                    database.setDatabaseType(DatabaseType.POSTGRES);
+                    database.setDbType(DBType.POSTGRES);
                     break;
                 case "mysql":
-                    database.setDatabaseType(DatabaseType.MYSQL);
+                    database.setDbType(DBType.MYSQL);
                     break;
                 case "mariadb":
-                    database.setDatabaseType(DatabaseType.MARIADB);
+                    database.setDbType(DBType.MARIADB);
             }
 
             database.setDatabaseMajorVersion(databasemMetadata
@@ -200,7 +202,7 @@ public class Crawler {
             repair(database, databasemMetadata);
 
         } catch (final Exception e) {
-            throw new ScubeException(e);
+            throw new SQLComponentsException(e);
         }
         return database;
     }
@@ -255,6 +257,8 @@ public class Crawler {
                 table.setColumns(getColumns(databasemetadata, table));
 
                 table.setIndices(getIndices(databasemetadata, table));
+
+                table.setUniqueColumns(getUniqueConstraints(databasemetadata,table));
                 // Set Sequence
                 database.getSequences()
                         .stream()
@@ -373,7 +377,7 @@ public class Crawler {
     }
 
     private ColumnType getColumnTypeForOthers(final Column column) {
-        switch (column.getTable().getDatabase().getDatabaseType()) {
+        switch (column.getTable().getDatabase().getDbType()) {
             case POSTGRES:
                 if (column.getTypeName().equalsIgnoreCase("json")) {
                     return ColumnType.JSON;
@@ -410,12 +414,52 @@ public class Crawler {
     }
 
     private void repair(final Database database, final DatabaseMetaData databaseMetaData) {
-        switch (database.getDatabaseType()) {
+        switch (database.getDbType()) {
             case MARIADB:
             case MYSQL:
                 repairMySQL(database, databaseMetaData);
                 break;
         }
+    }
+
+    public List<UniqueConstraint> getUniqueConstraints(final DatabaseMetaData databasemetadata,
+                                                              final Table table) throws SQLException {
+        List<UniqueConstraint> uniqueConstraints = new ArrayList<>();
+
+        ResultSet rs = databasemetadata.getIndexInfo(null, table.getSchemaName(),
+                table.getTableName(), true, true);
+
+        while(rs.next()) {
+            String indexName = rs.getString("index_name");
+            String columnName = rs.getString("column_name");
+
+            Optional<UniqueConstraint> uniqueConstraintOptional = uniqueConstraints.stream()
+                    .filter(uniqueConstraint -> uniqueConstraint.getName().equals(indexName))
+                    .findFirst();
+
+
+            if(uniqueConstraintOptional.isPresent()) {
+                uniqueConstraintOptional.get().getColumns().add(table.getColumns().stream()
+                        .filter(column -> column.getColumnName().equals(columnName)).findFirst().get());
+
+            } else {
+                UniqueConstraint uniqueConstraint = new UniqueConstraint();
+                uniqueConstraint.setName(indexName);
+
+                List<Column> columns = new ArrayList<>();
+
+                columns.add(table.getColumns().stream()
+                        .filter(column -> column.getColumnName().equals(columnName)).findFirst().get());
+                uniqueConstraint.setColumns(columns);
+
+                uniqueConstraints.add(uniqueConstraint);
+
+            }
+
+
+        }
+
+        return uniqueConstraints;
     }
 
 

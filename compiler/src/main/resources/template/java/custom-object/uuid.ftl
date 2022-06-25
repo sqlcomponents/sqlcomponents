@@ -1,4 +1,4 @@
-<#if orm.database.databaseType == 'POSTGRES' >
+<#if orm.database.dbType == 'POSTGRES' >
     private final UUID getUuid(final ResultSet rs,final int index) throws SQLException {
         return (UUID) rs.getObject(index);
     }

@@ -6,7 +6,7 @@
 
 <#function getPreparedValue property> 
 	
-	<#if property.entity.table.database.databaseType == 'POSTGRES'>
+	<#if property.entity.table.database.dbType == 'POSTGRES'>
 		<#if property.column.typeName == 'xml'>
 			<#return "XMLPARSE(document ?)">
 		</#if>
@@ -69,6 +69,15 @@
 		</#if>
 	</#list>
 	<#return null> 
+</#function>
+
+<#function getPropertyByColumnName columnName>
+	<#list properties as property>
+		<#if property.column.columnName == columnName>
+			<#return property>
+		</#if>
+	</#list>
+	<#return null>
 </#function>
 
 <#function getNullablePropsAsParameterString>
@@ -196,19 +205,3 @@ import ${importStatement};
 </#list>
 </#macro>
 
-<#function getUniqueKeysAsParameterString uniqueConstraintGroupName>
-	<#local pkAsParameterStr="">
-	<#local index=0>
-	<#list properties as property>		
-		<#if property.uniqueConstraintGroup?? && property.uniqueConstraintGroup == uniqueConstraintGroupName>
-			<#if index == 0>
-				<#local index=1>
-			<#else>
-				<#local pkAsParameterStr = pkAsParameterStr + "," >
-			</#if>
-			<#local pkAsParameterStr = pkAsParameterStr + getClassName(property.dataType) + " " +property.name >
-			<#local a=addImportStatement(property.dataType)>
-		</#if>
-	</#list>
-	<#return pkAsParameterStr> 
-</#function>

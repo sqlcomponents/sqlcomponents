@@ -4,7 +4,6 @@
 <#assign capturedOutput>
 public final class ${name}Manager {
 
-
     private static ${name}Manager ${name?uncap_first}Manager;
 
     private final javax.sql.DataSource dbDataSource;
@@ -59,25 +58,57 @@ public final class ${name}Manager {
      </#switch>
 </#list>
 
-    public class Observer {
-        // Observer is intenal
-        // This also prevents store creation ourtside ${name}Manager
+    public class Observer
+    {
+        // Observer is internal
+        // This also prevents store creation outside ${name}Manager
         private Observer() {
 
         }
     }
 
     @FunctionalInterface
-    public interface ConvertFunction<T, Object> {
+    public interface ConvertFunction<T, Object>
+    {
         Object apply(T t) throws SQLException;
     }
 
     @FunctionalInterface
-    public interface GetFunction<ResultSet, Integer, R> {
+    public interface GetFunction<ResultSet, Integer, R>
+    {
         R apply(ResultSet t, Integer u) throws SQLException;
     }
     <#assign a=addImportStatement("java.sql.ResultSet")>
     <#assign a=addImportStatement("java.sql.SQLException")>
+    <#assign a=addImportStatement("java.util.List")>
+
+    <#if orm.hasJavaClass("org.springframework.data.domain.Page") >
+    //
+    <#else>
+
+    public static <T> Page<T> page(List<T> content, int totalElements) {
+        return new Page(content,totalElements);
+    }
+
+    public static class Page<T> {
+        final List<T> content;
+        final int totalElements;
+
+        private Page(List<T> content, int totalElements) {
+            this.content = content;
+            this.totalElements = totalElements;
+        }
+
+        public List<T> getContent() {
+            return content;
+        }
+
+        public int getTotalElements() {
+            return totalElements;
+        }
+    }
+    </#if>
+
 }
 </#assign>
 <@importStatements/>

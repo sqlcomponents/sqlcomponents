@@ -1,8 +1,9 @@
-package org.sqlcomponents.core.model.relational.enumeration;
+package org.sqlcomponents.core.model.relational.enums;
 
 import java.sql.JDBCType;
 
-public enum ColumnType {
+public enum ColumnType
+{
     BIT("BIT"),
     /**
      * Identifies the generic SQL type {@code TINYINT}.
@@ -169,9 +170,7 @@ public enum ColumnType {
      */
     TIMESTAMP_WITH_TIMEZONE("TIMESTAMP_WITH_TIMEZONE"),
 
-    /**
-     * Special Types
-     */
+    //Special Types
     /**
      * Identifies the generic JSON type {@code TIMESTAMP_WITH_TIMEZONE}.
      */
@@ -192,29 +191,32 @@ public enum ColumnType {
 
     private final String value;
 
-    ColumnType(final String value) {
-        this.value = value;
+    ColumnType(final String aValue)
+    {
+	this.value = aValue;
     }
 
-    public static ColumnType value(final String value) {
-
-        for (ColumnType columnType :
-                ColumnType.values()) {
-            if (columnType.value.equals(value)) {
-                return columnType;
-            }
-        }
-        return null;
+    public static ColumnType value(final String aValue)
+    {
+	for (ColumnType columnType : ColumnType.values())
+	{
+	    if (columnType.value.equals(aValue))
+	    {
+		return columnType;
+	    }
+	}
+	return null;
     }
 
-    public static ColumnType value(final JDBCType jdbcType) {
-
-        for (ColumnType columnType :
-                ColumnType.values()) {
-            if (columnType.value.equals(jdbcType.getName())) {
-                return columnType;
-            }
-        }
-        return null;
+    public static ColumnType value(final JDBCType aJDBCType)
+    {
+	for (ColumnType columnType : ColumnType.values())
+	{
+	    if (columnType.value.equals(aJDBCType.getName()))
+	    {
+		return columnType;
+	    }
+	}
+	return null;
     }
 }

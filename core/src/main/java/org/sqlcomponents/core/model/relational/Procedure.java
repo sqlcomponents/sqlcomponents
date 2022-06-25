@@ -8,7 +8,8 @@ import java.util.List;
 
 @Getter
 @Setter
-public class Procedure {
+public class Procedure
+{
 
     /**
      *

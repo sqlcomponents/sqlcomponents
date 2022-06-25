@@ -1,7 +1,7 @@
 package org.sqlcomponents.core.mapper;
 
 import org.sqlcomponents.core.crawler.Crawler;
-import org.sqlcomponents.core.exception.ScubeException;
+import org.sqlcomponents.core.exception.SQLComponentsException;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.Entity;
 import org.sqlcomponents.core.model.Method;
@@ -27,10 +27,10 @@ public abstract class Mapper {
      * @param application
      * @param crawler
      * @return ORM
-     * @throws ScubeException
+     * @throws SQLComponentsException
      */
     public ORM getOrm(final Application application, final Crawler crawler)
-            throws ScubeException {
+            throws SQLComponentsException {
 
         ORM orm = application.getOrm();
 

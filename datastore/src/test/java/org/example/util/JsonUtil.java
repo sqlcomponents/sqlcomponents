@@ -11,62 +11,71 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class JsonUtil {
-
+public final class JsonUtil
+{
     private static ObjectMapper mapper;
 
-    public static <T> List<T> getTestObjects(Class<T> tClass) {
-        String databaseType = System.getenv("DATABASE_TYPE") == null
-                ? "postgres" : System.getenv("DATABASE_TYPE");
+    public static <T> List<T> getTestObjects(Class<T> tClass)
+    {
+	String databaseType = System.getenv("DATABASE_TYPE") == null
+			      ? "postgres" : System.getenv("DATABASE_TYPE");
 
-        List<T> list
-                = new ArrayList<>();
+	List<T> list = new ArrayList<>();
 
+	File jsonFile = new File("../datastore/src/test/resources/data/" + databaseType + "/"
+				 + tClass.getName().substring(tClass.getName().lastIndexOf('.') + 1) + ".json");
+	if (!jsonFile.exists())
+	{
+	    jsonFile = new File("../datastore/src/test/resources/data/"
+				+ tClass.getName().substring(tClass.getName().lastIndexOf('.') + 1) + ".json");
+	}
 
-        File jsonFile = new File("../datastore/src/test/resources/data/" + databaseType + "/"
-                + tClass.getName().substring(tClass.getName().lastIndexOf('.') + 1) + ".json");
-        if (!jsonFile.exists()) {
-            jsonFile = new File("../datastore/src/test/resources/data/"
-                    + tClass.getName().substring(tClass.getName().lastIndexOf('.') + 1) + ".json");
-        }
+	try (JsonParser jsonParser = getObjectMapper().getFactory()
+		.createParser(jsonFile))
+	{
+	    if (jsonParser.nextToken() != JsonToken.START_ARRAY)
+	    {
+		throw new IllegalArgumentException(
+			"illicalstate of array", null);
+	    }
+	    while (jsonParser.nextToken() != JsonToken.END_ARRAY)
+	    {
+		T entity = getObjectMapper()
+			.readValue(jsonParser, tClass);
+		list.add(entity);
+	    }
 
-        try (JsonParser jsonParser = getObjectMapper().getFactory()
-                .createParser(jsonFile)) {
-            if (jsonParser.nextToken() != JsonToken.START_ARRAY) {
-                throw new IllegalArgumentException(
-                        "illicalstate of array", null);
-            }
-            while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
-                T entity = getObjectMapper()
-                        .readValue(jsonParser, tClass);
-                list.add(entity);
-            }
-
-        } catch (IOException e) {
-            /* Unreachable */
-            e.printStackTrace();
-        }
-        return list;
+	}
+	catch (IOException e)
+	{
+	    /* Unreachable */
+	    e.printStackTrace();
+	}
+	return list;
     }
 
-
-    public static String getJSONString(Object obj) {
-        try {
-            return getObjectMapper().writeValueAsString(obj);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static String getJSONString(Object obj)
+    {
+	try
+	{
+	    return getObjectMapper().writeValueAsString(obj);
+	}
+	catch (JsonProcessingException e)
+	{
+	    e.printStackTrace();
+	}
+	return null;
     }
 
-    private static ObjectMapper getObjectMapper() {
-        if (mapper == null) {
-            mapper = new ObjectMapper();
-            mapper.findAndRegisterModules();
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        }
+    private static ObjectMapper getObjectMapper()
+    {
+	if (mapper == null)
+	{
+	    mapper = new ObjectMapper();
+	    mapper.findAndRegisterModules();
+	    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+	}
 
-        return mapper;
+	return mapper;
     }
-
 }

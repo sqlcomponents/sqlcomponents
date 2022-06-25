@@ -9,10 +9,11 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ORM {
-
-    public ORM(final Application application) {
-        setApplication(application);
+public class ORM
+{
+    public ORM(final Application application)
+    {
+	setApplication(application);
     }
 
     private Application application;
@@ -27,11 +28,11 @@ public class ORM {
 
     private String url;
 
-    private String daoIdentifier ="store";
+    private String daoIdentifier = "store";
 
-    private String beanIdentifier="model";
+    private String beanIdentifier = "model";
 
-    private String daoSuffix="";
+    private String daoSuffix = "";
 
     private String beanSuffix;
 
@@ -48,4 +49,21 @@ public class ORM {
     private boolean pagination;
     private List<String> methodSpecification;
 
+    private ClassLoader applicationClassLoader;
+
+    public void setApplicationClassLoader(final ClassLoader applicationClassLoader) {
+        this.applicationClassLoader = applicationClassLoader;
+    }
+
+    public boolean hasJavaClass(final String className) {
+        if(applicationClassLoader != null) {
+            try {
+                applicationClassLoader.loadClass(className);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        return false;
+    }
 }

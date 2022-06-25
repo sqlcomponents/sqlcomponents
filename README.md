@@ -22,10 +22,6 @@ Functions (String)
 Clean Code
 = Opensource / Checkstyles/ Documented
 
-Upgrades
-JDK
-Postgress
-
 # reference
 1. https://dev.mysql.com/doc/index-other.html
 2. https://blog.timescale.com/blog/why-sql-beating-nosql-what-this-means-for-future-of-data-time-series-database-348b777b847a/
@@ -40,9 +36,13 @@ Postgress
     
 From Directory sqlcomponents
 
-docker-compose up -d
-docker-compose down --volumes
-mvn clean package
-mvn clean package -Dmaven.surefire.debug  -Dmaven.failsafe.debug verify
-mvn clean package -Dmaven.test.skip=true
-mvn versions:use-latest-releases
+Min JDK needed is : 11
+Max JDK Tested is : 18 
+
+docker-compose up -d [launch in docker postgres on port  5432]
+docker-compose down --volumes  [optional only when sql error is seen to recreate the default tables]
+mvn clean package  
+mvn clean package -Dmaven.surefire.debug  -Dmaven.failsafe.debug verify  
+mvn clean package -Dmaven.test.skip=true  
+mvn versions:use-latest-releases  
+mvn help:active-profiles

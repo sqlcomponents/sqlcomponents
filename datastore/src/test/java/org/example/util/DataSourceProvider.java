@@ -26,5 +26,4 @@ public final class DataSourceProvider {
         config.setPassword(props.getProperty(databaseType + ".datasource.password"));
         return new HikariDataSource(config);
     }
-
 }

@@ -1,13 +1,14 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-	<groupId>org.sqlcomponents</groupId>
-	<artifactId>sqlcomponents</artifactId>
-	<version>1.0-SNAPSHOT</version>
+        <groupId>org.sqlcomponents</groupId>
+        <artifactId>sqlcomponents</artifactId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>sqlcomponents-maven-plugin</artifactId>
@@ -17,42 +18,37 @@
     <url>http://maven.apache.org</url>
 
     <dependencies>
-	<dependency>
-	    <groupId>org.apache.maven</groupId>
-	    <artifactId>maven-plugin-api</artifactId>
-	    <version>3.8.5</version>
-	</dependency>
-	<dependency>
-	    <groupId>org.apache.maven.plugin-tools</groupId>
-	    <artifactId>maven-plugin-annotations</artifactId>
-	    <version>3.6.4</version>
-	    <scope>provided</scope>
-	</dependency>
-	<dependency>
-	    <groupId>org.apache.maven</groupId>
-	    <artifactId>maven-project</artifactId>
-	    <version>3.0-alpha-2</version>
-	</dependency>
-	<dependency>
-	    <groupId>${project.groupId}</groupId>
-	    <artifactId>compiler</artifactId>
-	    <version>${project.version}</version>
-	</dependency>
-	<dependency>
-	    <groupId>org.yaml</groupId>
-	    <artifactId>snakeyaml</artifactId>
-	    <version>1.30</version>
-	</dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+            <version>3.8.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugin-tools</groupId>
+            <artifactId>maven-plugin-annotations</artifactId>
+            <version>3.6.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-project</artifactId>
+            <version>3.0-alpha-2</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>compiler</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
-	<plugins>
-	    <plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-plugin-plugin</artifactId>
-		<version>3.6.0</version>
-	    </plugin>
-	</plugins>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <version>3.6.0</version>
+            </plugin>
+        </plugins>
     </build>
-
 </project>

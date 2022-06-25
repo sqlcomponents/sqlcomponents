@@ -6,76 +6,87 @@ import org.sqlcomponents.core.model.relational.Procedure;
 
 import java.util.List;
 
-public class Service {
-
-    /**
-     *
-     */
+public class Service
+{
     private static final long serialVersionUID = 1L;
     private Package dbPackage;
     private String serviceName;
     private String daoPackage;
     private List<Method> methods;
 
-    public List<Method> getMethods() {
-        return methods;
+    public List<Method> getMethods()
+    {
+	return methods;
     }
 
-    public void setMethods(List<Method> methods) {
-        this.methods = methods;
+    public void setMethods(List<Method> methods)
+    {
+	this.methods = methods;
     }
 
-    public String getServiceName() {
-        return serviceName;
+    public String getServiceName()
+    {
+	return serviceName;
     }
 
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
+    public void setServiceName(String serviceName)
+    {
+	this.serviceName = serviceName;
     }
 
-    public String getDaoPackage() {
-        return daoPackage;
+    public String getDaoPackage()
+    {
+	return daoPackage;
     }
 
-    public void setDaoPackage(String daoPackage) {
-        this.daoPackage = daoPackage;
+    public void setDaoPackage(String daoPackage)
+    {
+	this.daoPackage = daoPackage;
     }
 
-    public Package getPackage() {
-        return dbPackage;
+    public Package getPackage()
+    {
+	return dbPackage;
     }
 
-    public void setPackage(Package dbPackage) {
-        this.dbPackage = dbPackage;
+    public void setPackage(Package dbPackage)
+    {
+	this.dbPackage = dbPackage;
     }
 
-    public List<Procedure> getFunctions() {
-        return dbPackage.getFunctions();
+    public List<Procedure> getFunctions()
+    {
+	return dbPackage.getFunctions();
     }
 
-    public void setFunctions(List<Procedure> functions) {
-        dbPackage.setFunctions(functions);
+    public void setFunctions(List<Procedure> functions)
+    {
+	dbPackage.setFunctions(functions);
     }
 
-    public String getName() {
-        return dbPackage.getName();
+    public String getName()
+    {
+	return dbPackage.getName();
     }
 
-    public void setName(String name) {
-        dbPackage.setName(name);
+    public void setName(String name)
+    {
+	dbPackage.setName(name);
     }
 
-    public String getRemarks() {
-        return dbPackage.getRemarks();
+    public String getRemarks()
+    {
+	return dbPackage.getRemarks();
     }
 
-    public void setRemarks(String remarks) {
-        dbPackage.setRemarks(remarks);
+    public void setRemarks(String remarks)
+    {
+	dbPackage.setRemarks(remarks);
     }
 
     @Override
-    public String toString() {
-        return getName();
+    public String toString()
+    {
+	return getName();
     }
-
 }
