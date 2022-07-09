@@ -31,6 +31,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 public class Crawler {
 
@@ -196,7 +197,8 @@ public class Crawler {
             database.setTableTypes(getTableTypes(databasemMetadata));
 
             database.setSequences(getSequences(databasemMetadata));
-            database.setTables(getTables(databasemMetadata, database, tableName -> application.getTablePatterns() == null || application.getTablePatterns().contains(tableName)));
+            database.setTables(getTables(databasemMetadata, database,
+                    tableName -> matches(application.getTablePatterns(),tableName)));
             // database.setFunctions(getProcedures(databasemMetadata));
 
             repair(database, databasemMetadata);
@@ -205,6 +207,22 @@ public class Crawler {
             throw new SQLComponentsException(e);
         }
         return database;
+    }
+
+    private boolean matches(final List<String> patterns, final String value) {
+        boolean matches = patterns == null || patterns.isEmpty();
+        if(!matches) {
+
+            for (String pattern :
+                    patterns) {
+                matches = Pattern.matches(pattern,value);
+                if(matches) {
+                    break;
+                }
+            }
+
+        }
+        return matches;
     }
 
     private Set<TableType> getTableTypes(final DatabaseMetaData databasemetadata) throws SQLException {
