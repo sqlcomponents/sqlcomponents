@@ -14,15 +14,18 @@ public final class DataSourceUtil {
      * @param url
      * @param userName
      * @param password
+     * @param schema
      * @return DataSource
      */
     public static DataSource getDataSource(final String url,
                                            final String userName,
-                                           final String password) {
+                                           final String password,
+                                           final String schema) {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(url);
         config.setUsername(userName);
         config.setPassword(password);
+        config.setSchema(schema);
         return new HikariDataSource(config);
     }
 }

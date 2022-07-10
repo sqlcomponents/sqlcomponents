@@ -47,7 +47,8 @@ public class Crawler {
         DataSource dataSource = DataSourceUtil.getDataSource(
                 application.getUrl(),
                 application.getUserName(),
-                application.getPassword());
+                application.getPassword(),
+                application.getSchemaName());
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databasemMetadata = connection.getMetaData();
 
@@ -197,7 +198,7 @@ public class Crawler {
             database.setTableTypes(getTableTypes(databasemMetadata));
 
             database.setSequences(getSequences(databasemMetadata));
-            database.setTables(getTables(databasemMetadata, database,
+            database.setTables(getTables(databasemMetadata, database,application.getSchemaName(),
                     tableName -> matches(application.getTablePatterns(),tableName)));
             // database.setFunctions(getProcedures(databasemMetadata));
 
@@ -252,13 +253,22 @@ public class Crawler {
         return sequences;
     }
 
-    private List<Table> getTables(final DatabaseMetaData databasemetadata, final Database database, final Predicate<String> tableFilter) throws SQLException {
+    private List<Table> getTables(final DatabaseMetaData databasemetadata,
+                                  final Database database,
+                                  final String schemeName,
+                                  final Predicate<String> tableFilter) throws SQLException {
         List<Table> tables = new ArrayList<>();
 
-        ResultSet resultset = databasemetadata.getTables(null, null, null, new String[]{"TABLE"});
+        String schemaNamePattern = database.getDbType() == DBType.MYSQL
+                ? schemeName : null;
+        String catalog = database.getDbType() == DBType.MYSQL
+                ? schemeName : null;
+
+        ResultSet resultset = databasemetadata.getTables(catalog, schemaNamePattern, null, new String[]{"TABLE"});
 
         while (resultset.next()) {
             final String tableName = resultset.getString("table_name");
+            System.out.println(tableName);
             if (tableFilter.test(tableName)) {
                 Table table = new Table(database);
                 table.setTableName(tableName);
