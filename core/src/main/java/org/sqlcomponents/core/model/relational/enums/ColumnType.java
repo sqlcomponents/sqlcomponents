@@ -219,4 +219,16 @@ public enum ColumnType
 	}
 	return null;
     }
+
+    public static ColumnType findEnum(final String aColumnType)
+    {
+	for (ColumnType v : values())
+	{
+	    if (v.value.equalsIgnoreCase(aColumnType))
+	    {
+		return v;
+	    }
+	}
+	return null;
+    }
 }

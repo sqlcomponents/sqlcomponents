@@ -20,7 +20,6 @@ public class Database
     private List<Package> packages;
     private List<String> sequences;
 
-
     private Set<TableType> tableTypes;
 
     private String catalogTerm;
@@ -174,7 +173,6 @@ public class Database
     private boolean usersLocalFilePerTable;
     private boolean usersLocalFiles;
 
-
     /**
      * Used to get Escaped Name for tableName or columnName
      *
@@ -183,9 +181,7 @@ public class Database
      */
     public String escapedName(final String name)
     {
-	Boolean shouldEscape = this.getSqlKeywords().stream()
-		.filter(keyword -> keyword.equalsIgnoreCase(name))
-		.findFirst().isPresent();
+	Boolean shouldEscape = this.getSqlKeywords().stream().filter(keyword -> keyword.equalsIgnoreCase(name)).findFirst().isPresent();
 	return shouldEscape ? this.identifierQuoteString + name + this.identifierQuoteString : name;
     }
 

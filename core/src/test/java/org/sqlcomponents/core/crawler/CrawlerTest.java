@@ -14,32 +14,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-class CrawlerTest {
-
+class CrawlerTest
+{
     @Test
-    void getDatabase() throws SQLComponentsException, IOException {
-        Application application;
+    void getDatabase() throws SQLComponentsException, IOException
+    {
+	Application application;
 
-        if (System.getenv("SQLCOMPONENTS_CONFIG") == null) {
-            Properties props = new Properties();
-            props.load(new FileReader("../database.properties"));
-            String databaseType = System.getenv("DATABASE_TYPE") == null
-                    ? "postgres" : System.getenv("DATABASE_TYPE");
+	if (System.getenv("SQLCOMPONENTS_CONFIG") == null)
+	{
+	    Properties props = new Properties();
+	    props.load(new FileReader("../database.properties"));
+	    String databaseType = System.getenv("DATABASE_TYPE") == null ? "postgres" : System.getenv("DATABASE_TYPE");
 
-            application = new Application();
-            application.setName("Movie");
-            application.setUrl(props.getProperty(databaseType + ".datasource.url"));
-            application.setUserName(props.getProperty(databaseType + ".datasource.username"));
-            application.setPassword(props.getProperty(databaseType + ".datasource.password"));
-            application.setSchemaName(props.getProperty(databaseType + ".datasource.schema"));
-        } else {
-            application = CoreConsts.buildApplication(new File(System.getenv("SQLCOMPONENTS_CONFIG")));
-        }
-//        List<String> tablePatterns = new ArrayList<>();
-//        tablePatterns.add("kafk\\w+");
-//        application.setTablePatterns(tablePatterns);
-        Database database = new Crawler().getDatabase(application);
+	    application = new Application();
+	    application.setName("Movie");
+	    application.setUrl(props.getProperty(databaseType + ".datasource.url"));
+	    application.setUserName(props.getProperty(databaseType + ".datasource.username"));
+	    application.setPassword(props.getProperty(databaseType + ".datasource.password"));
+	    application.setSchemaName(props.getProperty(databaseType + ".datasource.schema"));
+	}
+	else
+	{
+	    application = CoreConsts.buildApplication(new File(System.getenv("SQLCOMPONENTS_CONFIG")));
+	}
 
-        Assertions.assertNotNull(application, "Database is not crawled");
+	//	List<String> tablePatterns = new ArrayList<>();
+	//tablePatterns.add("kafk\\w+");
+	//application.setTablePatterns(tablePatterns);
+
+	Database database = new Crawler().getDatabase(application);
+	Assertions.assertNotNull(application, "Database is not crawled");
     }
 }
