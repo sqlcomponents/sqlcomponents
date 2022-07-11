@@ -17,7 +17,7 @@ import java.util.Properties;
 class CrawlerTest
 {
     @Test
-    void getDatabase() throws SQLComponentsException, IOException
+    void getDatabase() throws Exception
     {
 	Application application;
 

@@ -12,14 +12,13 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-public final class Application {
-    public static final List<String> METHOD_SPECIFICATION = Arrays.asList(
-            "SelectStatement",
-            "InsertStatement",
-            "DeleteStatement",
-            "MViewRefresh",
-            "UpdateStatement"
-    );
+public final class Application
+{
+    public static final List<String> METHOD_SPECIFICATION = Arrays.asList("SelectStatement",
+									  "InsertStatement",
+									  "DeleteStatement",
+									  "MViewRefresh",
+									  "UpdateStatement");
     private String name;
     private String location;
     private String srcFolder;
@@ -37,248 +36,310 @@ public final class Application {
     private boolean cleanSource = true;
     private ORM orm;
 
-    public Application() {
-        setOrm(new ORM(this));
+    public Application()
+    {
+	setOrm(new ORM(this));
     }
 
-    public String getDriverName() {
-        return driverName;
+    public String getDriverName()
+    {
+	return driverName;
     }
 
-    public void setDriverName(final String driverName) {
-        this.driverName = driverName;
+    public void setDriverName(final String driverName)
+    {
+	this.driverName = driverName;
     }
 
-    public List<String> getSequencePatterns() {
-        return sequencePatterns;
+    public List<String> getSequencePatterns()
+    {
+	return sequencePatterns;
     }
 
-    public void setSequencePatterns(List<String> sequencePatterns) {
-        this.sequencePatterns = sequencePatterns;
+    public void setSequencePatterns(List<String> sequencePatterns)
+    {
+	this.sequencePatterns = sequencePatterns;
     }
 
-    public String getDatabaseWordSeparator() {
-        return databaseWordSeparator;
+    public String getDatabaseWordSeparator()
+    {
+	return databaseWordSeparator;
     }
 
-    public void setDatabaseWordSeparator(String databaseWordSeparator) {
-        this.databaseWordSeparator = databaseWordSeparator;
+    public void setDatabaseWordSeparator(String databaseWordSeparator)
+    {
+	this.databaseWordSeparator = databaseWordSeparator;
     }
 
-    public String getBeanSuffix() {
-        return orm.getBeanSuffix();
+    public String getBeanSuffix()
+    {
+	return orm.getBeanSuffix();
     }
 
-    public void setBeanSuffix(String beanSuffix) {
-        orm.setBeanSuffix(beanSuffix);
+    public void setBeanSuffix(String beanSuffix)
+    {
+	orm.setBeanSuffix(beanSuffix);
     }
 
-    public String getDaoSuffix() {
-        return orm.getDaoSuffix();
+    public String getDaoSuffix()
+    {
+	return orm.getDaoSuffix();
     }
 
-    public void setDaoSuffix(String daoSuffix) {
-        orm.setDaoSuffix(daoSuffix);
+    public void setDaoSuffix(String daoSuffix)
+    {
+	orm.setDaoSuffix(daoSuffix);
     }
 
-    public boolean isCleanSource() {
-        return cleanSource;
+    public boolean isCleanSource()
+    {
+	return cleanSource;
     }
 
-    public void setCleanSource(boolean cleanSource) {
-        this.cleanSource = cleanSource;
+    public void setCleanSource(boolean cleanSource)
+    {
+	this.cleanSource = cleanSource;
     }
 
-    public String getName() {
-        return name;
+    public String getName()
+    {
+	return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String name)
+    {
+	this.name = name;
     }
 
-    public String getLocation() {
-        return location;
+    public String getLocation()
+    {
+	return location;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLocation(String location)
+    {
+	this.location = location;
     }
 
-    public List<String> getTablePatterns() {
-        return tablePatterns;
+    public List<String> getTablePatterns()
+    {
+	return tablePatterns;
     }
 
-    public void setTablePatterns(List<String> tablePatterns) {
-        this.tablePatterns = tablePatterns;
+    public void setTablePatterns(List<String> tablePatterns)
+    {
+	this.tablePatterns = tablePatterns;
     }
 
-    public String getRootPackage() {
-        return rootPackage;
+    public String getRootPackage()
+    {
+	return rootPackage;
     }
 
-    public void setRootPackage(String rootPackage) {
-        this.rootPackage = rootPackage;
+    public void setRootPackage(String rootPackage)
+    {
+	this.rootPackage = rootPackage;
     }
 
-    public HashMap<String, String> getWordsMap() {
-        return wordsMap;
+    public HashMap<String, String> getWordsMap()
+    {
+	return wordsMap;
     }
 
-    public void setWordsMap(HashMap<String, String> wordsMap) {
-        this.wordsMap = wordsMap;
+    public void setWordsMap(HashMap<String, String> wordsMap)
+    {
+	this.wordsMap = wordsMap;
     }
 
-    public String getBeanIdentifier() {
-        return orm.getBeanIdentifier();
+    public String getBeanIdentifier()
+    {
+	return orm.getBeanIdentifier();
     }
 
-    public void setBeanIdentifier(String beanIdentifier) {
-        orm.setBeanIdentifier(beanIdentifier);
+    public void setBeanIdentifier(String beanIdentifier)
+    {
+	orm.setBeanIdentifier(beanIdentifier);
     }
 
-    public String getDaoIdentifier() {
-        return orm.getDaoIdentifier();
+    public String getDaoIdentifier()
+    {
+	return orm.getDaoIdentifier();
     }
 
-    public void setDaoIdentifier(String daoIdentifier) {
-        orm.setDaoIdentifier(daoIdentifier);
+    public void setDaoIdentifier(String daoIdentifier)
+    {
+	orm.setDaoIdentifier(daoIdentifier);
     }
 
-    public HashMap<String, String> getModulesMap() {
-        return modulesMap;
+    public HashMap<String, String> getModulesMap()
+    {
+	return modulesMap;
     }
 
-    public void setModulesMap(HashMap<String, String> modulesMap) {
-        this.modulesMap = modulesMap;
+    public void setModulesMap(HashMap<String, String> modulesMap)
+    {
+	this.modulesMap = modulesMap;
     }
 
-    public String getSequenceTableMap() {
-        return sequenceTableMap;
+    public String getSequenceTableMap()
+    {
+	return sequenceTableMap;
     }
 
-    public void setSequenceTableMap(String sequenceTableMap) {
-        this.sequenceTableMap = sequenceTableMap;
+    public void setSequenceTableMap(String sequenceTableMap)
+    {
+	this.sequenceTableMap = sequenceTableMap;
     }
 
-    public ORM getOrm() {
-        return orm;
+    public ORM getOrm()
+    {
+	return orm;
     }
 
-    public void setOrm(ORM orm) {
-        this.orm = orm;
+    public void setOrm(ORM orm)
+    {
+	this.orm = orm;
     }
 
-    public List<Entity> getEntities() {
-        return orm.getEntities();
+    public List<Entity> getEntities()
+    {
+	return orm.getEntities();
     }
 
-    public void setEntities(List<Entity> entities) {
-        orm.setEntities(entities);
+    public void setEntities(List<Entity> entities)
+    {
+	orm.setEntities(entities);
     }
 
-    public HashMap<String, String> getInsertMap() {
-        return orm.getInsertMap();
+    public HashMap<String, String> getInsertMap()
+    {
+	return orm.getInsertMap();
     }
 
-    public void setInsertMap(HashMap<String, String> insertMap) {
-        orm.setInsertMap(insertMap);
+    public void setInsertMap(HashMap<String, String> insertMap)
+    {
+	orm.setInsertMap(insertMap);
     }
 
-    public String getPassword() {
-        return orm.getPassword();
+    public String getPassword()
+    {
+	return orm.getPassword();
     }
 
-    public void setPassword(String password) {
-        orm.setPassword(password);
+    public void setPassword(String password)
+    {
+	orm.setPassword(password);
     }
 
 
-    public HashMap<String, String> getUpdateMap() {
-        return orm.getUpdateMap();
+    public HashMap<String, String> getUpdateMap()
+    {
+	return orm.getUpdateMap();
     }
 
-    public void setUpdateMap(HashMap<String, String> updateMap) {
-        orm.setUpdateMap(updateMap);
+    public void setUpdateMap(HashMap<String, String> updateMap)
+    {
+	orm.setUpdateMap(updateMap);
     }
 
-    public String getUrl() {
-        return orm.getUrl();
+    public String getUrl()
+    {
+	return orm.getUrl();
     }
 
-    public void setUrl(String url) {
-        orm.setUrl(url);
+    public void setUrl(String url)
+    {
+	orm.setUrl(url);
     }
 
-    public String getUserName() {
-        return orm.getUserName();
+    public String getUserName()
+    {
+	return orm.getUserName();
     }
 
-    public void setUserName(String userName) {
-        orm.setUserName(userName);
+    public void setUserName(String userName)
+    {
+	orm.setUserName(userName);
     }
 
-    public int hashCode() {
-        return orm.hashCode();
+    public int hashCode()
+    {
+	return orm.hashCode();
     }
 
-    public List<String> getMethodSpecification() {
-        return orm.getMethodSpecification();
+    public List<String> getMethodSpecification()
+    {
+	return orm.getMethodSpecification();
     }
 
-    public void setMethodSpecification(List<String> methodSpecification) {
-        orm.setMethodSpecification(methodSpecification);
+    public void setMethodSpecification(List<String> methodSpecification)
+    {
+	orm.setMethodSpecification(methodSpecification);
     }
 
-    public String toString() {
-        return name;
+    public String toString()
+    {
+	return name;
     }
 
-    public String getSchemaName() {
-        return orm.getSchemaName();
+    public String getSchemaName()
+    {
+	return orm.getSchemaName();
     }
 
-    public void setSchemaName(String schemaName) {
-        orm.setSchemaName(schemaName);
+    public void setSchemaName(String schemaName)
+    {
+	orm.setSchemaName(schemaName);
     }
 
-    public HashMap<String, String> getPluralMap() {
-        return pluralMap;
+    public HashMap<String, String> getPluralMap()
+    {
+	return pluralMap;
     }
 
-    public void setPluralMap(HashMap<String, String> pluralMap) {
-        this.pluralMap = pluralMap;
+    public void setPluralMap(HashMap<String, String> pluralMap)
+    {
+	this.pluralMap = pluralMap;
     }
 
-    public boolean isOnline() {
-        return online;
+    public boolean isOnline()
+    {
+	return online;
     }
 
-    public void setOnline(boolean online) {
-        this.online = online;
+    public void setOnline(boolean online)
+    {
+	this.online = online;
     }
 
-    public boolean isModulesFirst() {
-        return modulesFirst;
+    public boolean isModulesFirst()
+    {
+	return modulesFirst;
     }
 
-    public void setModulesFirst(boolean modulesFirst) {
-        this.modulesFirst = modulesFirst;
+    public void setModulesFirst(boolean modulesFirst)
+    {
+	this.modulesFirst = modulesFirst;
     }
 
-    public String getSrcFolder() {
-        return srcFolder;
+    public String getSrcFolder()
+    {
+	return srcFolder;
     }
 
-    public void setSrcFolder(String srcFolder) {
-        this.srcFolder = srcFolder;
+    public void setSrcFolder(String srcFolder)
+    {
+	this.srcFolder = srcFolder;
     }
 
-    public void compile(final Compiler aCompiler) throws IOException, SQLComponentsException {
-        if (this.isCleanSource() && new File(this.getSrcFolder()).exists()) {
-            Files.walk(new File(this.getSrcFolder()).toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
-        }
+    public void compile(final Compiler aCompiler) throws Exception
+    {
+	if (this.isCleanSource() && new File(this.getSrcFolder()).exists())
+	{
+	    Files.walk(new File(this.getSrcFolder()).toPath()).sorted(Comparator.reverseOrder()).map(
+		    Path::toFile).forEach(File::delete);
+	}
 
-        aCompiler.compile(this);
+	aCompiler.compile(this);
     }
 }

@@ -4,8 +4,6 @@ import freemarker.template.TemplateException;
 import org.sqlcomponents.compiler.base.FTLTemplate;
 import org.sqlcomponents.compiler.java.mapper.DB2JavaDataTypeMapper;
 import org.sqlcomponents.core.compiler.Compiler;
-import org.sqlcomponents.core.crawler.Crawler;
-import org.sqlcomponents.core.exception.SQLComponentsException;
 import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.Entity;
@@ -30,7 +28,7 @@ public final class JavaFTLCompiler implements Compiler
     }
 
     @Override
-    public void compile(final Application aApplication) throws SQLComponentsException
+    public void compile(final Application aApplication) throws Exception
     {
 	Mapper mapper = new DB2JavaDataTypeMapper();
 	aApplication.setOrm(mapper.getOrm(aApplication));

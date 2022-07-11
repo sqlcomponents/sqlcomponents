@@ -6,5 +6,5 @@ import org.sqlcomponents.core.model.Application;
 //todo: Is it compiler or generator?
 public interface Compiler
 {
-    void compile(final Application aApplication) throws SQLComponentsException;
+    void compile(final Application aApplication) throws Exception;
 }
