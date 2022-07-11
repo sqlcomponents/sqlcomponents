@@ -1,6 +1,7 @@
 package org.sqlcomponents.compiler.java.mapper;
 
 import org.sqlcomponents.core.mapper.Mapper;
+import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.Column;
 
 import java.nio.ByteBuffer;
@@ -19,6 +20,11 @@ public final class DB2JavaDataTypeMapper extends Mapper
     private static final int MAX_DIGITS_FOR_LONG = String.valueOf(Long.MAX_VALUE).length() - 1;
     private static final int MAX_DIGITS_FOR_FLOAT = String.valueOf(Float.MAX_VALUE).indexOf('.');
     private static final int MAX_DIGITS_FOR_DOUBLE = String.valueOf(Double.MAX_VALUE).indexOf('.');
+
+    public DB2JavaDataTypeMapper(final Application bApplication)
+    {
+	super(bApplication);
+    }
 
     @Override
     public String getDataType(final Column aColumn)

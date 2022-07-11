@@ -30,8 +30,8 @@ public final class JavaFTLCompiler implements Compiler
     @Override
     public void compile(final Application aApplication) throws Exception
     {
-	Mapper mapper = new DB2JavaDataTypeMapper();
-	aApplication.setOrm(mapper.getOrm(aApplication));
+	Mapper mapper = new DB2JavaDataTypeMapper(aApplication);
+	aApplication.setOrm(mapper.getOrm());
 	ORM orm = aApplication.getOrm();
 
 	String packageFolder = getPackageAsFolder(aApplication.getSrcFolder(), aApplication

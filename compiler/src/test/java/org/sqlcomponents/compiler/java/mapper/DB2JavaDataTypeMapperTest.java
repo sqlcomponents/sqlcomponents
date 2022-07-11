@@ -7,20 +7,20 @@ import org.sqlcomponents.core.model.relational.enums.ColumnType;
 
 class DB2JavaDataTypeMapperTest
 {
-    private final DB2JavaDataTypeMapper DB2JavaDataTypeMapper;
+    private final DB2JavaDataTypeMapper db2JavaDataTypeMapper;
 
-    DB2JavaDataTypeMapperTest() {
-        this.DB2JavaDataTypeMapper = new DB2JavaDataTypeMapper();
+    DB2JavaDataTypeMapperTest()
+    {
+	db2JavaDataTypeMapper = new DB2JavaDataTypeMapper(null);
     }
 
     @Test
-    void test_GetIntegerDataTypes() {
-
-        Column column = new Column(null);
-
-        column.setColumnType(ColumnType.INTEGER);
-        column.setSize(5);
-        Assertions.assertEquals("java.lang.Integer", DB2JavaDataTypeMapper.getDataType(column), "Integer dataType obtained");
-
+    void test_GetIntegerDataTypes()
+    {
+	Column column = new Column(null);
+	column.setColumnType(ColumnType.INTEGER);
+	column.setSize(5);
+	Assertions.assertEquals("java.lang.Integer", db2JavaDataTypeMapper.getDataType(column),
+				"Integer dataType obtained");
     }
 }
