@@ -33,7 +33,7 @@ public final class JavaFTLCompiler implements Compiler
     public void compile(final Application aApplication) throws SQLComponentsException
     {
 	Mapper mapper = new DB2JavaDataTypeMapper();
-	aApplication.setOrm(mapper.getOrm(aApplication, new Crawler()));
+	aApplication.setOrm(mapper.getOrm(aApplication));
 	ORM orm = aApplication.getOrm();
 
 	String packageFolder = getPackageAsFolder(aApplication.getSrcFolder(), aApplication
@@ -54,15 +54,16 @@ public final class JavaFTLCompiler implements Compiler
 						   {
 						       try
 						       {
-							   writeDaoImplementation(entity, aApplication.getSrcFolder(), aApplication.getDaoSuffix());
-							   writeBeanSpecification(entity, aApplication.getSrcFolder(), aApplication.getBeanSuffix());
+							   writeDaoImplementation(entity, aApplication.getSrcFolder(),
+										  aApplication.getDaoSuffix());
+							   writeBeanSpecification(entity, aApplication.getSrcFolder(),
+										  aApplication.getBeanSuffix());
 						       }
 						       catch (final IOException | TemplateException e)
 						       {
 							   e.printStackTrace();
 						       }
 						   });
-
     }
 
     private void writeDaoImplementation(Entity entity, String srcFolder, String daoSuffix)
@@ -74,8 +75,6 @@ public final class JavaFTLCompiler implements Compiler
 	Files.write(new File(packageFolder + File.separator
 			     + entity.getName() + "Store" + daoSuffix.trim() + ".java").toPath(),
 		    getJavaContent(storeFTLTemplate.getContent(entity)).getBytes());
-
-
     }
 
     private void writeBeanSpecification(Entity entity, String srcFolder, String beanSuffix)

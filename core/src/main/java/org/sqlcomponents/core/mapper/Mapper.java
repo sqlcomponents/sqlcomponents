@@ -25,18 +25,16 @@ public abstract class Mapper
 
     /**
      * @param application
-     * @param crawler
      * @return ORM
      * @throws SQLComponentsException
      */
-    public ORM getOrm(final Application application, final Crawler crawler)
-	    throws SQLComponentsException
+    public ORM getOrm(final Application application) throws SQLComponentsException
     {
 	ORM orm = application.getOrm();
 
 	if (application.getOrm().getDatabase() == null || application.isOnline())
 	{
-	    Database database = crawler.getDatabase(application);
+	    Database database = new Crawler(application).getDatabase();
 	    application.getOrm().setDatabase(database);
 	}
 
