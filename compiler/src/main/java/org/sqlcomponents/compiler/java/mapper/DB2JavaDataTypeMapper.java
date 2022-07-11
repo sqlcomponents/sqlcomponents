@@ -6,6 +6,7 @@ import org.sqlcomponents.core.model.relational.Column;
 
 import java.nio.ByteBuffer;
 import java.time.*;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -38,7 +39,7 @@ public final class DB2JavaDataTypeMapper extends Mapper
 	    }
 	    default:
 	    {
-		return getDataTypeClass(aColumn).getName();
+		return Objects.requireNonNull(getDataTypeClass(aColumn)).getName();
 	    }
 	}
     }

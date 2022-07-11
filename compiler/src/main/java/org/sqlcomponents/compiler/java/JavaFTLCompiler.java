@@ -16,9 +16,10 @@ import java.nio.file.Files;
 
 public final class JavaFTLCompiler implements Compiler
 {
-    private FTLTemplate<Application> managerFTLTemplate;
-    private FTLTemplate<Entity> storeFTLTemplate;
-    private FTLTemplate<Entity> modelFTLTemplate;
+    private static final String DOT_JAVA = ".java";
+    private final FTLTemplate<Application> managerFTLTemplate;
+    private final FTLTemplate<Entity> storeFTLTemplate;
+    private final FTLTemplate<Entity> modelFTLTemplate;
 
     public JavaFTLCompiler() throws IOException
     {
@@ -40,7 +41,7 @@ public final class JavaFTLCompiler implements Compiler
 	try
 	{
 	    Files.write(new File(packageFolder + File.separator
-				 + aApplication.getName() + "Manager" + ".java").toPath(),
+				 + aApplication.getName() + "Manager" + DOT_JAVA).toPath(),
 			getJavaContent(managerFTLTemplate.getContent(aApplication)).getBytes());
 	}
 	catch (IOException | TemplateException e)
@@ -71,7 +72,7 @@ public final class JavaFTLCompiler implements Compiler
 		.getDaoPackage());
 	new File(packageFolder).mkdirs();
 	Files.write(new File(packageFolder + File.separator
-			     + entity.getName() + "Store" + daoSuffix.trim() + ".java").toPath(),
+			     + entity.getName() + "Store" + daoSuffix.trim() + DOT_JAVA).toPath(),
 		    getJavaContent(storeFTLTemplate.getContent(entity)).getBytes());
     }
 
@@ -83,7 +84,7 @@ public final class JavaFTLCompiler implements Compiler
 	new File(packageFolder).mkdirs();
 
 	Files.write(new File(packageFolder + File.separator
-			     + entity.getName() + (beanSuffix == null ? "" : beanSuffix.trim()) + ".java").toPath(),
+			     + entity.getName() + (beanSuffix == null ? "" : beanSuffix.trim()) + DOT_JAVA).toPath(),
 		    getJavaContent(modelFTLTemplate.getContent(entity)).getBytes());
     }
 
