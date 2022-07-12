@@ -35,21 +35,47 @@ import java.util.regex.Pattern;
 
 public final class Crawler
 {
-    private final Database database = new Database();
+    private final Database database;
 
-    private final Application application;
     private final DatabaseMetaData databaseMetaData;
+
+	private final String lSchemaNamePattern;
+	private final String lCatalog;
+
+	private final List<String> tablePatterns;
 
     public Crawler(final Application aApplication) throws Exception
     {
-	application = aApplication;
+		database = new Database();
+
 	DataSource lDataSource = DataSourceUtil.getDataSource(
-		application.getUrl(),
-		application.getUserName(),
-		application.getPassword(),
-		application.getSchemaName());
+			aApplication.getUrl(),
+			aApplication.getUserName(),
+			aApplication.getPassword(),
+			aApplication.getSchemaName());
 	Connection lConnection = lDataSource.getConnection();
 	databaseMetaData = lConnection.getMetaData();
+
+		switch (databaseMetaData.getDatabaseProductName().toLowerCase().trim())
+		{
+			case CrawlerConsts.POSTGRES_DB:
+			{
+				database.setDbType(DBType.POSTGRES);
+				break;
+			}
+			case CrawlerConsts.MYSQL_DB:
+			{
+				database.setDbType(DBType.MYSQL);
+				break;
+			}
+			case CrawlerConsts.MARIA_DB:
+			{
+				database.setDbType(DBType.MARIADB);
+			}
+		}
+		lSchemaNamePattern = (database.getDbType() == DBType.MYSQL) ? aApplication.getSchemaName() : null;
+		lCatalog = database.getDbType() == DBType.MYSQL ? aApplication.getSchemaName() : null;
+		tablePatterns = aApplication.getTablePatterns();
     }
 
     public Database getDatabase() throws Exception
@@ -57,23 +83,7 @@ public final class Crawler
 	database.setCatalogTerm(databaseMetaData.getCatalogTerm());
 	database.setCatalogSeperator(databaseMetaData.getCatalogSeparator());
 
-	switch (databaseMetaData.getDatabaseProductName().toLowerCase().trim())
-	{
-	    case CrawlerConsts.POSTGRES_DB:
-	    {
-		database.setDbType(DBType.POSTGRES);
-		break;
-	    }
-	    case CrawlerConsts.MYSQL_DB:
-	    {
-		database.setDbType(DBType.MYSQL);
-		break;
-	    }
-	    case CrawlerConsts.MARIA_DB:
-	    {
-		database.setDbType(DBType.MARIADB);
-	    }
-	}
+
 
 	database.setDatabaseMajorVersion(databaseMetaData.getDatabaseMajorVersion());
 	database.setDatabaseMinorVersion(databaseMetaData.getDatabaseMinorVersion());
@@ -182,8 +192,8 @@ public final class Crawler
 	database.setSupportsColumnAliasing(databaseMetaData.supportsColumnAliasing());
 	database.setTableTypes(getTableTypes());
 	database.setSequences(getSequences());
-	database.setTables(getTables(application.getSchemaName(),
-				     tableName -> matches(application.getTablePatterns(), tableName)));
+	database.setTables(getTables(
+				     tableName -> matches(tablePatterns, tableName)));
 	// lDatabase.setFunctions(getProcedures(lDatabaseMetaData));
 	repair();
 	return database;
@@ -237,21 +247,21 @@ public final class Crawler
 	return sequences;
     }
 
-    private List<Table> getTables(final String aSchemeName, final Predicate<String> aTableFilter) throws SQLException
+    private List<Table> getTables( final Predicate<String> aTableFilter) throws SQLException
     {
 	List<Table> lTables = new ArrayList<>();
 
-	String lSchemaNamePattern = (database.getDbType() == DBType.MYSQL) ? aSchemeName : null;
-	String lCatalog = database.getDbType() == DBType.MYSQL ? aSchemeName : null;
+
 
 	ResultSet lResultSet = databaseMetaData.getTables(lCatalog, lSchemaNamePattern, null,
 							  new String[]{"TABLE"});
 	while (lResultSet.next())
 	{
 	    final String tableName = lResultSet.getString("table_name");
-	    System.out.println(tableName);
+
 	    if (aTableFilter.test(tableName))
 	    {
+			System.out.println(tableName);
 		Table bTable = new Table(database);
 		bTable.setTableName(tableName);
 		bTable.setCategoryName(lResultSet.getString("table_cat"));
@@ -284,7 +294,7 @@ public final class Crawler
     {
 	List<Index> indices = new ArrayList<>();
 
-	ResultSet indexResultset = databaseMetaData.getIndexInfo(null, null, aTable.getTableName(),
+	ResultSet indexResultset = databaseMetaData.getIndexInfo(lCatalog, lSchemaNamePattern, aTable.getTableName(),
 								 true, true);
 
 	while (indexResultset.next())
@@ -313,7 +323,7 @@ public final class Crawler
     private List<Column> getColumns(final Table aTable) throws SQLException
     {
 	List<Column> lColumns = new ArrayList<>();
-	ResultSet lColumnResultSet = databaseMetaData.getColumns(null, null, aTable.getTableName(),
+	ResultSet lColumnResultSet = databaseMetaData.getColumns(lCatalog, lSchemaNamePattern, aTable.getTableName(),
 								 null);
 	ColumnType lColumnType;
 	while (lColumnResultSet.next())
@@ -345,7 +355,7 @@ public final class Crawler
 	}
 
 	// Fill Primary Keys
-	ResultSet primaryKeysResultSet = databaseMetaData.getPrimaryKeys(null, null, aTable.getTableName());
+	ResultSet primaryKeysResultSet = databaseMetaData.getPrimaryKeys(lCatalog, lSchemaNamePattern, aTable.getTableName());
 	while (primaryKeysResultSet.next())
 	{
 	    lColumns.stream().filter(column -> {
@@ -371,7 +381,7 @@ public final class Crawler
 	}
 
 	//Extracting Foreign Keys.
-	ResultSet foreignKeysResultSet = databaseMetaData.getExportedKeys(null, null, aTable.getTableName());
+	ResultSet foreignKeysResultSet = databaseMetaData.getExportedKeys(lCatalog, lSchemaNamePattern, aTable.getTableName());
 	while (foreignKeysResultSet.next())
 	{
 	    Key bKey = new Key();
@@ -407,7 +417,7 @@ public final class Crawler
     private List<Procedure> getProcedures() throws SQLException
     {
 	List<Procedure> lProcedures = new ArrayList<>();
-	ResultSet lResultSet = databaseMetaData.getProcedures(null, null, null);
+	ResultSet lResultSet = databaseMetaData.getProcedures(lCatalog, lSchemaNamePattern, null);
 	while (lResultSet.next())
 	{
 	    Procedure function = new Procedure();
@@ -438,7 +448,7 @@ public final class Crawler
     public List<UniqueConstraint> getUniqueConstraints(final Table aTable) throws SQLException
     {
 	List<UniqueConstraint> lUniqueConstraints = new ArrayList<>();
-	ResultSet rs = databaseMetaData.getIndexInfo(null, aTable.getSchemaName(),
+	ResultSet rs = databaseMetaData.getIndexInfo(lCatalog, lSchemaNamePattern,
 						     aTable.getTableName(), true, true);
 	while (rs.next())
 	{
@@ -476,9 +486,10 @@ public final class Crawler
 	database.getTables().forEach(table -> {
 	    try (PreparedStatement preparedStatement = databaseMetaData.getConnection().prepareStatement("SELECT "
 													 + "COLUMN_NAME,COLUMN_TYPE  from INFORMATION_SCHEMA.COLUMNS where\n"
-													 + " table_name = ?"))
+													 + " table_name = ? and table_schema = ?"))
 	    {
 		preparedStatement.setString(1, table.getTableName());
+			preparedStatement.setString(2, lSchemaNamePattern);
 		ResultSet lResultSet = preparedStatement.executeQuery();
 
 		Column bColumn;
