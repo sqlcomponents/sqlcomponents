@@ -71,16 +71,15 @@ public final class JavaFTLCompiler implements Compiler
 	String packageFolder = getPackageAsFolder(srcFolder, entity
 		.getDaoPackage());
 	new File(packageFolder).mkdirs();
-	Files.write(new File(packageFolder + File.separator
-			     + entity.getName() + "Store" + daoSuffix.trim() + DOT_JAVA).toPath(),
+	Files.write(new File(
+			    packageFolder + File.separator + entity.getName() + "Store" + daoSuffix.trim() + DOT_JAVA).toPath(),
 		    getJavaContent(storeFTLTemplate.getContent(entity)).getBytes());
     }
 
     private void writeBeanSpecification(Entity entity, String srcFolder, String beanSuffix)
 	    throws IOException, TemplateException
     {
-	String packageFolder = getPackageAsFolder(srcFolder, entity
-		.getBeanPackage());
+	String packageFolder = getPackageAsFolder(srcFolder, entity.getBeanPackage());
 	new File(packageFolder).mkdirs();
 
 	Files.write(new File(packageFolder + File.separator

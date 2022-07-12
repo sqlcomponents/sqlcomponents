@@ -19,12 +19,13 @@ import java.util.List;
 
 public abstract class Mapper
 {
-    public static final String DOT = ".";
+    private static final String DOT = ".";
+
     private final Application application;
 
-    public Mapper(final Application bApplication)
+    public Mapper(final Application aApplication)
     {
-	application = bApplication;
+	application = aApplication;
     }
 
     public abstract String getDataType(final Column aColumn);
@@ -45,23 +46,24 @@ public abstract class Mapper
 	orm.setEntities(getEntities());
 	orm.setMethods(getMethods());
 	orm.setServices(getServices());
+
 	return orm;
     }
 
     private Method getMethod(final Procedure aProcedure)
     {
-	List<Property> properties = new ArrayList<>(aProcedure.getParameters().size());
-	Method method = new Method(aProcedure);
-	method.setName(getPropertyName(aProcedure.getFunctionName()));
+	List<Property> lProperties = new ArrayList<>(aProcedure.getParameters().size());
+	Method lMethod = new Method(aProcedure);
+	lMethod.setName(getPropertyName(aProcedure.getFunctionName()));
 
 	for (Column column : aProcedure.getParameters())
 	{
-	    properties.add(getProperty(null, column));
+	    lProperties.add(getProperty(null, column));
 	}
-	method.setInputParameters(properties);
+	lMethod.setInputParameters(lProperties);
 
-	method.setOutputProperty(getProperty(null, aProcedure.getOutput()));
-	return method;
+	lMethod.setOutputProperty(getProperty(null, aProcedure.getOutput()));
+	return lMethod;
     }
 
     private List<Method> getMethods()
@@ -81,8 +83,7 @@ public abstract class Mapper
     private List<Service> getServices()
     {
 	ArrayList<Service> services = new ArrayList<>();
-	if (application
-		    .getOrm().getDatabase().getPackages() != null)
+	if (application.getOrm().getDatabase().getPackages() != null)
 	{
 	    Service service;
 	    for (Package package1 : application.getOrm().getDatabase().getPackages())
@@ -122,31 +123,32 @@ public abstract class Mapper
 
     private List<Entity> getEntities()
     {
-	Database database = application.getOrm().getDatabase();
-	ArrayList<Entity> entities = new ArrayList<>(database.getTables().size());
+	Database lDatabase = application.getOrm().getDatabase();
+	ArrayList<Entity> lEntities = new ArrayList<>(lDatabase.getTables().size());
 
-	List<Property> properties;
-	Entity entity;
+	List<Property> lProperties;
+	Entity lEntity;
 
-	for (Table table : database.getTables())
+	for (Table table : lDatabase.getTables())
 	{
-	    entity = new Entity(application.getOrm(), table);
-	    entity.setName(getEntityName(table.getTableName()));
-	    entity.setPluralName(getPluralName(entity.getName()));
-	    entity
+	    lEntity = new Entity(application.getOrm(), table);
+	    lEntity.setName(getEntityName(table.getTableName()));
+	    lEntity.setPluralName(getPluralName(lEntity.getName()));
+	    lEntity
 		    .setDaoPackage(getDaoPackage(table
 							 .getTableName()));
-	    entity.setBeanPackage(getBeanPackage(table.getTableName()));
-	    properties = new ArrayList<>(table.getColumns().size());
+	    lEntity.setBeanPackage(getBeanPackage(table.getTableName()));
+	    lProperties = new ArrayList<>(table.getColumns().size());
 
 	    for (Column column : table.getColumns())
 	    {
-		properties.add(getProperty(entity, column));
+		lProperties.add(getProperty(lEntity, column));
 	    }
-	    entity.setProperties(properties);
-	    entities.add(entity);
+
+	    lEntity.setProperties(lProperties);
+	    lEntities.add(lEntity);
 	}
-	return entities;
+	return lEntities;
     }
 
     protected String getServiceName(final String aPackageName)
@@ -155,10 +157,12 @@ public abstract class Mapper
 	{
 	    StringBuilder lStringBuilder = new StringBuilder();
 	    String[] bRelationalWords = aPackageName.split(application.getDatabaseWordSeparator());
+
 	    for (final String aRelationalWord : bRelationalWords)
 	    {
 		lStringBuilder.append(toTileCase(getObjectOrientedWord(aRelationalWord)));
 	    }
+
 	    lStringBuilder.append("Service");
 	    return lStringBuilder.toString();
 	}
@@ -170,8 +174,7 @@ public abstract class Mapper
 	if (aTableName != null)
 	{
 	    StringBuilder lStringBuilder = new StringBuilder();
-	    String[] bRelationalWords = aTableName
-		    .split(application.getDatabaseWordSeparator());
+	    String[] bRelationalWords = aTableName.split(application.getDatabaseWordSeparator());
 	    for (final String aRelationalWord : bRelationalWords)
 	    {
 		lStringBuilder.append(toTileCase(getObjectOrientedWord(aRelationalWord)));
@@ -191,12 +194,11 @@ public abstract class Mapper
 	String lObjectOrientedWord = null;
 	if (application.getWordsMap() != null)
 	{
-	    for (String relationalWordKey : application.getWordsMap().keySet())
+	    for (String bRelationalWordKey : application.getWordsMap().keySet())
 	    {
-		if (aRelationalWord.equalsIgnoreCase(relationalWordKey))
+		if (aRelationalWord.equalsIgnoreCase(bRelationalWordKey))
 		{
-		    lObjectOrientedWord = application.getWordsMap().get(
-			    relationalWordKey);
+		    lObjectOrientedWord = application.getWordsMap().get(bRelationalWordKey);
 		}
 	    }
 	}
@@ -207,19 +209,17 @@ public abstract class Mapper
     {
 	String lPluralName = null;
 	HashMap<String, String> lPluralMap = application.getPluralMap();
-	String pluralValue;
-	String capsEntityName = aEntityName.toUpperCase();
+	String lPluralValue;
+	String lToUpperCase = aEntityName.toUpperCase();
 	if (lPluralMap != null && lPluralMap.size() != 0)
 	{
 	    for (String pluralKey : lPluralMap.keySet())
 	    {
-		pluralValue = lPluralMap.get(pluralKey).toUpperCase();
-		if (capsEntityName.endsWith(pluralKey.toUpperCase()))
+		lPluralValue = lPluralMap.get(pluralKey).toUpperCase();
+		if (lToUpperCase.endsWith(pluralKey.toUpperCase()))
 		{
-		    int lastIndex = capsEntityName.lastIndexOf(pluralKey
-								       .toUpperCase());
-		    lPluralName = aEntityName.substring(0, lastIndex)
-				  + toTileCase(pluralValue);
+		    int lastIndex = lToUpperCase.lastIndexOf(pluralKey.toUpperCase());
+		    lPluralName = aEntityName.substring(0, lastIndex) + toTileCase(lPluralValue);
 		    break;
 		}
 	    }
@@ -229,6 +229,7 @@ public abstract class Mapper
 	{
 	    lPluralName = aEntityName + "s";
 	}
+
 	return lPluralName;
     }
 
@@ -285,17 +286,17 @@ public abstract class Mapper
 
     protected String getModuleName(final String aTableName)
     {
-	String[] dbWords = aTableName.split(application.getDatabaseWordSeparator());
-	HashMap<String, String> modulesMap = application.getModulesMap();
-	if (modulesMap != null)
+	String[] lDbWords = aTableName.split(application.getDatabaseWordSeparator());
+	HashMap<String, String> lModulesMap = application.getModulesMap();
+	if (lModulesMap != null)
 	{
-	    for (String moduleKey : modulesMap.keySet())
+	    for (String moduleKey : lModulesMap.keySet())
 	    {
-		for (int i = dbWords.length - 1; i >= 0; i--)
+		for (int i = lDbWords.length - 1; i >= 0; i--)
 		{
-		    if (dbWords[i].equalsIgnoreCase(moduleKey))
+		    if (lDbWords[i].equalsIgnoreCase(moduleKey))
 		    {
-			return modulesMap.get(moduleKey);
+			return lModulesMap.get(moduleKey);
 		    }
 		}
 	    }
@@ -306,10 +307,9 @@ public abstract class Mapper
     protected String getPropertyName(final String aColumnName)
     {
 	StringBuilder lStringBuilder = new StringBuilder();
-	String[] lRelationalWords = aColumnName
-		.split(application.getDatabaseWordSeparator());
-	int relationalWordsCount = lRelationalWords.length;
-	for (int index = 0; index < relationalWordsCount; index++)
+	String[] lRelationalWords = aColumnName.split(application.getDatabaseWordSeparator());
+	int lRelationalWordsCount = lRelationalWords.length;
+	for (int index = 0; index < lRelationalWordsCount; index++)
 	{
 	    if (index == 0)
 	    {
