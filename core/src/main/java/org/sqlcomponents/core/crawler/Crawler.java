@@ -109,8 +109,7 @@ public final class Crawler
 	database.setMaxTablesInSelect(databaseMetaData.getMaxTablesInSelect());
 	database.setMaxUserNameLength(databaseMetaData.getMaxUserNameLength());
 	database.setNumericFunctions(
-		new HashSet<>(
-			Arrays.asList(databaseMetaData.getNumericFunctions().split(CrawlerConsts.CAMA_STR))));
+		new HashSet<>(Arrays.asList(databaseMetaData.getNumericFunctions().split(CrawlerConsts.CAMA_STR))));
 	database.setProcedureTerm(databaseMetaData.getProcedureTerm());
 	database.setResultSetHoldability(databaseMetaData.getResultSetHoldability());
 	database.setSchemaTerm(databaseMetaData.getSchemaTerm());
@@ -121,9 +120,8 @@ public final class Crawler
 		new TreeSet<>(Arrays.asList(databaseMetaData.getStringFunctions().split(CrawlerConsts.CAMA_STR))));
 	database.setSystemFunctions(
 		new TreeSet<>(Arrays.asList(databaseMetaData.getSystemFunctions().split(CrawlerConsts.CAMA_STR))));
-	database.setTimeDateFunctions(
-		new TreeSet<>(Arrays.asList(databaseMetaData.getTimeDateFunctions().split(
-			CrawlerConsts.CAMA_STR))));
+	database.setTimeDateFunctions(new TreeSet<>(Arrays.asList(databaseMetaData.getTimeDateFunctions().split(
+		CrawlerConsts.CAMA_STR))));
 	database.setSupportsTransactions(databaseMetaData.supportsTransactions());
 	database.setSupportsDataDefinitionAndDataManipulationTransactions(
 		databaseMetaData.supportsDataDefinitionAndDataManipulationTransactions());
@@ -196,9 +194,7 @@ public final class Crawler
 	boolean matches = aPatterns == null || aPatterns.isEmpty();
 	if (!matches)
 	{
-
-	    for (String pattern :
-		    aPatterns)
+	    for (String pattern : aPatterns)
 	    {
 		matches = Pattern.matches(pattern, aValue);
 		if (matches)
@@ -206,7 +202,6 @@ public final class Crawler
 		    break;
 		}
 	    }
-
 	}
 	return matches;
     }
@@ -403,22 +398,7 @@ public final class Crawler
     {
 	if (aColumn.getTable().getDatabase().getDbType() == DBType.POSTGRES)
 	{
-	    if (aColumn.getTypeName().equalsIgnoreCase("json"))
-	    {
-		return ColumnType.JSON;
-	    }
-	    else if (aColumn.getTypeName().equalsIgnoreCase("jsonb"))
-	    {
-		return ColumnType.JSONB;
-	    }
-	    else if (aColumn.getTypeName().equalsIgnoreCase("uuid"))
-	    {
-		return ColumnType.UUID;
-	    }
-	    else if (aColumn.getTypeName().equalsIgnoreCase("interval"))
-	    {
-		return ColumnType.INTERVAL;
-	    }
+	    return ColumnType.findEnum(aColumn.getTypeName());
 	}
 
 	return null;

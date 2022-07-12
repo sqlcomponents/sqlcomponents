@@ -19,6 +19,7 @@ import java.util.List;
 
 public abstract class Mapper
 {
+    public static final String DOT = ".";
     private final Application application;
 
     public Mapper(final Application bApplication)
@@ -35,7 +36,7 @@ public abstract class Mapper
     {
 	ORM orm = application.getOrm();
 
-	if (application.getOrm().getDatabase() == null || application.isOnline())
+	if ((application.getOrm().getDatabase() == null) || application.isOnline())
 	{
 	    Database database = new Crawler(application).getDatabase();
 	    application.getOrm().setDatabase(database);
@@ -110,8 +111,7 @@ public abstract class Mapper
 	    Property property = new Property(aEntity, aColumn);
 	    if (aColumn.getColumnName() != null)
 	    {
-		property.setName(getPropertyName(aColumn
-							 .getColumnName()));
+		property.setName(getPropertyName(aColumn.getColumnName()));
 	    }
 	    property.setUniqueConstraintGroup(getEntityName(property.getColumn().getUniqueConstraintName()));
 	    property.setDataType(getDataType(aColumn));
@@ -154,8 +154,7 @@ public abstract class Mapper
 	if (aPackageName != null)
 	{
 	    StringBuilder lStringBuilder = new StringBuilder();
-	    String[] bRelationalWords = aPackageName
-		    .split(application.getDatabaseWordSeparator());
+	    String[] bRelationalWords = aPackageName.split(application.getDatabaseWordSeparator());
 	    for (final String aRelationalWord : bRelationalWords)
 	    {
 		lStringBuilder.append(toTileCase(getObjectOrientedWord(aRelationalWord)));
@@ -199,7 +198,6 @@ public abstract class Mapper
 		    lObjectOrientedWord = application.getWordsMap().get(
 			    relationalWordKey);
 		}
-
 	    }
 	}
 	return lObjectOrientedWord == null ? aRelationalWord : lObjectOrientedWord;
@@ -226,6 +224,7 @@ public abstract class Mapper
 		}
 	    }
 	}
+
 	if (lPluralName == null)
 	{
 	    lPluralName = aEntityName + "s";
@@ -246,31 +245,28 @@ public abstract class Mapper
 
 	if (application.isModulesFirst())
 	{
-	    if (moduleName != null
-		&& moduleName.trim().length() != 0)
+	    if (moduleName != null && moduleName.trim().length() != 0)
 	    {
-		lBuffer.append(".");
+		lBuffer.append(DOT);
 		lBuffer.append(moduleName.trim());
 	    }
-	    if (aIdentifier != null
-		&& aIdentifier.trim().length() != 0)
+	    if (aIdentifier != null && aIdentifier.trim().length() != 0)
 	    {
-		lBuffer.append(".");
+		lBuffer.append(DOT);
 		lBuffer.append(aIdentifier.trim());
 	    }
 	}
 	else
 	{
-	    if (aIdentifier != null
-		&& aIdentifier.trim().length() != 0)
+	    if (aIdentifier != null && aIdentifier.trim().length() != 0)
 	    {
-		lBuffer.append(".");
+		lBuffer.append(DOT);
 		lBuffer.append(aIdentifier.trim());
 	    }
-	    if (moduleName != null
-		&& moduleName.trim().length() != 0)
+
+	    if (moduleName != null && moduleName.trim().length() != 0)
 	    {
-		lBuffer.append(".");
+		lBuffer.append(DOT);
 		lBuffer.append(moduleName.trim());
 	    }
 	}
