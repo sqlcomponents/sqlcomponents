@@ -2,8 +2,7 @@ package org.sqlcomponents.core.model.relational.enums;
 
 import java.sql.JDBCType;
 
-public enum ColumnType
-{
+public enum ColumnType {
     BIT("BIT"),
     /**
      * Identifies the generic SQL type {@code TINYINT}.
@@ -82,15 +81,13 @@ public enum ColumnType
      */
     NULL("NULL"),
     /**
-     * Indicates that the SQL type
-     * is database-specific and gets mapped to a Java object that can be
-     * accessed via the methods getObject and setObject.
+     * Indicates that the SQL type is database-specific and gets mapped to a Java object that can be accessed via the
+     * methods getObject and setObject.
      */
     OTHER("OTHER"),
     /**
-     * Indicates that the SQL type
-     * is database-specific and gets mapped to a Java object that can be
-     * accessed via the methods getObject and setObject.
+     * Indicates that the SQL type is database-specific and gets mapped to a Java object that can be accessed via the
+     * methods getObject and setObject.
      */
     JAVA_OBJECT("JAVA_OBJECT"),
     /**
@@ -170,7 +167,7 @@ public enum ColumnType
      */
     TIMESTAMP_WITH_TIMEZONE("TIMESTAMP_WITH_TIMEZONE"),
 
-    //Special Types
+    // Special Types
     /**
      * Identifies the generic JSON type {@code TIMESTAMP_WITH_TIMEZONE}.
      */
@@ -186,49 +183,38 @@ public enum ColumnType
     /**
      * Identifies the generic INTERVAL type {@code TIMESTAMP_WITH_TIMEZONE}.
      */
-    INTERVAL("INTERVAL"),
-    TEXT("TEXT");
+    INTERVAL("INTERVAL"), TEXT("TEXT");
 
     private final String value;
 
-    ColumnType(final String aValue)
-    {
-	this.value = aValue;
+    ColumnType(final String aValue) {
+        this.value = aValue;
     }
 
-    public static ColumnType value(final String aValue)
-    {
-	for (ColumnType columnType : ColumnType.values())
-	{
-	    if (columnType.value.equals(aValue))
-	    {
-		return columnType;
-	    }
-	}
-	return null;
+    public static ColumnType value(final String aValue) {
+        for (ColumnType columnType : ColumnType.values()) {
+            if (columnType.value.equals(aValue)) {
+                return columnType;
+            }
+        }
+        return null;
     }
 
-    public static ColumnType value(final JDBCType aJDBCType)
-    {
-	for (ColumnType columnType : ColumnType.values())
-	{
-	    if (columnType.value.equals(aJDBCType.getName()))
-	    {
-		return columnType;
-	    }
-	}
-	return null;
+    public static ColumnType value(final JDBCType aJDBCType) {
+        for (ColumnType columnType : ColumnType.values()) {
+            if (columnType.value.equals(aJDBCType.getName())) {
+                return columnType;
+            }
+        }
+        return null;
     }
 
-    public static ColumnType findEnum(final String aColumnType)
-    {
-	for (ColumnType v : values())
-	{
-	    if (v.value.equalsIgnoreCase(aColumnType))
-	    {
-		return v;
-	    }
-	}
-	return null;
+    public static ColumnType findEnum(final String aColumnType) {
+        for (ColumnType v : values()) {
+            if (v.value.equalsIgnoreCase(aColumnType)) {
+                return v;
+            }
+        }
+        return null;
     }
 }

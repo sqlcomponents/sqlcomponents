@@ -9,11 +9,9 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ORM
-{
-    public ORM(final Application application)
-    {
-	setApplication(application);
+public class ORM {
+    public ORM(final Application application) {
+        setApplication(application);
     }
 
     private Application application;
@@ -27,7 +25,6 @@ public class ORM
     private Database database;
 
     private String url;
-
 
     private HashMap<String, String> wordsMap;
     private HashMap<String, String> modulesMap;
@@ -49,7 +46,7 @@ public class ORM
     }
 
     public boolean hasJavaClass(final String className) {
-        if(applicationClassLoader != null) {
+        if (applicationClassLoader != null) {
             try {
                 applicationClassLoader.loadClass(className);
                 return true;

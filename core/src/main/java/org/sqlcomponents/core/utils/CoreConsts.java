@@ -8,14 +8,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-
-public class CoreConsts
-{
+public class CoreConsts {
     public static final String BACK_SLASH = "/";
 
     public static Application buildApplication(final File configFile) throws IOException {
-        Application lApplication = new Yaml(new Constructor(Application.class))
-                .load(new FileReader(configFile));
+        Application lApplication = new Yaml(new Constructor(Application.class)).load(new FileReader(configFile));
 
         lApplication.setMethodSpecification(Application.METHOD_SPECIFICATION);
 

@@ -6,7 +6,6 @@ import org.sqlcomponents.core.model.Application;
 import java.sql.SQLException;
 
 //todo: Is it compiler or generator?
-public interface Compiler
-{
+public interface Compiler {
     public void compile(final Application aApplication) throws SQLException;
 }

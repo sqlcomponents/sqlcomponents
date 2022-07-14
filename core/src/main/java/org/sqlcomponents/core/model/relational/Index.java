@@ -6,8 +6,7 @@ import org.sqlcomponents.core.model.relational.enums.Order;
 
 @Getter
 @Setter
-public class Index
-{
+public class Index {
 
     private final Table table;
 
@@ -22,9 +21,8 @@ public class Index
     private int pages;
     private String filterCondition;
 
-    public Index(final Table table)
-    {
-	this.table = table;
+    public Index(final Table table) {
+        this.table = table;
     }
 
 }

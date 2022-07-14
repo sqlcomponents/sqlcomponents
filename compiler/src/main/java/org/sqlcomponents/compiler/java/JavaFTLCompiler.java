@@ -15,74 +15,58 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.SQLException;
 
-public final class JavaFTLCompiler implements Compiler
-{
+public final class JavaFTLCompiler implements Compiler {
     private static final String DOT_JAVA = ".java";
     private final FTLTemplate<Application> managerFTLTemplate;
     private final FTLTemplate<Entity> storeFTLTemplate;
     private final FTLTemplate<Entity> modelFTLTemplate;
 
-    public JavaFTLCompiler() throws IOException
-    {
-	managerFTLTemplate = new FTLTemplate<>("template/java/Manager.ftl");
-	storeFTLTemplate = new FTLTemplate<>("template/java/Store.ftl");
-	modelFTLTemplate = new FTLTemplate<>("template/java/Model.ftl");
+    public JavaFTLCompiler() throws IOException {
+        managerFTLTemplate = new FTLTemplate<>("template/java/Manager.ftl");
+        storeFTLTemplate = new FTLTemplate<>("template/java/Store.ftl");
+        modelFTLTemplate = new FTLTemplate<>("template/java/Model.ftl");
     }
 
     @Override
-    public void compile(final Application aApplication) throws SQLException
-    {
-	Mapper mapper = new DB2JavaDataTypeMapper(aApplication);
-	aApplication.setOrm(mapper.getOrm());
-	ORM orm = aApplication.getOrm();
+    public void compile(final Application aApplication) throws SQLException {
+        Mapper mapper = new DB2JavaDataTypeMapper(aApplication);
+        aApplication.setOrm(mapper.getOrm());
+        ORM orm = aApplication.getOrm();
 
-	String packageFolder = getPackageAsFolder(aApplication.getSrcFolder(), aApplication.getRootPackage());
-	new File(packageFolder).mkdirs();
-	try
-	{
-	    Files.write(new File(packageFolder + File.separator
-				 + aApplication.getName() + "Manager" + DOT_JAVA).toPath(),
-			getJavaContent(managerFTLTemplate.getContent(aApplication)).getBytes());
-	}
-	catch (IOException | TemplateException e)
-	{
-	    e.printStackTrace();
-	}
+        String packageFolder = getPackageAsFolder(aApplication.getSrcFolder(), aApplication.getRootPackage());
+        new File(packageFolder).mkdirs();
+        try {
+            Files.write(
+                    new File(packageFolder + File.separator + aApplication.getName() + "Manager" + DOT_JAVA).toPath(),
+                    getJavaContent(managerFTLTemplate.getContent(aApplication)).getBytes());
+        } catch (IOException | TemplateException e) {
+            e.printStackTrace();
+        }
 
-	orm.getEntities().parallelStream().forEach(entity ->
-						   {
-						       try
-						       {
-							   writeDaoImplementation(entity, aApplication.getSrcFolder());
-							   writeBeanSpecification(entity, aApplication.getSrcFolder());
-						       }
-						       catch (final IOException | TemplateException e)
-						       {
-							   e.printStackTrace();
-						       }
-						   });
+        orm.getEntities().parallelStream().forEach(entity -> {
+            try {
+                writeDaoImplementation(entity, aApplication.getSrcFolder());
+                writeBeanSpecification(entity, aApplication.getSrcFolder());
+            } catch (final IOException | TemplateException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
-    private void writeDaoImplementation(Entity entity, String srcFolder)
-	    throws IOException, TemplateException
-    {
-	String packageFolder = getPackageAsFolder(srcFolder, entity
-		.getDaoPackage());
-	new File(packageFolder).mkdirs();
-	Files.write(new File(
-			    packageFolder + File.separator + entity.getName() + "Store" + DOT_JAVA).toPath(),
-		    getJavaContent(storeFTLTemplate.getContent(entity)).getBytes());
+    private void writeDaoImplementation(Entity entity, String srcFolder) throws IOException, TemplateException {
+        String packageFolder = getPackageAsFolder(srcFolder, entity.getDaoPackage());
+        new File(packageFolder).mkdirs();
+        Files.write(new File(packageFolder + File.separator + entity.getName() + "Store" + DOT_JAVA).toPath(),
+                getJavaContent(storeFTLTemplate.getContent(entity)).getBytes());
     }
 
     private void writeBeanSpecification(final Entity aEntity, final String aSrcFolder)
-	    throws IOException, TemplateException
-    {
-	String packageFolder = getPackageAsFolder(aSrcFolder, aEntity.getBeanPackage());
-	new File(packageFolder).mkdirs();
+            throws IOException, TemplateException {
+        String packageFolder = getPackageAsFolder(aSrcFolder, aEntity.getBeanPackage());
+        new File(packageFolder).mkdirs();
 
-	Files.write(new File(packageFolder + File.separator
-			     + aEntity.getName() + DOT_JAVA).toPath(),
-		    getJavaContent(modelFTLTemplate.getContent(aEntity)).getBytes());
+        Files.write(new File(packageFolder + File.separator + aEntity.getName() + DOT_JAVA).toPath(),
+                getJavaContent(modelFTLTemplate.getContent(aEntity)).getBytes());
     }
 
     /**
@@ -90,27 +74,21 @@ public final class JavaFTLCompiler implements Compiler
      *
      * @return formatted Content
      */
-    private String getJavaContent(final String aContent)
-    {
-	//TODO: format with 1.8
-	return aContent;
+    private String getJavaContent(final String aContent) {
+        // TODO: format with 1.8
+        return aContent;
     }
 
-    private String getPackageAsFolder(final String aRootDir, final String aPackageStr)
-    {
-	char[] lCharArray = aPackageStr.toCharArray();
-	StringBuilder lFilePath = new StringBuilder();
-	for (final char aC : lCharArray)
-	{
-	    if (aC == '.')
-	    {
-		lFilePath.append(File.separatorChar);
-	    }
-	    else
-	    {
-		lFilePath.append(aC);
-	    }
-	}
-	return aRootDir + CoreConsts.BACK_SLASH + lFilePath;
+    private String getPackageAsFolder(final String aRootDir, final String aPackageStr) {
+        char[] lCharArray = aPackageStr.toCharArray();
+        StringBuilder lFilePath = new StringBuilder();
+        for (final char aC : lCharArray) {
+            if (aC == '.') {
+                lFilePath.append(File.separatorChar);
+            } else {
+                lFilePath.append(aC);
+            }
+        }
+        return aRootDir + CoreConsts.BACK_SLASH + lFilePath;
     }
 }

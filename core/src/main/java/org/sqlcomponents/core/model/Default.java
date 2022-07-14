@@ -5,8 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Default
-{
+public class Default {
     private boolean onInsert;
     private boolean onUpdate;
     private String columnName;
