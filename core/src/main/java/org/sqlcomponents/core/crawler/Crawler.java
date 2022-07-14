@@ -40,7 +40,7 @@ public final class Crawler
     private final Application application;
     private final DatabaseMetaData databaseMetaData;
 
-    public Crawler(final Application aApplication) throws Exception
+    public Crawler(final Application aApplication) throws SQLException
     {
 	application = aApplication;
 	DataSource lDataSource = DataSourceUtil.getDataSource(
@@ -52,7 +52,7 @@ public final class Crawler
 	databaseMetaData = lConnection.getMetaData();
     }
 
-    public Database getDatabase() throws Exception
+    public Database getDatabase() throws SQLException
     {
 	database.setCatalogTerm(databaseMetaData.getCatalogTerm());
 	database.setCatalogSeperator(databaseMetaData.getCatalogSeparator());

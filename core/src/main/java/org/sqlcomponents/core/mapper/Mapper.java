@@ -13,6 +13,7 @@ import org.sqlcomponents.core.model.relational.Package;
 import org.sqlcomponents.core.model.relational.Procedure;
 import org.sqlcomponents.core.model.relational.Table;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +34,7 @@ public abstract class Mapper
     /**
      * @return ORM
      */
-    public ORM getOrm() throws Exception
+    public ORM getOrm() throws SQLException
     {
 	ORM orm = application.getOrm();
 
@@ -134,9 +135,7 @@ public abstract class Mapper
 	    lEntity = new Entity(application.getOrm(), table);
 	    lEntity.setName(getEntityName(table.getTableName()));
 	    lEntity.setPluralName(getPluralName(lEntity.getName()));
-	    lEntity
-		    .setDaoPackage(getDaoPackage(table
-							 .getTableName()));
+	    lEntity.setDaoPackage(getDaoPackage(table.getTableName()));
 	    lEntity.setBeanPackage(getBeanPackage(table.getTableName()));
 	    lProperties = new ArrayList<>(table.getColumns().size());
 

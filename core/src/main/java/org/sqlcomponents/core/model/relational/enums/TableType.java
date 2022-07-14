@@ -2,7 +2,6 @@ package org.sqlcomponents.core.model.relational.enums;
 
 public enum TableType
 {
-
     TABLE("TABLE"),
     FOREIGN_TABLE("FOREIGN TABLE"),
     PARTITIONED_TABLE("PARTITIONED TABLE"),

@@ -13,6 +13,7 @@ import org.sqlcomponents.core.utils.CoreConsts;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.SQLException;
 
 public final class JavaFTLCompiler implements Compiler
 {
@@ -29,14 +30,13 @@ public final class JavaFTLCompiler implements Compiler
     }
 
     @Override
-    public void compile(final Application aApplication) throws Exception
+    public void compile(final Application aApplication) throws SQLException
     {
 	Mapper mapper = new DB2JavaDataTypeMapper(aApplication);
 	aApplication.setOrm(mapper.getOrm());
 	ORM orm = aApplication.getOrm();
 
-	String packageFolder = getPackageAsFolder(aApplication.getSrcFolder(), aApplication
-		.getRootPackage());
+	String packageFolder = getPackageAsFolder(aApplication.getSrcFolder(), aApplication.getRootPackage());
 	new File(packageFolder).mkdirs();
 	try
 	{
@@ -76,15 +76,15 @@ public final class JavaFTLCompiler implements Compiler
 		    getJavaContent(storeFTLTemplate.getContent(entity)).getBytes());
     }
 
-    private void writeBeanSpecification(Entity entity, String srcFolder, String beanSuffix)
+    private void writeBeanSpecification(final Entity aEntity, final String aSrcFolder, final String aBeanSuffix)
 	    throws IOException, TemplateException
     {
-	String packageFolder = getPackageAsFolder(srcFolder, entity.getBeanPackage());
+	String packageFolder = getPackageAsFolder(aSrcFolder, aEntity.getBeanPackage());
 	new File(packageFolder).mkdirs();
 
 	Files.write(new File(packageFolder + File.separator
-			     + entity.getName() + (beanSuffix == null ? "" : beanSuffix.trim()) + DOT_JAVA).toPath(),
-		    getJavaContent(modelFTLTemplate.getContent(entity)).getBytes());
+			     + aEntity.getName() + (aBeanSuffix == null ? "" : aBeanSuffix.trim()) + DOT_JAVA).toPath(),
+		    getJavaContent(modelFTLTemplate.getContent(aEntity)).getBytes());
     }
 
     /**
