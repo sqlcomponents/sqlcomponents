@@ -178,11 +178,7 @@ public abstract class Mapper
 	    {
 		lStringBuilder.append(toTileCase(getObjectOrientedWord(aRelationalWord)));
 	    }
-	    if (application.getBeanSuffix() != null
-		&& application.getBeanSuffix().trim().length() != 0)
-	    {
-		lStringBuilder.append(application.getBeanSuffix().trim());
-	    }
+
 	    return lStringBuilder.toString();
 	}
 	return null;
@@ -275,12 +271,12 @@ public abstract class Mapper
 
     protected String getDaoPackage(final String aTableName)
     {
-	return getPackage(aTableName, application.getDaoIdentifier());
+	return getPackage(aTableName, "store");
     }
 
     protected String getBeanPackage(final String aTableName)
     {
-	return getPackage(aTableName, application.getBeanIdentifier());
+	return getPackage(aTableName, "model");
     }
 
     protected String getModuleName(final String aTableName)

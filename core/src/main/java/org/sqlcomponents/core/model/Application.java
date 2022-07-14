@@ -71,25 +71,7 @@ public final class Application
 	this.databaseWordSeparator = databaseWordSeparator;
     }
 
-    public String getBeanSuffix()
-    {
-	return orm.getBeanSuffix();
-    }
 
-    public void setBeanSuffix(String beanSuffix)
-    {
-	orm.setBeanSuffix(beanSuffix);
-    }
-
-    public String getDaoSuffix()
-    {
-	return orm.getDaoSuffix();
-    }
-
-    public void setDaoSuffix(String daoSuffix)
-    {
-	orm.setDaoSuffix(daoSuffix);
-    }
 
     public boolean isCleanSource()
     {
@@ -151,25 +133,7 @@ public final class Application
 	this.wordsMap = wordsMap;
     }
 
-    public String getBeanIdentifier()
-    {
-	return orm.getBeanIdentifier();
-    }
 
-    public void setBeanIdentifier(String beanIdentifier)
-    {
-	orm.setBeanIdentifier(beanIdentifier);
-    }
-
-    public String getDaoIdentifier()
-    {
-	return orm.getDaoIdentifier();
-    }
-
-    public void setDaoIdentifier(String daoIdentifier)
-    {
-	orm.setDaoIdentifier(daoIdentifier);
-    }
 
     public HashMap<String, String> getModulesMap()
     {

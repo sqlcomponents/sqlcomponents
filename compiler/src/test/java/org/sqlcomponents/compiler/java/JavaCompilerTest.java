@@ -33,9 +33,7 @@ class JavaCompilerTest
 	    // daoProject.setTablePatterns(Arrays.asList("movie"));
 
 	    application.setOnline(true);
-	    application.setBeanIdentifier("model");
-	    application.setDaoIdentifier("store");
-	    application.setDaoSuffix("");
+
 	    application.setRootPackage("org.example");
 	    application.setCleanSource(true);
 	    application.setMethodSpecification(Application.METHOD_SPECIFICATION);

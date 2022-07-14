@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * Datastore for the table - ${table.tableName}.
  */
-public final class ${name}Store${orm.daoSuffix}  {
+public final class ${name}Store  {
 
     private final javax.sql.DataSource dbDataSource;
 
@@ -30,7 +30,7 @@ public final class ${name}Store${orm.daoSuffix}  {
     /**
      * Datastore
      */
-    public ${name}Store${orm.daoSuffix}(final javax.sql.DataSource theDataSource
+    public ${name}Store(final javax.sql.DataSource theDataSource
                 ,final ${orm.application.name}Manager.Observer theObserver
                     <#list sampleDistinctCustomColumnTypeProperties as property>
                     ,final ${orm.application.name}Manager.GetFunction<ResultSet, Integer, ${getClassName(property.dataType)}> theGet${property.column.typeName?cap_first}

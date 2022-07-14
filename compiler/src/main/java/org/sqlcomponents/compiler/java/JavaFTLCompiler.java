@@ -53,10 +53,8 @@ public final class JavaFTLCompiler implements Compiler
 						   {
 						       try
 						       {
-							   writeDaoImplementation(entity, aApplication.getSrcFolder(),
-										  aApplication.getDaoSuffix());
-							   writeBeanSpecification(entity, aApplication.getSrcFolder(),
-										  aApplication.getBeanSuffix());
+							   writeDaoImplementation(entity, aApplication.getSrcFolder());
+							   writeBeanSpecification(entity, aApplication.getSrcFolder());
 						       }
 						       catch (final IOException | TemplateException e)
 						       {
@@ -65,25 +63,25 @@ public final class JavaFTLCompiler implements Compiler
 						   });
     }
 
-    private void writeDaoImplementation(Entity entity, String srcFolder, String daoSuffix)
+    private void writeDaoImplementation(Entity entity, String srcFolder)
 	    throws IOException, TemplateException
     {
 	String packageFolder = getPackageAsFolder(srcFolder, entity
 		.getDaoPackage());
 	new File(packageFolder).mkdirs();
 	Files.write(new File(
-			    packageFolder + File.separator + entity.getName() + "Store" + daoSuffix.trim() + DOT_JAVA).toPath(),
+			    packageFolder + File.separator + entity.getName() + "Store" + DOT_JAVA).toPath(),
 		    getJavaContent(storeFTLTemplate.getContent(entity)).getBytes());
     }
 
-    private void writeBeanSpecification(final Entity aEntity, final String aSrcFolder, final String aBeanSuffix)
+    private void writeBeanSpecification(final Entity aEntity, final String aSrcFolder)
 	    throws IOException, TemplateException
     {
 	String packageFolder = getPackageAsFolder(aSrcFolder, aEntity.getBeanPackage());
 	new File(packageFolder).mkdirs();
 
 	Files.write(new File(packageFolder + File.separator
-			     + aEntity.getName() + (aBeanSuffix == null ? "" : aBeanSuffix.trim()) + DOT_JAVA).toPath(),
+			     + aEntity.getName() + DOT_JAVA).toPath(),
 		    getJavaContent(modelFTLTemplate.getContent(aEntity)).getBytes());
     }
 

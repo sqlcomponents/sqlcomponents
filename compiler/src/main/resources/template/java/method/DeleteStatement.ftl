@@ -29,23 +29,23 @@ public DeleteStatement delete() {
 
 public static final class DeleteStatement {
 
-    private final ${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix};
+    private final ${name}Store ${name?uncap_first}Store;
     private final WhereClause whereClause;
 
-    private DeleteStatement(final ${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix}) {
-            this(${name?uncap_first}Store${orm.daoSuffix},null);
+    private DeleteStatement(final ${name}Store ${name?uncap_first}Store) {
+            this(${name?uncap_first}Store,null);
         }
 
-        private DeleteStatement(final ${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix}
+        private DeleteStatement(final ${name}Store ${name?uncap_first}Store
                 ,final WhereClause whereClause) {
-            this.${name?uncap_first}Store${orm.daoSuffix} = ${name?uncap_first}Store${orm.daoSuffix};
+            this.${name?uncap_first}Store = ${name?uncap_first}Store;
             this.whereClause = whereClause;
         }
 
     public int execute() throws SQLException  {
     	final String query = "DELETE FROM ${table.escapedName?j_string}" 
         + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
-        try (java.sql.Connection dbConnection = this.${name?uncap_first}Store${orm.daoSuffix}.dbDataSource.getConnection();
+        try (java.sql.Connection dbConnection = this.${name?uncap_first}Store.dbDataSource.getConnection();
 			Statement statement = dbConnection.createStatement()) {
             return statement.executeUpdate(query);
         }

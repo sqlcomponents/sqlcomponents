@@ -28,13 +28,6 @@ public class ORM
 
     private String url;
 
-    private String daoIdentifier = "store";
-
-    private String beanIdentifier = "model";
-
-    private String daoSuffix = "";
-
-    private String beanSuffix;
 
     private HashMap<String, String> wordsMap;
     private HashMap<String, String> modulesMap;
