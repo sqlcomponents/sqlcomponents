@@ -31,9 +31,9 @@ public final class Application
     private HashMap<String, String> modulesMap;
     private HashMap<String, String> pluralMap;
     private String sequenceTableMap;
-    private boolean online = true;
+
     private boolean modulesFirst;
-    private boolean cleanSource = true;
+
     private ORM orm;
 
     public Application()
@@ -73,15 +73,7 @@ public final class Application
 
 
 
-    public boolean isCleanSource()
-    {
-	return cleanSource;
-    }
 
-    public void setCleanSource(boolean cleanSource)
-    {
-	this.cleanSource = cleanSource;
-    }
 
     public String getName()
     {
@@ -266,15 +258,7 @@ public final class Application
 	this.pluralMap = pluralMap;
     }
 
-    public boolean isOnline()
-    {
-	return online;
-    }
 
-    public void setOnline(boolean online)
-    {
-	this.online = online;
-    }
 
     public boolean isModulesFirst()
     {
@@ -298,11 +282,14 @@ public final class Application
 
     public void compile(final Compiler aCompiler) throws Exception
     {
-	if (this.isCleanSource() && new File(this.getSrcFolder()).exists())
-	{
-	    Files.walk(new File(this.getSrcFolder()).toPath()).sorted(Comparator.reverseOrder()).map(
-		    Path::toFile).forEach(File::delete);
-	}
+
+        File srcFolder = new File(this.getSrcFolder());
+        if(srcFolder.exists()) {
+            Files.walk(srcFolder.toPath()).sorted(Comparator.reverseOrder()).map(
+                    Path::toFile).forEach(File::delete);
+        }
+
+
 
 	aCompiler.compile(this);
     }

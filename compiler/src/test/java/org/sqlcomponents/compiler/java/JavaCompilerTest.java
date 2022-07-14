@@ -32,10 +32,10 @@ class JavaCompilerTest
 	    application.setSchemaName(props.getProperty(databaseType + ".datasource.schema"));
 	    // daoProject.setTablePatterns(Arrays.asList("movie"));
 
-	    application.setOnline(true);
+
 
 	    application.setRootPackage("org.example");
-	    application.setCleanSource(true);
+
 	    application.setMethodSpecification(Application.METHOD_SPECIFICATION);
 	    application.setSrcFolder("../datastore/src/main/java");
 	}
