@@ -13,7 +13,7 @@ public enum Flag {
 
     public static @Nullable Flag value(final String aValue) {
         for (Flag bFlag : Flag.values()) {
-            if (bFlag.value.equals(aValue)) {
+            if (bFlag.value.equalsIgnoreCase(aValue)) {
                 return bFlag;
             }
         }

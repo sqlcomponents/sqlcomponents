@@ -1,5 +1,6 @@
 package org.sqlcomponents.compiler.java.mapper;
 
+import org.jetbrains.annotations.NotNull;
 import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.Column;
@@ -19,6 +20,7 @@ public final class DB2JavaDataTypeMapper extends Mapper {
     private static final int MAX_DIGITS_FOR_LONG = String.valueOf(Long.MAX_VALUE).length() - 1;
     private static final int MAX_DIGITS_FOR_FLOAT = String.valueOf(Float.MAX_VALUE).indexOf('.');
     private static final int MAX_DIGITS_FOR_DOUBLE = String.valueOf(Double.MAX_VALUE).indexOf('.');
+    public static final String INTERVAL_STR = "interval";
 
     public DB2JavaDataTypeMapper(final Application bApplication) {
         super(bApplication);
@@ -101,53 +103,53 @@ public final class DB2JavaDataTypeMapper extends Mapper {
             return getDataTypeClassForSpecialType(aColumn);
         }
         default: {
-            throwRuntimeException(aColumn);
+            throw new RuntimeException(createMessage(aColumn));
         }
         }
-        return null;
     }
 
     private Class getDataTypeClassForSpecialType(final Column aColumn) {
-        if (aColumn.getTypeName().equalsIgnoreCase("interval")) {
+        if (aColumn.getTypeName().equalsIgnoreCase(INTERVAL_STR)) {
             return Duration.class;
-        } else {
-            throwRuntimeException(aColumn);
         }
-        return null;
+        throw new RuntimeException(createMessage(aColumn));
     }
 
-    private void throwRuntimeException(final Column aColumn) {
-        throw new RuntimeException("Datatype not found for column " + aColumn.getColumnName() + " of table "
+    @NotNull
+    private String createMessage(final Column aColumn) {
+        return "Datatype not found for column " + aColumn.getColumnName() + " of table "
                 + aColumn.getTable().getTableName() + " of type name " + aColumn.getTypeName() + " of column type "
-                + aColumn.getColumnType());
+                + aColumn.getColumnType();
     }
 
-    private Class<? extends Number> chooseNumberType(final Column column) {
-        return column.getDecimalDigits() == 0 ? chooseIntegerType(column) : chooseDecimalType(column);
+    private Class<? extends Number> chooseNumberType(final Column aColumn) {
+        return (aColumn.getDecimalDigits() == 0) ? chooseIntegerType(aColumn) : chooseDecimalType(aColumn);
     }
 
     private Class<? extends Number> chooseIntegerType(final Column aColumn) {
-        Class<? extends Number> integerType;
+        final Class<? extends Number> lIntegerType;
 
         if (aColumn.getSize() <= MAX_DIGITS_FOR_BYTE) {
-            integerType = Byte.class;
+            lIntegerType = Byte.class;
         } else if (aColumn.getSize() <= MAX_DIGITS_FOR_SHORT) {
-            integerType = Short.class;
+            lIntegerType = Short.class;
         } else if (aColumn.getSize() <= MAX_DIGITS_FOR_INTEGER) {
-            integerType = Integer.class;
+            lIntegerType = Integer.class;
         } else {
-            integerType = Long.class;
+            lIntegerType = Long.class;
         }
-        return integerType;
+
+        return lIntegerType;
     }
 
     private Class<? extends Number> chooseDecimalType(final Column aColumn) {
-        Class<? extends Number> lDecimalType;
+        final Class<? extends Number> lDecimalType;
         if (aColumn.getSize() <= MAX_DIGITS_FOR_FLOAT) {
             lDecimalType = Float.class;
         } else {
             lDecimalType = Double.class;
         }
+
         return lDecimalType;
     }
 }

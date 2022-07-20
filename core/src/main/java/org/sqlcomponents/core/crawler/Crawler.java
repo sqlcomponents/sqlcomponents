@@ -99,19 +99,19 @@ public final class Crawler {
         database.setMaxTablesInSelect(databaseMetaData.getMaxTablesInSelect());
         database.setMaxUserNameLength(databaseMetaData.getMaxUserNameLength());
         database.setNumericFunctions(
-                new HashSet<>(Arrays.asList(databaseMetaData.getNumericFunctions().split(CrawlerConsts.CAMA_STR))));
+                new HashSet<>(Arrays.asList(databaseMetaData.getNumericFunctions().split(CrawlerConsts.COMMA_STR))));
         database.setProcedureTerm(databaseMetaData.getProcedureTerm());
         database.setResultSetHoldability(databaseMetaData.getResultSetHoldability());
         database.setSchemaTerm(databaseMetaData.getSchemaTerm());
         database.setSearchStringEscape(databaseMetaData.getSearchStringEscape());
         database.setSqlKeywords(
-                new TreeSet<>(Arrays.asList(databaseMetaData.getSQLKeywords().split(CrawlerConsts.CAMA_STR))));
+                new TreeSet<>(Arrays.asList(databaseMetaData.getSQLKeywords().split(CrawlerConsts.COMMA_STR))));
         database.setStringFunctions(
-                new TreeSet<>(Arrays.asList(databaseMetaData.getStringFunctions().split(CrawlerConsts.CAMA_STR))));
+                new TreeSet<>(Arrays.asList(databaseMetaData.getStringFunctions().split(CrawlerConsts.COMMA_STR))));
         database.setSystemFunctions(
-                new TreeSet<>(Arrays.asList(databaseMetaData.getSystemFunctions().split(CrawlerConsts.CAMA_STR))));
+                new TreeSet<>(Arrays.asList(databaseMetaData.getSystemFunctions().split(CrawlerConsts.COMMA_STR))));
         database.setTimeDateFunctions(
-                new TreeSet<>(Arrays.asList(databaseMetaData.getTimeDateFunctions().split(CrawlerConsts.CAMA_STR))));
+                new TreeSet<>(Arrays.asList(databaseMetaData.getTimeDateFunctions().split(CrawlerConsts.COMMA_STR))));
         database.setSupportsTransactions(databaseMetaData.supportsTransactions());
         database.setSupportsDataDefinitionAndDataManipulationTransactions(
                 databaseMetaData.supportsDataDefinitionAndDataManipulationTransactions());
@@ -435,7 +435,7 @@ public final class Crawler {
                     if (s.length == 2) {
                         String grp = s[1].trim().replaceAll(CrawlerConsts.END_BR_REGX, "");
 
-                        s = grp.split(CrawlerConsts.CAMA_STR);
+                        s = grp.split(CrawlerConsts.COMMA_STR);
                         bColumn.setSize(Integer.parseInt(s[0]));
                         if (s.length == 2) {
                             bColumn.setDecimalDigits(Integer.parseInt(s[1]));
