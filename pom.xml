@@ -104,6 +104,9 @@
 		<groupId>net.revelc.code.formatter</groupId>
 		<artifactId>formatter-maven-plugin</artifactId>
 		<version>2.19.0</version>
+		<configuration>
+		    <lineEnding>LF</lineEnding>
+		</configuration>
 		<executions>
 		    <execution>
 			<goals>

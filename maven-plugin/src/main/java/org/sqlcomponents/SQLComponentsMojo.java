@@ -39,7 +39,7 @@ public final class SQLComponentsMojo extends AbstractMojo {
         Application lApplication = createApplicationFromYMLSpec();
         lApplication.getOrm().setApplicationClassLoader(getClassLoader(this.project));
         lApplication.compile(new JavaFTLCompiler()); // todo: why compiler has to be passed, why not created within
-                                                     // compile method, is Compiler Injectable?
+        // compile method, is Compiler Injectable?
     }
 
     private ClassLoader getClassLoader(MavenProject project) {
