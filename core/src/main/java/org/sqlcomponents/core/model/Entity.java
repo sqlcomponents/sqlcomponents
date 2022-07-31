@@ -36,6 +36,11 @@ public class Entity {
 
     public List<Property> getInsertableProperties() {
         return this.getProperties().stream().filter(property -> {
+            if (this.getOrm().getInsertMap() != null
+                    && this.getOrm().getInsertMap().get(property.getColumn().getColumnName()) != null
+                    && this.getOrm().getInsertMap().get(property.getColumn().getColumnName()).trim().length() == 0) {
+                return false;
+            }
             return property.getColumn().isInsertable();
         }).collect(Collectors.toList());
     }

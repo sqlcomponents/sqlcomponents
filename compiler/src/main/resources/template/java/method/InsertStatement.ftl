@@ -12,18 +12,24 @@
   			<#list properties as property>
   			    <#if property.column.primaryKeyIndex == 1>nextval('${sequenceName}')</#if>
   			 </#list>
-  			 <#else>    ${getPreparedValue(property)}</#if><#assign index=1><#else>            ,${getPreparedValue(property)}</#if>
+  			 <#else>    ${getPreparedValue(property,orm.insertMap)}</#if><#assign index=1><#else>            ,${getPreparedValue(property,orm.insertMap)}</#if>
   		</#list>
   	    )
   		"</@compress>;
 </#macro>
 
-<#function getPreparedValue property>
+<#function getPreparedValue property insertMap>
+
+<#if insertMap[property.column.columnName]??>
+<#return insertMap[property.column.columnName]>
+</#if>
 	<#if property.entity.table.database.dbType == 'POSTGRES'>
 		<#if property.column.typeName == 'xml'>
 			<#return "XMLPARSE(document ?)">
 		</#if>
-	</#if>
+    <#elseif insertMap[property.column.columnName]??>
+        <#return "X">
+    </#if>
 	<#return "?">
 </#function>
 
@@ -72,16 +78,19 @@
             <#assign index=0>
             <#assign column_index=1>
             <#list insertableProperties as property>
-            <#if index == 0>
-            <#if sequenceName?? && property.column.primaryKeyIndex == 1>
+            <#if orm.insertMap[property.column.columnName]??>
             <#else>
-            preparedStatement.set${getJDBCClassName(property.dataType)}(${column_index},${wrapSet(name?uncap_first+".get"+property.name?cap_first + "()",property)});
-            <#assign column_index = column_index + 1>
-            </#if>
-            <#assign index=1>
-            <#else>
-            preparedStatement.set${getJDBCClassName(property.dataType)}(${column_index},${wrapSet(name?uncap_first+".get"+property.name?cap_first + "()",property)});
-            <#assign column_index = column_index + 1>
+                <#if index == 0>
+                <#if sequenceName?? && property.column.primaryKeyIndex == 1>
+                <#else>
+                preparedStatement.set${getJDBCClassName(property.dataType)}(${column_index},${wrapSet(name?uncap_first+".get"+property.name?cap_first + "()",property)});
+                <#assign column_index = column_index + 1>
+                </#if>
+                <#assign index=1>
+                <#else>
+                preparedStatement.set${getJDBCClassName(property.dataType)}(${column_index},${wrapSet(name?uncap_first+".get"+property.name?cap_first + "()",property)});
+                <#assign column_index = column_index + 1>
+                </#if>
             </#if>
             </#list>
         }

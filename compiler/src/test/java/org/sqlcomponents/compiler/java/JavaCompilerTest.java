@@ -11,8 +11,9 @@ class JavaCompilerTest {
     @Test
     void writeCode() throws Exception {
         Application application = CompilerTestUtil.getApplication();
-        Map<String,String> insertMap = new HashMap<>();
-        insertMap.put("created_at","CURRENT_TIMESTAMP");
+        Map<String, String> insertMap = new HashMap<>();
+        insertMap.put("created_at", "CURRENT_TIMESTAMP");
+        insertMap.put("modified_by", "");
         application.setInsertMap(insertMap);
         application.compile(new JavaCompiler());
         System.out.println("Code is compiled into " + application.getSrcFolder());

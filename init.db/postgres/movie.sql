@@ -9,5 +9,6 @@ CREATE TABLE movie (
     genre VARCHAR(150),
     imdb_id VARCHAR(15),
     created_at TIMESTAMP,
+    modified_by VARCHAR(80),
     UNIQUE(imdb_id)
 );
