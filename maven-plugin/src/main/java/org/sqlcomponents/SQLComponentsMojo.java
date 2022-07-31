@@ -7,7 +7,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
-import org.sqlcomponents.compiler.java.JavaFTLCompiler;
+import org.sqlcomponents.compiler.java.JavaCompiler;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.utils.CoreConsts;
 
@@ -38,7 +38,7 @@ public final class SQLComponentsMojo extends AbstractMojo {
     public void execute() {
         Application lApplication = createApplicationFromYMLSpec();
         lApplication.getOrm().setApplicationClassLoader(getClassLoader(this.project));
-        lApplication.compile(new JavaFTLCompiler()); // todo: why compiler has to be passed, why not created within
+        lApplication.compile(new JavaCompiler()); // todo: why compiler has to be passed, why not created within
         // compile method, is Compiler Injectable?
     }
 

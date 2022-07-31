@@ -8,5 +8,6 @@ CREATE TABLE movie (
     rating NUMERIC(2,1),
     genre VARCHAR(150),
     imdb_id VARCHAR(15),
+    created_at TIMESTAMP,
     UNIQUE(imdb_id)
 );

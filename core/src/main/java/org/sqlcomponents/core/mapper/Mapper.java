@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class Mapper {
     private static final String DOT = ".";
@@ -170,7 +171,7 @@ public abstract class Mapper {
 
     protected String getPluralName(final String aEntityName) {
         String lPluralName = null;
-        HashMap<String, String> lPluralMap = application.getPluralMap();
+        Map<String, String> lPluralMap = application.getPluralMap();
         String lPluralValue;
         String lToUpperCase = aEntityName.toUpperCase();
         if (lPluralMap != null && lPluralMap.size() != 0) {
@@ -232,7 +233,7 @@ public abstract class Mapper {
 
     protected String getModuleName(final String aTableName) {
         String[] lDbWords = aTableName.split(application.getDatabaseWordSeparator());
-        HashMap<String, String> lModulesMap = application.getModulesMap();
+        Map<String, String> lModulesMap = application.getModulesMap();
         if (lModulesMap != null) {
             for (String moduleKey : lModulesMap.keySet()) {
                 for (int i = lDbWords.length - 1; i >= 0; i--) {

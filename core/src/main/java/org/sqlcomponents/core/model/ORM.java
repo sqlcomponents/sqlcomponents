@@ -6,6 +6,7 @@ import org.sqlcomponents.core.model.relational.Database;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -26,11 +27,11 @@ public class ORM {
 
     private String url;
 
-    private HashMap<String, String> wordsMap;
-    private HashMap<String, String> modulesMap;
-    private HashMap<String, String> updateMap;
-    private HashMap<String, String> insertMap;
-    private HashMap<String, String> validationMap;
+    private Map<String, String> wordsMap;
+    private Map<String, String> modulesMap;
+    private Map<String, String> updateMap;
+    private Map<String, String> insertMap;
+    private Map<String, String> validationMap;
 
     private List<Entity> entities;
     private List<Service> services;

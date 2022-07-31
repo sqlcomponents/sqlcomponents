@@ -225,7 +225,6 @@ public final class Crawler {
         ResultSet lResultSet = databaseMetaData.getTables(lCatalog, lSchemaNamePattern, null, new String[] { "TABLE" });
         while (lResultSet.next()) {
             final String tableName = lResultSet.getString("table_name");
-            System.out.println(tableName);
             if (aTableFilter.test(tableName)) {
                 Table bTable = new Table(database);
                 bTable.setTableName(tableName);

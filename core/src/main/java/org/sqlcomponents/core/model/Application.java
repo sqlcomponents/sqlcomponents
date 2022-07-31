@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class Application {
     public static final List<String> METHOD_SPECIFICATION = Arrays.asList("SelectStatement", "InsertStatement",
@@ -21,9 +22,9 @@ public final class Application {
     private List<String> sequencePatterns;
     private String databaseWordSeparator = "_";
     private String rootPackage;
-    private HashMap<String, String> wordsMap;
-    private HashMap<String, String> modulesMap;
-    private HashMap<String, String> pluralMap;
+    private Map<String, String> wordsMap;
+    private Map<String, String> modulesMap;
+    private Map<String, String> pluralMap;
     private String sequenceTableMap;
 
     private boolean modulesFirst;
@@ -90,19 +91,19 @@ public final class Application {
         this.rootPackage = rootPackage;
     }
 
-    public HashMap<String, String> getWordsMap() {
+    public Map<String, String> getWordsMap() {
         return wordsMap;
     }
 
-    public void setWordsMap(HashMap<String, String> wordsMap) {
+    public void setWordsMap(Map<String, String> wordsMap) {
         this.wordsMap = wordsMap;
     }
 
-    public HashMap<String, String> getModulesMap() {
+    public Map<String, String> getModulesMap() {
         return modulesMap;
     }
 
-    public void setModulesMap(HashMap<String, String> modulesMap) {
+    public void setModulesMap(Map<String, String> modulesMap) {
         this.modulesMap = modulesMap;
     }
 
@@ -130,11 +131,11 @@ public final class Application {
         orm.setEntities(entities);
     }
 
-    public HashMap<String, String> getInsertMap() {
+    public Map<String, String> getInsertMap() {
         return orm.getInsertMap();
     }
 
-    public void setInsertMap(HashMap<String, String> insertMap) {
+    public void setInsertMap(Map<String, String> insertMap) {
         orm.setInsertMap(insertMap);
     }
 
@@ -146,11 +147,11 @@ public final class Application {
         orm.setPassword(password);
     }
 
-    public HashMap<String, String> getUpdateMap() {
+    public Map<String, String> getUpdateMap() {
         return orm.getUpdateMap();
     }
 
-    public void setUpdateMap(HashMap<String, String> updateMap) {
+    public void setUpdateMap(Map<String, String> updateMap) {
         orm.setUpdateMap(updateMap);
     }
 
@@ -194,11 +195,11 @@ public final class Application {
         orm.setSchemaName(schemaName);
     }
 
-    public HashMap<String, String> getPluralMap() {
+    public Map<String, String> getPluralMap() {
         return pluralMap;
     }
 
-    public void setPluralMap(HashMap<String, String> pluralMap) {
+    public void setPluralMap(Map<String, String> pluralMap) {
         this.pluralMap = pluralMap;
     }
 

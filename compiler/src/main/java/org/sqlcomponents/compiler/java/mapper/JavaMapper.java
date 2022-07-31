@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  * Java Mapper which is responsible for converting Database Types into appropriate Java Data type.
  */
-public final class DB2JavaDataTypeMapper extends Mapper {
+public final class JavaMapper extends Mapper {
     private static final int MAX_DIGITS_FOR_BYTE = String.valueOf(Byte.MAX_VALUE).length() - 1;
     private static final int MAX_DIGITS_FOR_SHORT = String.valueOf(Short.MAX_VALUE).length() - 1;
     private static final int MAX_DIGITS_FOR_INTEGER = String.valueOf(Integer.MAX_VALUE).length() - 1;
@@ -22,7 +22,7 @@ public final class DB2JavaDataTypeMapper extends Mapper {
     private static final int MAX_DIGITS_FOR_DOUBLE = String.valueOf(Double.MAX_VALUE).indexOf('.');
     public static final String INTERVAL_STR = "interval";
 
-    public DB2JavaDataTypeMapper(final Application bApplication) {
+    public JavaMapper(final Application bApplication) {
         super(bApplication);
     }
 

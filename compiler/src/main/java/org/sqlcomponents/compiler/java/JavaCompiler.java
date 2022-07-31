@@ -2,7 +2,7 @@ package org.sqlcomponents.compiler.java;
 
 import freemarker.template.TemplateException;
 import org.sqlcomponents.compiler.base.FTLTemplate;
-import org.sqlcomponents.compiler.java.mapper.DB2JavaDataTypeMapper;
+import org.sqlcomponents.compiler.java.mapper.JavaMapper;
 import org.sqlcomponents.core.compiler.Compiler;
 import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.Application;
@@ -15,13 +15,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.SQLException;
 
-public final class JavaFTLCompiler implements Compiler {
+public final class JavaCompiler implements Compiler {
     private static final String DOT_JAVA = ".java";
     private final FTLTemplate<Application> managerFTLTemplate;
     private final FTLTemplate<Entity> storeFTLTemplate;
     private final FTLTemplate<Entity> modelFTLTemplate;
 
-    public JavaFTLCompiler() throws IOException {
+    public JavaCompiler() throws IOException {
         managerFTLTemplate = new FTLTemplate<>("template/java/Manager.ftl");
         storeFTLTemplate = new FTLTemplate<>("template/java/Store.ftl");
         modelFTLTemplate = new FTLTemplate<>("template/java/Model.ftl");
@@ -29,7 +29,7 @@ public final class JavaFTLCompiler implements Compiler {
 
     @Override
     public void compile(final Application aApplication) throws SQLException {
-        Mapper mapper = new DB2JavaDataTypeMapper(aApplication);
+        Mapper mapper = new JavaMapper(aApplication);
         aApplication.setOrm(mapper.getOrm());
         ORM orm = aApplication.getOrm();
 

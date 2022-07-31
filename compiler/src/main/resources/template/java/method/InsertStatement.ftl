@@ -18,6 +18,15 @@
   		"</@compress>;
 </#macro>
 
+<#function getPreparedValue property>
+	<#if property.entity.table.database.dbType == 'POSTGRES'>
+		<#if property.column.typeName == 'xml'>
+			<#return "XMLPARSE(document ?)">
+		</#if>
+	</#if>
+	<#return "?">
+</#function>
+
 <#if table.tableType == 'TABLE' >
 
 
