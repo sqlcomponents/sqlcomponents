@@ -38,9 +38,23 @@ class MovieStoreTest {
     void testFind() throws SQLException {
         Optional<Movie> movie = this.movieStore
                 .select(this.movieStore.select(title().eq("Memento")).execute().get(0).getId());
-        Assertions.assertNotNull( movie.get().getCreatedAt(), "Insert Map Value is set");
-        Assertions.assertNull( movie.get().getModifiedBy(), "Insert Map Non Value is not set");
+        Assertions.assertNotNull(movie.get().getCreatedAt(), "Insert Map Value is set");
+        Assertions.assertNull(movie.get().getModifiedBy(), "Insert Map Non Value is not set");
+        Assertions.assertNull(movie.get().getModifiedAt(), "Insert Map Non Value is not set");
         Assertions.assertEquals("Memento", movie.get().getTitle(), "Find By PK");
+    }
+
+    @Test
+    void testUpdate() throws SQLException {
+        Optional<Movie> movie = this.movieStore
+                .select(this.movieStore.select(title().eq("Memento")).execute().get(0).getId());
+        Short movieId = movie.get().getId();
+
+        movie.get().setTitle("Update Title");
+        this.movieStore.update(movie.get());
+
+        Assertions.assertEquals("Update Title", this.movieStore.select(movieId).get().getTitle(), "Update Failed");
+
     }
 
     @Test

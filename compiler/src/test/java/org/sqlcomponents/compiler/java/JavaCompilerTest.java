@@ -14,6 +14,7 @@ class JavaCompilerTest {
         Map<String, String> insertMap = new HashMap<>();
         insertMap.put("created_at", "CURRENT_TIMESTAMP");
         insertMap.put("modified_by", "");
+        insertMap.put("modified_at", "");
         application.setInsertMap(insertMap);
         application.compile(new JavaCompiler());
         System.out.println("Code is compiled into " + application.getSrcFolder());

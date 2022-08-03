@@ -10,5 +10,6 @@ CREATE TABLE movie (
     imdb_id VARCHAR(15),
     created_at TIMESTAMP,
     modified_by VARCHAR(80),
+    modified_at TIMESTAMP,
     UNIQUE(imdb_id)
 );
