@@ -3,16 +3,16 @@
   final String query = <@compress single_line=true>"
 		UPDATE ${table.escapedName?j_string} SET
         		<#assign index=0>
-        		<#list properties as property>
+        		<#list updatableProperties as property>
         			<#if property.column.primaryKeyIndex == 0>
-        			<#if index == 0><#assign index=1><#else>,</#if>${property.column.escapedName?j_string} = ?
+        			<#if index == 0><#assign index=1><#else>,</#if>${property.column.escapedName?j_string} = ${getPreparedValue(property,orm.updateMap)}
         			</#if>
         		</#list>
         		WHERE
         	    <#assign index=0>
         		<#list properties as property>
         			<#if property.column.primaryKeyIndex != 0>
-        			<#if index == 0><#assign index=1><#else> AND </#if>${property.column.escapedName?j_string} = ?
+        			<#if index == 0><#assign index=1><#else> AND </#if>${property.column.escapedName?j_string} = ${getPreparedValue(property,orm.updateMap)}
         			</#if>
         		</#list>
 		</@compress>";
@@ -25,16 +25,16 @@ public int update(${name} ${name?uncap_first}) throws SQLException {
         final String query = <@compress single_line=true>"
 		UPDATE ${table.escapedName?j_string} SET
         		<#assign index=0>
-        		<#list properties as property>
+        		<#list updatableProperties as property>
         			<#if property.column.primaryKeyIndex == 0>
-        			<#if index == 0><#assign index=1><#else>,</#if>${property.column.escapedName?j_string} = ?
+        			<#if index == 0><#assign index=1><#else>,</#if>${property.column.escapedName?j_string} = ${getPreparedValue(property,orm.updateMap)}
         			</#if>
         		</#list>
         		WHERE
         	    <#assign index=0>
         		<#list properties as property>
         			<#if property.column.primaryKeyIndex != 0>
-        			<#if index == 0><#assign index=1><#else> AND </#if>${property.column.escapedName?j_string} = ?
+        			<#if index == 0><#assign index=1><#else> AND </#if>${property.column.escapedName?j_string} = ${getPreparedValue(property,orm.updateMap)}
         			</#if>
         		</#list>
 		</@compress>";
@@ -45,11 +45,15 @@ public int update(${name} ${name?uncap_first}) throws SQLException {
 
         <#assign index=0>
         <#assign column_index=1>
-        <#list properties as property>
+        <#list updatableProperties as property>
+        <#if orm.updateMap[property.column.columnName]??>
+        <#else>
             <#if property.column.primaryKeyIndex == 0>
             <#if index == 0><#assign index=1><#else></#if>preparedStatement.set${getJDBCClassName(property.dataType)}(${column_index},${wrapSet(name?uncap_first+".get"+property.name?cap_first + "()",property)});
                                                           				<#assign column_index = column_index + 1>
             </#if>
+        </#if>
+
         </#list>
 
         <#assign index=0>
@@ -92,10 +96,13 @@ public int update(${name} ${name?uncap_first}) throws SQLException {
         private void prepare(final PreparedStatement preparedStatement,final ${name} ${name?uncap_first}) throws SQLException {
             <#assign index=0>
             <#assign column_index=1>
-            <#list properties as property>
-                <#if property.column.primaryKeyIndex == 0>
-                <#if index == 0><#assign index=1><#else></#if>preparedStatement.set${getJDBCClassName(property.dataType)}(${column_index},${wrapSet(name?uncap_first+".get"+property.name?cap_first + "()",property)});
-                                                                            <#assign column_index = column_index + 1>
+            <#list updatableProperties as property>
+                <#if orm.updateMap[property.column.columnName]??>
+                <#else>
+                    <#if property.column.primaryKeyIndex == 0>
+                    <#if index == 0><#assign index=1><#else></#if>preparedStatement.set${getJDBCClassName(property.dataType)}(${column_index},${wrapSet(name?uncap_first+".get"+property.name?cap_first + "()",property)});
+                                                                                <#assign column_index = column_index + 1>
+                    </#if>
                 </#if>
             </#list>
 

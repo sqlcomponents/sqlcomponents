@@ -45,6 +45,17 @@ public class Entity {
         }).collect(Collectors.toList());
     }
 
+    public List<Property> getUpdatableProperties() {
+        return this.getProperties().stream().filter(property -> {
+            if (this.getOrm().getUpdateMap() != null
+                    && this.getOrm().getUpdateMap().get(property.getColumn().getColumnName()) != null
+                    && this.getOrm().getUpdateMap().get(property.getColumn().getColumnName()).trim().length() == 0) {
+                return false;
+            }
+            return property.getColumn().isInsertable();
+        }).collect(Collectors.toList());
+    }
+
     /**
      * Get Not Null Insertable Properties
      *

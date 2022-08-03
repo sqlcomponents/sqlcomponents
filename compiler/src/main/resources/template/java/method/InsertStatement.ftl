@@ -18,20 +18,7 @@
   		"</@compress>;
 </#macro>
 
-<#function getPreparedValue property insertMap>
 
-<#if insertMap[property.column.columnName]??>
-<#return insertMap[property.column.columnName]>
-</#if>
-	<#if property.entity.table.database.dbType == 'POSTGRES'>
-		<#if property.column.typeName == 'xml'>
-			<#return "XMLPARSE(document ?)">
-		</#if>
-    <#elseif insertMap[property.column.columnName]??>
-        <#return "X">
-    </#if>
-	<#return "?">
-</#function>
 
 <#if table.tableType == 'TABLE' >
 

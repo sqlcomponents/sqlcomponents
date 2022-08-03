@@ -8,6 +8,7 @@ CREATE TABLE movie (
     rating NUMERIC(2,1),
     genre VARCHAR(150),
     imdb_id VARCHAR(15),
+    created_by VARCHAR(80),
     created_at TIMESTAMP,
     modified_by VARCHAR(80),
     modified_at TIMESTAMP,

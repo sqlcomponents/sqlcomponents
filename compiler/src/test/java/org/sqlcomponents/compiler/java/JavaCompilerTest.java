@@ -16,6 +16,13 @@ class JavaCompilerTest {
         insertMap.put("modified_by", "");
         insertMap.put("modified_at", "");
         application.setInsertMap(insertMap);
+
+        Map<String, String> updateMap = new HashMap<>();
+        updateMap.put("modified_at", "CURRENT_TIMESTAMP");
+        updateMap.put("created_by", "");
+        updateMap.put("created_at", "");
+        application.setUpdateMap(updateMap);
+
         application.compile(new JavaCompiler());
         System.out.println("Code is compiled into " + application.getSrcFolder());
     }
