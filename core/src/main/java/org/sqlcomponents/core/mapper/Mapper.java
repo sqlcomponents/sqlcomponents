@@ -1,7 +1,6 @@
 package org.sqlcomponents.core.mapper;
 
 import org.sqlcomponents.core.crawler.Crawler;
-import org.sqlcomponents.core.exception.SQLComponentsException;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.Entity;
 import org.sqlcomponents.core.model.Method;
@@ -14,84 +13,76 @@ import org.sqlcomponents.core.model.relational.Package;
 import org.sqlcomponents.core.model.relational.Procedure;
 import org.sqlcomponents.core.model.relational.Table;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class Mapper {
+    private static final String DOT = ".";
 
-    public abstract String getDataType(Column column);
+    private final Application application;
+
+    public Mapper(final Application aApplication) {
+        application = aApplication;
+    }
+
+    public abstract String getDataType(final Column aColumn);
 
     /**
-     *
-     * @param application
-     * @param crawler
      * @return ORM
-     * @throws SQLComponentsException
      */
-    public ORM getOrm(final Application application, final Crawler crawler)
-            throws SQLComponentsException {
-
+    public ORM getOrm() throws SQLException {
         ORM orm = application.getOrm();
 
-        if (application.getOrm().getDatabase() == null || application
-                .isOnline()) {
-            Database database = crawler.getDatabase(application);
-            application.getOrm().setDatabase(database);
-        }
+        Database database = new Crawler(application).getDatabase();
+        application.getOrm().setDatabase(database);
 
-        orm.setEntities(getEntities(application));
-        orm.setMethods(getMethods(application));
-        orm.setServices(getServices(application));
+        orm.setEntities(getEntities());
+        orm.setMethods(getMethods());
+        orm.setServices(getServices());
+
         return orm;
     }
 
-    private Method getMethod(final Procedure function,
-                             final Application application) {
-        List<Property> properties = new ArrayList<Property>(function
-                .getParameters().size());
-        Method method = new Method(function);
-        method.setName(getPropertyName(application,
-                function.getFunctionName()));
+    private Method getMethod(final Procedure aProcedure) {
+        List<Property> lProperties = new ArrayList<>(aProcedure.getParameters().size());
+        Method lMethod = new Method(aProcedure);
+        lMethod.setName(getPropertyName(aProcedure.getFunctionName()));
 
-        for (Column column : function.getParameters()) {
-            properties.add(getProperty(application, null, column));
+        for (Column column : aProcedure.getParameters()) {
+            lProperties.add(getProperty(null, column));
         }
-        method.setInputParameters(properties);
+        lMethod.setInputParameters(lProperties);
 
-        method.setOutputProperty(getProperty(application, null,
-                function.getOutput()));
-        return method;
+        lMethod.setOutputProperty(getProperty(null, aProcedure.getOutput()));
+        return lMethod;
     }
 
-    private List<Method> getMethods(final Application application) {
+    private List<Method> getMethods() {
         Database database = application.getOrm().getDatabase();
-        ArrayList<Method> methods = new ArrayList<Method>();
+        ArrayList<Method> methods = new ArrayList<>();
         if (database.getFunctions() != null) {
             for (Procedure function : database.getFunctions()) {
-                methods.add(getMethod(function, application));
+                methods.add(getMethod(function));
             }
         }
         return methods;
     }
 
-    private List<Service> getServices(final Application application) {
-        ArrayList<Service> services = new ArrayList<Service>();
-        if (application
-                .getOrm().getDatabase().getPackages() != null) {
-            Service service = null;
-            for (Package package1 : application.getOrm()
-                    .getDatabase().getPackages()) {
+    private List<Service> getServices() {
+        ArrayList<Service> services = new ArrayList<>();
+        if (application.getOrm().getDatabase().getPackages() != null) {
+            Service service;
+            for (Package package1 : application.getOrm().getDatabase().getPackages()) {
                 service = new Service();
                 service.setPackage(package1);
-                service.setServiceName(getServiceName(application,
-                        service.getName()));
-                service.setDaoPackage(getDaoPackage(application,
-                        service.getName()));
-                service.setMethods(new ArrayList<Method>());
+                service.setServiceName(getServiceName(service.getName()));
+                service.setDaoPackage(getDaoPackage(service.getName()));
+                service.setMethods(new ArrayList<>());
                 for (Procedure function : package1.getFunctions()) {
-                    service.getMethods().add(getMethod(function,
-                            application));
+                    service.getMethods().add(getMethod(function));
                 }
                 services.add(service);
             }
@@ -100,196 +91,154 @@ public abstract class Mapper {
         return services;
     }
 
-    private Property getProperty(final Application application,
-                                 final Entity entity, final Column column) {
-        if (column != null) {
-            Property property = new Property(entity, column);
-            if (column.getColumnName() != null) {
-                property.setName(getPropertyName(application, column
-                        .getColumnName()));
+    private Property getProperty(final Entity aEntity, final Column aColumn) {
+        if (aColumn != null) {
+            Property property = new Property(aEntity, aColumn);
+            if (aColumn.getColumnName() != null) {
+                property.setName(getPropertyName(aColumn.getColumnName()));
             }
-            property.setUniqueConstraintGroup(getEntityName(application,
-                    property.getColumn().getUniqueConstraintName()));
-            property.setDataType(getDataType(column));
+            property.setUniqueConstraintGroup(getEntityName(property.getColumn().getUniqueConstraintName()));
+            property.setDataType(getDataType(aColumn));
             return property;
         }
         return null;
-
     }
 
-    private List<Entity> getEntities(final Application application) {
+    private List<Entity> getEntities() {
+        Database lDatabase = application.getOrm().getDatabase();
+        ArrayList<Entity> lEntities = new ArrayList<>(lDatabase.getTables().size());
 
-        Database database = application.getOrm().getDatabase();
+        List<Property> lProperties;
+        Entity lEntity;
 
-        ArrayList<Entity> entities = new ArrayList<Entity>(database.getTables()
-                .size());
-
-        List<Property> properties;
-        Entity entity;
-
-        for (Table table : database.getTables()) {
-            entity = new Entity(application.getOrm(), table);
-            entity.setName(getEntityName(application, table.getTableName()));
-            entity.setPluralName(getPluralName(application, entity.getName()));
-            entity
-                    .setDaoPackage(getDaoPackage(application, table
-                            .getTableName()));
-            entity.setBeanPackage(getBeanPackage(application, table
-                    .getTableName()));
-
-
-            properties = new ArrayList<Property>(table.getColumns().size());
+        for (Table table : lDatabase.getTables()) {
+            lEntity = new Entity(application.getOrm(), table);
+            lEntity.setName(getEntityName(table.getTableName()));
+            lEntity.setPluralName(getPluralName(lEntity.getName()));
+            lEntity.setDaoPackage(getDaoPackage(table.getTableName()));
+            lEntity.setBeanPackage(getBeanPackage(table.getTableName()));
+            lProperties = new ArrayList<>(table.getColumns().size());
 
             for (Column column : table.getColumns()) {
-                properties.add(getProperty(application, entity, column));
+                lProperties.add(getProperty(lEntity, column));
             }
-            entity.setProperties(properties);
-            entities.add(entity);
+
+            lEntity.setProperties(lProperties);
+            lEntities.add(lEntity);
         }
-        return entities;
+        return lEntities;
     }
 
+    protected String getServiceName(final String aPackageName) {
+        if (aPackageName != null) {
+            StringBuilder lStringBuilder = new StringBuilder();
+            String[] bRelationalWords = aPackageName.split(application.getDatabaseWordSeparator());
 
-    protected String getServiceName(final Application application,
-                                    final String packageName) {
-        if (packageName != null) {
-            StringBuffer buffer = new StringBuffer();
-            String[] relationalWords = packageName
-                    .split(application.getDatabaseWordSeparator());
-            int relationalWordsCount = relationalWords.length;
-            for (int index = 0; index < relationalWordsCount; index++) {
-                buffer.append(toTileCase(getObjectOrientedWord(application,
-                        relationalWords[index])));
+            for (final String aRelationalWord : bRelationalWords) {
+                lStringBuilder.append(toTileCase(getObjectOrientedWord(aRelationalWord)));
             }
-            buffer.append("Service");
-            return buffer.toString();
+
+            lStringBuilder.append("Service");
+            return lStringBuilder.toString();
         }
         return null;
     }
 
-    protected String getEntityName(final Application application,
-                                   final String tableName) {
-        if (tableName != null) {
-            StringBuffer buffer = new StringBuffer();
-            String[] relationalWords = tableName
-                    .split(application.getDatabaseWordSeparator());
-            int relationalWordsCount = relationalWords.length;
-            for (int index = 0; index < relationalWordsCount; index++) {
-                buffer.append(toTileCase(getObjectOrientedWord(application,
-                        relationalWords[index])));
+    protected String getEntityName(final String aTableName) {
+        if (aTableName != null) {
+            StringBuilder lStringBuilder = new StringBuilder();
+            String[] bRelationalWords = aTableName.split(application.getDatabaseWordSeparator());
+            for (final String aRelationalWord : bRelationalWords) {
+                lStringBuilder.append(toTileCase(getObjectOrientedWord(aRelationalWord)));
             }
-            if (application.getBeanSuffix() != null
-                    && application.getBeanSuffix().trim().length() != 0) {
-                buffer.append(application.getBeanSuffix().trim());
-            }
-            return buffer.toString();
+
+            return lStringBuilder.toString();
         }
         return null;
     }
 
-    protected String getObjectOrientedWord(final Application application,
-                                           final String relationalWord) {
-        String objectOrientedWord = null;
+    protected String getObjectOrientedWord(final String aRelationalWord) {
+        String lObjectOrientedWord = null;
         if (application.getWordsMap() != null) {
-            for (String relationalWordKey : application
-                    .getWordsMap().keySet()) {
-                if (relationalWord.equalsIgnoreCase(relationalWordKey)) {
-                    objectOrientedWord = application.getWordsMap().get(
-                            relationalWordKey);
+            for (String bRelationalWordKey : application.getWordsMap().keySet()) {
+                if (aRelationalWord.equalsIgnoreCase(bRelationalWordKey)) {
+                    lObjectOrientedWord = application.getWordsMap().get(bRelationalWordKey);
                 }
-
             }
         }
-        return objectOrientedWord == null ? relationalWord : objectOrientedWord;
-
+        return lObjectOrientedWord == null ? aRelationalWord : lObjectOrientedWord;
     }
 
-    protected String getPluralName(final Application application,
-                                   final String entityName) {
-        String pluralName = null;
-        HashMap<String, String> pluralMap = application.getPluralMap();
-        String pluralValue;
-        String capsEntityName = entityName.toUpperCase();
-        if (pluralMap != null && pluralMap.size() != 0) {
-            for (String pluralKey : pluralMap.keySet()) {
-                pluralValue = pluralMap.get(pluralKey).toUpperCase();
-                if (capsEntityName.endsWith(pluralKey.toUpperCase())) {
-                    int lastIndex = capsEntityName.lastIndexOf(pluralKey
-                            .toUpperCase());
-                    pluralName = entityName.substring(0, lastIndex)
-                            + toTileCase(pluralValue);
+    protected String getPluralName(final String aEntityName) {
+        String lPluralName = null;
+        Map<String, String> lPluralMap = application.getPluralMap();
+        String lPluralValue;
+        String lToUpperCase = aEntityName.toUpperCase();
+        if (lPluralMap != null && lPluralMap.size() != 0) {
+            for (String pluralKey : lPluralMap.keySet()) {
+                lPluralValue = lPluralMap.get(pluralKey).toUpperCase();
+                if (lToUpperCase.endsWith(pluralKey.toUpperCase())) {
+                    int lastIndex = lToUpperCase.lastIndexOf(pluralKey.toUpperCase());
+                    lPluralName = aEntityName.substring(0, lastIndex) + toTileCase(lPluralValue);
                     break;
                 }
             }
         }
-        if (pluralName == null) {
-            pluralName = entityName + "s";
+
+        if (lPluralName == null) {
+            lPluralName = aEntityName + "s";
         }
-        return pluralName;
+
+        return lPluralName;
     }
 
-
-    private String getPackage(final Application application,
-                              final String tableName, final String identifier) {
-        StringBuffer buffer = new StringBuffer();
-
+    private String getPackage(final String aTableName, final String aIdentifier) {
+        StringBuilder lBuffer = new StringBuilder();
         if (application.getRootPackage() != null) {
-            buffer.append(application.getRootPackage());
+            lBuffer.append(application.getRootPackage());
         }
 
-        String moduleName = getModuleName(application, tableName);
+        String moduleName = getModuleName(aTableName);
 
         if (application.isModulesFirst()) {
-            if (moduleName != null
-                    && moduleName.trim().length() != 0) {
-                buffer.append(".");
-                buffer.append(moduleName.trim());
+            if (moduleName != null && moduleName.trim().length() != 0) {
+                lBuffer.append(DOT);
+                lBuffer.append(moduleName.trim());
             }
-            if (identifier != null
-                    && identifier.trim().length() != 0) {
-                buffer.append(".");
-                buffer.append(identifier.trim());
+            if (aIdentifier != null && aIdentifier.trim().length() != 0) {
+                lBuffer.append(DOT);
+                lBuffer.append(aIdentifier.trim());
             }
         } else {
-            if (identifier != null
-                    && identifier.trim().length() != 0) {
-                buffer.append(".");
-                buffer.append(identifier.trim());
+            if (aIdentifier != null && aIdentifier.trim().length() != 0) {
+                lBuffer.append(DOT);
+                lBuffer.append(aIdentifier.trim());
             }
-            if (moduleName != null
-                    && moduleName.trim().length() != 0) {
-                buffer.append(".");
-                buffer.append(moduleName.trim());
+
+            if (moduleName != null && moduleName.trim().length() != 0) {
+                lBuffer.append(DOT);
+                lBuffer.append(moduleName.trim());
             }
         }
-        return buffer.toString().toLowerCase();
+        return lBuffer.toString().toLowerCase();
     }
 
-    protected String getDaoPackage(final Application application,
-                                   final String tableName) {
-        return getPackage(application, tableName,
-                application.getDaoIdentifier());
+    protected String getDaoPackage(final String aTableName) {
+        return getPackage(aTableName, "store");
     }
 
-    protected String getBeanPackage(final Application application,
-                                    final String tableName) {
-        return getPackage(application, tableName,
-                application.getBeanIdentifier());
+    protected String getBeanPackage(final String aTableName) {
+        return getPackage(aTableName, "model");
     }
 
-    protected String getModuleName(final Application application,
-                                   final String tableName) {
-
-        String[] dbWords = tableName
-                .split(application.getDatabaseWordSeparator());
-        HashMap<String, String> modulesMap = application.getModulesMap();
-        if (modulesMap != null) {
-            for (String moduleKey : modulesMap.keySet()) {
-                for (int i = dbWords.length - 1; i >= 0; i--) {
-                    if (dbWords[i].toUpperCase()
-                            .equals(moduleKey.toUpperCase())) {
-                        return modulesMap.get(moduleKey);
-
+    protected String getModuleName(final String aTableName) {
+        String[] lDbWords = aTableName.split(application.getDatabaseWordSeparator());
+        Map<String, String> lModulesMap = application.getModulesMap();
+        if (lModulesMap != null) {
+            for (String moduleKey : lModulesMap.keySet()) {
+                for (int i = lDbWords.length - 1; i >= 0; i--) {
+                    if (lDbWords[i].equalsIgnoreCase(moduleKey)) {
+                        return lModulesMap.get(moduleKey);
                     }
                 }
             }
@@ -297,34 +246,30 @@ public abstract class Mapper {
         return null;
     }
 
-    protected String getPropertyName(final Application application,
-                                     final String columnName) {
-        StringBuffer buffer = new StringBuffer();
-        String[] relationalWords = columnName
-                .split(application.getDatabaseWordSeparator());
-        int relationalWordsCount = relationalWords.length;
-        for (int index = 0; index < relationalWordsCount; index++) {
+    protected String getPropertyName(final String aColumnName) {
+        StringBuilder lStringBuilder = new StringBuilder();
+        String[] lRelationalWords = aColumnName.split(application.getDatabaseWordSeparator());
+        int lRelationalWordsCount = lRelationalWords.length;
+        for (int index = 0; index < lRelationalWordsCount; index++) {
             if (index == 0) {
-                buffer.append(getObjectOrientedWord(application,
-                        relationalWords[index]).toLowerCase());
+                lStringBuilder.append(getObjectOrientedWord(lRelationalWords[index]).toLowerCase());
             } else {
-                buffer.append(toTileCase(getObjectOrientedWord(application,
-                        relationalWords[index])));
+                lStringBuilder.append(toTileCase(getObjectOrientedWord(lRelationalWords[index])));
             }
         }
-        return buffer.toString();
+        return lStringBuilder.toString();
     }
 
-    protected String toTileCase(final String word) {
-        char[] wordTemp = word.toLowerCase().toCharArray();
-        int letterCount = wordTemp.length;
-        for (int index = 0; index < letterCount; index++) {
+    protected String toTileCase(final String aWord) {
+        char[] lCharArray = aWord.toLowerCase().toCharArray();
+        int lLetterCount = lCharArray.length;
+        for (int index = 0; index < lLetterCount; index++) {
             if (index == 0) {
-                wordTemp[index] = Character.toUpperCase(wordTemp[index]);
+                lCharArray[index] = Character.toUpperCase(lCharArray[index]);
             } else {
-                wordTemp[index] = Character.toLowerCase(wordTemp[index]);
+                lCharArray[index] = Character.toLowerCase(lCharArray[index]);
             }
         }
-        return new String(wordTemp);
+        return new String(lCharArray);
     }
 }

@@ -11,7 +11,7 @@ public SelectStatement select(WhereClause whereClause) throws SQLException  {
 
 public static final class SelectStatement {
 
-        private final ${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix};
+        private final ${name}Store ${name?uncap_first}Store;
         private final WhereClause whereClause;
 
         private LimitClause limitClause;
@@ -21,13 +21,13 @@ public static final class SelectStatement {
                 return new LimitClause(this,limit);
         }
 
-        private SelectStatement(final ${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix}) {
-            this(${name?uncap_first}Store${orm.daoSuffix},null);
+        private SelectStatement(final ${name}Store ${name?uncap_first}Store) {
+            this(${name?uncap_first}Store,null);
         }
 
-        private SelectStatement(final ${name}Store${orm.daoSuffix} ${name?uncap_first}Store${orm.daoSuffix}
+        private SelectStatement(final ${name}Store ${name?uncap_first}Store
                 ,final WhereClause whereClause) {
-            this.${name?uncap_first}Store${orm.daoSuffix} = ${name?uncap_first}Store${orm.daoSuffix};
+            this.${name?uncap_first}Store = ${name?uncap_first}Store;
             this.whereClause = whereClause;
         }
 
@@ -40,13 +40,13 @@ public static final class SelectStatement {
                 + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) )
                 + ( this.limitClause == null ? "" : this.limitClause.asSql() )
                 + ( this.offsetClause == null ? "" : this.offsetClause.asSql() );
-                try (java.sql.Connection dbConnection = this.${name?uncap_first}Store${orm.daoSuffix}.dbDataSource.getConnection();
+                try (java.sql.Connection dbConnection = this.${name?uncap_first}Store.dbDataSource.getConnection();
                 PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
                 
                 ResultSet resultSet = preparedStatement.executeQuery();
                                 List<${name}> arrays = new ArrayList();
                 while (resultSet.next()) {
-                                        arrays.add(this.${name?uncap_first}Store${orm.daoSuffix}.rowMapper(resultSet));
+                                        arrays.add(this.${name?uncap_first}Store.rowMapper(resultSet));
                                 }
                                 return arrays;
                 } 
@@ -60,7 +60,7 @@ public static final class SelectStatement {
 		FROM ${table.escapedName?j_string}
                 </@compress>" 
                 + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
-                try (java.sql.Connection dbConnection = this.${name?uncap_first}Store${orm.daoSuffix}.dbDataSource.getConnection();
+                try (java.sql.Connection dbConnection = this.${name?uncap_first}Store.dbDataSource.getConnection();
                 PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
                 
                 ResultSet resultSet = preparedStatement.executeQuery();

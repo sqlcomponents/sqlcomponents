@@ -11,6 +11,7 @@ public class SQLComponentsException extends Exception {
 
     /**
      * constructor with arguments.
+     *
      * @param arg0
      * @param arg1
      */
@@ -20,6 +21,7 @@ public class SQLComponentsException extends Exception {
 
     /**
      * constructor with arguments.
+     *
      * @param arg0
      */
     public SQLComponentsException(final String arg0) {
@@ -28,6 +30,7 @@ public class SQLComponentsException extends Exception {
 
     /**
      * constructor with arguments.
+     *
      * @param arg0
      */
     public SQLComponentsException(final Throwable arg0) {

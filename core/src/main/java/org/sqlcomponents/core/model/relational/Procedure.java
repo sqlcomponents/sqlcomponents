@@ -1,6 +1,5 @@
 package org.sqlcomponents.core.model.relational;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,8 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class Procedure
-{
+public class Procedure {
 
     /**
      *
@@ -26,6 +24,5 @@ public class Procedure
     private List<Column> parameters;
 
     private Column output;
-
 
 }

@@ -6,14 +6,13 @@ import org.sqlcomponents.core.model.relational.Database;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
-public class ORM
-{
-    public ORM(final Application application)
-    {
-	setApplication(application);
+public class ORM {
+    public ORM(final Application application) {
+        setApplication(application);
     }
 
     private Application application;
@@ -28,19 +27,11 @@ public class ORM
 
     private String url;
 
-    private String daoIdentifier = "store";
-
-    private String beanIdentifier = "model";
-
-    private String daoSuffix = "";
-
-    private String beanSuffix;
-
-    private HashMap<String, String> wordsMap;
-    private HashMap<String, String> modulesMap;
-    private HashMap<String, String> updateMap;
-    private HashMap<String, String> insertMap;
-    private HashMap<String, String> validationMap;
+    private Map<String, String> wordsMap;
+    private Map<String, String> modulesMap;
+    private Map<String, String> updateMap;
+    private Map<String, String> insertMap;
+    private Map<String, String> validationMap;
 
     private List<Entity> entities;
     private List<Service> services;
@@ -56,7 +47,7 @@ public class ORM
     }
 
     public boolean hasJavaClass(final String className) {
-        if(applicationClassLoader != null) {
+        if (applicationClassLoader != null) {
             try {
                 applicationClassLoader.loadClass(className);
                 return true;

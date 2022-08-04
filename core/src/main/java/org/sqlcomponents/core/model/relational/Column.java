@@ -9,8 +9,7 @@ import java.util.SortedSet;
 
 @Setter
 @Getter
-public class Column
-{
+public class Column {
 
     private final Table table;
     private String columnName;
@@ -37,23 +36,19 @@ public class Column
     private Flag generatedColumn;
     private SortedSet<Key> exportedKeys;
 
-    public Column(final Table aTable)
-    {
-	this.table = aTable;
+    public Column(final Table aTable) {
+        this.table = aTable;
     }
 
-    public String getEscapedName()
-    {
-	return this.table.getDatabase().escapedName(this.getColumnName());
+    public String getEscapedName() {
+        return this.table.getDatabase().escapedName(this.getColumnName());
     }
 
-    public boolean isInsertable()
-    {
-	return autoIncrement != Flag.YES && generatedColumn != Flag.YES;
+    public boolean isInsertable() {
+        return autoIncrement != Flag.YES && generatedColumn != Flag.YES;
     }
 
-    public boolean isPrimaryKey()
-    {
-	return primaryKeyIndex != 0;
+    public boolean isPrimaryKey() {
+        return primaryKeyIndex != 0;
     }
 }

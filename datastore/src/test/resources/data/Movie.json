@@ -5,7 +5,9 @@
 	"yearOfRelease": 2000,
 	"genre": "Thriller",
 	"rating": 9.5,
-	"imdbId": "tt0209144"
+	"imdbId": "tt0209144",
+	"modifiedBy": "modifiedBy",
+		"modifiedAt": "2014-01-01T00:00:00"
     },
     {
 	"title": "Interstellar",

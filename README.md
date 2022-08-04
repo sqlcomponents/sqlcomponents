@@ -36,6 +36,7 @@ Clean Code
     
 From Directory sqlcomponents
 
+On JDK 8 it will not work
 Min JDK needed is : 11
 Max JDK Tested is : 18 
 

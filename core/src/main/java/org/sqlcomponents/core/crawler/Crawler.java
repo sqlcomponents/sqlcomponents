@@ -1,7 +1,7 @@
 package org.sqlcomponents.core.crawler;
 
+import org.sqlcomponents.core.crawler.util.CrawlerConsts;
 import org.sqlcomponents.core.crawler.util.DataSourceUtil;
-import org.sqlcomponents.core.exception.SQLComponentsException;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.Column;
 import org.sqlcomponents.core.model.relational.Database;
@@ -31,201 +31,183 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
-public class Crawler {
+public final class Crawler {
+    private final Database database = new Database();
 
-    /**
-     *
-     * @param application
-     * @return Database
-     * @throws SQLComponentsException
-     */
-    public Database getDatabase(final Application application)
-            throws SQLComponentsException {
-        Database database = new Database();
-        DataSource dataSource = DataSourceUtil.getDataSource(
-                application.getUrl(),
-                application.getUserName(),
-                application.getPassword());
-        try (Connection connection = dataSource.getConnection()) {
-            DatabaseMetaData databasemMetadata = connection.getMetaData();
+    private final Application application;
+    private final DatabaseMetaData databaseMetaData;
 
+    public Crawler(final Application aApplication) throws SQLException {
+        application = aApplication;
+        DataSource lDataSource = DataSourceUtil.getDataSource(application.getUrl(), application.getUserName(),
+                application.getPassword(), application.getSchemaName());
+        Connection lConnection = lDataSource.getConnection();
+        databaseMetaData = lConnection.getMetaData();
+    }
 
-            database.setCatalogTerm(databasemMetadata.getCatalogTerm());
-            database.setCatalogSeperator(databasemMetadata
-                    .getCatalogSeparator());
+    public Database getDatabase() throws SQLException {
+        database.setCatalogTerm(databaseMetaData.getCatalogTerm());
+        database.setCatalogSeperator(databaseMetaData.getCatalogSeparator());
 
-            switch (databasemMetadata.getDatabaseProductName()
-                    .toLowerCase().trim()) {
-                case "postgresql":
-                    database.setDbType(DBType.POSTGRES);
-                    break;
-                case "mysql":
-                    database.setDbType(DBType.MYSQL);
-                    break;
-                case "mariadb":
-                    database.setDbType(DBType.MARIADB);
-            }
-
-            database.setDatabaseMajorVersion(databasemMetadata
-                    .getDatabaseMajorVersion());
-            database.setDatabaseMinorVersion(databasemMetadata
-                    .getDatabaseMinorVersion());
-            database.setDatabaseProductVersion(databasemMetadata
-                    .getDatabaseProductVersion());
-            database.setDefaultTransactionIsolation(databasemMetadata
-                    .getDefaultTransactionIsolation());
-            database.setDatabaseMajorVersion(databasemMetadata
-                    .getDatabaseMajorVersion());
-            database.setDatabaseMinorVersion(databasemMetadata
-                    .getDatabaseMinorVersion());
-            database.setDriverName(databasemMetadata.getDriverName());
-            database.setDriverVersion(databasemMetadata.getDriverVersion());
-            database.setExtraNameCharacters(databasemMetadata
-                    .getExtraNameCharacters());
-            database.setIdentifierQuoteString(databasemMetadata
-                    .getIdentifierQuoteString());
-            database.setJdbcMajorVersion(databasemMetadata
-                    .getJDBCMajorVersion());
-            database.setJdbcMinorVersion(databasemMetadata
-                    .getJDBCMinorVersion());
-            database.setMaxBinaryLiteralLength(databasemMetadata
-                    .getMaxBinaryLiteralLength());
-            database.setMaxCharLiteralLength(databasemMetadata
-                    .getMaxCharLiteralLength());
-            database.setMaxCatalogNameLength(databasemMetadata
-                    .getMaxCatalogNameLength());
-            database.setMaxColumnNameLength(databasemMetadata
-                    .getMaxColumnNameLength());
-            database.setMaxColumnsInGroupBy(databasemMetadata
-                    .getMaxColumnsInGroupBy());
-            database.setMaxColumnsInIndex(databasemMetadata
-                    .getMaxColumnsInIndex());
-            database.setMaxColumnsInOrderBy(databasemMetadata
-                    .getMaxColumnsInOrderBy());
-            database.setMaxColumnsInSelect(databasemMetadata.
-                    getMaxColumnsInSelect());
-            database.setMaxColumnsInTable(databasemMetadata
-                    .getMaxColumnsInTable());
-            database.setMaxConnections(databasemMetadata
-                    .getMaxConnections());
-            database.setMaxCursorNameLength(databasemMetadata
-                    .getMaxCursorNameLength());
-            database.setMaxIndexLength(databasemMetadata
-                    .getMaxIndexLength());
-            database.setMaxSchemaNameLength(databasemMetadata
-                    .getMaxSchemaNameLength());
-            database.setMaxProcedureNameLength(databasemMetadata
-                    .getMaxProcedureNameLength());
-            database.setMaxRowSize(databasemMetadata.getMaxRowSize());
-            database.setDoesMaxRowSizeIncludeBlobs(databasemMetadata
-                    .doesMaxRowSizeIncludeBlobs());
-            database.setMaxStatementLength(databasemMetadata
-                    .getMaxStatementLength());
-            database.setMaxStatements(databasemMetadata
-                    .getMaxStatements());
-            database.setMaxTableNameLength(databasemMetadata
-                    .getMaxTableNameLength());
-            database.setMaxTablesInSelect(databasemMetadata.getMaxTablesInSelect());
-            database.setMaxUserNameLength(databasemMetadata.getMaxUserNameLength());
-            database.setNumericFunctions(new HashSet<>(Arrays.asList(databasemMetadata.getNumericFunctions().split(","))));
-            database.setProcedureTerm(databasemMetadata.getProcedureTerm());
-            database.setResultSetHoldability(databasemMetadata.getResultSetHoldability());
-            database.setSchemaTerm(databasemMetadata.getSchemaTerm());
-            database.setSearchStringEscape(databasemMetadata.getSearchStringEscape());
-            database.setSqlKeywords(new TreeSet<>(Arrays.asList(databasemMetadata.getSQLKeywords().split(","))));
-            database.setStringFunctions(new TreeSet<>(Arrays.asList(databasemMetadata.getStringFunctions().split(","))));
-            database.setSystemFunctions(new TreeSet<>(Arrays.asList(databasemMetadata.getSystemFunctions().split(","))));
-            database.setTimeDateFunctions(new TreeSet<>(Arrays.asList(databasemMetadata.getTimeDateFunctions().split(","))));
-            database.setSupportsTransactions(databasemMetadata.supportsTransactions());
-            database.setSupportsDataDefinitionAndDataManipulationTransactions(databasemMetadata.supportsDataDefinitionAndDataManipulationTransactions());
-            database.setDataDefinitionCausesTransactionCommit(databasemMetadata.dataDefinitionCausesTransactionCommit());
-            database.setDataDefinitionIgnoredInTransactions(databasemMetadata.dataDefinitionIgnoredInTransactions());
-//			database.setSupportsResultSetType(databasemMetadata.supportsResultSetType());
-//			database.setSupportsResultSetConcurrency(databasemMetadata.supportsResultSetConcurrency());
-//			database.setOwnUpdatesAreVisible(databasemMetadata.ownUpdatesAreVisible());
-//			database.setOwnDeletesAreVisible(databasemMetadata.ownDeletesAreVisible());
-//			database.setOwnInsertsAreVisible(databasemMetadata.ownInsertsAreVisible());
-//			database.setOthersUpdatesAreVisible(databasemMetadata.othersUpdatesAreVisible());
-//			database.setOthersDeletesAreVisible(databasemMetadata.othersDeletesAreVisible());
-//			database.setOthersInsertsAreVisible(databasemMetadata.othersInsertsAreVisible());
-//			database.setUpdatesAreDetected(databasemMetadata.updatesAreDetected());
-//			database.setDeletesAreDetected(databasemMetadata.deletesAreDetected());
-//			database.setInsertsAreDetected(databasemMetadata.insertsAreDetected());
-// 			database.setSupportsResultSetHoldability(databasemMetadata.supportsResultSetHoldability());
-//			database.setSupportsTransactionIsolationLevel(databasemMetadata.supportsTransactionIsolationLevel());
-            database.setCatalogAtStart(databasemMetadata.isCatalogAtStart());
-            database.setReadOnly(databasemMetadata.isReadOnly());
-            database.setLocatorsUpdateCopy(databasemMetadata.locatorsUpdateCopy());
-            database.setSupportsBatchUpdates(databasemMetadata.supportsBatchUpdates());
-            database.setSupportsSavePoint(databasemMetadata.supportsAlterTableWithAddColumn());
-            database.setSupportsNamedParameters(databasemMetadata.supportsNamedParameters());
-            database.setSupportsMultipleOpenResults(databasemMetadata.supportsMultipleOpenResults());
-            database.setSupportsGetGeneratedKeys(databasemMetadata.supportsGetGeneratedKeys());
-            database.setSqlStateType(databasemMetadata.getSQLStateType());
-            database.setSupportsStatementPooling(databasemMetadata.supportsStatementPooling());
-            database.setAllProceduresAreCallable(databasemMetadata.allProceduresAreCallable());
-            database.setAllTablesAreSelectable(databasemMetadata.allTablesAreSelectable());
-            database.setUrl(databasemMetadata.getURL());
-            database.setUserName(databasemMetadata.getUserName());
-            database.setNullPlusNonNullIsNull(databasemMetadata.nullPlusNonNullIsNull());
-            database.setNullsAreSortedHigh(databasemMetadata.nullsAreSortedHigh());
-            database.setNullsAreSortedLow(databasemMetadata.nullsAreSortedLow());
-            database.setNullsAreSortedAtStart(databasemMetadata.nullsAreSortedAtStart());
-            database.setNullsAreSortedAtEnd(databasemMetadata.nullsAreSortedAtEnd());
-            database.setAutoCommitFailureClosesAllResultSets(databasemMetadata.autoCommitFailureClosesAllResultSets());
-            database.setGeneratedKeyAlwaysReturned(databasemMetadata.generatedKeyAlwaysReturned());
-            database.setStoresLowerCaseIdentifiers(databasemMetadata.storesLowerCaseIdentifiers());
-            database.setStoresLowerCaseQuotedIdentifiers(databasemMetadata.storesLowerCaseQuotedIdentifiers());
-            database.setStoresMixedCaseIdentifiers(databasemMetadata.storesMixedCaseIdentifiers());
-            database.setStoresMixedCaseQuotedIdentifiers(databasemMetadata.storesMixedCaseQuotedIdentifiers());
-            database.setStoresUpperCaseIdentifiers(databasemMetadata.storesUpperCaseIdentifiers());
-            database.setStoresUpperCaseQuotedIdentifiers(databasemMetadata.storesUpperCaseQuotedIdentifiers());
-            database.setSupportsAlterTableWithAddColumn(databasemMetadata.supportsAlterTableWithAddColumn());
-            database.setSupportsAlterTableWithDropColumn(databasemMetadata.supportsAlterTableWithDropColumn());
-            database.setSupportsANSI92EntryLevelSQL(databasemMetadata.supportsANSI92EntryLevelSQL());
-            database.setSupportsANSI92FullSQL(databasemMetadata.supportsANSI92FullSQL());
-            database.setSupportsANSI92IntermediateSQL(databasemMetadata.supportsANSI92IntermediateSQL());
-            database.setSupportsCatalogsInDataManipulation(databasemMetadata.supportsCatalogsInDataManipulation());
-            database.setSupportsCatalogsInIndexDefinitions(databasemMetadata.supportsCatalogsInIndexDefinitions());
-            database.setSupportsCatalogsInPrivilegeDefinitions(databasemMetadata.supportsCatalogsInPrivilegeDefinitions());
-            database.setSupportsCatalogsInProcedureCalls(databasemMetadata.supportsCatalogsInProcedureCalls());
-            database.setSupportsCatalogsInTableDefinitions(databasemMetadata.supportsCatalogsInTableDefinitions());
-            database.setSupportsColumnAliasing(databasemMetadata.supportsColumnAliasing());
-
-            database.setTableTypes(getTableTypes(databasemMetadata));
-
-            database.setSequences(getSequences(databasemMetadata));
-            database.setTables(getTables(databasemMetadata, database, tableName -> application.getTablePatterns() == null || application.getTablePatterns().contains(tableName)));
-            // database.setFunctions(getProcedures(databasemMetadata));
-
-            repair(database, databasemMetadata);
-
-        } catch (final Exception e) {
-            throw new SQLComponentsException(e);
+        switch (databaseMetaData.getDatabaseProductName().toLowerCase().trim()) {
+        case CrawlerConsts.POSTGRES_DB: {
+            database.setDbType(DBType.POSTGRES);
+            break;
         }
+        case CrawlerConsts.MYSQL_DB: {
+            database.setDbType(DBType.MYSQL);
+            break;
+        }
+        case CrawlerConsts.MARIA_DB: {
+            database.setDbType(DBType.MARIADB);
+        }
+        }
+
+        database.setDatabaseMajorVersion(databaseMetaData.getDatabaseMajorVersion());
+        database.setDatabaseMinorVersion(databaseMetaData.getDatabaseMinorVersion());
+        database.setDatabaseProductVersion(databaseMetaData.getDatabaseProductVersion());
+        database.setDefaultTransactionIsolation(databaseMetaData.getDefaultTransactionIsolation());
+        database.setDatabaseMajorVersion(databaseMetaData.getDatabaseMajorVersion());
+        database.setDatabaseMinorVersion(databaseMetaData.getDatabaseMinorVersion());
+        database.setDriverName(databaseMetaData.getDriverName());
+        database.setDriverVersion(databaseMetaData.getDriverVersion());
+        database.setExtraNameCharacters(databaseMetaData.getExtraNameCharacters());
+        database.setIdentifierQuoteString(databaseMetaData.getIdentifierQuoteString());
+        database.setJdbcMajorVersion(databaseMetaData.getJDBCMajorVersion());
+        database.setJdbcMinorVersion(databaseMetaData.getJDBCMinorVersion());
+        database.setMaxBinaryLiteralLength(databaseMetaData.getMaxBinaryLiteralLength());
+        database.setMaxCharLiteralLength(databaseMetaData.getMaxCharLiteralLength());
+        database.setMaxCatalogNameLength(databaseMetaData.getMaxCatalogNameLength());
+        database.setMaxColumnNameLength(databaseMetaData.getMaxColumnNameLength());
+        database.setMaxColumnsInGroupBy(databaseMetaData.getMaxColumnsInGroupBy());
+        database.setMaxColumnsInIndex(databaseMetaData.getMaxColumnsInIndex());
+        database.setMaxColumnsInOrderBy(databaseMetaData.getMaxColumnsInOrderBy());
+        database.setMaxColumnsInSelect(databaseMetaData.getMaxColumnsInSelect());
+        database.setMaxColumnsInTable(databaseMetaData.getMaxColumnsInTable());
+        database.setMaxConnections(databaseMetaData.getMaxConnections());
+        database.setMaxCursorNameLength(databaseMetaData.getMaxCursorNameLength());
+        database.setMaxIndexLength(databaseMetaData.getMaxIndexLength());
+        database.setMaxSchemaNameLength(databaseMetaData.getMaxSchemaNameLength());
+        database.setMaxProcedureNameLength(databaseMetaData.getMaxProcedureNameLength());
+        database.setMaxRowSize(databaseMetaData.getMaxRowSize());
+        database.setDoesMaxRowSizeIncludeBlobs(databaseMetaData.doesMaxRowSizeIncludeBlobs());
+        database.setMaxStatementLength(databaseMetaData.getMaxStatementLength());
+        database.setMaxStatements(databaseMetaData.getMaxStatements());
+        database.setMaxTableNameLength(databaseMetaData.getMaxTableNameLength());
+        database.setMaxTablesInSelect(databaseMetaData.getMaxTablesInSelect());
+        database.setMaxUserNameLength(databaseMetaData.getMaxUserNameLength());
+        database.setNumericFunctions(
+                new HashSet<>(Arrays.asList(databaseMetaData.getNumericFunctions().split(CrawlerConsts.COMMA_STR))));
+        database.setProcedureTerm(databaseMetaData.getProcedureTerm());
+        database.setResultSetHoldability(databaseMetaData.getResultSetHoldability());
+        database.setSchemaTerm(databaseMetaData.getSchemaTerm());
+        database.setSearchStringEscape(databaseMetaData.getSearchStringEscape());
+        database.setSqlKeywords(
+                new TreeSet<>(Arrays.asList(databaseMetaData.getSQLKeywords().split(CrawlerConsts.COMMA_STR))));
+        database.setStringFunctions(
+                new TreeSet<>(Arrays.asList(databaseMetaData.getStringFunctions().split(CrawlerConsts.COMMA_STR))));
+        database.setSystemFunctions(
+                new TreeSet<>(Arrays.asList(databaseMetaData.getSystemFunctions().split(CrawlerConsts.COMMA_STR))));
+        database.setTimeDateFunctions(
+                new TreeSet<>(Arrays.asList(databaseMetaData.getTimeDateFunctions().split(CrawlerConsts.COMMA_STR))));
+        database.setSupportsTransactions(databaseMetaData.supportsTransactions());
+        database.setSupportsDataDefinitionAndDataManipulationTransactions(
+                databaseMetaData.supportsDataDefinitionAndDataManipulationTransactions());
+        database.setDataDefinitionCausesTransactionCommit(databaseMetaData.dataDefinitionCausesTransactionCommit());
+        database.setDataDefinitionIgnoredInTransactions(databaseMetaData.dataDefinitionIgnoredInTransactions());
+        // lDatabase.setSupportsResultSetType(lDatabaseMetaData.supportsResultSetType());
+        // lDatabase.setSupportsResultSetConcurrency(lDatabaseMetaData.supportsResultSetConcurrency());
+        // lDatabase.setOwnUpdatesAreVisible(lDatabaseMetaData.ownUpdatesAreVisible());
+        // lDatabase.setOwnDeletesAreVisible(lDatabaseMetaData.ownDeletesAreVisible());
+        // lDatabase.setOwnInsertsAreVisible(lDatabaseMetaData.ownInsertsAreVisible());
+        // lDatabase.setOthersUpdatesAreVisible(lDatabaseMetaData.othersUpdatesAreVisible());
+        // lDatabase.setOthersDeletesAreVisible(lDatabaseMetaData.othersDeletesAreVisible());
+        // lDatabase.setOthersInsertsAreVisible(lDatabaseMetaData.othersInsertsAreVisible());
+        // lDatabase.setUpdatesAreDetected(lDatabaseMetaData.updatesAreDetected());
+        // lDatabase.setDeletesAreDetected(lDatabaseMetaData.deletesAreDetected());
+        // lDatabase.setInsertsAreDetected(lDatabaseMetaData.insertsAreDetected());
+        // lDatabase.setSupportsResultSetHoldability(lDatabaseMetaData.supportsResultSetHoldability());
+        // lDatabase.setSupportsTransactionIsolationLevel(lDatabaseMetaData.supportsTransactionIsolationLevel());
+        database.setCatalogAtStart(databaseMetaData.isCatalogAtStart());
+        database.setReadOnly(databaseMetaData.isReadOnly());
+        database.setLocatorsUpdateCopy(databaseMetaData.locatorsUpdateCopy());
+        database.setSupportsBatchUpdates(databaseMetaData.supportsBatchUpdates());
+        database.setSupportsSavePoint(databaseMetaData.supportsAlterTableWithAddColumn());
+        database.setSupportsNamedParameters(databaseMetaData.supportsNamedParameters());
+        database.setSupportsMultipleOpenResults(databaseMetaData.supportsMultipleOpenResults());
+        database.setSupportsGetGeneratedKeys(databaseMetaData.supportsGetGeneratedKeys());
+        database.setSqlStateType(databaseMetaData.getSQLStateType());
+        database.setSupportsStatementPooling(databaseMetaData.supportsStatementPooling());
+        database.setAllProceduresAreCallable(databaseMetaData.allProceduresAreCallable());
+        database.setAllTablesAreSelectable(databaseMetaData.allTablesAreSelectable());
+        database.setUrl(databaseMetaData.getURL());
+        database.setUserName(databaseMetaData.getUserName());
+        database.setNullPlusNonNullIsNull(databaseMetaData.nullPlusNonNullIsNull());
+        database.setNullsAreSortedHigh(databaseMetaData.nullsAreSortedHigh());
+        database.setNullsAreSortedLow(databaseMetaData.nullsAreSortedLow());
+        database.setNullsAreSortedAtStart(databaseMetaData.nullsAreSortedAtStart());
+        database.setNullsAreSortedAtEnd(databaseMetaData.nullsAreSortedAtEnd());
+        database.setAutoCommitFailureClosesAllResultSets(databaseMetaData.autoCommitFailureClosesAllResultSets());
+        database.setGeneratedKeyAlwaysReturned(databaseMetaData.generatedKeyAlwaysReturned());
+        database.setStoresLowerCaseIdentifiers(databaseMetaData.storesLowerCaseIdentifiers());
+        database.setStoresLowerCaseQuotedIdentifiers(databaseMetaData.storesLowerCaseQuotedIdentifiers());
+        database.setStoresMixedCaseIdentifiers(databaseMetaData.storesMixedCaseIdentifiers());
+        database.setStoresMixedCaseQuotedIdentifiers(databaseMetaData.storesMixedCaseQuotedIdentifiers());
+        database.setStoresUpperCaseIdentifiers(databaseMetaData.storesUpperCaseIdentifiers());
+        database.setStoresUpperCaseQuotedIdentifiers(databaseMetaData.storesUpperCaseQuotedIdentifiers());
+        database.setSupportsAlterTableWithAddColumn(databaseMetaData.supportsAlterTableWithAddColumn());
+        database.setSupportsAlterTableWithDropColumn(databaseMetaData.supportsAlterTableWithDropColumn());
+        database.setSupportsANSI92EntryLevelSQL(databaseMetaData.supportsANSI92EntryLevelSQL());
+        database.setSupportsANSI92FullSQL(databaseMetaData.supportsANSI92FullSQL());
+        database.setSupportsANSI92IntermediateSQL(databaseMetaData.supportsANSI92IntermediateSQL());
+        database.setSupportsCatalogsInDataManipulation(databaseMetaData.supportsCatalogsInDataManipulation());
+        database.setSupportsCatalogsInIndexDefinitions(databaseMetaData.supportsCatalogsInIndexDefinitions());
+        database.setSupportsCatalogsInPrivilegeDefinitions(databaseMetaData.supportsCatalogsInPrivilegeDefinitions());
+        database.setSupportsCatalogsInProcedureCalls(databaseMetaData.supportsCatalogsInProcedureCalls());
+        database.setSupportsCatalogsInTableDefinitions(databaseMetaData.supportsCatalogsInTableDefinitions());
+        database.setSupportsColumnAliasing(databaseMetaData.supportsColumnAliasing());
+        database.setTableTypes(getTableTypes());
+        database.setSequences(getSequences());
+        database.setTables(getTables(application.getSchemaName(),
+                tableName -> matches(application.getTablePatterns(), tableName)));
+        // lDatabase.setFunctions(getProcedures(lDatabaseMetaData));
+        repair();
         return database;
     }
 
-    private Set<TableType> getTableTypes(final DatabaseMetaData databasemetadata) throws SQLException {
+    private boolean matches(final List<String> aPatterns, final String aValue) {
+        boolean matches = aPatterns == null || aPatterns.isEmpty();
+        if (!matches) {
+            for (String pattern : aPatterns) {
+                matches = Pattern.matches(pattern, aValue);
+                if (matches) {
+                    break;
+                }
+            }
+        }
+        return matches;
+    }
+
+    private Set<TableType> getTableTypes() throws SQLException {
         Set<TableType> tableTypes = new TreeSet<>();
-        ResultSet resultset = databasemetadata.getTableTypes();
+        ResultSet resultset = databaseMetaData.getTableTypes();
 
         while (resultset.next()) {
             String s = resultset.getString("TABLE_TYPE");
             TableType lTableType = TableType.value(s);
-            assert(lTableType !=null) : "TableType can't be null for '" + s + "', Check if all tables are created in Database";
+            assert (lTableType != null) : "TableType can't be null for '" + s
+                    + "', Check if all tables are created in Database";
             tableTypes.add(lTableType);
         }
 
         return tableTypes;
     }
 
-
-    private List<String> getSequences(final DatabaseMetaData databasemetadata) throws SQLException {
+    private List<String> getSequences() throws SQLException {
         List<String> sequences = new ArrayList<>();
-        ResultSet resultset = databasemetadata.getTables(null, null,
-                null, new String[]{"SEQUENCE"});
+        ResultSet resultset = databaseMetaData.getTables(null, null, null, new String[] { "SEQUENCE" });
 
         while (resultset.next()) {
             sequences.add(resultset.getString("table_name"));
@@ -234,284 +216,234 @@ public class Crawler {
         return sequences;
     }
 
-    private List<Table> getTables(final DatabaseMetaData databasemetadata, final Database database, final Predicate<String> tableFilter) throws SQLException {
-        List<Table> tables = new ArrayList<>();
+    private List<Table> getTables(final String aSchemeName, final Predicate<String> aTableFilter) throws SQLException {
+        List<Table> lTables = new ArrayList<>();
 
-        ResultSet resultset = databasemetadata.getTables(null, null, null, new String[]{"TABLE"});
+        String lSchemaNamePattern = (database.getDbType() == DBType.MYSQL) ? aSchemeName : null;
+        String lCatalog = database.getDbType() == DBType.MYSQL ? aSchemeName : null;
 
-        while (resultset.next()) {
-            final String tableName = resultset.getString("table_name");
-            if (tableFilter.test(tableName)) {
-                Table table = new Table(database);
-                table.setTableName(tableName);
-                table.setCategoryName(resultset.getString("table_cat"));
-                table.setSchemaName(resultset.getString("table_schem"));
-                table.setTableType(TableType.value(resultset.getString("table_type")));
-                table.setRemarks(resultset.getString("remarks"));
-                // table.setCategoryType(resultset.getString("type_cat"));
-                // table.setSchemaType(resultset.getString("type_schem"));
-                // table.setNameType(resultset.getString("type_name"));
-                // table.setSelfReferencingColumnName(resultset.getString("self_referencing_col_name"));
-                // table.setReferenceGeneration(resultset.getString("ref_generation"));
+        ResultSet lResultSet = databaseMetaData.getTables(lCatalog, lSchemaNamePattern, null, new String[] { "TABLE" });
+        while (lResultSet.next()) {
+            final String tableName = lResultSet.getString("table_name");
+            if (aTableFilter.test(tableName)) {
+                Table bTable = new Table(database);
+                bTable.setTableName(tableName);
+                bTable.setCategoryName(lResultSet.getString("table_cat"));
+                bTable.setSchemaName(lResultSet.getString("table_schem"));
+                bTable.setTableType(TableType.value(lResultSet.getString("table_type")));
+                bTable.setRemarks(lResultSet.getString("remarks"));
+                // bTable.setCategoryType(lResultSet.getString("type_cat"));
+                // bTable.setSchemaType(lResultSet.getString("type_schem"));
+                // bTable.setNameType(lResultSet.getString("type_name"));
+                // bTable.setSelfReferencingColumnName(lResultSet.getString("self_referencing_col_name"));
+                // bTable.setReferenceGeneration(lResultSet.getString("ref_generation"));
 
-                table.setColumns(getColumns(databasemetadata, table));
-
-                table.setIndices(getIndices(databasemetadata, table));
-
-                table.setUniqueColumns(getUniqueConstraints(databasemetadata,table));
+                bTable.setColumns(getColumns(bTable));
+                bTable.setIndices(getIndices(bTable));
+                bTable.setUniqueColumns(getUniqueConstraints(bTable));
                 // Set Sequence
-                database.getSequences()
-                        .stream()
-                        .filter(sequenceName -> sequenceName.contains(tableName))
-                        .findFirst()
-                        .ifPresent(table::setSequenceName);
-
-                tables.add(table);
+                database.getSequences().stream().filter(sequenceName -> sequenceName.contains(tableName)).findFirst()
+                        .ifPresent(bTable::setSequenceName);
+                lTables.add(bTable);
             }
-
-
         }
 
-        return tables;
+        return lTables;
     }
 
-    private List<Index> getIndices(final DatabaseMetaData databasemetadata, final Table table) throws SQLException {
+    private List<Index> getIndices(final Table aTable) throws SQLException {
         List<Index> indices = new ArrayList<>();
 
-        ResultSet indexResultset = databasemetadata.getIndexInfo(null, null, table.getTableName(), true, true);
+        ResultSet indexResultset = databaseMetaData.getIndexInfo(null, null, aTable.getTableName(), true, true);
 
         while (indexResultset.next()) {
-            Index index = new Index(table);
-            index.setColumnName(indexResultset.getString("COLUMN_NAME"));
-            index.setOrdinalPosition(indexResultset.getShort("ORDINAL_POSITION"));
+            Index bIndex = new Index(aTable);
+            bIndex.setColumnName(indexResultset.getString("COLUMN_NAME"));
+            bIndex.setOrdinalPosition(indexResultset.getShort("ORDINAL_POSITION"));
 
-            index.setIndexName(indexResultset.getString("INDEX_NAME"));
-            index.setIndexQualifier(indexResultset.getString("INDEX_QUALIFIER"));
-            index.setCardinality(indexResultset.getInt("CARDINALITY"));
+            bIndex.setIndexName(indexResultset.getString("INDEX_NAME"));
+            bIndex.setIndexQualifier(indexResultset.getString("INDEX_QUALIFIER"));
+            bIndex.setCardinality(indexResultset.getInt("CARDINALITY"));
             String ascDesc = indexResultset.getString("ASC_OR_DESC");
             if (ascDesc != null) {
-                index.setOrder(Order.value(ascDesc));
+                bIndex.setOrder(Order.value(ascDesc));
             }
-            index.setFilterCondition(indexResultset.getString("FILTER_CONDITION"));
-            index.setPages(indexResultset.getInt("PAGES"));
-            index.setType(indexResultset.getShort("TYPE"));
-            index.setNonUnique(indexResultset.getBoolean("NON_UNIQUE"));
-
-
-            indices.add(index);
+            bIndex.setFilterCondition(indexResultset.getString("FILTER_CONDITION"));
+            bIndex.setPages(indexResultset.getInt("PAGES"));
+            bIndex.setType(indexResultset.getShort("TYPE"));
+            bIndex.setNonUnique(indexResultset.getBoolean("NON_UNIQUE"));
+            indices.add(bIndex);
         }
         return indices;
     }
 
-    private List<Column> getColumns(final DatabaseMetaData databasemetadata, final Table table) throws SQLException {
-        List<Column> columns = new ArrayList<>();
-
-        ResultSet columnResultset = databasemetadata.getColumns(null, null, table.getTableName(), null);
-        ColumnType columnType;
-        while (columnResultset.next()) {
-            Column column = new Column(table);
-            column.setColumnName(columnResultset.getString("COLUMN_NAME"));
-            column.setTableName(columnResultset.getString("TABLE_NAME"));
-            column.setTypeName(columnResultset.getString("TYPE_NAME"));
-            columnType = ColumnType.value(JDBCType.valueOf(columnResultset.getInt("DATA_TYPE")));
-            column.setColumnType(columnType == ColumnType.OTHER ? getColumnTypeForOthers(column) : columnType);
-            column.setSize(columnResultset.getInt("COLUMN_SIZE"));
-            column.setDecimalDigits(columnResultset.getInt("DECIMAL_DIGITS"));
-            column.setRemarks(columnResultset.getString("REMARKS"));
-            column.setNullable(Flag.value(columnResultset.getString("IS_NULLABLE")));
-            column.setAutoIncrement(Flag.value(columnResultset.getString("IS_AUTOINCREMENT")));
-            column.setTableCategory(columnResultset.getString("TABLE_CAT"));
-            column.setTableSchema(columnResultset.getString("TABLE_SCHEM"));
-            column.setBufferLength(columnResultset.getInt("BUFFER_LENGTH"));
-            column.setNumberPrecisionRadix(columnResultset.getInt("NUM_PREC_RADIX"));
-            column.setColumnDefinition(columnResultset.getString("COLUMN_DEF"));
-            column.setOrdinalPosition(columnResultset.getInt("ORDINAL_POSITION"));
-            column.setScopeCatalog(columnResultset.getString("SCOPE_CATALOG"));
-            column.setScopeSchema(columnResultset.getString("SCOPE_SCHEMA"));
-            column.setScopeTable(columnResultset.getString("SCOPE_TABLE"));
-            column.setSourceDataType(columnResultset.getString("SOURCE_DATA_TYPE"));
-            column.setGeneratedColumn(Flag.value(columnResultset.getString("IS_GENERATEDCOLUMN")));
-
-            column.setExportedKeys(new TreeSet<>());
-
-            columns.add(column);
+    private List<Column> getColumns(final Table aTable) throws SQLException {
+        List<Column> lColumns = new ArrayList<>();
+        ResultSet lColumnResultSet = databaseMetaData.getColumns(null, null, aTable.getTableName(), null);
+        ColumnType lColumnType;
+        while (lColumnResultSet.next()) {
+            Column bColumn = new Column(aTable);
+            bColumn.setColumnName(lColumnResultSet.getString("COLUMN_NAME"));
+            bColumn.setTableName(lColumnResultSet.getString("TABLE_NAME"));
+            bColumn.setTypeName(lColumnResultSet.getString("TYPE_NAME"));
+            lColumnType = ColumnType.value(JDBCType.valueOf(lColumnResultSet.getInt("DATA_TYPE")));
+            bColumn.setColumnType(lColumnType == ColumnType.OTHER ? getColumnTypeForOthers(bColumn) : lColumnType);
+            bColumn.setSize(lColumnResultSet.getInt("COLUMN_SIZE"));
+            bColumn.setDecimalDigits(lColumnResultSet.getInt("DECIMAL_DIGITS"));
+            bColumn.setRemarks(lColumnResultSet.getString("REMARKS"));
+            bColumn.setNullable(Flag.value(lColumnResultSet.getString("IS_NULLABLE")));
+            bColumn.setAutoIncrement(Flag.value(lColumnResultSet.getString("IS_AUTOINCREMENT")));
+            bColumn.setTableCategory(lColumnResultSet.getString("TABLE_CAT"));
+            bColumn.setTableSchema(lColumnResultSet.getString("TABLE_SCHEM"));
+            bColumn.setBufferLength(lColumnResultSet.getInt("BUFFER_LENGTH"));
+            bColumn.setNumberPrecisionRadix(lColumnResultSet.getInt("NUM_PREC_RADIX"));
+            bColumn.setColumnDefinition(lColumnResultSet.getString("COLUMN_DEF"));
+            bColumn.setOrdinalPosition(lColumnResultSet.getInt("ORDINAL_POSITION"));
+            bColumn.setScopeCatalog(lColumnResultSet.getString("SCOPE_CATALOG"));
+            bColumn.setScopeSchema(lColumnResultSet.getString("SCOPE_SCHEMA"));
+            bColumn.setScopeTable(lColumnResultSet.getString("SCOPE_TABLE"));
+            bColumn.setSourceDataType(lColumnResultSet.getString("SOURCE_DATA_TYPE"));
+            bColumn.setGeneratedColumn(Flag.value(lColumnResultSet.getString("IS_GENERATEDCOLUMN")));
+            bColumn.setExportedKeys(new TreeSet<>());
+            lColumns.add(bColumn);
         }
 
         // Fill Primary Keys
-        ResultSet primaryKeysResultSet = databasemetadata.getPrimaryKeys(null, null, table.getTableName());
+        ResultSet primaryKeysResultSet = databaseMetaData.getPrimaryKeys(null, null, aTable.getTableName());
         while (primaryKeysResultSet.next()) {
-            columns.stream().filter(column -> {
+            lColumns.stream().filter(column -> {
                 try {
                     return column.getColumnName().equals(primaryKeysResultSet.getString("COLUMN_NAME"));
                 } catch (SQLException throwables) {
                     return false;
                 }
-            }).findFirst()
-                    .ifPresent(column -> {
-                        try {
-                            column.setPrimaryKeyIndex(primaryKeysResultSet.getInt("KEY_SEQ"));
-                        } catch (SQLException throwables) {
-                            throwables.printStackTrace();
-                        }
-                    });
-        }
-
-        //Extracting Foreign Keys.
-        ResultSet foreignKeysResultSet = databasemetadata.getExportedKeys(null, null, table.getTableName());
-
-        while (foreignKeysResultSet.next()) {
-            Key key = new Key();
-            key.setTableName(foreignKeysResultSet.getString("FKTABLE_NAME"));
-            key.setColumnName(foreignKeysResultSet.getString("FKCOLUMN_NAME"));
-            if (!columns.isEmpty()) {
-                columns.stream().filter(column -> {
-                    try {
-                        return column.getColumnName().equals(foreignKeysResultSet.getString("PKCOLUMN_NAME"));
-                    } catch (SQLException throwables) {
-                        return false;
-                    }
-                }).findFirst().ifPresent(column -> column.getExportedKeys().add(key));
-            }
-        }
-        return columns;
-    }
-
-    private ColumnType getColumnTypeForOthers(final Column column) {
-        switch (column.getTable().getDatabase().getDbType()) {
-            case POSTGRES:
-                if (column.getTypeName().equalsIgnoreCase("json")) {
-                    return ColumnType.JSON;
-                } else if (column.getTypeName().equalsIgnoreCase("jsonb")) {
-                    return ColumnType.JSONB;
-                } else if (column.getTypeName().equalsIgnoreCase("uuid")) {
-                    return ColumnType.UUID;
-                } else if (column.getTypeName().equalsIgnoreCase("interval")) {
-                    return ColumnType.INTERVAL;
-                }
-                break;
-        }
-
-        return null;
-    }
-
-    private List<Procedure> getProcedures(final DatabaseMetaData databasemetadata) throws SQLException {
-
-        List<Procedure> functions = new ArrayList<>();
-
-        ResultSet functionResultset = databasemetadata.getProcedures(null, null, null);
-        while (functionResultset.next()) {
-            Procedure function = new Procedure();
-            function.setFunctionName(functionResultset.getString("PROCEDURE_NAME"));
-            function.setFunctionCategory(functionResultset.getString("PROCEDURE_CAT"));
-            function.setFunctionSchema(functionResultset.getString("PROCEDURE_SCHEM"));
-            function.setFunctionType(functionResultset.getShort("PROCEDURE_TYPE"));
-            function.setRemarks(functionResultset.getString("REMARKS"));
-            function.setSpecificName(functionResultset.getString("SPECIFIC_NAME"));
-            functions.add(function);
-        }
-
-        return functions;
-    }
-
-    private void repair(final Database database, final DatabaseMetaData databaseMetaData) {
-        switch (database.getDbType()) {
-            case MARIADB:
-            case MYSQL:
-                repairMySQL(database, databaseMetaData);
-                break;
-        }
-    }
-
-    public List<UniqueConstraint> getUniqueConstraints(final DatabaseMetaData databasemetadata,
-                                                              final Table table) throws SQLException {
-        List<UniqueConstraint> uniqueConstraints = new ArrayList<>();
-
-        ResultSet rs = databasemetadata.getIndexInfo(null, table.getSchemaName(),
-                table.getTableName(), true, true);
-
-        while(rs.next()) {
-            String indexName = rs.getString("index_name");
-            String columnName = rs.getString("column_name");
-
-            Optional<UniqueConstraint> uniqueConstraintOptional = uniqueConstraints.stream()
-                    .filter(uniqueConstraint -> uniqueConstraint.getName().equals(indexName))
-                    .findFirst();
-
-
-            if(uniqueConstraintOptional.isPresent()) {
-                uniqueConstraintOptional.get().getColumns().add(table.getColumns().stream()
-                        .filter(column -> column.getColumnName().equals(columnName)).findFirst().get());
-
-            } else {
-                UniqueConstraint uniqueConstraint = new UniqueConstraint();
-                uniqueConstraint.setName(indexName);
-
-                List<Column> columns = new ArrayList<>();
-
-                columns.add(table.getColumns().stream()
-                        .filter(column -> column.getColumnName().equals(columnName)).findFirst().get());
-                uniqueConstraint.setColumns(columns);
-
-                uniqueConstraints.add(uniqueConstraint);
-
-            }
-
-
-        }
-
-        return uniqueConstraints;
-    }
-
-
-    private void repairMySQL(final Database database, final DatabaseMetaData databaseMetaData) {
-        if (database != null) {
-            database.getTables().forEach(table -> {
-                try (PreparedStatement preparedStatement = databaseMetaData.getConnection().prepareStatement("SELECT "
-                        + "COLUMN_NAME,COLUMN_TYPE  from INFORMATION_SCHEMA.COLUMNS where\n"
-                        + " table_name = ?")) {
-                    preparedStatement.setString(1, table.getTableName());
-
-                    ResultSet resultSet = preparedStatement.executeQuery();
-
-                    Column column;
-                    String columnType;
-                    while (resultSet.next()) {
-                         column = table.getColumns().stream()
-                                .filter(column1 -> {
-                                    try {
-                                        return column1.getColumnName().equals(resultSet.getString("COLUMN_NAME"));
-                                    } catch (SQLException throwables) {
-                                        throwables.printStackTrace();
-                                    }
-                                    return false;
-                                })
-                                .findFirst().get();
-                        columnType = resultSet.getString("COLUMN_TYPE");
-                        String[] s = columnType.split("\\(");
-                        column.setTypeName(s[0].trim());
-
-                        ColumnType columnType1 = ColumnType.value(column.getTypeName().toUpperCase());
-                        if (columnType1 != null) {
-                            column.setColumnType(columnType1);
-                        }
-                        if (s.length == 2) {
-                            String grp = s[1].trim().replaceAll("\\)", "");
-
-                            s = grp.split(",");
-                            column.setSize(Integer.parseInt(s[0]));
-                            if (s.length == 2) {
-                                column.setDecimalDigits(Integer.parseInt(s[1]));
-                            }
-                        }
-
-                    }
-
-
-
+            }).findFirst().ifPresent(column -> {
+                try {
+                    column.setPrimaryKeyIndex(primaryKeysResultSet.getInt("KEY_SEQ"));
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
             });
         }
+
+        // Extracting Foreign Keys.
+        ResultSet foreignKeysResultSet = databaseMetaData.getExportedKeys(null, null, aTable.getTableName());
+        while (foreignKeysResultSet.next()) {
+            Key bKey = new Key();
+            bKey.setTableName(foreignKeysResultSet.getString("FKTABLE_NAME"));
+            bKey.setColumnName(foreignKeysResultSet.getString("FKCOLUMN_NAME"));
+            if (!lColumns.isEmpty()) {
+                lColumns.stream().filter(column -> {
+                    try {
+                        return column.getColumnName().equals(foreignKeysResultSet.getString("PKCOLUMN_NAME"));
+                    } catch (SQLException throwables) {
+                        return false;
+                    }
+                }).findFirst().ifPresent(column -> column.getExportedKeys().add(bKey));
+            }
+        }
+        return lColumns;
+    }
+
+    private ColumnType getColumnTypeForOthers(final Column aColumn) {
+        if (aColumn.getTable().getDatabase().getDbType() == DBType.POSTGRES) {
+            return ColumnType.findEnum(aColumn.getTypeName());
+        }
+
+        return null;
+    }
+
+    private List<Procedure> getProcedures() throws SQLException {
+        List<Procedure> lProcedures = new ArrayList<>();
+        ResultSet lResultSet = databaseMetaData.getProcedures(null, null, null);
+        while (lResultSet.next()) {
+            Procedure function = new Procedure();
+            function.setFunctionName(lResultSet.getString("PROCEDURE_NAME"));
+            function.setFunctionCategory(lResultSet.getString("PROCEDURE_CAT"));
+            function.setFunctionSchema(lResultSet.getString("PROCEDURE_SCHEM"));
+            function.setFunctionType(lResultSet.getShort("PROCEDURE_TYPE"));
+            function.setRemarks(lResultSet.getString("REMARKS"));
+            function.setSpecificName(lResultSet.getString("SPECIFIC_NAME"));
+            lProcedures.add(function);
+        }
+        return lProcedures;
+    }
+
+    private void repair() {
+        switch (database.getDbType()) {
+        case MARIADB:
+        case MYSQL: {
+            repairMySQL();
+            break;
+        }
+        }
+    }
+
+    public List<UniqueConstraint> getUniqueConstraints(final Table aTable) throws SQLException {
+        List<UniqueConstraint> lUniqueConstraints = new ArrayList<>();
+        ResultSet rs = databaseMetaData.getIndexInfo(null, aTable.getSchemaName(), aTable.getTableName(), true, true);
+        while (rs.next()) {
+            String indexName = rs.getString("index_name");
+            String columnName = rs.getString("column_name");
+            Optional<UniqueConstraint> lUniqueConstraint = lUniqueConstraints.stream()
+                    .filter(uniqueConstraint -> uniqueConstraint.getName().equals(indexName)).findFirst();
+            if (lUniqueConstraint.isPresent()) {
+                lUniqueConstraint.get().getColumns().add(aTable.getColumns().stream()
+                        .filter(column -> column.getColumnName().equals(columnName)).findFirst().get());
+
+            } else {
+                UniqueConstraint bUniqueConstraint = new UniqueConstraint();
+                bUniqueConstraint.setName(indexName);
+                List<Column> bColumns = new ArrayList<>();
+                bColumns.add(aTable.getColumns().stream().filter(column -> column.getColumnName().equals(columnName))
+                        .findFirst().get());
+                bUniqueConstraint.setColumns(bColumns);
+                lUniqueConstraints.add(bUniqueConstraint);
+            }
+        }
+
+        return lUniqueConstraints;
+    }
+
+    private void repairMySQL() {
+        database.getTables().forEach(table -> {
+            try (PreparedStatement preparedStatement = databaseMetaData.getConnection().prepareStatement("SELECT "
+                    + "COLUMN_NAME,COLUMN_TYPE  from INFORMATION_SCHEMA.COLUMNS where\n" + " table_name = ?")) {
+                preparedStatement.setString(1, table.getTableName());
+                ResultSet lResultSet = preparedStatement.executeQuery();
+
+                Column bColumn;
+                String bColumnType;
+                while (lResultSet.next()) {
+                    bColumn = table.getColumns().stream().filter(column1 -> {
+                        try {
+                            return column1.getColumnName().equals(lResultSet.getString("COLUMN_NAME"));
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
+                        }
+                        return false;
+                    }).findFirst().get();
+                    bColumnType = lResultSet.getString("COLUMN_TYPE");
+                    String[] s = bColumnType.split(CrawlerConsts.START_BR_REGX);
+                    bColumn.setTypeName(s[0].trim());
+
+                    ColumnType columnType1 = ColumnType.value(bColumn.getTypeName().toUpperCase());
+                    if (columnType1 != null) {
+                        bColumn.setColumnType(columnType1);
+                    }
+                    if (s.length == 2) {
+                        String grp = s[1].trim().replaceAll(CrawlerConsts.END_BR_REGX, "");
+
+                        s = grp.split(CrawlerConsts.COMMA_STR);
+                        bColumn.setSize(Integer.parseInt(s[0]));
+                        if (s.length == 2) {
+                            bColumn.setDecimalDigits(Integer.parseInt(s[1]));
+                        }
+                    }
+                }
+            } catch (final SQLException aSQLException) {
+                aSQLException.printStackTrace();
+            }
+        });
     }
 }

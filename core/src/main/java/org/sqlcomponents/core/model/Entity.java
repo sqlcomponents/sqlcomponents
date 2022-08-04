@@ -1,6 +1,5 @@
 package org.sqlcomponents.core.model;
 
-
 import lombok.Getter;
 import lombok.Setter;
 import org.sqlcomponents.core.model.relational.Table;
@@ -31,13 +30,28 @@ public class Entity {
         setTable(table);
     }
 
-
     public boolean hasJavaClass(String className) {
         return orm.hasJavaClass(className);
     }
 
     public List<Property> getInsertableProperties() {
         return this.getProperties().stream().filter(property -> {
+            if (this.getOrm().getInsertMap() != null
+                    && this.getOrm().getInsertMap().get(property.getColumn().getColumnName()) != null
+                    && this.getOrm().getInsertMap().get(property.getColumn().getColumnName()).trim().length() == 0) {
+                return false;
+            }
+            return property.getColumn().isInsertable();
+        }).collect(Collectors.toList());
+    }
+
+    public List<Property> getUpdatableProperties() {
+        return this.getProperties().stream().filter(property -> {
+            if (this.getOrm().getUpdateMap() != null
+                    && this.getOrm().getUpdateMap().get(property.getColumn().getColumnName()) != null
+                    && this.getOrm().getUpdateMap().get(property.getColumn().getColumnName()).trim().length() == 0) {
+                return false;
+            }
             return property.getColumn().isInsertable();
         }).collect(Collectors.toList());
     }
@@ -49,8 +63,7 @@ public class Entity {
      */
     public List<Property> getMustInsertableProperties() {
         return this.getProperties().stream().filter(property -> {
-            return property.getColumn().isInsertable()
-                    && property.getColumn().getNullable() != Flag.YES;
+            return property.getColumn().isInsertable() && property.getColumn().getNullable() != Flag.YES;
         }).collect(Collectors.toList());
     }
 
@@ -72,10 +85,8 @@ public class Entity {
         List<Property> sampleDistinctCustomColumnTypeProperties = new ArrayList<>(distinctColumnTypeNames.size());
 
         distinctColumnTypeNames.stream().forEach(typeName -> {
-            sampleDistinctCustomColumnTypeProperties.add(this.getProperties()
-                    .stream()
-                    .filter(property -> property.getColumn().getTypeName().equals(typeName))
-                    .findFirst().get());
+            sampleDistinctCustomColumnTypeProperties.add(this.getProperties().stream()
+                    .filter(property -> property.getColumn().getTypeName().equals(typeName)).findFirst().get());
         });
 
         return sampleDistinctCustomColumnTypeProperties;

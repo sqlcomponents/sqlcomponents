@@ -4,7 +4,9 @@
  * These classes contain the methods for exception handling.
  *
  * @since 1.0
+ *
  * @author rmhari
+ *
  * @version 1.8
  */
 

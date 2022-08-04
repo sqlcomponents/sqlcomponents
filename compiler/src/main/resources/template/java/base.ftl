@@ -4,16 +4,6 @@
 	<#return str?split(".")?last>
 </#function>
 
-<#function getPreparedValue property> 
-	
-	<#if property.entity.table.database.dbType == 'POSTGRES'>
-		<#if property.column.typeName == 'xml'>
-			<#return "XMLPARSE(document ?)">
-		</#if>
-	</#if>		
-	<#return "?">
-</#function>
-
 <#function getJDBCClassName str> 
 	<#local pkAsParameterStr="${getClassName(str)}">
 	<#if pkAsParameterStr == "Integer">
