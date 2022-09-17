@@ -172,7 +172,7 @@ public int update(${name} ${name?uncap_first}) throws SQLException {
             }
 
         public SetClause set(final Value... values) {
-            return new SetClause(null,this);
+            return new SetClause(values,this);
         }
 
         public static final class SetClause  {
@@ -180,6 +180,13 @@ public int update(${name} ${name?uncap_first}) throws SQLException {
             private final UpdateStatement updateStatement;
 
             private ${name} ${name?uncap_first};
+
+            private Value[] values;
+
+            SetClause(final Value[] values,final UpdateStatement updateStatement) {
+                this.values = values;
+                this.updateStatement = updateStatement;
+            }
 
             SetClause(final ${name} ${name?uncap_first},final UpdateStatement updateStatement) {
                 this.${name?uncap_first} = ${name?uncap_first};
