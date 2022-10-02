@@ -65,8 +65,7 @@
             <#assign index=0>
             <#assign column_index=1>
             <#list insertableProperties as property>
-            <#if orm.insertMap[property.column.columnName]??>
-            <#else>
+            <#if !orm.insertMap?keys?seq_contains(property.column.columnName)>
                 <#if index == 0>
                 <#if sequenceName?? && property.column.primaryKeyIndex == 1>
                 <#else>

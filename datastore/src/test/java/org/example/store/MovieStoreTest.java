@@ -52,8 +52,7 @@ class MovieStoreTest {
 
         movie.get().setTitle("Update Title");
         this.movieStore.update(movie.get());
-        movie = this.movieStore
-                .select(movieId);
+        movie = this.movieStore.select(movieId);
 
         Assertions.assertNotNull(movie.get().getModifiedAt(), "Update Map Non Value is not set");
         Assertions.assertEquals("Update Title", this.movieStore.select(movieId).get().getTitle(), "Update Failed");
