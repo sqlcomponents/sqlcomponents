@@ -37,8 +37,8 @@ public class Entity {
     public List<Property> getInsertableProperties() {
         return this.getProperties().stream().filter(property -> {
             if (this.getOrm().getInsertMap() != null
-                    && this.getOrm().getInsertMap().get(property.getColumn().getColumnName()) != null
-                    && this.getOrm().getInsertMap().get(property.getColumn().getColumnName()).trim().length() == 0) {
+                    && this.getOrm().getInsertMap().containsKey(property.getColumn().getColumnName())
+                    && this.getOrm().getInsertMap().get(property.getColumn().getColumnName()) == null) {
                 return false;
             }
             return property.getColumn().isInsertable();
@@ -48,8 +48,8 @@ public class Entity {
     public List<Property> getUpdatableProperties() {
         return this.getProperties().stream().filter(property -> {
             if (this.getOrm().getUpdateMap() != null
-                    && this.getOrm().getUpdateMap().get(property.getColumn().getColumnName()) != null
-                    && this.getOrm().getUpdateMap().get(property.getColumn().getColumnName()).trim().length() == 0) {
+                    && this.getOrm().getUpdateMap().containsKey(property.getColumn().getColumnName())
+                    && this.getOrm().getUpdateMap().get(property.getColumn().getColumnName()) == null) {
                 return false;
             }
             return property.getColumn().isInsertable();

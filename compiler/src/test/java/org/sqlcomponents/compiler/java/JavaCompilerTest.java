@@ -15,16 +15,16 @@ class JavaCompilerTest {
         if (application.getInsertMap() == null) {
             Map<String, String> insertMap = new HashMap<>();
             insertMap.put("created_at", "CURRENT_TIMESTAMP");
-            insertMap.put("modified_by", "");
-            insertMap.put("modified_at", "");
+            insertMap.put("modified_by", null);
+            insertMap.put("modified_at", null);
             application.setInsertMap(insertMap);
         }
 
         if (application.getUpdateMap() == null) {
             Map<String, String> updateMap = new HashMap<>();
             updateMap.put("modified_at", "CURRENT_TIMESTAMP");
-            updateMap.put("created_by", "");
-            updateMap.put("created_at", "");
+            updateMap.put("created_by", null);
+            updateMap.put("created_at", null);
             application.setUpdateMap(updateMap);
         }
 

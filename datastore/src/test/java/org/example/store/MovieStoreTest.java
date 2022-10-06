@@ -13,8 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-import static org.example.store.MovieStore.title;
-import static org.example.store.MovieStore.yearOfRelease;
+import static org.example.store.MovieStore.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MovieStoreTest {
@@ -52,8 +51,7 @@ class MovieStoreTest {
 
         movie.get().setTitle("Update Title");
         this.movieStore.update(movie.get());
-        movie = this.movieStore
-                .select(movieId);
+        movie = this.movieStore.select(movieId);
 
         Assertions.assertNotNull(movie.get().getModifiedAt(), "Update Map Non Value is not set");
         Assertions.assertEquals("Update Title", this.movieStore.select(movieId).get().getTitle(), "Update Failed");
@@ -95,5 +93,13 @@ class MovieStoreTest {
         Assertions.assertEquals(12, this.movieStore
                 .select(yearOfRelease().eq((short) 2017).or().directedBy().eq("Christopher Nolan")).execute().size(),
                 "Select All Single Criteria");
+    }
+
+    @Test
+    void testPartialUpdate() throws SQLException {
+        int updatedRows = this.movieStore.update().set(directedBy("Sathish")).where(yearOfRelease().gt((short) 0))
+                .execute();
+
+        // Assertions.assertEquals(this.moviesToTest.size(), updatedRows, "Partial Update is not working");
     }
 }
