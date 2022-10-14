@@ -17,7 +17,7 @@ class JavaCompilerTest {
             insertMap.put("created_at", "CURRENT_TIMESTAMP");
             insertMap.put("modified_by", null);
             insertMap.put("modified_at", null);
-            insertMap.put("azagu_raja#a_text", "a_text");
+            insertMap.put("azagu_raja#a_integer", "4");
             application.setInsertMap(insertMap);
         }
 

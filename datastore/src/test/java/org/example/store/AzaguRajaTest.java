@@ -113,6 +113,14 @@ class AzaguRajaTest {
     }
 
     @Test
+    void testTableFilterMaps() throws SQLException {
+        this.connectionStore.insert().values(connectionsToTest).execute();
+
+        AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore.insert().values(azaguRajasToTest.get(0)).returning();
+        Assertions.assertEquals(4, insertedAzaguRaja.getAInteger(), "Insert Map with Table and Column");
+    }
+
+    @Test
     void testDeleteWhereClause() throws SQLException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 

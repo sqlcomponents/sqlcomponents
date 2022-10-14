@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 @Getter
@@ -36,10 +37,18 @@ public class Entity {
         return orm.hasJavaClass(className);
     }
 
+    public boolean containsProperty(final Property property, final Map<String, String> map) {
+        String combinedKey = property.getColumn().getTableName() + "#" + property.getColumn().getColumnName();
+        return !(map.containsKey(property.getColumn().getColumnName()) || map.containsKey(combinedKey));
+    }
+
     public String getPreparedValue(final Property property, final Map<String, String> map) {
         String preparedValue = null;
         if ((preparedValue = map.get(property.getColumn().getColumnName())) != null) {
-            return preparedValue;
+            return preparedValue.replaceAll("\"", Matcher.quoteReplacement("\\\""));
+        } else if ((preparedValue = map
+                .get(property.getColumn().getTableName() + "#" + property.getColumn().getColumnName())) != null) {
+            return preparedValue.replaceAll("\"", Matcher.quoteReplacement("\\\""));
         } else {
             if (property.getEntity().getTable().getDatabase().getDbType() == DBType.POSTGRES) {
                 // property.column.typeName == 'xml'
@@ -70,9 +79,10 @@ public class Entity {
     }
 
     private boolean isFilteredIn(final Map<String, String> map, final Property property) {
-        return map != null
-                && map.containsKey(property.getColumn().getColumnName())
-                && map.get(property.getColumn().getColumnName()) == null;
+        String combinedKey = property.getColumn().getTableName() + "#" + property.getColumn().getColumnName();
+        return map != null && ((map.containsKey(property.getColumn().getColumnName())
+                && map.get(property.getColumn().getColumnName()) == null)
+                || (map.containsKey(combinedKey) && map.get(combinedKey) == null));
     }
 
     /**
