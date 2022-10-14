@@ -26,8 +26,6 @@ public final class Application {
     private Map<String, String> modulesMap;
     private Map<String, String> pluralMap;
 
-    private List<String> encryption;
-
     private String sequenceTableMap;
 
     private boolean modulesFirst;
@@ -223,11 +221,11 @@ public final class Application {
     }
 
     public List<String> getEncryption() {
-        return encryption;
+        return orm.getEncryption();
     }
 
     public void setEncryption(final List<String> encryption) {
-        this.encryption = encryption;
+        orm.setEncryption(encryption);
     }
 
     public void compile(final Compiler aCompiler) throws Exception {

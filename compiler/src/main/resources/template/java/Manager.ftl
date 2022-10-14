@@ -15,15 +15,25 @@ public final class ${name}Manager {
     private final ${entity.name}Store ${entity.name?uncap_first}Store;
     </#list>
 
-    private ${name}Manager(final javax.sql.DataSource dbDataSource) {
+    private ${name}Manager(final javax.sql.DataSource dbDataSource
+    <#if encryption?? >
+    <#assign a=addImportStatement("javax.sql.DataSource")>
+    ,final Function<String,String> encryptionFunction
+    ,final Function<String,String> decryptionFunction
+    </#if>
+    ) {
         this.dbDataSource = dbDataSource;
         this.observer = new Observer();
         <#list orm.entities as entity>
         this.${entity.name?uncap_first}Store = new ${entity.name}Store(dbDataSource,this.observer
         <#list entity.sampleDistinctCustomColumnTypeProperties as property>
-                                ,this::get${property.column.typeName?cap_first}
-                                ,this::convert${property.column.typeName?cap_first}
+                    ,this::get${property.column.typeName?cap_first}
+                    ,this::convert${property.column.typeName?cap_first}
         </#list>
+        <#if entity.containsEncryptedProperty() >
+            ,encryptionFunction
+            , decryptionFunction
+        </#if>
         );
         </#list>
     }
@@ -36,7 +46,13 @@ public final class ${name}Manager {
     </#if>
                                                             ) {
         if(${name?uncap_first}Manager == null) {
-            ${name?uncap_first}Manager = new ${name}Manager(dbDataSource);
+            ${name?uncap_first}Manager = new ${name}Manager(dbDataSource
+            <#if encryption?? >
+            
+            , encryptionFunction
+            ,decryptionFunction
+            </#if>
+            );
         }
         return ${name?uncap_first}Manager;
     }

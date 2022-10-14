@@ -27,6 +27,11 @@ public final class ${name}Store  {
     private final ${orm.application.name}Manager.ConvertFunction<${getClassName(property.dataType)},Object> convert${property.column.typeName?cap_first};
     </#list>
 
+    <#if containsEncryptedProperty() >
+        private final Function<String,String> encryptionFunction;
+        private final Function<String,String> decryptionFunction;
+    </#if>
+
     /**
      * Datastore
      */
@@ -36,6 +41,12 @@ public final class ${name}Store  {
                     ,final ${orm.application.name}Manager.GetFunction<ResultSet, Integer, ${getClassName(property.dataType)}> theGet${property.column.typeName?cap_first}
                     ,final ${orm.application.name}Manager.ConvertFunction<${getClassName(property.dataType)},Object> theConvert${property.column.typeName?cap_first}
                     </#list>
+
+                    <#if containsEncryptedProperty() >
+                        <#assign a=addImportStatement("javax.sql.DataSource")>
+                        ,final Function<String,String> encryptionFunction
+                        ,final Function<String,String> decryptionFunction
+                    </#if>
                 ) {
         this.dbDataSource = theDataSource;
         this.observer = theObserver;
@@ -43,6 +54,10 @@ public final class ${name}Store  {
         this.get${property.column.typeName?cap_first} =  theGet${property.column.typeName?cap_first};
         this.convert${property.column.typeName?cap_first} =  theConvert${property.column.typeName?cap_first};
         </#list>
+        <#if containsEncryptedProperty() >
+            this.encryptionFunction = encryptionFunction;
+            this.decryptionFunction = decryptionFunction;
+        </#if>
     }
 
 	<#list orm.methodSpecification as method>

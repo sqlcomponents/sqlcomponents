@@ -37,6 +37,16 @@ public class Entity {
         return orm.hasJavaClass(className);
     }
 
+    public boolean containsEncryption(final Property property) {
+        String combinedKey = property.getColumn().getTableName() + "#" + property.getColumn().getColumnName();
+        return orm.getEncryption() != null && (orm.getEncryption().contains(property.getColumn().getColumnName())
+                || orm.getEncryption().contains(combinedKey));
+    }
+
+    public boolean containsEncryptedProperty() {
+        return this.getProperties().stream().filter(this::containsEncryption).findFirst().isPresent();
+    }
+
     public boolean containsProperty(final Property property, final Map<String, String> map) {
         String combinedKey = property.getColumn().getTableName() + "#" + property.getColumn().getColumnName();
         return !(map.containsKey(property.getColumn().getColumnName()) || map.containsKey(combinedKey));

@@ -31,7 +31,7 @@ class JavaCompilerTest {
             application.setUpdateMap(updateMap);
         }
 
-        application.setEncryption(Arrays.asList(""));
+        application.setEncryption(Arrays.asList("a_encrypted_text"));
 
         application.compile(new JavaCompiler());
         System.out.println("Code is compiled into " + application.getSrcFolder());
