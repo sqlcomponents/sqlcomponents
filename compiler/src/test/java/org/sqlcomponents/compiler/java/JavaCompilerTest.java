@@ -26,6 +26,7 @@ class JavaCompilerTest {
             updateMap.put("modified_at", "CURRENT_TIMESTAMP");
             updateMap.put("created_by", null);
             updateMap.put("created_at", null);
+            updateMap.put("azagu_raja#a_integer", "5");
             application.setUpdateMap(updateMap);
         }
 

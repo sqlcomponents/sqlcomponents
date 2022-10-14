@@ -118,6 +118,10 @@ class AzaguRajaTest {
 
         AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore.insert().values(azaguRajasToTest.get(0)).returning();
         Assertions.assertEquals(4, insertedAzaguRaja.getAInteger(), "Insert Map with Table and Column");
+        // this.allInAllAzaguRajaStore.update(insertedAzaguRaja);
+        // insertedAzaguRaja = this.allInAllAzaguRajaStore.select(insertedAzaguRaja.getId()).get();
+        // Assertions.assertEquals(5, insertedAzaguRaja.getAInteger(), "Insert Map with Table and Column");
+
     }
 
     @Test

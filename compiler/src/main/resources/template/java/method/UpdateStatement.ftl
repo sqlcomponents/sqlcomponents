@@ -97,7 +97,7 @@ public int update(${name} ${name?uncap_first}) throws SQLException {
             <#assign index=0>
             <#assign column_index=1>
             <#list updatableProperties as property>
-                <#if !orm.updateMap?keys?seq_contains(property.column.columnName)>
+                <#if containsProperty(property,orm.updateMap)>
                     <#if property.column.primaryKeyIndex == 0>
                     <#if index == 0><#assign index=1><#else></#if>preparedStatement.set${getJDBCClassName(property.dataType)}(${column_index},${wrapSet(name?uncap_first+".get"+property.name?cap_first + "()",property)});
                                                                                 <#assign column_index = column_index + 1>
