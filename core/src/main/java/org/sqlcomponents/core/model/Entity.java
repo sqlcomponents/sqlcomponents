@@ -3,6 +3,7 @@ package org.sqlcomponents.core.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.sqlcomponents.core.model.relational.Table;
+import org.sqlcomponents.core.model.relational.enums.DBType;
 import org.sqlcomponents.core.model.relational.enums.Flag;
 
 import java.util.ArrayList;
@@ -35,23 +36,24 @@ public class Entity {
         return orm.hasJavaClass(className);
     }
 
-    public String getPreparedValue(final Property property,
-                                   final Map<String, String> map) {
+    public String getPreparedValue(final Property property, final Map<String, String> map) {
         String preparedValue = null;
-        if( (preparedValue = map.get(property.getColumn().getColumnName())) != null) {
+        if ((preparedValue = map.get(property.getColumn().getColumnName())) != null) {
             return preparedValue;
+        } else {
+            if (property.getEntity().getTable().getDatabase().getDbType() == DBType.POSTGRES) {
+                // property.column.typeName == 'xml'
+                if (property.getColumn().getTypeName().equals("xml")) {
+                    preparedValue = "XMLPARSE(document ?)";
+                }
+            }
         }
-        else {
-            preparedValue = "?";
-        }
-        return preparedValue;
+        return preparedValue == null ? "?" : preparedValue;
     }
 
     public List<Property> getInsertableProperties() {
         return this.getProperties().stream().filter(property -> {
-            if (this.getOrm().getInsertMap() != null
-                    && this.getOrm().getInsertMap().containsKey(property.getColumn().getColumnName())
-                    && this.getOrm().getInsertMap().get(property.getColumn().getColumnName()) == null) {
+            if (isFilteredIn(this.getOrm().getInsertMap(), property)) {
                 return false;
             }
             return property.getColumn().isInsertable();
@@ -60,13 +62,17 @@ public class Entity {
 
     public List<Property> getUpdatableProperties() {
         return this.getProperties().stream().filter(property -> {
-            if (this.getOrm().getUpdateMap() != null
-                    && this.getOrm().getUpdateMap().containsKey(property.getColumn().getColumnName())
-                    && this.getOrm().getUpdateMap().get(property.getColumn().getColumnName()) == null) {
+            if (isFilteredIn(this.getOrm().getUpdateMap(), property)) {
                 return false;
             }
             return property.getColumn().isInsertable();
         }).collect(Collectors.toList());
+    }
+
+    private boolean isFilteredIn(final Map<String, String> map, final Property property) {
+        return map != null
+                && map.containsKey(property.getColumn().getColumnName())
+                && map.get(property.getColumn().getColumnName()) == null;
     }
 
     /**
