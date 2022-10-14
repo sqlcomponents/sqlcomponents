@@ -11,7 +11,7 @@
 	<#return pkAsParameterStr> 
 </#function>
 
-<#function getPreparedValue property insertMap>
+<#--  <#function getPreparedValue property insertMap>
 
 <#if insertMap[property.column.columnName]??>
 <#return insertMap[property.column.columnName]>
@@ -24,7 +24,7 @@
         <#return "X">
     </#if>
 	<#return "?">
-</#function>
+</#function>  -->
 
 <#function getPrimaryKeysAsCommaSeparated>
 	<#local pkAsParameterStr="">

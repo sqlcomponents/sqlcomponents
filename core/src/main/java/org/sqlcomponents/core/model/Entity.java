@@ -7,6 +7,7 @@ import org.sqlcomponents.core.model.relational.enums.Flag;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,18 @@ public class Entity {
 
     public boolean hasJavaClass(String className) {
         return orm.hasJavaClass(className);
+    }
+
+    public String getPreparedValue(final Property property,
+                                   final Map<String, String> map) {
+        String preparedValue = null;
+        if( (preparedValue = map.get(property.getColumn().getColumnName())) != null) {
+            return preparedValue;
+        }
+        else {
+            preparedValue = "?";
+        }
+        return preparedValue;
     }
 
     public List<Property> getInsertableProperties() {
