@@ -4,6 +4,7 @@ import org.example.MovieManager;
 import org.example.model.AzaguRaja;
 import org.example.model.Connection;
 import org.example.util.DataSourceProvider;
+import org.example.util.EncryptionUtil;
 import org.example.util.JsonUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +28,8 @@ class AzaguRajaTest {
     private final List<AzaguRaja> azaguRajasToTest;
 
     AzaguRajaTest() {
-        MovieManager movieManager = MovieManager.getManager(DataSourceProvider.dataSource());
+        MovieManager movieManager = MovieManager.getManager(DataSourceProvider.dataSource(),
+                EncryptionUtil::enAnDecrypt, EncryptionUtil::enAnDecrypt);
         // Stores used for testing
         this.connectionStore = movieManager.getConnectionStore();
         this.allInAllAzaguRajaStore = movieManager.getAzaguRajaStore();

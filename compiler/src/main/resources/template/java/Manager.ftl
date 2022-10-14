@@ -28,7 +28,13 @@ public final class ${name}Manager {
         </#list>
     }
 
-    public static final ${name}Manager getManager(final DataSource dbDataSource) {
+    public static final ${name}Manager getManager(final DataSource dbDataSource
+    <#if encryption?? >
+    <#assign a=addImportStatement("javax.sql.DataSource")>
+    ,final Function<String,String> encryptionFunction
+    ,final Function<String,String> decryptionFunction
+    </#if>
+                                                            ) {
         if(${name?uncap_first}Manager == null) {
             ${name?uncap_first}Manager = new ${name}Manager(dbDataSource);
         }

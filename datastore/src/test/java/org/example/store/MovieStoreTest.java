@@ -3,6 +3,7 @@ package org.example.store;
 import org.example.MovieManager;
 import org.example.model.Movie;
 import org.example.util.DataSourceProvider;
+import org.example.util.EncryptionUtil;
 import org.example.util.JsonUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,7 +22,8 @@ class MovieStoreTest {
     private List<Movie> moviesToTest;
 
     MovieStoreTest() {
-        MovieManager movieManager = MovieManager.getManager(DataSourceProvider.dataSource());
+        MovieManager movieManager = MovieManager.getManager(DataSourceProvider.dataSource(),
+                EncryptionUtil::enAnDecrypt, EncryptionUtil::enAnDecrypt);
         // Stores used for testing
         this.movieStore = movieManager.getMovieStore();
     }
