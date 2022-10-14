@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.sqlcomponents.compiler.java.util.CompilerTestUtil;
 import org.sqlcomponents.core.model.Application;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +30,8 @@ class JavaCompilerTest {
             updateMap.put("azagu_raja#a_integer", "5");
             application.setUpdateMap(updateMap);
         }
+
+        application.setEncryption(Arrays.asList(""));
 
         application.compile(new JavaCompiler());
         System.out.println("Code is compiled into " + application.getSrcFolder());

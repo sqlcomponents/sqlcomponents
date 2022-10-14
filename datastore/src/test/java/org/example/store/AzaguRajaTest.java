@@ -125,6 +125,18 @@ class AzaguRajaTest {
     }
 
     @Test
+    void testEncryption() throws SQLException {
+        this.connectionStore.insert().values(connectionsToTest).execute();
+
+        azaguRajasToTest.get(0).setAEncryptedText("AEncryptedText");
+
+        AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore.insert().values(azaguRajasToTest.get(0)).returning();
+        Assertions.assertEquals("AEncryptedText", insertedAzaguRaja.getAEncryptedText(),
+                "Insert Map with Table and Column");
+
+    }
+
+    @Test
     void testDeleteWhereClause() throws SQLException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 

@@ -25,6 +25,9 @@ public final class Application {
     private Map<String, String> wordsMap;
     private Map<String, String> modulesMap;
     private Map<String, String> pluralMap;
+
+    private List<String> encryption;
+
     private String sequenceTableMap;
 
     private boolean modulesFirst;
@@ -217,6 +220,14 @@ public final class Application {
 
     public void setSrcFolder(String srcFolder) {
         this.srcFolder = srcFolder;
+    }
+
+    public List<String> getEncryption() {
+        return encryption;
+    }
+
+    public void setEncryption(final List<String> encryption) {
+        this.encryption = encryption;
     }
 
     public void compile(final Compiler aCompiler) throws Exception {
