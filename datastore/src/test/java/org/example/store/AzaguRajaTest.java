@@ -4,6 +4,7 @@ import org.example.MovieManager;
 import org.example.model.AzaguRaja;
 import org.example.model.Connection;
 import org.example.util.DataSourceProvider;
+import org.example.util.EncryptionUtil;
 import org.example.util.JsonUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +28,8 @@ class AzaguRajaTest {
     private final List<AzaguRaja> azaguRajasToTest;
 
     AzaguRajaTest() {
-        MovieManager movieManager = MovieManager.getManager(DataSourceProvider.dataSource());
+        MovieManager movieManager = MovieManager.getManager(DataSourceProvider.dataSource(),
+                EncryptionUtil::enAnDecrypt, EncryptionUtil::enAnDecrypt);
         // Stores used for testing
         this.connectionStore = movieManager.getConnectionStore();
         this.allInAllAzaguRajaStore = movieManager.getAzaguRajaStore();
@@ -110,6 +112,30 @@ class AzaguRajaTest {
         List<AzaguRaja> insertedAzaguRajas = this.allInAllAzaguRajaStore.insert().values(azaguRajasToTest.get(0))
                 .values(azaguRajasToTest.get(1)).values(azaguRajasToTest.get(2)).returning();
         Assertions.assertEquals(3, insertedAzaguRajas.size(), "Multi Sequence Insert Returning");
+    }
+
+    @Test
+    void testTableFilterMaps() throws SQLException {
+        this.connectionStore.insert().values(connectionsToTest).execute();
+
+        AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore.insert().values(azaguRajasToTest.get(0)).returning();
+        Assertions.assertEquals(4, insertedAzaguRaja.getAInteger(), "Insert Map with Table and Column");
+        // this.allInAllAzaguRajaStore.update(insertedAzaguRaja);
+        // insertedAzaguRaja = this.allInAllAzaguRajaStore.select(insertedAzaguRaja.getId()).get();
+        // Assertions.assertEquals(5, insertedAzaguRaja.getAInteger(), "Insert Map with Table and Column");
+
+    }
+
+    @Test
+    void testEncryption() throws SQLException {
+        this.connectionStore.insert().values(connectionsToTest).execute();
+
+        azaguRajasToTest.get(0).setAEncryptedText("AEncryptedText");
+
+        AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore.insert().values(azaguRajasToTest.get(0)).returning();
+        Assertions.assertEquals("AEncryptedText", insertedAzaguRaja.getAEncryptedText(),
+                "Insert Map with Table and Column");
+
     }
 
     @Test

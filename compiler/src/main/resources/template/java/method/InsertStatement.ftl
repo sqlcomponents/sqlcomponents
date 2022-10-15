@@ -27,7 +27,11 @@
         return new InsertStatement(this
         <#list sampleDistinctCustomColumnTypeProperties as property>
                                                       ,this.convert${property.column.typeName?cap_first}
-                                               </#list>);
+                                               </#list>
+                                               <#if containsEncryptedProperty() >
+            ,this.encryptionFunction
+            ,this.decryptionFunction
+        </#if>);
     }
 
     <#if mustInsertableProperties?size != 0>
@@ -40,7 +44,12 @@
         return new InsertStatement(this
         <#list sampleDistinctCustomColumnTypeProperties as property>
                ,this.convert${property.column.typeName?cap_first}
-        </#list>);
+        </#list>
+        <#if containsEncryptedProperty() >
+            ,this.encryptionFunction
+            ,this.decryptionFunction
+        </#if>
+        );
     }
     </#if>
     public static final class InsertStatement {
@@ -50,22 +59,35 @@
         private final ${orm.application.name}Manager.ConvertFunction<${getClassName(property.dataType)},Object> convert${property.column.typeName?cap_first};
         </#list>
 
+        <#if containsEncryptedProperty() >
+            private final Function<String,String> encryptionFunction;
+            private final Function<String,String> decryptionFunction;
+        </#if>
+
         private InsertStatement(final ${name}Store ${name?uncap_first}Store
         <#list sampleDistinctCustomColumnTypeProperties as property>
          ,final ${orm.application.name}Manager.ConvertFunction<${getClassName(property.dataType)},Object> theConvert${property.column.typeName?cap_first}
         </#list>
+        <#if containsEncryptedProperty() >
+            ,final Function<String,String> encryptionFunction
+            ,final Function<String,String> decryptionFunction
+        </#if>
                 ) {
             this.${name?uncap_first}Store = ${name?uncap_first}Store;
             <#list sampleDistinctCustomColumnTypeProperties as property>
             this.convert${property.column.typeName?cap_first} =  theConvert${property.column.typeName?cap_first};
             </#list>
+            <#if containsEncryptedProperty() >
+            this.encryptionFunction = encryptionFunction;
+            this.decryptionFunction = decryptionFunction;
+            </#if>
         }
 
         private void prepare(final PreparedStatement preparedStatement,final ${name} ${name?uncap_first}) throws SQLException {
             <#assign index=0>
             <#assign column_index=1>
             <#list insertableProperties as property>
-            <#if !orm.insertMap?keys?seq_contains(property.column.columnName)>
+            <#if containsProperty(property,orm.insertMap)>
                 <#if index == 0>
                 <#if sequenceName?? && property.column.primaryKeyIndex == 1>
                 <#else>

@@ -3,11 +3,14 @@ package org.sqlcomponents.core.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.sqlcomponents.core.model.relational.Table;
+import org.sqlcomponents.core.model.relational.enums.DBType;
 import org.sqlcomponents.core.model.relational.enums.Flag;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 @Getter
@@ -34,11 +37,42 @@ public class Entity {
         return orm.hasJavaClass(className);
     }
 
+    public boolean containsEncryption(final Property property) {
+        String combinedKey = property.getColumn().getTableName() + "#" + property.getColumn().getColumnName();
+        return orm.getEncryption() != null && (orm.getEncryption().contains(property.getColumn().getColumnName())
+                || orm.getEncryption().contains(combinedKey));
+    }
+
+    public boolean containsEncryptedProperty() {
+        return this.getProperties().stream().filter(this::containsEncryption).findFirst().isPresent();
+    }
+
+    public boolean containsProperty(final Property property, final Map<String, String> map) {
+        String combinedKey = property.getColumn().getTableName() + "#" + property.getColumn().getColumnName();
+        return !(map.containsKey(property.getColumn().getColumnName()) || map.containsKey(combinedKey));
+    }
+
+    public String getPreparedValue(final Property property, final Map<String, String> map) {
+        String preparedValue = null;
+        if ((preparedValue = map.get(property.getColumn().getColumnName())) != null) {
+            return preparedValue.replaceAll("\"", Matcher.quoteReplacement("\\\""));
+        } else if ((preparedValue = map
+                .get(property.getColumn().getTableName() + "#" + property.getColumn().getColumnName())) != null) {
+            return preparedValue.replaceAll("\"", Matcher.quoteReplacement("\\\""));
+        } else {
+            if (property.getEntity().getTable().getDatabase().getDbType() == DBType.POSTGRES) {
+                // property.column.typeName == 'xml'
+                if (property.getColumn().getTypeName().equals("xml")) {
+                    preparedValue = "XMLPARSE(document ?)";
+                }
+            }
+        }
+        return preparedValue == null ? "?" : preparedValue;
+    }
+
     public List<Property> getInsertableProperties() {
         return this.getProperties().stream().filter(property -> {
-            if (this.getOrm().getInsertMap() != null
-                    && this.getOrm().getInsertMap().containsKey(property.getColumn().getColumnName())
-                    && this.getOrm().getInsertMap().get(property.getColumn().getColumnName()) == null) {
+            if (isFilteredIn(this.getOrm().getInsertMap(), property)) {
                 return false;
             }
             return property.getColumn().isInsertable();
@@ -47,13 +81,18 @@ public class Entity {
 
     public List<Property> getUpdatableProperties() {
         return this.getProperties().stream().filter(property -> {
-            if (this.getOrm().getUpdateMap() != null
-                    && this.getOrm().getUpdateMap().containsKey(property.getColumn().getColumnName())
-                    && this.getOrm().getUpdateMap().get(property.getColumn().getColumnName()) == null) {
+            if (isFilteredIn(this.getOrm().getUpdateMap(), property)) {
                 return false;
             }
             return property.getColumn().isInsertable();
         }).collect(Collectors.toList());
+    }
+
+    private boolean isFilteredIn(final Map<String, String> map, final Property property) {
+        String combinedKey = property.getColumn().getTableName() + "#" + property.getColumn().getColumnName();
+        return map != null && ((map.containsKey(property.getColumn().getColumnName())
+                && map.get(property.getColumn().getColumnName()) == null)
+                || (map.containsKey(combinedKey) && map.get(combinedKey) == null));
     }
 
     /**

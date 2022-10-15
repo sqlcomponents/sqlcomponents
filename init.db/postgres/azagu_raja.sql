@@ -13,6 +13,7 @@ CREATE TABLE azagu_raja(
    reference_code VARCHAR(80),
    a_char CHAR(1),
    a_text text,
+   a_encrypted_text text,
 	a_smallint smallint CHECK (a_smallint>=0),
 	a_integer	 integer CHECK (a_integer >= 0),	
 	a_bigint	 bigint	CHECK (a_bigint >= 0),

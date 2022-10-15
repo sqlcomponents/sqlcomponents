@@ -32,6 +32,7 @@ public class ORM {
     private Map<String, String> updateMap;
     private Map<String, String> insertMap;
     private Map<String, String> validationMap;
+    private List<String> encryption;
 
     private List<Entity> entities;
     private List<Service> services;

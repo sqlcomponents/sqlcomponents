@@ -72,7 +72,13 @@ public int update(${name} ${name?uncap_first}) throws SQLException {
         return new UpdateStatement(this
         <#list sampleDistinctCustomColumnTypeProperties as property>
                                                       ,this.convert${property.column.typeName?cap_first}
-                                               </#list>);
+                                               </#list>
+                                               
+        <#if containsEncryptedProperty() >
+            ,this.encryptionFunction
+            ,this.decryptionFunction
+        </#if>
+        );
     }
 
     public static final class UpdateStatement {
@@ -81,23 +87,35 @@ public int update(${name} ${name?uncap_first}) throws SQLException {
         <#list sampleDistinctCustomColumnTypeProperties as property>
         private final ${orm.application.name}Manager.ConvertFunction<${getClassName(property.dataType)},Object> convert${property.column.typeName?cap_first};
         </#list>
+        <#if containsEncryptedProperty() >
+            private final Function<String,String> encryptionFunction;
+            private final Function<String,String> decryptionFunction;
+        </#if>
 
         private UpdateStatement(final ${name}Store ${name?uncap_first}Store
         <#list sampleDistinctCustomColumnTypeProperties as property>
          ,final ${orm.application.name}Manager.ConvertFunction<${getClassName(property.dataType)},Object> theConvert${property.column.typeName?cap_first}
         </#list>
+        <#if containsEncryptedProperty() >
+            ,final Function<String,String> encryptionFunction
+            ,final Function<String,String> decryptionFunction
+        </#if>
                 ) {
             this.${name?uncap_first}Store = ${name?uncap_first}Store;
             <#list sampleDistinctCustomColumnTypeProperties as property>
             this.convert${property.column.typeName?cap_first} =  theConvert${property.column.typeName?cap_first};
             </#list>
+            <#if containsEncryptedProperty() >
+            this.encryptionFunction = encryptionFunction;
+            this.decryptionFunction = decryptionFunction;
+            </#if>
         }
 
         private void prepare(final PreparedStatement preparedStatement,final ${name} ${name?uncap_first}) throws SQLException {
             <#assign index=0>
             <#assign column_index=1>
             <#list updatableProperties as property>
-                <#if !orm.updateMap?keys?seq_contains(property.column.columnName)>
+                <#if containsProperty(property,orm.updateMap)>
                     <#if property.column.primaryKeyIndex == 0>
                     <#if index == 0><#assign index=1><#else></#if>preparedStatement.set${getJDBCClassName(property.dataType)}(${column_index},${wrapSet(name?uncap_first+".get"+property.name?cap_first + "()",property)});
                                                                                 <#assign column_index = column_index + 1>
