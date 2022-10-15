@@ -43,7 +43,7 @@ public final class ${name}Store  {
                     </#list>
 
                     <#if containsEncryptedProperty() >
-                        <#assign a=addImportStatement("javax.sql.DataSource")>
+                        <#assign a=addImportStatement("java.util.function.Function")>
                         ,final Function<String,String> encryptionFunction
                         ,final Function<String,String> decryptionFunction
                     </#if>

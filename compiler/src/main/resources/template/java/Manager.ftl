@@ -17,7 +17,7 @@ public final class ${name}Manager {
 
     private ${name}Manager(final javax.sql.DataSource dbDataSource
     <#if encryption?has_content  >
-    <#assign a=addImportStatement("javax.sql.DataSource")>
+    <#assign a=addImportStatement("java.util.function.Function")>
     ,final Function<String,String> encryptionFunction
     ,final Function<String,String> decryptionFunction
     </#if>
