@@ -102,7 +102,11 @@ public final class ${name}Store  {
         	    ${name?uncap_first}.set${property.name?cap_first}(this.get${property.column.typeName?cap_first}.apply(rs,${index}));
                  <#break>
           <#default>
+          <#if containsEncryption(property)>
+            ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
+          <#else>
           ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}));
+          </#if>
           <#break>
         </#switch>
 		<#assign index = index + 1>

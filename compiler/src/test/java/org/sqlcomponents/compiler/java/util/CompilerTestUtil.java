@@ -6,6 +6,9 @@ import org.sqlcomponents.core.utils.CoreConsts;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class CompilerTestUtil {
@@ -24,6 +27,22 @@ public class CompilerTestUtil {
             application.setPassword(props.getProperty(databaseType + ".datasource.password"));
             application.setSchemaName(props.getProperty(databaseType + ".datasource.schema"));
             // daoProject.setTablePatterns(Arrays.asList("movie"));
+
+            Map<String, String> insertMap = new HashMap<>();
+            insertMap.put("created_at", "CURRENT_TIMESTAMP");
+            insertMap.put("modified_by", null);
+            insertMap.put("modified_at", null);
+            insertMap.put("azagu_raja#a_integer", "4");
+            application.setInsertMap(insertMap);
+
+            Map<String, String> updateMap = new HashMap<>();
+            updateMap.put("modified_at", "CURRENT_TIMESTAMP");
+            updateMap.put("created_by", null);
+            updateMap.put("created_at", null);
+            updateMap.put("azagu_raja#a_integer", "5");
+            application.setUpdateMap(updateMap);
+
+            application.setEncryption(Arrays.asList("a_encrypted_text"));
 
             application.setRootPackage("org.example");
 

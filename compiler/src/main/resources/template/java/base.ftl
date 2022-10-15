@@ -47,7 +47,11 @@
 	<#case "java.time.Duration">
 	<#return "this.convert${property.column.typeName?cap_first}.apply(${wText})">
   <#default>
+  <#if containsEncryption(property)>
+  <#return "this.encryptionFunction.apply(${wText})">
+  <#else>
   <#return "${wText}">
+  </#if>
 </#switch>
 </#function>
 

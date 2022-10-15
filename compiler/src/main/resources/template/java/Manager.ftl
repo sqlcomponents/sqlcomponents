@@ -16,7 +16,7 @@ public final class ${name}Manager {
     </#list>
 
     private ${name}Manager(final javax.sql.DataSource dbDataSource
-    <#if encryption?? >
+    <#if encryption?has_content  >
     <#assign a=addImportStatement("javax.sql.DataSource")>
     ,final Function<String,String> encryptionFunction
     ,final Function<String,String> decryptionFunction
@@ -39,7 +39,7 @@ public final class ${name}Manager {
     }
 
     public static final ${name}Manager getManager(final DataSource dbDataSource
-    <#if encryption?? >
+    <#if encryption?has_content  >
     <#assign a=addImportStatement("javax.sql.DataSource")>
     ,final Function<String,String> encryptionFunction
     ,final Function<String,String> decryptionFunction
@@ -47,7 +47,7 @@ public final class ${name}Manager {
                                                             ) {
         if(${name?uncap_first}Manager == null) {
             ${name?uncap_first}Manager = new ${name}Manager(dbDataSource
-            <#if encryption?? >
+            <#if encryption?has_content  >
             
             , encryptionFunction
             ,decryptionFunction
