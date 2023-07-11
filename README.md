@@ -33,7 +33,17 @@ Clean Code
 8. https://jdbc.postgresql.org/documentation/81/geometric.html
 9. https://jdbc.postgresql.org/documentation/head/escapes.html#escape-use-example
 10. https://github.com/bwajtr/java-persistence-frameworks-comparison
-    
+11. https://engineering.fb.com/2021/07/22/data-infrastructure/mysql/
+12. https://mariadb.com/resources/customer-stories/dbs-bank-oracle-to-mariadb/
+13. https://mariadb.com/resources/customer-stories/dbs-bank-oracle-to-mariadb/
+
+## Related
+1. https://github.com/schemacrawler/SchemaCrawler
+2. https://github.com/kyleconroy/sqlc
+3. https://github.com/facebookincubator/CG-SQL
+4. https://github.com/diesel-rs/diesel
+
+
 From Directory sqlcomponents
 
 On JDK 8 it will not work
