@@ -31,22 +31,77 @@ class MovieStoreTest {
     @BeforeAll
     void init() throws SQLException {
         this.movieStore.delete().execute();
+        // Data used for testing
+        this.moviesToTest = this.movieStore.insert().values(JsonUtil.getTestObjects(Movie.class)).returning();
     }
 
     @Test
     void testFind() throws SQLException {
-        Movie movie = new Movie();
-
-        movie.setTitle("Avatar");
-        movie.setDirectedBy("James Cameroon");
-        movie.setGenre("Action");
-        movie.setYearOfRelease((short) 2012);
-        movie.setImdbId("SSSS");
-        movie.setRating(3.5);
-
-        Movie result = this.movieStore.insert().values(movie).returning();
-        System.out.println(result);
+        Optional<Movie> movie = this.movieStore
+                .select(this.movieStore.select(title().eq("Memento")).execute().get(0).getId());
+        Assertions.assertNotNull(movie.get().getCreatedAt(), "Insert Map Value is set");
+        Assertions.assertNull(movie.get().getModifiedBy(), "Insert Map Non Value is not set");
+        Assertions.assertNull(movie.get().getModifiedAt(), "Insert Map Non Value is not set");
+        Assertions.assertEquals("Memento", movie.get().getTitle(), "Find By PK");
     }
 
+    @Test
+    void testUpdate() throws SQLException {
+        Optional<Movie> movie = this.movieStore
+                .select(this.movieStore.select(title().eq("Memento")).execute().get(0).getId());
+        Short movieId = movie.get().getId();
 
+        movie.get().setTitle("Update Title");
+        this.movieStore.update(movie.get());
+        movie = this.movieStore.select(movieId);
+
+        Assertions.assertNotNull(movie.get().getModifiedAt(), "Update Map Non Value is not set");
+        Assertions.assertEquals("Update Title", this.movieStore.select(movieId).get().getTitle(), "Update Failed");
+
+    }
+
+    @Test
+    void testWhereClause() throws SQLException {
+        Assertions.assertEquals(moviesToTest.size(), this.movieStore.select().execute().size(), "Select All");
+    }
+
+    @Test
+    void testLimitClause() throws SQLException {
+        Assertions.assertEquals(2, this.movieStore.select().limit(2).execute().getContent().size(),
+                "Select With Limit");
+
+        Assertions.assertEquals(2, this.movieStore.select().limit(2).offset(3).execute().getContent().size(),
+                "Select With Limit");
+
+        Assertions.assertEquals(moviesToTest.size(), this.movieStore.select().limit(2).execute().getTotalElements(),
+                "Select All Count");
+    }
+
+    @Test
+    void testWhereClauseSingleCriteria() throws SQLException {
+        Assertions.assertEquals(1, this.movieStore.select(title().eq("Memento")).execute().size(),
+                "Select All Single Criteria");
+    }
+
+    @Test
+    void testWhereClauseMultipleANDCriteria() throws SQLException {
+        Assertions.assertEquals(1, this.movieStore
+                .select(yearOfRelease().eq((short) 2017).and().directedBy().eq("Christopher Nolan")).execute().size(),
+                "Select All Single Criteria");
+    }
+
+    @Test
+    void testWhereClauseMultipleORCriteria() throws SQLException {
+        Assertions.assertEquals(12, this.movieStore
+                .select(yearOfRelease().eq((short) 2017).or().directedBy().eq("Christopher Nolan")).execute().size(),
+                "Select All Single Criteria");
+    }
+
+    @Test
+    void testPartialUpdate() throws SQLException {
+        int updatedRows = this.movieStore.update().set(directedBy("Sathish")).where(yearOfRelease().gt((short) 0))
+                .execute();
+
+        // Assertions.assertEquals(this.moviesToTest.size(), updatedRows, "Partial Update is not working");
+    }
 }
