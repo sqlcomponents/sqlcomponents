@@ -6,7 +6,7 @@ import org.example.util.DataSourceProvider;
 import org.example.util.EncryptionUtil;
 import org.example.util.JsonUtil;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
@@ -28,7 +28,7 @@ class MovieStoreTest {
         this.movieStore = movieManager.getMovieStore();
     }
 
-    @BeforeAll
+    @BeforeEach
     void init() throws SQLException {
         this.movieStore.delete().execute();
         // Data used for testing
