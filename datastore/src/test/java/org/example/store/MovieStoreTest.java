@@ -104,4 +104,18 @@ class MovieStoreTest {
 
         // Assertions.assertEquals(this.moviesToTest.size(), updatedRows, "Partial Update is not working");
     }
+
+    /**
+     * Test Plan.
+     * @throws SQLException
+     */
+    @Test
+    void testSingleReturning() throws SQLException {
+
+    }
+
+    @Test
+    void testMultipleReturning() throws SQLException {
+
+    }
 }

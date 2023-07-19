@@ -35,7 +35,7 @@ Clean Code
 10. https://github.com/bwajtr/java-persistence-frameworks-comparison
 11. https://engineering.fb.com/2021/07/22/data-infrastructure/mysql/
 12. https://mariadb.com/resources/customer-stories/dbs-bank-oracle-to-mariadb/
-13. https://mariadb.com/resources/customer-stories/dbs-bank-oracle-to-mariadb/
+13. https://www.infoq.com/news/2022/04/red-hat-releases-hibernate-6/
 
 ## Related
 1. https://github.com/schemacrawler/SchemaCrawler
