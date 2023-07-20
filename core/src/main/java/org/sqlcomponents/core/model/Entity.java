@@ -70,6 +70,13 @@ public class Entity {
         return preparedValue == null ? "?" : preparedValue;
     }
 
+    public List<Property> getReturningProperties() {
+        return this.getProperties().stream().filter(property -> {
+            return property.getColumn().getAutoIncrement() == Flag.YES
+                    || property.getColumn().getGeneratedColumn() == Flag.YES ;
+        }).collect(Collectors.toList());
+    }
+
     public List<Property> getInsertableProperties() {
         return this.getProperties().stream().filter(property -> {
             if (isFilteredIn(this.getOrm().getInsertMap(), property)) {

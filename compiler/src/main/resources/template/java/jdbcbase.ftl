@@ -43,4 +43,6 @@
 </#function>
 
 
-<#macro columnSelection limitByGeneratedColumns=false><#assign index=0><#list properties as property><#if index == 0><#assign index=1><#else>,</#if>${property.column.escapedName?j_string}</#list></#macro>
+<#macro columnSelection><#assign index=0><#list properties as property><#if index == 0><#assign index=1><#else>,</#if>${property.column.escapedName?j_string}</#list></#macro>
+
+<#macro returningColumnSelection><#assign index=0><#list returningProperties as property><#if index == 0><#assign index=1><#else>,</#if>${property.column.escapedName?j_string}</#list></#macro>

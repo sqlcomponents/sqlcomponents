@@ -17,7 +17,7 @@
   	    )
   	    <#if isReturning>
           <#if orm.database.dbType == 'POSTGRES' && orm.database.databaseMajorVersion gt 10>
-            returning <@columnSelection limitByGeneratedColumns=true/>
+            returning <@returningColumnSelection/>
           </#if>
   	    </#if>
   		"</@compress>;
