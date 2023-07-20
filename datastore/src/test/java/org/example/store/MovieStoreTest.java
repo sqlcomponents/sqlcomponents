@@ -123,13 +123,10 @@ class MovieStoreTest {
 
         Assertions.assertNotNull(insertedMovie.getId(), "Inserted Movie id is null");
 
-        Assertions.assertEquals(insertedMovie.getTitle(), movieToInsert.getTitle(), "Inserted Movie title is not same");
-        Assertions.assertEquals(insertedMovie.getYearOfRelease(), movieToInsert.getYearOfRelease(), "Inserted Movie yearOfRelease is not same");
-        Assertions.assertEquals(insertedMovie.getDirectedBy(), movieToInsert.getDirectedBy(), "Inserted Movie directedBy is not same");
-        Assertions.assertEquals(insertedMovie.getImdbId(), movieToInsert.getImdbId(), "Inserted Movie imdbId is not same");
-        Assertions.assertEquals(insertedMovie.getRating(), movieToInsert.getRating(), "Inserted Movie rating is not same");
-        Assertions.assertEquals(insertedMovie.getGenre(), movieToInsert.getGenre(), "Inserted Movie genre is not same");
+        checkEquality(movieToInsert, insertedMovie);
     }
+
+
 
     /**
      * Test Plan.
@@ -155,12 +152,22 @@ class MovieStoreTest {
 
             Assertions.assertNotNull(insertedMovie.getId(), "Inserted Movie id is null");
 
-            Assertions.assertEquals(insertedMovie.getTitle(), movieToInsert.getTitle(), "Inserted Movie title is not same");
-            Assertions.assertEquals(insertedMovie.getYearOfRelease(), movieToInsert.getYearOfRelease(), "Inserted Movie yearOfRelease is not same");
-            Assertions.assertEquals(insertedMovie.getDirectedBy(), movieToInsert.getDirectedBy(), "Inserted Movie directedBy is not same");
-            Assertions.assertEquals(insertedMovie.getImdbId(), movieToInsert.getImdbId(), "Inserted Movie imdbId is not same");
-            Assertions.assertEquals(insertedMovie.getRating(), movieToInsert.getRating(), "Inserted Movie rating is not same");
-            Assertions.assertEquals(insertedMovie.getGenre(), movieToInsert.getGenre(), "Inserted Movie genre is not same");
+            checkEquality(movieToInsert, insertedMovie);
         }
+    }
+
+
+    /**
+     * Checks Equality of the Objects.
+     * @param movieToInsert
+     * @param insertedMovie
+     */
+    private static void checkEquality(final Movie movieToInsert, final Movie insertedMovie) {
+        Assertions.assertEquals(insertedMovie.getTitle(), movieToInsert.getTitle(), "Inserted Movie title is not same");
+        Assertions.assertEquals(insertedMovie.getYearOfRelease(), movieToInsert.getYearOfRelease(), "Inserted Movie yearOfRelease is not same");
+        Assertions.assertEquals(insertedMovie.getDirectedBy(), movieToInsert.getDirectedBy(), "Inserted Movie directedBy is not same");
+        Assertions.assertEquals(insertedMovie.getImdbId(), movieToInsert.getImdbId(), "Inserted Movie imdbId is not same");
+        Assertions.assertEquals(insertedMovie.getRating(), movieToInsert.getRating(), "Inserted Movie rating is not same");
+        Assertions.assertEquals(insertedMovie.getGenre(), movieToInsert.getGenre(), "Inserted Movie genre is not same");
     }
 }
