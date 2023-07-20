@@ -72,8 +72,13 @@ public class Entity {
 
     public List<Property> getReturningProperties() {
         return this.getProperties().stream().filter(property -> {
-            return property.getColumn().getAutoIncrement() == Flag.YES
-                    || property.getColumn().getGeneratedColumn() == Flag.YES ;
+            boolean isReturning = property.getColumn().getAutoIncrement() == Flag.YES
+                    || property.getColumn().getGeneratedColumn() == Flag.YES;
+            String mapped = property.getEntity().getOrm().getApplication().getInsertMap().get(property.getColumn().getColumnName());
+            if(mapped != null) {
+                isReturning = true;
+            }
+            return isReturning;
         }).collect(Collectors.toList());
     }
 
