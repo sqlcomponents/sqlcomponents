@@ -74,8 +74,9 @@ public class Entity {
         return this.getProperties().stream().filter(property -> {
             boolean isReturning = property.getColumn().getAutoIncrement() == Flag.YES
                     || property.getColumn().getGeneratedColumn() == Flag.YES;
-            String mapped = property.getEntity().getOrm().getApplication().getInsertMap().get(property.getColumn().getColumnName());
-            if(mapped != null) {
+            String mapped = property.getEntity().getOrm().getApplication().getInsertMap()
+                    .get(property.getColumn().getColumnName());
+            if (mapped != null) {
                 isReturning = true;
             }
             return isReturning;

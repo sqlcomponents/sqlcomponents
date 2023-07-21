@@ -17,9 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Azaguraja
- * 1. Reference for all the data types.
- * 2. All Persistence Interfaces.
+ * Azaguraja 1. Reference for all the data types. 2. All Persistence Interfaces.
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AzaguRajaTest {

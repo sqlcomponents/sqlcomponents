@@ -106,10 +106,9 @@ class MovieStoreTest {
     }
 
     /**
-     * Test Plan.
-     * The returned object should be non-null
-     * The returned object should have the same values as the inserted object.
-     * The returned object should have non-null id.
+     * Test Plan. The returned object should be non-null The returned object should have the same values as the inserted
+     * object. The returned object should have non-null id.
+     *
      * @throws SQLException
      */
     @Test
@@ -126,14 +125,11 @@ class MovieStoreTest {
         checkEquality(movieToInsert, insertedMovie);
     }
 
-
-
     /**
-     * Test Plan.
-     * The returned list length should be same as the inserted list length.
-     * The objects in the returned list should have the same values as the inserted objects.
-     * The objects in the returned list should be in the same order as the inserted objects.
-     * The objects in the returned list should have non-null id.
+     * Test Plan. The returned list length should be same as the inserted list length. The objects in the returned list
+     * should have the same values as the inserted objects. The objects in the returned list should be in the same order
+     * as the inserted objects. The objects in the returned list should have non-null id.
+     *
      * @throws SQLException
      */
     @Test
@@ -156,18 +152,22 @@ class MovieStoreTest {
         }
     }
 
-
     /**
      * Checks Equality of the Objects.
+     *
      * @param movieToInsert
      * @param insertedMovie
      */
     private static void checkEquality(final Movie movieToInsert, final Movie insertedMovie) {
         Assertions.assertEquals(insertedMovie.getTitle(), movieToInsert.getTitle(), "Inserted Movie title is not same");
-        Assertions.assertEquals(insertedMovie.getYearOfRelease(), movieToInsert.getYearOfRelease(), "Inserted Movie yearOfRelease is not same");
-        Assertions.assertEquals(insertedMovie.getDirectedBy(), movieToInsert.getDirectedBy(), "Inserted Movie directedBy is not same");
-        Assertions.assertEquals(insertedMovie.getImdbId(), movieToInsert.getImdbId(), "Inserted Movie imdbId is not same");
-        Assertions.assertEquals(insertedMovie.getRating(), movieToInsert.getRating(), "Inserted Movie rating is not same");
+        Assertions.assertEquals(insertedMovie.getYearOfRelease(), movieToInsert.getYearOfRelease(),
+                "Inserted Movie yearOfRelease is not same");
+        Assertions.assertEquals(insertedMovie.getDirectedBy(), movieToInsert.getDirectedBy(),
+                "Inserted Movie directedBy is not same");
+        Assertions.assertEquals(insertedMovie.getImdbId(), movieToInsert.getImdbId(),
+                "Inserted Movie imdbId is not same");
+        Assertions.assertEquals(insertedMovie.getRating(), movieToInsert.getRating(),
+                "Inserted Movie rating is not same");
         Assertions.assertEquals(insertedMovie.getGenre(), movieToInsert.getGenre(), "Inserted Movie genre is not same");
     }
 }
