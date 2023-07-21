@@ -73,7 +73,8 @@ public final class ${name}Store  {
 	</#if>	
 	-->	
 
-    private ${name} rowMapperForReturning(final ResultSet rs,final ${name} ${name?uncap_first}) throws SQLException {
+  private ${name} rowMapperForReturning(final ResultSet rs,final ${name} inserting${name}) throws SQLException {
+    final ${name} ${name?uncap_first} = new ${name}();
         <#assign index=1>
 		<#list returningProperties as property>
 		<#switch property.dataType>
@@ -111,6 +112,9 @@ public final class ${name}Store  {
         </#switch>
 		<#assign index = index + 1>
 		</#list>
+    <#list nonReturningProperties as property>
+        ${name?uncap_first}.set${property.name?cap_first}(inserting${name}.get${property.name?cap_first}());
+    </#list>
         return ${name?uncap_first};
     }
 

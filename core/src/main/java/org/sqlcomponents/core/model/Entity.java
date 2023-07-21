@@ -155,25 +155,25 @@ public class Entity {
      * @return the returning properties
      */
     public List<Property> getReturningProperties() {
-        return this.getProperties().stream().filter(property -> {
-            boolean isReturning =
-                    property.getColumn().getAutoIncrement() == Flag.YES
-                            || property.getColumn().getGeneratedColumn()
-                            == Flag.YES;
-            Map<String, String> insertMap =
-                    property.getEntity().getOrm().getApplication()
-                            .getInsertMap();
-            String mapped = insertMap
-                    .get(property.getColumn().getColumnName());
-            String specificTableMapped =
-                    insertMap.get(String.format("%s#%s",
-                            property.getEntity().getTable().getTableName(),
-                            property.getColumn().getColumnName()));
-            if (mapped != null || specificTableMapped != null) {
-                isReturning = true;
-            }
-            return isReturning;
-        }).collect(Collectors.toList());
+        return this.getProperties().stream().filter(Entity::isReturning)
+            .collect(Collectors.toList());
+    }
+
+    public List<Property> getNonReturningProperties() {
+        return this.getProperties().stream().filter(property -> !isReturning(property))
+            .collect(Collectors.toList());
+    }
+
+
+    private static boolean isReturning(Property property) {
+        boolean isReturning = property.getColumn().getAutoIncrement() == Flag.YES
+                || property.getColumn().getGeneratedColumn() == Flag.YES;
+        String mapped = property.getEntity().getOrm().getApplication().getInsertMap().get(
+            property.getColumn().getColumnName());
+        if(mapped != null) {
+            isReturning = true;
+        }
+        return isReturning;
     }
 
 
