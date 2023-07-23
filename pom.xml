@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.sqlcomponents</groupId>
@@ -13,166 +13,201 @@
     <url>http://sqlcomponents.org</url>
 
     <licenses>
-	<license>
-	    <name>Apache License, Version 2.0</name>
-	    <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-	    <distribution>repo</distribution>
-	</license>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
     </licenses>
 
     <scm>
-	<url>https://github.com/sqlcomponents/sqlcomponents</url>
+        <url>https://github.com/sqlcomponents/sqlcomponents</url>
     </scm>
 
     <properties>
-	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	<maven.compiler.source>1.8</maven.compiler.source>
-	<maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <maven.checkstyle.version>3.1.2</maven.checkstyle.version>
+        <checkstyle.version>10.3.2</checkstyle.version>
+
     </properties>
 
     <modules>
-	<module>core</module>
-	<module>compiler</module>
-	<module>maven-plugin</module>
+        <module>core</module>
+        <module>compiler</module>
+        <module>maven-plugin</module>
     </modules>
 
     <dependencies>
-	<dependency>
-	    <groupId>org.projectlombok</groupId>
-	    <artifactId>lombok</artifactId>
-	    <version>1.18.24</version>
-	    <scope>compile</scope>
-	</dependency>
-	<dependency>
-	    <groupId>com.zaxxer</groupId>
-	    <artifactId>HikariCP</artifactId>
-	    <version>5.0.1</version>
-	</dependency>
-	<dependency>
-	    <groupId>org.postgresql</groupId>
-	    <artifactId>postgresql</artifactId>
-	    <version>42.5.0</version>
-	</dependency>
-	<dependency>
-	    <groupId>org.mariadb.jdbc</groupId>
-	    <artifactId>mariadb-java-client</artifactId>
-	    <version>3.0.8</version>
-	</dependency>
-	<dependency>
-	    <groupId>mysql</groupId>
-	    <artifactId>mysql-connector-java</artifactId>
-	    <version>8.0.30</version>
-	</dependency>
-	<dependency>
-	    <groupId>com.microsoft.sqlserver</groupId>
-	    <artifactId>mssql-jdbc</artifactId>
-	    <version>11.2.1.jre18</version>
-	</dependency>
-	<dependency>
-	    <groupId>org.junit.jupiter</groupId>
-	    <artifactId>junit-jupiter</artifactId>
-	    <version>5.9.1</version>
-	    <scope>test</scope>
-	</dependency>
-	<dependency>
-	    <groupId>org.hamcrest</groupId>
-	    <artifactId>hamcrest</artifactId>
-	    <version>2.2</version>
-	    <scope>test</scope>
-	</dependency>
-	<dependency>
-	    <groupId>org.slf4j</groupId>
-	    <artifactId>slf4j-api</artifactId>
-	    <version>2.0.3</version>
-	</dependency>
-	<dependency>
-	    <groupId>org.slf4j</groupId>
-	    <artifactId>slf4j-log4j12</artifactId>
-	    <version>2.0.3</version>
-	</dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.24</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>3.0.8</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.30</version>
+        </dependency>
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>11.2.1.jre18</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.9.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>2.0.3</version>
+        </dependency>
     </dependencies>
 
     <build>
-	<plugins>
-	    <plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-compiler-plugin</artifactId>
-		<version>3.8.1</version>
-	    </plugin>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+            </plugin>
 
-	    <plugin>
-		<groupId>net.revelc.code.formatter</groupId>
-		<artifactId>formatter-maven-plugin</artifactId>
-		<version>2.19.0</version>
-		<configuration>
-		    <lineEnding>LF</lineEnding>
-		</configuration>
-		<executions>
-		    <execution>
-			<goals>
-			    <goal>format</goal>
-			</goals>
-		    </execution>
-		</executions>
-	    </plugin>
 
-	    <plugin>
-		<groupId>com.rudikershaw.gitbuildhook</groupId>
-		<artifactId>git-build-hook-maven-plugin</artifactId>
-		<version>3.2.0</version>
-		<configuration>
-		    <gitConfig>
-			<hooks.commitmsgregex>(\w+\s){3,}(\w+\.)</hooks.commitmsgregex>
-			<!-- The location of the directory you are using to store the Git hooks in your project. -->
-			<core.hooksPath>hooks-directory/</core.hooksPath>
-			<!-- Some other project specific git config that you want to set. -->
-			<custom.configuration>true</custom.configuration>
-		    </gitConfig>
-		    <installHooks>
-			<!-- The location of a git hook to install into the default hooks directory. -->
-			<pre-commit>file_path/to/your/hook.sh</pre-commit>
-			<commit-msg>class_path/package/hook.sh</commit-msg>
-		    </installHooks>
-		</configuration>
-		<executions>
-		    <execution>
-			<goals>
-			    <!-- Sets git config specified under configuration > gitConfig. -->
-			    <goal>configure</goal>
-			</goals>
-		    </execution>
-		</executions>
-	    </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven.checkstyle.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${checkstyle.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>true</failsOnError>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
-	    <plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-surefire-plugin</artifactId>
-		<version>2.22.0</version>
-		<configuration>
-		    <argLine>
-			--illegal-access=permit
-		    </argLine>
-		</configuration>
-	    </plugin>
-	    <plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-failsafe-plugin</artifactId>
-		<version>2.22.0</version>
-		<configuration>
-		    <argLine>
-			--illegal-access=permit
-		    </argLine>
-		</configuration>
-	    </plugin>
-	</plugins>
+
+            <plugin>
+                <groupId>net.revelc.code.formatter</groupId>
+                <artifactId>formatter-maven-plugin</artifactId>
+                <version>2.19.0</version>
+                <configuration>
+                    <lineEnding>LF</lineEnding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.rudikershaw.gitbuildhook</groupId>
+                <artifactId>git-build-hook-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <gitConfig>
+                        <hooks.commitmsgregex>(\w+\s){3,}(\w+\.)</hooks.commitmsgregex>
+                        <!-- The location of the directory you are using to store the Git hooks in your project. -->
+                        <core.hooksPath>hooks-directory/</core.hooksPath>
+                        <!-- Some other project specific git config that you want to set. -->
+                        <custom.configuration>true</custom.configuration>
+                    </gitConfig>
+                    <installHooks>
+                        <!-- The location of a git hook to install into the default hooks directory. -->
+                        <pre-commit>file_path/to/your/hook.sh</pre-commit>
+                        <commit-msg>class_path/package/hook.sh</commit-msg>
+                    </installHooks>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!-- Sets git config specified under configuration > gitConfig. -->
+                            <goal>configure</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.0</version>
+                <configuration>
+                    <argLine>
+                        --illegal-access=permit
+                    </argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.22.0</version>
+                <configuration>
+                    <argLine>
+                        --illegal-access=permit
+                    </argLine>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
     <distributionManagement>
-	<repository>
-	    <id>github</id>
-	    <name>GitHub OWNER Apache Maven Packages</name>
-	    <url>https://maven.pkg.github.com/sqlcomponents/sqlcomponents</url>
-	</repository>
+        <repository>
+            <id>github</id>
+            <name>GitHub OWNER Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/sqlcomponents/sqlcomponents</url>
+        </repository>
     </distributionManagement>
 
 </project>
