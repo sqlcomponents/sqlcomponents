@@ -47,8 +47,29 @@ public final class SQLComponentsMojo extends AbstractMojo {
      * @readonly
      */
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
-    public MavenProject project;
+    private MavenProject project;
 
+    /**
+     * Sets project.
+     *
+     * @param paramProject the param project
+     */
+    public void setProject(final MavenProject paramProject) {
+        this.project = paramProject;
+    }
+
+    /**
+     * Gets project.
+     *
+     * @return the project
+     */
+    public MavenProject getProject() {
+        return this.project;
+    }
+
+    /**
+     * Method to execute the plugin.
+     */
     @SneakyThrows
     public void execute() {
         Application lApplication = createApplicationFromYMLSpec();

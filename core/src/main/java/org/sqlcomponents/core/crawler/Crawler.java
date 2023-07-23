@@ -88,6 +88,7 @@ public final class Crawler {
             }
             case MARIA_DB: {
                 database.setDbType(DBType.MARIADB);
+                break;
             }
         }
 
@@ -180,32 +181,6 @@ public final class Crawler {
                 databaseMetaData.dataDefinitionCausesTransactionCommit());
         database.setDataDefinitionIgnoredInTransactions(
                 databaseMetaData.dataDefinitionIgnoredInTransactions());
-        // lDatabase.setSupportsResultSetType(lDatabaseMetaData
-        // .supportsResultSetType());
-        // lDatabase.setSupportsResultSetConcurrency(lDatabaseMetaData
-        // .supportsResultSetConcurrency());
-        // lDatabase.setOwnUpdatesAreVisible(lDatabaseMetaData
-        // .ownUpdatesAreVisible());
-        // lDatabase.setOwnDeletesAreVisible(lDatabaseMetaData
-        // .ownDeletesAreVisible());
-        // lDatabase.setOwnInsertsAreVisible(lDatabaseMetaData
-        // .ownInsertsAreVisible());
-        // lDatabase.setOthersUpdatesAreVisible(lDatabaseMetaData
-        // .othersUpdatesAreVisible());
-        // lDatabase.setOthersDeletesAreVisible(lDatabaseMetaData
-        // .othersDeletesAreVisible());
-        // lDatabase.setOthersInsertsAreVisible(lDatabaseMetaData
-        // .othersInsertsAreVisible());
-        // lDatabase.setUpdatesAreDetected(lDatabaseMetaData
-        // .updatesAreDetected());
-        // lDatabase.setDeletesAreDetected(lDatabaseMetaData
-        // .deletesAreDetected());
-        // lDatabase.setInsertsAreDetected(lDatabaseMetaData
-        // .insertsAreDetected());
-        // lDatabase.setSupportsResultSetHoldability(lDatabaseMetaData
-        // .supportsResultSetHoldability());
-        // lDatabase.setSupportsTransactionIsolationLevel(lDatabaseMetaData
-        // .supportsTransactionIsolationLevel());
         database.setCatalogAtStart(databaseMetaData.isCatalogAtStart());
         database.setReadOnly(databaseMetaData.isReadOnly());
         database.setLocatorsUpdateCopy(databaseMetaData.locatorsUpdateCopy());
@@ -278,7 +253,6 @@ public final class Crawler {
         database.setTables(getTables(application.getSchemaName(),
                 tableName -> matches(application.getTablePatterns(),
                         tableName)));
-        // lDatabase.setFunctions(getProcedures(lDatabaseMetaData));
         repair();
         return database;
     }

@@ -155,7 +155,9 @@ public class Service {
     public void setRemarks(final String paramRemarks) {
         dbPackage.setRemarks(paramRemarks);
     }
-
+    /**
+     * Returns the name of the package.
+     */
     @Override
     public String toString() {
         return getName();

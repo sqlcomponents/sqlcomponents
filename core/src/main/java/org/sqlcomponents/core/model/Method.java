@@ -179,6 +179,10 @@ public class Method {
         function.setParameters(paramParameters);
     }
 
+    /**
+     * Should return the name of the method.
+     * @return
+     */
     @Override
     public String toString() {
         return name;

@@ -403,6 +403,15 @@ public final class Application {
     public int hashCode() {
         return orm.hashCode();
     }
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj instanceof Application) {
+            Application app = (Application) obj;
+            return orm.equals(app.getOrm());
+        } else {
+            return false;
+        }
+    }
 
     /**
      * Gets method specification.
