@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xmlns="http://maven.apache.org/POM/4.0.0"
-	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <name>Compiler</name>
     <artifactId>compiler</artifactId>
 
     <parent>
-	<groupId>org.sqlcomponents</groupId>
-	<artifactId>sqlcomponents</artifactId>
-	<version>1.0-SNAPSHOT</version>
+        <groupId>org.sqlcomponents</groupId>
+        <artifactId>sqlcomponents</artifactId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
     <dependencies>
-	<dependency>
-	    <groupId>org.freemarker</groupId>
-	    <artifactId>freemarker</artifactId>
-	    <version>2.3.31</version>
-	</dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.31</version>
+        </dependency>
 
-	<dependency>
-	    <groupId>${project.groupId}</groupId>
-	    <artifactId>core</artifactId>
-	    <version>${project.version}</version>
-	</dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

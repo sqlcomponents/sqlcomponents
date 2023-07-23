@@ -7,232 +7,532 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The type Application.
+ */
 public final class Application {
-    public static final List<String> METHOD_SPECIFICATION = Arrays.asList("SelectStatement", "InsertStatement",
-            "DeleteStatement", "MViewRefresh", "UpdateStatement");
+
+    /**
+     * The constant METHOD_SPECIFICATION.
+     */
+    public static final List<String> METHOD_SPECIFICATION =
+            Arrays.asList("SelectStatement",
+                    "InsertStatement", "DeleteStatement", "MViewRefresh",
+                    "UpdateStatement");
+    /**
+     * The Name.
+     */
     private String name;
+    /**
+     * The Location.
+     */
     private String location;
+    /**
+     * The Src folder.
+     */
     private String srcFolder;
+    /**
+     * The Driver name.
+     */
     private String driverName;
+    /**
+     * The Table patterns.
+     */
     private List<String> tablePatterns;
+    /**
+     * The Sequence patterns.
+     */
     private List<String> sequencePatterns;
+    /**
+     * The Database word separator.
+     */
     private String databaseWordSeparator = "_";
+    /**
+     * The Root package.
+     */
     private String rootPackage;
+    /**
+     * The Words map.
+     */
     private Map<String, String> wordsMap;
+    /**
+     * The Modules map.
+     */
     private Map<String, String> modulesMap;
+    /**
+     * The Plural map.
+     */
     private Map<String, String> pluralMap;
 
+    /**
+     * The Sequence table map.
+     */
     private String sequenceTableMap;
 
+    /**
+     * The Modules first.
+     */
     private boolean modulesFirst;
 
+    /**
+     * The Orm.
+     */
     private ORM orm;
 
+    /**
+     * Instantiates a new Application.
+     */
     public Application() {
         setOrm(new ORM(this));
     }
 
+    /**
+     * Gets driver name.
+     *
+     * @return the driver name
+     */
     public String getDriverName() {
         return driverName;
     }
 
-    public void setDriverName(final String driverName) {
-        this.driverName = driverName;
+    /**
+     * Sets driver name.
+     *
+     * @param paramDriverName the param driver name
+     */
+    public void setDriverName(final String paramDriverName) {
+        this.driverName = paramDriverName;
     }
 
+    /**
+     * Gets sequence patterns.
+     *
+     * @return the sequence patterns
+     */
     public List<String> getSequencePatterns() {
         return sequencePatterns;
     }
 
-    public void setSequencePatterns(List<String> sequencePatterns) {
-        this.sequencePatterns = sequencePatterns;
+    /**
+     * Sets sequence patterns.
+     *
+     * @param paramSequencePatterns the param sequence patterns
+     */
+    public void setSequencePatterns(final List<String> paramSequencePatterns) {
+        this.sequencePatterns = paramSequencePatterns;
     }
 
+    /**
+     * Gets database word separator.
+     *
+     * @return the database word separator
+     */
     public String getDatabaseWordSeparator() {
         return databaseWordSeparator;
     }
 
-    public void setDatabaseWordSeparator(String databaseWordSeparator) {
-        this.databaseWordSeparator = databaseWordSeparator;
+    /**
+     * Sets database word separator.
+     *
+     * @param paramDatabaseWordSeparator the param database word separator
+     */
+    public void setDatabaseWordSeparator(
+            final String paramDatabaseWordSeparator) {
+        this.databaseWordSeparator = paramDatabaseWordSeparator;
     }
 
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    /**
+     * Sets name.
+     *
+     * @param paramName the param name
+     */
+    public void setName(final String paramName) {
+        this.name = paramName;
     }
 
+    /**
+     * Gets location.
+     *
+     * @return the location
+     */
     public String getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    /**
+     * Sets location.
+     *
+     * @param paramLocation the param location
+     */
+    public void setLocation(final String paramLocation) {
+        this.location = paramLocation;
     }
 
+    /**
+     * Gets table patterns.
+     *
+     * @return the table patterns
+     */
     public List<String> getTablePatterns() {
         return tablePatterns;
     }
 
-    public void setTablePatterns(List<String> tablePatterns) {
-        this.tablePatterns = tablePatterns;
+    /**
+     * Sets table patterns.
+     *
+     * @param paramTablePatterns the param table patterns
+     */
+    public void setTablePatterns(final List<String> paramTablePatterns) {
+        this.tablePatterns = paramTablePatterns;
     }
 
+    /**
+     * Gets root package.
+     *
+     * @return the root package
+     */
     public String getRootPackage() {
         return rootPackage;
     }
 
-    public void setRootPackage(String rootPackage) {
-        this.rootPackage = rootPackage;
+    /**
+     * Sets root package.
+     *
+     * @param paramRootPackage the param root package
+     */
+    public void setRootPackage(final String paramRootPackage) {
+        this.rootPackage = paramRootPackage;
     }
 
+    /**
+     * Gets words map.
+     *
+     * @return the words map
+     */
     public Map<String, String> getWordsMap() {
         return wordsMap;
     }
 
-    public void setWordsMap(Map<String, String> wordsMap) {
-        this.wordsMap = wordsMap;
+    /**
+     * Sets words map.
+     *
+     * @param paramWordsMap the param words map
+     */
+    public void setWordsMap(final Map<String, String> paramWordsMap) {
+        this.wordsMap = paramWordsMap;
     }
 
+    /**
+     * Gets modules map.
+     *
+     * @return the modules map
+     */
     public Map<String, String> getModulesMap() {
         return modulesMap;
     }
 
-    public void setModulesMap(Map<String, String> modulesMap) {
-        this.modulesMap = modulesMap;
+    /**
+     * Sets modules map.
+     *
+     * @param paramModulesMap the param modules map
+     */
+    public void setModulesMap(final Map<String, String> paramModulesMap) {
+        this.modulesMap = paramModulesMap;
     }
 
+    /**
+     * Gets sequence table map.
+     *
+     * @return the sequence table map
+     */
     public String getSequenceTableMap() {
         return sequenceTableMap;
     }
 
-    public void setSequenceTableMap(String sequenceTableMap) {
-        this.sequenceTableMap = sequenceTableMap;
+    /**
+     * Sets sequence table map.
+     *
+     * @param paramSequenceTableMap the param sequence table map
+     */
+    public void setSequenceTableMap(final String paramSequenceTableMap) {
+        this.sequenceTableMap = paramSequenceTableMap;
     }
 
+    /**
+     * Gets orm.
+     *
+     * @return the orm
+     */
     public ORM getOrm() {
         return orm;
     }
 
-    public void setOrm(ORM orm) {
-        this.orm = orm;
+    /**
+     * Sets orm.
+     *
+     * @param paramOrm the param orm
+     */
+    public void setOrm(final ORM paramOrm) {
+        this.orm = paramOrm;
     }
 
+    /**
+     * Gets entities.
+     *
+     * @return the entities
+     */
     public List<Entity> getEntities() {
         return orm.getEntities();
     }
 
-    public void setEntities(List<Entity> entities) {
-        orm.setEntities(entities);
+    /**
+     * Sets entities.
+     *
+     * @param paramEntities the param entities
+     */
+    public void setEntities(final List<Entity> paramEntities) {
+        orm.setEntities(paramEntities);
     }
 
+    /**
+     * Gets insert map.
+     *
+     * @return the insert map
+     */
     public Map<String, String> getInsertMap() {
         return orm.getInsertMap();
     }
 
-    public void setInsertMap(Map<String, String> insertMap) {
-        orm.setInsertMap(insertMap);
+    /**
+     * Sets insert map.
+     *
+     * @param paramInsertMap the param insert map
+     */
+    public void setInsertMap(final Map<String, String> paramInsertMap) {
+        orm.setInsertMap(paramInsertMap);
     }
 
+    /**
+     * Gets password.
+     *
+     * @return the password
+     */
     public String getPassword() {
         return orm.getPassword();
     }
 
-    public void setPassword(String password) {
-        orm.setPassword(password);
+    /**
+     * Sets password.
+     *
+     * @param paramPassword the param password
+     */
+    public void setPassword(final String paramPassword) {
+        orm.setPassword(paramPassword);
     }
 
+    /**
+     * Gets update map.
+     *
+     * @return the update map
+     */
     public Map<String, String> getUpdateMap() {
         return orm.getUpdateMap();
     }
 
-    public void setUpdateMap(Map<String, String> updateMap) {
-        orm.setUpdateMap(updateMap);
+    /**
+     * Sets update map.
+     *
+     * @param paramUpdateMap the param update map
+     */
+    public void setUpdateMap(final Map<String, String> paramUpdateMap) {
+        orm.setUpdateMap(paramUpdateMap);
     }
 
+    /**
+     * Gets url.
+     *
+     * @return the url
+     */
     public String getUrl() {
         return orm.getUrl();
     }
 
-    public void setUrl(String url) {
-        orm.setUrl(url);
+    /**
+     * Sets url.
+     *
+     * @param paramUrl the param url
+     */
+    public void setUrl(final String paramUrl) {
+        orm.setUrl(paramUrl);
     }
 
+    /**
+     * Gets user name.
+     *
+     * @return the user name
+     */
     public String getUserName() {
         return orm.getUserName();
     }
 
-    public void setUserName(String userName) {
-        orm.setUserName(userName);
+    /**
+     * Sets user name.
+     *
+     * @param paramUserName the param user name
+     */
+    public void setUserName(final String paramUserName) {
+        orm.setUserName(paramUserName);
     }
 
+    /**
+     * Returns hash code.
+     * @return hashCode
+     */
     public int hashCode() {
         return orm.hashCode();
     }
 
+    /**
+     * Gets method specification.
+     *
+     * @return the method specification
+     */
     public List<String> getMethodSpecification() {
         return orm.getMethodSpecification();
     }
 
-    public void setMethodSpecification(List<String> methodSpecification) {
-        orm.setMethodSpecification(methodSpecification);
+    /**
+     * Sets method specification.
+     *
+     * @param paramMethodSpecification the param method specification
+     */
+    public void setMethodSpecification(
+            final List<String> paramMethodSpecification) {
+        orm.setMethodSpecification(paramMethodSpecification);
     }
 
+    /**
+     * Returns String representation of this object.
+     * @return name
+     */
     public String toString() {
         return name;
     }
 
+    /**
+     * Gets schema name.
+     *
+     * @return the schema name
+     */
     public String getSchemaName() {
         return orm.getSchemaName();
     }
 
-    public void setSchemaName(String schemaName) {
-        orm.setSchemaName(schemaName);
+    /**
+     * Sets schema name.
+     *
+     * @param paramSchemaName the param schema name
+     */
+    public void setSchemaName(final String paramSchemaName) {
+        orm.setSchemaName(paramSchemaName);
     }
 
+    /**
+     * Gets plural map.
+     *
+     * @return the plural map
+     */
     public Map<String, String> getPluralMap() {
         return pluralMap;
     }
 
-    public void setPluralMap(Map<String, String> pluralMap) {
-        this.pluralMap = pluralMap;
+    /**
+     * Sets plural map.
+     *
+     * @param paramPluralMap the param plural map
+     */
+    public void setPluralMap(final Map<String, String> paramPluralMap) {
+        this.pluralMap = paramPluralMap;
     }
 
+    /**
+     * Is modules first boolean.
+     *
+     * @return the boolean
+     */
     public boolean isModulesFirst() {
         return modulesFirst;
     }
 
-    public void setModulesFirst(boolean modulesFirst) {
-        this.modulesFirst = modulesFirst;
+    /**
+     * Sets modules first.
+     *
+     * @param paramModulesFirst the param modules first
+     */
+    public void setModulesFirst(final boolean paramModulesFirst) {
+        this.modulesFirst = paramModulesFirst;
     }
 
+    /**
+     * Gets src folder.
+     *
+     * @return the src folder
+     */
     public String getSrcFolder() {
         return srcFolder;
     }
 
-    public void setSrcFolder(String srcFolder) {
-        this.srcFolder = srcFolder;
+    /**
+     * Sets src folder.
+     *
+     * @param paramSrcFolder the param src folder
+     */
+    public void setSrcFolder(final String paramSrcFolder) {
+        this.srcFolder = paramSrcFolder;
     }
 
+    /**
+     * Gets encryption.
+     *
+     * @return the encryption
+     */
     public List<String> getEncryption() {
         return orm.getEncryption();
     }
 
-    public void setEncryption(final List<String> encryption) {
-        orm.setEncryption(encryption);
+    /**
+     * Sets encryption.
+     *
+     * @param paramEncryption the param encryption
+     */
+    public void setEncryption(final List<String> paramEncryption) {
+        orm.setEncryption(paramEncryption);
     }
 
+    /**
+     * Compile.
+     *
+     * @param aCompiler the a compiler
+     * @throws Exception the exception
+     */
     public void compile(final Compiler aCompiler) throws Exception {
 
-        File srcFolder = new File(this.getSrcFolder());
-        if (srcFolder.exists()) {
-            Files.walk(srcFolder.toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+        File aSrcFolder = new File(this.getSrcFolder());
+        if (aSrcFolder.exists()) {
+            Files.walk(aSrcFolder.toPath()).sorted(Comparator.reverseOrder())
+                    .map(Path::toFile).forEach(File::delete);
         }
 
         aCompiler.compile(this);

@@ -15,20 +15,29 @@ public final class JsonUtil {
     private static ObjectMapper mapper;
 
     public static <T> List<T> getTestObjects(Class<T> tClass) {
-        String databaseType = System.getenv("DATABASE_TYPE") == null ? "postgres" : System.getenv("DATABASE_TYPE");
+        String databaseType =
+                System.getenv("DATABASE_TYPE") == null ? "postgres" :
+                        System.getenv("DATABASE_TYPE");
 
         List<T> list = new ArrayList<>();
 
-        File jsonFile = new File("../datastore/src/test/resources/data/" + databaseType + "/"
-                + tClass.getName().substring(tClass.getName().lastIndexOf('.') + 1) + ".json");
+        File jsonFile = new File(
+                "../datastore/src/test/resources/data/" + databaseType + "/"
+                        + tClass.getName()
+                        .substring(tClass.getName().lastIndexOf('.') + 1) +
+                        ".json");
         if (!jsonFile.exists()) {
             jsonFile = new File("../datastore/src/test/resources/data/"
-                    + tClass.getName().substring(tClass.getName().lastIndexOf('.') + 1) + ".json");
+                    + tClass.getName()
+                    .substring(tClass.getName().lastIndexOf('.') + 1) +
+                    ".json");
         }
 
-        try (JsonParser jsonParser = getObjectMapper().getFactory().createParser(jsonFile)) {
+        try (JsonParser jsonParser = getObjectMapper().getFactory()
+                .createParser(jsonFile)) {
             if (jsonParser.nextToken() != JsonToken.START_ARRAY) {
-                throw new IllegalArgumentException("illicalstate of array", null);
+                throw new IllegalArgumentException("illicalstate of array",
+                        null);
             }
             while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
                 T entity = getObjectMapper().readValue(jsonParser, tClass);

@@ -19,13 +19,19 @@ public class CompilerTestUtil {
             Properties props = new Properties();
             props.load(new FileReader("../database.properties"));
 
-            String databaseType = System.getenv("DATABASE_TYPE") == null ? "postgres" : System.getenv("DATABASE_TYPE");
+            String databaseType =
+                    System.getenv("DATABASE_TYPE") == null ? "postgres" :
+                            System.getenv("DATABASE_TYPE");
 
             application.setName("Movie");
-            application.setUrl(props.getProperty(databaseType + ".datasource.url"));
-            application.setUserName(props.getProperty(databaseType + ".datasource.username"));
-            application.setPassword(props.getProperty(databaseType + ".datasource.password"));
-            application.setSchemaName(props.getProperty(databaseType + ".datasource.schema"));
+            application.setUrl(
+                    props.getProperty(databaseType + ".datasource.url"));
+            application.setUserName(
+                    props.getProperty(databaseType + ".datasource.username"));
+            application.setPassword(
+                    props.getProperty(databaseType + ".datasource.password"));
+            application.setSchemaName(
+                    props.getProperty(databaseType + ".datasource.schema"));
             // daoProject.setTablePatterns(Arrays.asList("movie"));
 
             Map<String, String> insertMap = new HashMap<>();
@@ -46,10 +52,12 @@ public class CompilerTestUtil {
 
             application.setRootPackage("org.example");
 
-            application.setMethodSpecification(Application.METHOD_SPECIFICATION);
+            application.setMethodSpecification(
+                    Application.METHOD_SPECIFICATION);
             application.setSrcFolder("../datastore/src/main/java");
         } else {
-            application = CoreConsts.buildApplication(new File(System.getenv("SQLCOMPONENTS_CONFIG")));
+            application = CoreConsts.buildApplication(
+                    new File(System.getenv("SQLCOMPONENTS_CONFIG")));
             if (System.getenv("SOURCE_FOLDER") == null) {
                 throw new IllegalArgumentException("SOURCE_FOLDER is not set");
             }

@@ -23,6 +23,7 @@ Clean Code
 = Opensource / Checkstyles/ Documented
 
 # reference
+
 1. https://dev.mysql.com/doc/index-other.html
 2. https://blog.timescale.com/blog/why-sql-beating-nosql-what-this-means-for-future-of-data-time-series-database-348b777b847a/
 3. https://blogs.oracle.com/oraclemagazine/deliver-oracle-database-18c-express-edition-in-containers
@@ -38,22 +39,22 @@ Clean Code
 13. https://www.infoq.com/news/2022/04/red-hat-releases-hibernate-6/
 
 ## Related
+
 1. https://github.com/schemacrawler/SchemaCrawler
 2. https://github.com/kyleconroy/sqlc
 3. https://github.com/facebookincubator/CG-SQL
 4. https://github.com/diesel-rs/diesel
 
-
 From Directory sqlcomponents
 
 On JDK 8 it will not work
 Min JDK needed is : 11
-Max JDK Tested is : 18 
+Max JDK Tested is : 18
 
 docker-compose up -d [launch in docker postgres on port  5432]
 docker-compose down --volumes  [optional only when sql error is seen to recreate the default tables]
 mvn clean package  
-mvn clean package -Dmaven.surefire.debug  -Dmaven.failsafe.debug verify  
+mvn clean package -Dmaven.surefire.debug -Dmaven.failsafe.debug verify  
 mvn clean package -Dmaven.test.skip=true  
 mvn versions:use-latest-releases  
 mvn help:active-profiles

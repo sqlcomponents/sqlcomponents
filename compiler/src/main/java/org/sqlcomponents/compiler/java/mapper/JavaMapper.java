@@ -6,22 +6,59 @@ import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.Column;
 
 import java.nio.ByteBuffer;
-import java.time.*;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Java Mapper which is responsible for converting Database Types into appropriate Java Data type.
+ * Java Mapper which is responsible for converting Database Types into
+ * appropriate Java Data type.
  */
 public final class JavaMapper extends Mapper {
-    private static final int MAX_DIGITS_FOR_BYTE = String.valueOf(Byte.MAX_VALUE).length() - 1;
-    private static final int MAX_DIGITS_FOR_SHORT = String.valueOf(Short.MAX_VALUE).length() - 1;
-    private static final int MAX_DIGITS_FOR_INTEGER = String.valueOf(Integer.MAX_VALUE).length() - 1;
-    private static final int MAX_DIGITS_FOR_LONG = String.valueOf(Long.MAX_VALUE).length() - 1;
-    private static final int MAX_DIGITS_FOR_FLOAT = String.valueOf(Float.MAX_VALUE).indexOf('.');
-    private static final int MAX_DIGITS_FOR_DOUBLE = String.valueOf(Double.MAX_VALUE).indexOf('.');
+    /**
+     * The constant MAX_DIGITS_FOR_BYTE.
+     */
+    private static final int MAX_DIGITS_FOR_BYTE =
+            String.valueOf(Byte.MAX_VALUE).length() - 1;
+    /**
+     * The constant MAX_DIGITS_FOR_SHORT.
+     */
+    private static final int MAX_DIGITS_FOR_SHORT =
+            String.valueOf(Short.MAX_VALUE).length() - 1;
+    /**
+     * The constant MAX_DIGITS_FOR_INTEGER.
+     */
+    private static final int MAX_DIGITS_FOR_INTEGER =
+            String.valueOf(Integer.MAX_VALUE).length() - 1;
+    /**
+     * The constant MAX_DIGITS_FOR_LONG.
+     */
+    private static final int MAX_DIGITS_FOR_LONG =
+            String.valueOf(Long.MAX_VALUE).length() - 1;
+    /**
+     * The constant MAX_DIGITS_FOR_FLOAT.
+     */
+    private static final int MAX_DIGITS_FOR_FLOAT =
+            String.valueOf(Float.MAX_VALUE).indexOf('.');
+    /**
+     * The constant MAX_DIGITS_FOR_DOUBLE.
+     */
+    private static final int MAX_DIGITS_FOR_DOUBLE =
+            String.valueOf(Double.MAX_VALUE).indexOf('.');
+    /**
+     * The constant INTERVAL_STR.
+     */
     public static final String INTERVAL_STR = "interval";
 
+    /**
+     * Instantiates a new Java mapper.
+     *
+     * @param bApplication the b application
+     */
     public JavaMapper(final Application bApplication) {
         super(bApplication);
     }
@@ -29,85 +66,98 @@ public final class JavaMapper extends Mapper {
     @Override
     public String getDataType(final Column aColumn) {
         switch (aColumn.getColumnType()) {
-        case JSON:
-        case JSONB: {
-            return "org.json.JSONObject";
-        }
-        default: {
-            return Objects.requireNonNull(getDataTypeClass(aColumn)).getName();
-        }
+            case JSON:
+            case JSONB: {
+                return "org.json.JSONObject";
+            }
+            default: {
+                return Objects.requireNonNull(getDataTypeClass(aColumn))
+                        .getName();
+            }
         }
     }
 
+    /**
+     * Gets data type class.
+     *
+     * @param aColumn the a column
+     * @return the data type class
+     */
     private Class getDataTypeClass(final Column aColumn) {
         switch (aColumn.getColumnType()) {
-        case TINYINT:
-        case BIT:
-        case SMALLINT: {
-            return aColumn.getSize() == 1 ? Boolean.class : Short.class;
-        }
-        case BIGINT: {
-            return Long.class;
-        }
-        case REAL:
-        case FLOAT: {
-            return Float.class;
-        }
-        case DOUBLE:
-        case DECIMAL: {
-            return chooseDecimalType(aColumn);
-        }
-        case INTEGER: {
-            return chooseIntegerType(aColumn);
-        }
-        case NUMERIC: {
-            return chooseNumberType(aColumn);
-        }
-        case VARCHAR:
-        case NVARCHAR:
-        case LONGVARCHAR:
-        case CHAR: {
-            return aColumn.getSize() == 1 ? Character.class : String.class;
-        }
-        case TEXT:
-        case SQLXML: {
-            return String.class;
-        }
-        case BOOLEAN: {
-            return Boolean.class;
-        }
-        case TIME: {
-            return LocalTime.class;
-        }
-        case DATE: {
-            return LocalDate.class;
-        }
-        case TIMESTAMP: {
-            return LocalDateTime.class;
-        }
-        case TIMESTAMP_WITH_TIMEZONE: {
-            return OffsetDateTime.class;
-        }
-        case UUID: {
-            return UUID.class;
-        }
-        case INTERVAL: {
-            return Duration.class;
-        }
-        case BLOB:
-        case LONGVARBINARY:
-        case BINARY: {
-            return ByteBuffer.class;
-        }
-        case OTHER: {
-            return getDataTypeClassForSpecialType(aColumn);
-        }
-        default: {
-            throw new RuntimeException(createMessage(aColumn));
-        }
+            case TINYINT:
+            case BIT:
+            case SMALLINT: {
+                return aColumn.getSize() == 1 ? Boolean.class : Short.class;
+            }
+            case BIGINT: {
+                return Long.class;
+            }
+            case REAL:
+            case FLOAT: {
+                return Float.class;
+            }
+            case DOUBLE:
+            case DECIMAL: {
+                return chooseDecimalType(aColumn);
+            }
+            case INTEGER: {
+                return chooseIntegerType(aColumn);
+            }
+            case NUMERIC: {
+                return chooseNumberType(aColumn);
+            }
+            case VARCHAR:
+            case NVARCHAR:
+            case LONGVARCHAR:
+            case CHAR: {
+                return aColumn.getSize() == 1 ? Character.class : String.class;
+            }
+            case TEXT:
+            case SQLXML: {
+                return String.class;
+            }
+            case BOOLEAN: {
+                return Boolean.class;
+            }
+            case TIME: {
+                return LocalTime.class;
+            }
+            case DATE: {
+                return LocalDate.class;
+            }
+            case TIMESTAMP: {
+                return LocalDateTime.class;
+            }
+            case TIMESTAMP_WITH_TIMEZONE: {
+                return OffsetDateTime.class;
+            }
+            case UUID: {
+                return UUID.class;
+            }
+            case INTERVAL: {
+                return Duration.class;
+            }
+            case BLOB:
+            case LONGVARBINARY:
+            case BINARY: {
+                return ByteBuffer.class;
+            }
+            case OTHER: {
+                return getDataTypeClassForSpecialType(aColumn);
+            }
+            default: {
+                throw new RuntimeException(createMessage(aColumn));
+            }
         }
     }
 
+    /**
+     * Gets data type class for special type.
+     *
+     * @param aColumn the a column
+     * @return the data type class for special type
+     */
     private Class getDataTypeClassForSpecialType(final Column aColumn) {
         if (aColumn.getTypeName().equalsIgnoreCase(INTERVAL_STR)) {
             return Duration.class;
@@ -115,17 +165,38 @@ public final class JavaMapper extends Mapper {
         throw new RuntimeException(createMessage(aColumn));
     }
 
+    /**
+     * Create message string.
+     *
+     * @param aColumn the a column
+     * @return the string
+     */
     @NotNull
     private String createMessage(final Column aColumn) {
-        return "Datatype not found for column " + aColumn.getColumnName() + " of table "
-                + aColumn.getTable().getTableName() + " of type name " + aColumn.getTypeName() + " of column type "
+        return "Datatype not found for column " + aColumn.getColumnName() +
+                " of table "
+                + aColumn.getTable().getTableName() + " of type name " +
+                aColumn.getTypeName() + " of column type "
                 + aColumn.getColumnType();
     }
 
+    /**
+     * Choose number type class.
+     *
+     * @param aColumn the a column
+     * @return the class
+     */
     private Class<? extends Number> chooseNumberType(final Column aColumn) {
-        return (aColumn.getDecimalDigits() == 0) ? chooseIntegerType(aColumn) : chooseDecimalType(aColumn);
+        return (aColumn.getDecimalDigits() == 0) ? chooseIntegerType(aColumn) :
+                chooseDecimalType(aColumn);
     }
 
+    /**
+     * Choose integer type class.
+     *
+     * @param aColumn the a column
+     * @return the class
+     */
     private Class<? extends Number> chooseIntegerType(final Column aColumn) {
         final Class<? extends Number> lIntegerType;
 
@@ -142,6 +213,12 @@ public final class JavaMapper extends Mapper {
         return lIntegerType;
     }
 
+    /**
+     * Choose decimal type class.
+     *
+     * @param aColumn the a column
+     * @return the class
+     */
     private Class<? extends Number> chooseDecimalType(final Column aColumn) {
         final Class<? extends Number> lDecimalType;
         if (aColumn.getSize() <= MAX_DIGITS_FOR_FLOAT) {

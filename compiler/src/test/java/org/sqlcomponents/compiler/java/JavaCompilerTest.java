@@ -9,7 +9,8 @@ class JavaCompilerTest {
     void writeCode() throws Exception {
         Application application = CompilerTestUtil.getApplication();
         application.compile(new JavaCompiler());
-        System.out.println("Code is compiled into " + application.getSrcFolder());
+        System.out.println(
+                "Code is compiled into " + application.getSrcFolder());
     }
 
 }
