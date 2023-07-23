@@ -47,7 +47,7 @@ public abstract class Mapper {
      * @param aColumn the a column
      * @return the data type
      */
-    public abstract String getDataType(final Column aColumn);
+    public abstract String getDataType(Column aColumn);
 
     /**
      * Gets orm.
@@ -244,8 +244,8 @@ public abstract class Mapper {
                 }
             }
         }
-        return lObjectOrientedWord == null ? aRelationalWord :
-                lObjectOrientedWord;
+        return lObjectOrientedWord == null ? aRelationalWord
+                : lObjectOrientedWord;
     }
 
     /**
@@ -265,8 +265,8 @@ public abstract class Mapper {
                 if (lToUpperCase.endsWith(pluralKey.toUpperCase())) {
                     int lastIndex =
                             lToUpperCase.lastIndexOf(pluralKey.toUpperCase());
-                    lPluralName = aEntityName.substring(0, lastIndex) +
-                            toTileCase(lPluralValue);
+                    lPluralName = aEntityName.substring(0, lastIndex)
+                            + toTileCase(lPluralValue);
                     break;
                 }
             }

@@ -55,12 +55,12 @@ public class Entity {
     /**
      * Instantiates a new Entity.
      *
-     * @param orm   the orm
-     * @param table the table
+     * @param paramOrm   the orm
+     * @param paramTable the table
      */
-    public Entity(ORM orm, Table table) {
-        setOrm(orm);
-        setTable(table);
+    public Entity(final ORM paramOrm, final Table paramTable) {
+        setOrm(paramOrm);
+        setTable(paramTable);
     }
 
     /**
@@ -69,7 +69,7 @@ public class Entity {
      * @param className the class name
      * @return the boolean
      */
-    public boolean hasJavaClass(String className) {
+    public boolean hasJavaClass(final String className) {
         return orm.hasJavaClass(className);
     }
 
@@ -80,8 +80,8 @@ public class Entity {
      * @return the boolean
      */
     public boolean containsEncryption(final Property property) {
-        String combinedKey = property.getColumn().getTableName() + "#" +
-                property.getColumn().getColumnName();
+        String combinedKey = property.getColumn().getTableName() + "#"
+                + property.getColumn().getColumnName();
         return orm.getEncryption() != null && (orm.getEncryption()
                 .contains(property.getColumn().getColumnName())
                 || orm.getEncryption().contains(combinedKey));
@@ -106,10 +106,10 @@ public class Entity {
      */
     public boolean containsProperty(final Property property,
                                     final Map<String, String> map) {
-        String combinedKey = property.getColumn().getTableName() + "#" +
-                property.getColumn().getColumnName();
-        return !(map.containsKey(property.getColumn().getColumnName()) ||
-                map.containsKey(combinedKey));
+        String combinedKey = property.getColumn().getTableName() + "#"
+                + property.getColumn().getColumnName();
+        return !(map.containsKey(property.getColumn().getColumnName())
+                || map.containsKey(combinedKey));
     }
 
     /**
@@ -122,18 +122,18 @@ public class Entity {
     public String getPreparedValue(final Property property,
                                    final Map<String, String> map) {
         String preparedValue = null;
-        if ((preparedValue = map.get(property.getColumn().getColumnName())) !=
-                null) {
+        if ((preparedValue = map.get(property.getColumn().getColumnName()))
+                != null) {
             return preparedValue.replaceAll("\"",
                     Matcher.quoteReplacement("\\\""));
         } else if ((preparedValue = map
-                .get(property.getColumn().getTableName() + "#" +
-                        property.getColumn().getColumnName())) != null) {
+                .get(property.getColumn().getTableName() + "#"
+                        + property.getColumn().getColumnName())) != null) {
             return preparedValue.replaceAll("\"",
                     Matcher.quoteReplacement("\\\""));
         } else {
-            if (property.getEntity().getTable().getDatabase().getDbType() ==
-                    DBType.POSTGRES) {
+            if (property.getEntity().getTable().getDatabase().getDbType()
+                    == DBType.POSTGRES) {
                 // property.column.typeName == 'xml'
                 if (property.getColumn().getTypeName().equals("xml")) {
                     preparedValue = "XMLPARSE(document ?)";
@@ -152,8 +152,8 @@ public class Entity {
         return this.getProperties().stream().filter(property -> {
             boolean isReturning =
                     property.getColumn().getAutoIncrement() == Flag.YES
-                            || property.getColumn().getGeneratedColumn() ==
-                            Flag.YES;
+                            || property.getColumn().getGeneratedColumn()
+                            == Flag.YES;
             Map<String, String> insertMap =
                     property.getEntity().getOrm().getApplication()
                             .getInsertMap();
@@ -208,25 +208,24 @@ public class Entity {
      */
     private boolean isFilteredIn(final Map<String, String> map,
                                  final Property property) {
-        String combinedKey = property.getColumn().getTableName() + "#" +
-                property.getColumn().getColumnName();
-        return map != null &&
-                ((map.containsKey(property.getColumn().getColumnName())
-                        &&
-                        map.get(property.getColumn().getColumnName()) == null)
-                        || (map.containsKey(combinedKey) &&
-                        map.get(combinedKey) == null));
+        String combinedKey = property.getColumn().getTableName() + "#"
+                + property.getColumn().getColumnName();
+        return map != null
+                && ((map.containsKey(property.getColumn().getColumnName())
+                && map.get(property.getColumn().getColumnName()) == null)
+                || (map.containsKey(combinedKey)
+                && map.get(combinedKey) == null));
     }
 
     /**
-     * Get Not Null Insertable Properties
+     * Get Not Null Insertable Properties.
      *
      * @return properties must insertable properties
      */
     public List<Property> getMustInsertableProperties() {
         return this.getProperties().stream().filter(property -> {
-            return property.getColumn().isInsertable() &&
-                    property.getColumn().getNullable() != Flag.YES;
+            return property.getColumn().isInsertable()
+                    && property.getColumn().getNullable() != Flag.YES;
         }).collect(Collectors.toList());
     }
 
@@ -248,8 +247,8 @@ public class Entity {
      */
     public List<Property> getGeneratedPrimaryKeyProperties() {
         return this.getProperties().stream().filter(property -> {
-            return property.getColumn().isPrimaryKey() &&
-                    property.getColumn().getAutoIncrement() == Flag.YES;
+            return property.getColumn().isPrimaryKey()
+                    && property.getColumn().getAutoIncrement() == Flag.YES;
         }).collect(Collectors.toList());
     }
 

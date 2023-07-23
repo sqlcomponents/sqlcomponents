@@ -21,10 +21,10 @@ public enum Order {
     /**
      * Instantiates a new Order.
      *
-     * @param value the value
+     * @param paramValue the value
      */
-    Order(final String value) {
-        this.value = value;
+    Order(final String paramValue) {
+        this.value = paramValue;
     }
 
     /**

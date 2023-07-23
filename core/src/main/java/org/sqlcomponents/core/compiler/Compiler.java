@@ -15,5 +15,5 @@ public interface Compiler {
      * @param aApplication the a application
      * @throws SQLException the sql exception
      */
-    public void compile(final Application aApplication) throws SQLException;
+    void compile(Application aApplication) throws SQLException;
 }

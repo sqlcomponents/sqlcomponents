@@ -63,14 +63,15 @@ public final class SQLComponentsMojo extends AbstractMojo {
     /**
      * Gets class loader.
      *
-     * @param project the project
+     * @param paramProject the project
      * @return the class loader
      */
-    private ClassLoader getClassLoader(MavenProject project) {
+    private ClassLoader getClassLoader(final MavenProject paramProject) {
         try {
-            List classpathElements = project.getCompileClasspathElements();
-            classpathElements.add(project.getBuild().getOutputDirectory());
-            classpathElements.add(project.getBuild().getTestOutputDirectory());
+            List classpathElements = paramProject.getCompileClasspathElements();
+            classpathElements.add(paramProject.getBuild().getOutputDirectory());
+            classpathElements.add(
+                    paramProject.getBuild().getTestOutputDirectory());
             URL[] urls = new URL[classpathElements.size()];
             for (int i = 0; i < classpathElements.size(); ++i) {
                 urls[i] = new File((String) classpathElements.get(i)).toURL();
@@ -93,10 +94,10 @@ public final class SQLComponentsMojo extends AbstractMojo {
         Application lApplication = CoreConsts.buildApplication(
                 new File(project.getBasedir(), YML_SPEC_FILE_NAME));
         lApplication.setSrcFolder(
-                project.getBuild().getDirectory() + GENERATE_SOURCES_DIR +
-                        lApplication.getName().toLowerCase());
-        getLog().info("'" + GENERATED_SOURCES + "' directory is: " +
-                lApplication.getSrcFolder());
+                project.getBuild().getDirectory() + GENERATE_SOURCES_DIR
+                        + lApplication.getName().toLowerCase());
+        getLog().info("'" + GENERATED_SOURCES + "' directory is: "
+                + lApplication.getSrcFolder());
         project.addCompileSourceRoot(lApplication.getSrcFolder());
         return lApplication;
     }

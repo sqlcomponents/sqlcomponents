@@ -29,10 +29,10 @@ public class Method {
     /**
      * Instantiates a new Method.
      *
-     * @param function the function
+     * @param paramFunction the function
      */
-    public Method(Procedure function) {
-        setFunction(function);
+    public Method(final Procedure paramFunction) {
+        setFunction(paramFunction);
     }
 
     /**
@@ -47,10 +47,10 @@ public class Method {
     /**
      * Sets function name.
      *
-     * @param functionName the function name
+     * @param paramFunctionName the function name
      */
-    public void setFunctionName(String functionName) {
-        function.setFunctionName(functionName);
+    public void setFunctionName(final String paramFunctionName) {
+        function.setFunctionName(paramFunctionName);
     }
 
     /**
@@ -65,10 +65,10 @@ public class Method {
     /**
      * Sets remarks.
      *
-     * @param remarks the remarks
+     * @param paramRemarks the remarks
      */
-    public void setRemarks(String remarks) {
-        function.setRemarks(remarks);
+    public void setRemarks(final String paramRemarks) {
+        function.setRemarks(paramRemarks);
     }
 
     /**
@@ -83,10 +83,10 @@ public class Method {
     /**
      * Sets name.
      *
-     * @param name the name
+     * @param paramName the name
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setName(final String paramName) {
+        this.name = paramName;
     }
 
     /**
@@ -101,10 +101,10 @@ public class Method {
     /**
      * Sets input parameters.
      *
-     * @param inputParameters the input parameters
+     * @param paramInputParameters the input parameters
      */
-    public void setInputParameters(List<Property> inputParameters) {
-        this.inputParameters = inputParameters;
+    public void setInputParameters(final List<Property> paramInputParameters) {
+        this.inputParameters = paramInputParameters;
     }
 
     /**
@@ -119,10 +119,10 @@ public class Method {
     /**
      * Sets output property.
      *
-     * @param outputProperty the output property
+     * @param paramOutputProperty the output property
      */
-    public void setOutputProperty(Property outputProperty) {
-        this.outputProperty = outputProperty;
+    public void setOutputProperty(final Property paramOutputProperty) {
+        this.outputProperty = paramOutputProperty;
     }
 
     /**
@@ -137,10 +137,10 @@ public class Method {
     /**
      * Sets function.
      *
-     * @param function the function
+     * @param paramFunction the function
      */
-    public void setFunction(Procedure function) {
-        this.function = function;
+    public void setFunction(final Procedure paramFunction) {
+        this.function = paramFunction;
     }
 
     /**
@@ -155,10 +155,10 @@ public class Method {
     /**
      * Sets output.
      *
-     * @param output the output
+     * @param paramOutput the output
      */
-    public void setOutput(Column output) {
-        function.setOutput(output);
+    public void setOutput(final Column paramOutput) {
+        function.setOutput(paramOutput);
     }
 
     /**
@@ -171,12 +171,12 @@ public class Method {
     }
 
     /**
-     * Sets parametes.
+     * Sets parameters.
      *
-     * @param parametes the parametes
+     * @param paramParameters the parameters
      */
-    public void setParametes(List<Column> parametes) {
-        function.setParameters(parametes);
+    public void setParametes(final List<Column> paramParameters) {
+        function.setParameters(paramParameters);
     }
 
     @Override

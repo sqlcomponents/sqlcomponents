@@ -16,10 +16,10 @@ public class ORM {
     /**
      * Instantiates a new Orm.
      *
-     * @param application the application
+     * @param paramApplication the application
      */
-    public ORM(final Application application) {
-        setApplication(application);
+    public ORM(final Application paramApplication) {
+        setApplication(paramApplication);
     }
 
     /**
@@ -110,11 +110,11 @@ public class ORM {
     /**
      * Sets application class loader.
      *
-     * @param applicationClassLoader the application class loader
+     * @param paramApplicationClassLoader the application class loader
      */
     public void setApplicationClassLoader(
-            final ClassLoader applicationClassLoader) {
-        this.applicationClassLoader = applicationClassLoader;
+            final ClassLoader paramApplicationClassLoader) {
+        this.applicationClassLoader = paramApplicationClassLoader;
     }
 
     /**

@@ -1,6 +1,5 @@
 package org.sqlcomponents.core.crawler;
 
-import org.sqlcomponents.core.crawler.util.CrawlerConsts;
 import org.sqlcomponents.core.crawler.util.DataSourceUtil;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.Column;
@@ -79,15 +78,15 @@ public final class Crawler {
 
         switch (databaseMetaData.getDatabaseProductName().toLowerCase()
                 .trim()) {
-            case CrawlerConsts.POSTGRES_DB: {
+            case POSTGRES_DB: {
                 database.setDbType(DBType.POSTGRES);
                 break;
             }
-            case CrawlerConsts.MYSQL_DB: {
+            case MYSQL_DB: {
                 database.setDbType(DBType.MYSQL);
                 break;
             }
-            case CrawlerConsts.MARIA_DB: {
+            case MARIA_DB: {
                 database.setDbType(DBType.MARIADB);
             }
         }
@@ -149,7 +148,7 @@ public final class Crawler {
         database.setNumericFunctions(
                 new HashSet<>(Arrays.asList(
                         databaseMetaData.getNumericFunctions()
-                                .split(CrawlerConsts.COMMA_STR))));
+                                .split(COMMA_STR))));
         database.setProcedureTerm(databaseMetaData.getProcedureTerm());
         database.setResultSetHoldability(
                 databaseMetaData.getResultSetHoldability());
@@ -158,23 +157,25 @@ public final class Crawler {
                 databaseMetaData.getSearchStringEscape());
         database.setSqlKeywords(
                 new TreeSet<>(Arrays.asList(databaseMetaData.getSQLKeywords()
-                        .split(CrawlerConsts.COMMA_STR))));
+                        .split(COMMA_STR))));
         database.setStringFunctions(
                 new TreeSet<>(Arrays.asList(
                         databaseMetaData.getStringFunctions()
-                                .split(CrawlerConsts.COMMA_STR))));
+                                .split(COMMA_STR))));
         database.setSystemFunctions(
                 new TreeSet<>(Arrays.asList(
                         databaseMetaData.getSystemFunctions()
-                                .split(CrawlerConsts.COMMA_STR))));
+                                .split(COMMA_STR))));
         database.setTimeDateFunctions(
                 new TreeSet<>(Arrays.asList(
                         databaseMetaData.getTimeDateFunctions()
-                                .split(CrawlerConsts.COMMA_STR))));
+                                .split(COMMA_STR))));
         database.setSupportsTransactions(
                 databaseMetaData.supportsTransactions());
         database.setSupportsDataDefinitionAndDataManipulationTransactions(
-                databaseMetaData.supportsDataDefinitionAndDataManipulationTransactions());
+                databaseMetaData
+                        .supportsDataDefinitionAndDataManipulationTransactions()
+        );
         database.setDataDefinitionCausesTransactionCommit(
                 databaseMetaData.dataDefinitionCausesTransactionCommit());
         database.setDataDefinitionIgnoredInTransactions(
@@ -281,6 +282,31 @@ public final class Crawler {
         repair();
         return database;
     }
+
+    /**
+     * The constant MARIA_DB.
+     */
+    private static final String MARIA_DB = "mariadb";
+    /**
+     * The constant MYSQL_DB.
+     */
+    private static final String MYSQL_DB = "mysql";
+    /**
+     * The constant POSTGRES_DB.
+     */
+    private static final String POSTGRES_DB = "postgresql";
+    /**
+     * The constant COMMA_STR.
+     */
+    private static final String COMMA_STR = ",";
+    /**
+     * The constant END_BR_REGX.
+     */
+    private static final String END_BR_REGX = "\\)";
+    /**
+     * The constant START_BR_REGX.
+     */
+    private static final String START_BR_REGX = "\\(";
 
     /**
      * Matches boolean.
@@ -453,8 +479,8 @@ public final class Crawler {
             bColumn.setTypeName(lColumnResultSet.getString("TYPE_NAME"));
             lColumnType = ColumnType.value(
                     JDBCType.valueOf(lColumnResultSet.getInt("DATA_TYPE")));
-            bColumn.setColumnType(lColumnType == ColumnType.OTHER ?
-                    getColumnTypeForOthers(bColumn) : lColumnType);
+            bColumn.setColumnType(lColumnType == ColumnType.OTHER
+                    ? getColumnTypeForOthers(bColumn) : lColumnType);
             bColumn.setSize(lColumnResultSet.getInt("COLUMN_SIZE"));
             bColumn.setDecimalDigits(lColumnResultSet.getInt("DECIMAL_DIGITS"));
             bColumn.setRemarks(lColumnResultSet.getString("REMARKS"));
@@ -576,6 +602,8 @@ public final class Crawler {
                 repairMySQL();
                 break;
             }
+            default:
+                break;
         }
     }
 
@@ -597,8 +625,8 @@ public final class Crawler {
             String columnName = rs.getString("column_name");
             Optional<UniqueConstraint> lUniqueConstraint =
                     lUniqueConstraints.stream()
-                            .filter(uniqueConstraint -> uniqueConstraint.getName()
-                                    .equals(indexName)).findFirst();
+                            .filter(uniqueConstraint -> uniqueConstraint
+                                    .getName().equals(indexName)).findFirst();
             if (lUniqueConstraint.isPresent()) {
                 lUniqueConstraint.get().getColumns()
                         .add(aTable.getColumns().stream()
@@ -630,9 +658,9 @@ public final class Crawler {
                          databaseMetaData.getConnection()
                     .prepareStatement("SELECT "
                             +
-                            "COLUMN_NAME,COLUMN_TYPE  from INFORMATION_SCHEMA" +
-                            ".COLUMNS where\n" +
-                            " table_name = ?")) {
+                            "COLUMN_NAME,COLUMN_TYPE  from INFORMATION_SCHEMA"
+                            + ".COLUMNS where\n"
+                            + " table_name = ?")) {
                 preparedStatement.setString(1, table.getTableName());
                 ResultSet lResultSet = preparedStatement.executeQuery();
 
@@ -650,7 +678,7 @@ public final class Crawler {
                         return false;
                     }).findFirst().get();
                     bColumnType = lResultSet.getString("COLUMN_TYPE");
-                    String[] s = bColumnType.split(CrawlerConsts.START_BR_REGX);
+                    String[] s = bColumnType.split(START_BR_REGX);
                     bColumn.setTypeName(s[0].trim());
 
                     ColumnType columnType1 = ColumnType.value(
@@ -660,9 +688,9 @@ public final class Crawler {
                     }
                     if (s.length == 2) {
                         String grp = s[1].trim()
-                                .replaceAll(CrawlerConsts.END_BR_REGX, "");
+                                .replaceAll(END_BR_REGX, "");
 
-                        s = grp.split(CrawlerConsts.COMMA_STR);
+                        s = grp.split(COMMA_STR);
                         bColumn.setSize(Integer.parseInt(s[0]));
                         if (s.length == 2) {
                             bColumn.setDecimalDigits(Integer.parseInt(s[1]));

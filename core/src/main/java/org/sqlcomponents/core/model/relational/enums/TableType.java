@@ -93,6 +93,9 @@ public enum TableType {
      */
     SYNONYM("SYNONYM");
 
+    /**
+     * The Value.
+     */
     private final String value;
 
     /**

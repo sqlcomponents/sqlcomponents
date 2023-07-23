@@ -86,19 +86,20 @@ public class Table {
     /**
      * Sets unique columns.
      *
-     * @param uniqueColumns the unique columns
+     * @param paramUniqueColumns the unique columns
      */
-    public void setUniqueColumns(final List<UniqueConstraint> uniqueColumns) {
-        this.uniqueColumns = uniqueColumns;
+    public void setUniqueColumns(
+            final List<UniqueConstraint> paramUniqueColumns) {
+        this.uniqueColumns = paramUniqueColumns;
     }
 
     /**
      * Instantiates a new Table.
      *
-     * @param database the database
+     * @param paramDatabase the database
      */
-    public Table(final Database database) {
-        this.database = database;
+    public Table(final Database paramDatabase) {
+        this.database = paramDatabase;
     }
 
     /**
@@ -215,10 +216,10 @@ public class Table {
     /**
      * Sets table name.
      *
-     * @param tableName the table name
+     * @param paramTableName the table name
      */
-    public void setTableName(final String tableName) {
-        this.tableName = tableName;
+    public void setTableName(final String paramTableName) {
+        this.tableName = paramTableName;
     }
 
     /**
@@ -233,10 +234,10 @@ public class Table {
     /**
      * Sets sequence name.
      *
-     * @param sequenceName the sequence name
+     * @param paramSequenceName the sequence name
      */
-    public void setSequenceName(final String sequenceName) {
-        this.sequenceName = sequenceName;
+    public void setSequenceName(final String paramSequenceName) {
+        this.sequenceName = paramSequenceName;
     }
 
     /**
@@ -251,10 +252,10 @@ public class Table {
     /**
      * Sets category name.
      *
-     * @param categoryName the category name
+     * @param paramCategoryName the category name
      */
-    public void setCategoryName(final String categoryName) {
-        this.categoryName = categoryName;
+    public void setCategoryName(final String paramCategoryName) {
+        this.categoryName = paramCategoryName;
     }
 
     /**
@@ -269,10 +270,10 @@ public class Table {
     /**
      * Sets schema name.
      *
-     * @param schemaName the schema name
+     * @param paramSchemaName the schema name
      */
-    public void setSchemaName(final String schemaName) {
-        this.schemaName = schemaName;
+    public void setSchemaName(final String paramSchemaName) {
+        this.schemaName = paramSchemaName;
     }
 
     /**
@@ -287,10 +288,10 @@ public class Table {
     /**
      * Sets table type.
      *
-     * @param tableType the table type
+     * @param paramTableType the table type
      */
-    public void setTableType(final TableType tableType) {
-        this.tableType = tableType;
+    public void setTableType(final TableType paramTableType) {
+        this.tableType = paramTableType;
     }
 
     /**
@@ -305,10 +306,10 @@ public class Table {
     /**
      * Sets remarks.
      *
-     * @param remarks the remarks
+     * @param paramRemarks the remarks
      */
-    public void setRemarks(final String remarks) {
-        this.remarks = remarks;
+    public void setRemarks(final String paramRemarks) {
+        this.remarks = paramRemarks;
     }
 
     /**
@@ -323,10 +324,10 @@ public class Table {
     /**
      * Sets category type.
      *
-     * @param categoryType the category type
+     * @param paramCategoryType the category type
      */
-    public void setCategoryType(final String categoryType) {
-        this.categoryType = categoryType;
+    public void setCategoryType(final String paramCategoryType) {
+        this.categoryType = paramCategoryType;
     }
 
     /**
@@ -341,10 +342,10 @@ public class Table {
     /**
      * Sets schema type.
      *
-     * @param schemaType the schema type
+     * @param paramSchemaType the schema type
      */
-    public void setSchemaType(final String schemaType) {
-        this.schemaType = schemaType;
+    public void setSchemaType(final String paramSchemaType) {
+        this.schemaType = paramSchemaType;
     }
 
     /**
@@ -359,10 +360,10 @@ public class Table {
     /**
      * Sets name type.
      *
-     * @param nameType the name type
+     * @param paramNameType the name type
      */
-    public void setNameType(final String nameType) {
-        this.nameType = nameType;
+    public void setNameType(final String paramNameType) {
+        this.nameType = paramNameType;
     }
 
     /**
@@ -377,11 +378,11 @@ public class Table {
     /**
      * Sets self referencing column name.
      *
-     * @param selfReferencingColumnName the self referencing column name
+     * @param paramSelfReferencingColumnName the self referencing column name
      */
     public void setSelfReferencingColumnName(
-            final String selfReferencingColumnName) {
-        this.selfReferencingColumnName = selfReferencingColumnName;
+            final String paramSelfReferencingColumnName) {
+        this.selfReferencingColumnName = paramSelfReferencingColumnName;
     }
 
     /**
@@ -396,10 +397,10 @@ public class Table {
     /**
      * Sets reference generation.
      *
-     * @param referenceGeneration the reference generation
+     * @param paramReferenceGeneration the reference generation
      */
-    public void setReferenceGeneration(final String referenceGeneration) {
-        this.referenceGeneration = referenceGeneration;
+    public void setReferenceGeneration(final String paramReferenceGeneration) {
+        this.referenceGeneration = paramReferenceGeneration;
     }
 
     /**
@@ -414,10 +415,10 @@ public class Table {
     /**
      * Sets columns.
      *
-     * @param columns the columns
+     * @param paramColumns the columns
      */
-    public void setColumns(final List<Column> columns) {
-        this.columns = columns;
+    public void setColumns(final List<Column> paramColumns) {
+        this.columns = paramColumns;
     }
 
     /**
@@ -432,10 +433,10 @@ public class Table {
     /**
      * Sets indices.
      *
-     * @param indices the indices
+     * @param paramIndices the indices
      */
-    public void setIndices(final List<Index> indices) {
-        this.indices = indices;
+    public void setIndices(final List<Index> paramIndices) {
+        this.indices = paramIndices;
     }
 
     /**

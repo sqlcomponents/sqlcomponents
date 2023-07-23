@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * The type Core consts.
  */
-public class CoreConsts {
+public final class CoreConsts {
     /**
      * The constant BACK_SLASH.
      */
@@ -33,5 +33,8 @@ public class CoreConsts {
         lApplication.setMethodSpecification(Application.METHOD_SPECIFICATION);
 
         return lApplication;
+    }
+    private CoreConsts() {
+        throw new UnsupportedOperationException("Utility class");
     }
 }

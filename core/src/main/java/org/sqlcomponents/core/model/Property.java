@@ -30,12 +30,12 @@ public class Property {
     /**
      * Instantiates a new Property.
      *
-     * @param entity the entity
-     * @param column the column
+     * @param paramEntity the entity
+     * @param paramColumn the column
      */
-    public Property(Entity entity, Column column) {
-        setEntity(entity);
-        setColumn(column);
+    public Property(final Entity paramEntity, final Column paramColumn) {
+        setEntity(paramEntity);
+        setColumn(paramColumn);
     }
 
     /**
@@ -50,10 +50,10 @@ public class Property {
     /**
      * Sets entity.
      *
-     * @param entity the entity
+     * @param paramEntity the entity
      */
-    public void setEntity(Entity entity) {
-        this.entity = entity;
+    public void setEntity(final Entity paramEntity) {
+        this.entity = paramEntity;
     }
 
     /**
@@ -68,10 +68,11 @@ public class Property {
     /**
      * Sets unique constraint group.
      *
-     * @param uniqueConstraintGroup the unique constraint group
+     * @param paramUniqueConstraintGroup the unique constraint group
      */
-    public void setUniqueConstraintGroup(String uniqueConstraintGroup) {
-        this.uniqueConstraintGroup = uniqueConstraintGroup;
+    public void setUniqueConstraintGroup(
+            final String paramUniqueConstraintGroup) {
+        this.uniqueConstraintGroup = paramUniqueConstraintGroup;
     }
 
     /**
@@ -86,10 +87,10 @@ public class Property {
     /**
      * Sets column.
      *
-     * @param column the column
+     * @param paramColumn the column
      */
-    public void setColumn(Column column) {
-        this.column = column;
+    public void setColumn(final Column paramColumn) {
+        this.column = paramColumn;
     }
 
     /**
@@ -104,10 +105,10 @@ public class Property {
     /**
      * Sets name.
      *
-     * @param name the name
+     * @param paramName the name
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setName(final String paramName) {
+        this.name = paramName;
     }
 
     /**
@@ -122,9 +123,9 @@ public class Property {
     /**
      * Sets data type.
      *
-     * @param dataType the data type
+     * @param paramDataType the data type
      */
-    public void setDataType(String dataType) {
-        this.dataType = dataType;
+    public void setDataType(final String paramDataType) {
+        this.dataType = paramDataType;
     }
 }

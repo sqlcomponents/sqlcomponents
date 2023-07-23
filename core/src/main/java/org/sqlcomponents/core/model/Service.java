@@ -42,10 +42,10 @@ public class Service {
     /**
      * Sets methods.
      *
-     * @param methods the methods
+     * @param paramMethods the methods
      */
-    public void setMethods(List<Method> methods) {
-        this.methods = methods;
+    public void setMethods(final List<Method> paramMethods) {
+        this.methods = paramMethods;
     }
 
     /**
@@ -60,10 +60,10 @@ public class Service {
     /**
      * Sets service name.
      *
-     * @param serviceName the service name
+     * @param paramServiceName the service name
      */
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
+    public void setServiceName(final String paramServiceName) {
+        this.serviceName = paramServiceName;
     }
 
     /**
@@ -78,10 +78,10 @@ public class Service {
     /**
      * Sets dao package.
      *
-     * @param daoPackage the dao package
+     * @param paramDaoPackage the dao package
      */
-    public void setDaoPackage(String daoPackage) {
-        this.daoPackage = daoPackage;
+    public void setDaoPackage(final String paramDaoPackage) {
+        this.daoPackage = paramDaoPackage;
     }
 
     /**
@@ -96,10 +96,10 @@ public class Service {
     /**
      * Sets package.
      *
-     * @param dbPackage the db package
+     * @param paramDbPackage the db package
      */
-    public void setPackage(Package dbPackage) {
-        this.dbPackage = dbPackage;
+    public void setPackage(final Package paramDbPackage) {
+        this.dbPackage = paramDbPackage;
     }
 
     /**
@@ -114,10 +114,10 @@ public class Service {
     /**
      * Sets functions.
      *
-     * @param functions the functions
+     * @param paramFunctions the functions
      */
-    public void setFunctions(List<Procedure> functions) {
-        dbPackage.setFunctions(functions);
+    public void setFunctions(final List<Procedure> paramFunctions) {
+        dbPackage.setFunctions(paramFunctions);
     }
 
     /**
@@ -132,10 +132,10 @@ public class Service {
     /**
      * Sets name.
      *
-     * @param name the name
+     * @param paramName the name
      */
-    public void setName(String name) {
-        dbPackage.setName(name);
+    public void setName(final String paramName) {
+        dbPackage.setName(paramName);
     }
 
     /**
@@ -150,10 +150,10 @@ public class Service {
     /**
      * Sets remarks.
      *
-     * @param remarks the remarks
+     * @param paramRemarks the remarks
      */
-    public void setRemarks(String remarks) {
-        dbPackage.setRemarks(remarks);
+    public void setRemarks(final String paramRemarks) {
+        dbPackage.setRemarks(paramRemarks);
     }
 
     @Override

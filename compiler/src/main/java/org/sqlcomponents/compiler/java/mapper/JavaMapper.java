@@ -173,10 +173,10 @@ public final class JavaMapper extends Mapper {
      */
     @NotNull
     private String createMessage(final Column aColumn) {
-        return "Datatype not found for column " + aColumn.getColumnName() +
-                " of table "
-                + aColumn.getTable().getTableName() + " of type name " +
-                aColumn.getTypeName() + " of column type "
+        return "Datatype not found for column " + aColumn.getColumnName()
+                + " of table "
+                + aColumn.getTable().getTableName() + " of type name "
+                + aColumn.getTypeName() + " of column type "
                 + aColumn.getColumnType();
     }
 
@@ -187,8 +187,8 @@ public final class JavaMapper extends Mapper {
      * @return the class
      */
     private Class<? extends Number> chooseNumberType(final Column aColumn) {
-        return (aColumn.getDecimalDigits() == 0) ? chooseIntegerType(aColumn) :
-                chooseDecimalType(aColumn);
+        return (aColumn.getDecimalDigits() == 0) ? chooseIntegerType(aColumn)
+                : chooseDecimalType(aColumn);
     }
 
     /**

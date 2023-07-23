@@ -58,9 +58,9 @@ public final class JavaCompiler implements Compiler {
         new File(packageFolder).mkdirs();
         try {
             Files.write(
-                    new File(packageFolder + File.separator +
-                            aApplication.getName() + "Manager" +
-                            DOT_JAVA).toPath(),
+                    new File(packageFolder + File.separator
+                            + aApplication.getName() + "Manager"
+                            + DOT_JAVA).toPath(),
                     getJavaContent(managerFTLTemplate.getContent(
                             aApplication)).getBytes());
         } catch (IOException | TemplateException e) {
@@ -85,15 +85,16 @@ public final class JavaCompiler implements Compiler {
      * @throws IOException       the io exception
      * @throws TemplateException the template exception
      */
-    private void writeDaoImplementation(Entity entity, String srcFolder)
+    private void writeDaoImplementation(final Entity entity,
+                                        final String srcFolder)
             throws IOException, TemplateException {
         String packageFolder =
                 getPackageAsFolder(srcFolder, entity.getDaoPackage());
         new File(packageFolder).mkdirs();
         Files.write(new File(
-                        packageFolder + File.separator + entity.getName() +
-                                "Store" +
-                                DOT_JAVA).toPath(),
+                        packageFolder + File.separator + entity.getName()
+                                + "Store"
+                                + DOT_JAVA).toPath(),
                 getJavaContent(storeFTLTemplate.getContent(entity)).getBytes());
     }
 
@@ -113,8 +114,8 @@ public final class JavaCompiler implements Compiler {
         new File(packageFolder).mkdirs();
 
         Files.write(new File(
-                        packageFolder + File.separator + aEntity.getName() +
-                                DOT_JAVA).toPath(),
+                        packageFolder + File.separator + aEntity.getName()
+                                + DOT_JAVA).toPath(),
                 getJavaContent(
                         modelFTLTemplate.getContent(aEntity)).getBytes());
     }

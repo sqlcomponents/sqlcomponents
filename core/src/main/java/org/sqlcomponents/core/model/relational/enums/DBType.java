@@ -17,10 +17,18 @@ public enum DBType {
      */
     MARIADB("MARIADB");
 
+    /**
+     * The Value.
+     */
     private final String value;
 
-    DBType(final String value) {
-        this.value = value;
+    /**
+     * Instantiates a new Db type.
+     *
+     * @param paramValue the value
+     */
+    DBType(final String paramValue) {
+        this.value = paramValue;
     }
 
     /**
