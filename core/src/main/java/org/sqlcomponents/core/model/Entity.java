@@ -9,6 +9,7 @@ import org.sqlcomponents.core.model.relational.enums.Flag;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.SortedSet;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
@@ -122,24 +123,29 @@ public class Entity {
     public String getPreparedValue(final Property property,
                                    final Map<String, String> map) {
         String preparedValue = null;
-        if ((preparedValue = map.get(property.getColumn().getColumnName()))
-                != null) {
+        String columnName = property.getColumn().getColumnName();
+        String tableNameColumnName =
+                property.getColumn().getTableName() + "#" + columnName;
+        String typeName = property.getColumn().getTypeName();
+        DBType dbType =
+                property.getEntity().getTable().getDatabase().getDbType();
+
+        preparedValue = map.get(columnName);
+        if (Objects.nonNull(preparedValue)) {
             return preparedValue.replaceAll("\"",
                     Matcher.quoteReplacement("\\\""));
-        } else if ((preparedValue = map
-                .get(property.getColumn().getTableName() + "#"
-                        + property.getColumn().getColumnName())) != null) {
-            return preparedValue.replaceAll("\"",
-                    Matcher.quoteReplacement("\\\""));
-        } else {
-            if (property.getEntity().getTable().getDatabase().getDbType()
-                    == DBType.POSTGRES) {
-                // property.column.typeName == 'xml'
-                if (property.getColumn().getTypeName().equals("xml")) {
-                    preparedValue = "XMLPARSE(document ?)";
-                }
-            }
         }
+
+        preparedValue = map.get(tableNameColumnName);
+        if (Objects.nonNull(preparedValue)) {
+            return preparedValue.replaceAll("\"",
+                    Matcher.quoteReplacement("\\\""));
+        }
+
+        if (dbType == DBType.POSTGRES && typeName.equals("xml")) {
+            preparedValue = "XMLPARSE(document ?)";
+        }
+
         return preparedValue == null ? "?" : preparedValue;
     }
 
