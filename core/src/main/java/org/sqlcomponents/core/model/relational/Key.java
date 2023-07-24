@@ -50,6 +50,11 @@ public class Key implements Comparable<Key> {
         this.columnName = paramColumnName;
     }
 
+    /**
+     * Copareby table name.
+     * @param o the object to be compared.
+     * @return
+     */
     @Override
     public int compareTo(final Key o) {
         return this.getTableName().compareTo(o.getTableName());

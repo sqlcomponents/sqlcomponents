@@ -127,7 +127,6 @@ public final class JavaCompiler implements Compiler {
      * @return formatted Content
      */
     private String getJavaContent(final String aContent) {
-        // TODO: format with 1.8
         return aContent;
     }
 

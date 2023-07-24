@@ -67,13 +67,11 @@ public final class JavaMapper extends Mapper {
     public String getDataType(final Column aColumn) {
         switch (aColumn.getColumnType()) {
             case JSON:
-            case JSONB: {
+            case JSONB:
                 return "org.json.JSONObject";
-            }
-            default: {
+            default:
                 return Objects.requireNonNull(getDataTypeClass(aColumn))
                         .getName();
-            }
         }
     }
 
@@ -87,68 +85,50 @@ public final class JavaMapper extends Mapper {
         switch (aColumn.getColumnType()) {
             case TINYINT:
             case BIT:
-            case SMALLINT: {
+            case SMALLINT:
                 return aColumn.getSize() == 1 ? Boolean.class : Short.class;
-            }
-            case BIGINT: {
+            case BIGINT:
                 return Long.class;
-            }
             case REAL:
-            case FLOAT: {
+            case FLOAT:
                 return Float.class;
-            }
             case DOUBLE:
-            case DECIMAL: {
+            case DECIMAL:
                 return chooseDecimalType(aColumn);
-            }
-            case INTEGER: {
+            case INTEGER:
                 return chooseIntegerType(aColumn);
-            }
-            case NUMERIC: {
+            case NUMERIC:
                 return chooseNumberType(aColumn);
-            }
             case VARCHAR:
             case NVARCHAR:
             case LONGVARCHAR:
-            case CHAR: {
+            case CHAR:
                 return aColumn.getSize() == 1 ? Character.class : String.class;
-            }
             case TEXT:
-            case SQLXML: {
+            case SQLXML:
                 return String.class;
-            }
-            case BOOLEAN: {
+            case BOOLEAN:
                 return Boolean.class;
-            }
-            case TIME: {
+            case TIME:
                 return LocalTime.class;
-            }
-            case DATE: {
+            case DATE:
                 return LocalDate.class;
-            }
-            case TIMESTAMP: {
+            case TIMESTAMP:
                 return LocalDateTime.class;
-            }
-            case TIMESTAMP_WITH_TIMEZONE: {
+            case TIMESTAMP_WITH_TIMEZONE:
                 return OffsetDateTime.class;
-            }
-            case UUID: {
+            case UUID:
                 return UUID.class;
-            }
-            case INTERVAL: {
+            case INTERVAL:
                 return Duration.class;
-            }
             case BLOB:
             case LONGVARBINARY:
-            case BINARY: {
+            case BINARY:
                 return ByteBuffer.class;
-            }
-            case OTHER: {
+            case OTHER:
                 return getDataTypeClassForSpecialType(aColumn);
-            }
-            default: {
+            default:
                 throw new RuntimeException(createMessage(aColumn));
-            }
         }
     }
 

@@ -73,37 +73,8 @@ public final class Crawler {
      * @throws SQLException the sql exception
      */
     public Database getDatabase() throws SQLException {
-        database.setCatalogTerm(databaseMetaData.getCatalogTerm());
-        database.setCatalogSeperator(databaseMetaData.getCatalogSeparator());
-
-        switch (databaseMetaData.getDatabaseProductName().toLowerCase()
-                .trim()) {
-            case POSTGRES_DB: {
-                database.setDbType(DBType.POSTGRES);
-                break;
-            }
-            case MYSQL_DB: {
-                database.setDbType(DBType.MYSQL);
-                break;
-            }
-            case MARIA_DB: {
-                database.setDbType(DBType.MARIADB);
-                break;
-            }
-        }
-
-        database.setDatabaseMajorVersion(
-                databaseMetaData.getDatabaseMajorVersion());
-        database.setDatabaseMinorVersion(
-                databaseMetaData.getDatabaseMinorVersion());
-        database.setDatabaseProductVersion(
-                databaseMetaData.getDatabaseProductVersion());
-        database.setDefaultTransactionIsolation(
-                databaseMetaData.getDefaultTransactionIsolation());
-        database.setDatabaseMajorVersion(
-                databaseMetaData.getDatabaseMajorVersion());
-        database.setDatabaseMinorVersion(
-                databaseMetaData.getDatabaseMinorVersion());
+        setDatabaseType();
+        setDatabaseVersion();
         database.setDriverName(databaseMetaData.getDriverName());
         database.setDriverVersion(databaseMetaData.getDriverVersion());
         database.setExtraNameCharacters(
@@ -236,6 +207,34 @@ public final class Crawler {
                 databaseMetaData.supportsANSI92FullSQL());
         database.setSupportsANSI92IntermediateSQL(
                 databaseMetaData.supportsANSI92IntermediateSQL());
+        setCatelog();
+        database.setTableTypes(getTableTypes());
+        database.setSequences(getSequences());
+        database.setTables(getTables(application.getSchemaName(),
+                tableName -> matches(application.getTablePatterns(),
+                        tableName)));
+        repair();
+        return database;
+    }
+
+    private void setDatabaseVersion() throws SQLException {
+        database.setDatabaseMajorVersion(
+                databaseMetaData.getDatabaseMajorVersion());
+        database.setDatabaseMinorVersion(
+                databaseMetaData.getDatabaseMinorVersion());
+        database.setDatabaseProductVersion(
+                databaseMetaData.getDatabaseProductVersion());
+        database.setDefaultTransactionIsolation(
+                databaseMetaData.getDefaultTransactionIsolation());
+        database.setDatabaseMajorVersion(
+                databaseMetaData.getDatabaseMajorVersion());
+        database.setDatabaseMinorVersion(
+                databaseMetaData.getDatabaseMinorVersion());
+    }
+
+    private void setCatelog() throws SQLException {
+        database.setCatalogTerm(databaseMetaData.getCatalogTerm());
+        database.setCatalogSeperator(databaseMetaData.getCatalogSeparator());
         database.setSupportsCatalogsInDataManipulation(
                 databaseMetaData.supportsCatalogsInDataManipulation());
         database.setSupportsCatalogsInIndexDefinitions(
@@ -248,13 +247,23 @@ public final class Crawler {
                 databaseMetaData.supportsCatalogsInTableDefinitions());
         database.setSupportsColumnAliasing(
                 databaseMetaData.supportsColumnAliasing());
-        database.setTableTypes(getTableTypes());
-        database.setSequences(getSequences());
-        database.setTables(getTables(application.getSchemaName(),
-                tableName -> matches(application.getTablePatterns(),
-                        tableName)));
-        repair();
-        return database;
+    }
+
+    private void setDatabaseType() throws SQLException {
+        switch (databaseMetaData.getDatabaseProductName().toLowerCase()
+                .trim()) {
+            case POSTGRES_DB:
+                database.setDbType(DBType.POSTGRES);
+                break;
+            case MYSQL_DB:
+                database.setDbType(DBType.MYSQL);
+                break;
+            case MARIA_DB:
+                database.setDbType(DBType.MARIADB);
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -572,10 +581,9 @@ public final class Crawler {
     private void repair() {
         switch (database.getDbType()) {
             case MARIADB:
-            case MYSQL: {
+            case MYSQL:
                 repairMySQL();
                 break;
-            }
             default:
                 break;
         }
