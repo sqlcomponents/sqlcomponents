@@ -156,21 +156,37 @@ public class Entity {
      */
     public List<Property> getReturningProperties() {
         return this.getProperties().stream().filter(Entity::isReturning)
-            .collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
 
+    /**
+     * Gets non returning properties.
+     *
+     * @return the non returning properties
+     */
     public List<Property> getNonReturningProperties() {
-        return this.getProperties().stream().filter(property -> !isReturning(property))
-            .collect(Collectors.toList());
+        return this.getProperties().stream()
+                .filter(property -> !isReturning(property))
+                .collect(Collectors.toList());
     }
 
 
-    private static boolean isReturning(Property property) {
-        boolean isReturning = property.getColumn().getAutoIncrement() == Flag.YES
-                || property.getColumn().getGeneratedColumn() == Flag.YES;
-        String mapped = property.getEntity().getOrm().getApplication().getInsertMap().get(
-            property.getColumn().getColumnName());
-        if(mapped != null) {
+    /**
+     * Is returning boolean.
+     *
+     * @param property the property
+     * @return the boolean
+     */
+    private static boolean isReturning(final Property property) {
+        boolean isReturning =
+                property.getColumn().getAutoIncrement() == Flag.YES
+                        || property.getColumn().getGeneratedColumn()
+                        == Flag.YES;
+        String mapped =
+                property.getEntity().getOrm().getApplication().getInsertMap()
+                        .get(
+                                property.getColumn().getColumnName());
+        if (mapped != null) {
             isReturning = true;
         }
         return isReturning;
