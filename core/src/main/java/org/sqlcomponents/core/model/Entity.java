@@ -182,11 +182,16 @@ public class Entity {
                 property.getColumn().getAutoIncrement() == Flag.YES
                         || property.getColumn().getGeneratedColumn()
                         == Flag.YES;
-        String mapped =
-                property.getEntity().getOrm().getApplication().getInsertMap()
-                        .get(
-                                property.getColumn().getColumnName());
-        if (mapped != null) {
+        Map<String, String> insertMap =
+                property.getEntity().getOrm().getApplication()
+                        .getInsertMap();
+        String mapped = insertMap
+                .get(property.getColumn().getColumnName());
+        String specificTableMapped =
+                insertMap.get(String.format("%s#%s",
+                        property.getEntity().getTable().getTableName(),
+                        property.getColumn().getColumnName()));
+        if (mapped != null || specificTableMapped != null) {
             isReturning = true;
         }
         return isReturning;
