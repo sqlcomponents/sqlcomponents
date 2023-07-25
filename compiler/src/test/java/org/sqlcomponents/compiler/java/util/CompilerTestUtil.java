@@ -23,7 +23,7 @@ public class CompilerTestUtil {
                     System.getenv("DATABASE_TYPE") == null ? "postgres" :
                             System.getenv("DATABASE_TYPE");
 
-            application.setName("Movie");
+            application.setName("Raja");
             application.setUrl(
                     props.getProperty(databaseType + ".datasource.url"));
             application.setUserName(
@@ -38,14 +38,14 @@ public class CompilerTestUtil {
             insertMap.put("created_at", "CURRENT_TIMESTAMP");
             insertMap.put("modified_by", null);
             insertMap.put("modified_at", null);
-            insertMap.put("azagu_raja#a_integer", "4");
+            insertMap.put("raja#a_integer", "4");
             application.setInsertMap(insertMap);
 
             Map<String, String> updateMap = new HashMap<>();
             updateMap.put("modified_at", "CURRENT_TIMESTAMP");
             updateMap.put("created_by", null);
             updateMap.put("created_at", null);
-            updateMap.put("azagu_raja#a_integer", "5");
+            updateMap.put("raja#a_integer", "5");
             application.setUpdateMap(updateMap);
 
             application.setEncryption(Arrays.asList("a_encrypted_text"));

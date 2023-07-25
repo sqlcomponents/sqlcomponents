@@ -1,7 +1,7 @@
 package org.example.store;
 
-import org.example.MovieManager;
-import org.example.model.AzaguRaja;
+import org.example.RajaManager;
+import org.example.model.Raja;
 import org.example.model.Connection;
 import org.example.util.DataSourceProvider;
 import org.example.util.EncryptionUtil;
@@ -21,25 +21,25 @@ import java.util.Optional;
  * Interfaces.
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class AzaguRajaTest {
+class RajaTest {
     private final ConnectionStore connectionStore;
-    private final AzaguRajaStore allInAllAzaguRajaStore;
+    private final RajaStore allInAllRajaStore;
 
     private final List<Connection> connectionsToTest;
-    private final List<AzaguRaja> azaguRajasToTest;
+    private final List<Raja> azaguRajasToTest;
 
-    AzaguRajaTest() {
-        MovieManager movieManager =
-                MovieManager.getManager(DataSourceProvider.dataSource(),
+    RajaTest() {
+        RajaManager movieManager =
+                RajaManager.getManager(DataSourceProvider.dataSource(),
                         EncryptionUtil::enAnDecrypt,
                         EncryptionUtil::enAnDecrypt);
         // Stores used for testing
         this.connectionStore = movieManager.getConnectionStore();
-        this.allInAllAzaguRajaStore = movieManager.getAzaguRajaStore();
+        this.allInAllRajaStore = movieManager.getRajaStore();
 
         // Data used for testing
         this.connectionsToTest = JsonUtil.getTestObjects(Connection.class);
-        this.azaguRajasToTest = JsonUtil.getTestObjects(AzaguRaja.class);
+        this.azaguRajasToTest = JsonUtil.getTestObjects(Raja.class);
 
         this.azaguRajasToTest.parallelStream().forEach(azaguRaja -> {
             // Declare and initialize the byte array
@@ -52,7 +52,7 @@ class AzaguRajaTest {
     @BeforeEach
     void init() throws SQLException {
         // Clean Up
-        this.allInAllAzaguRajaStore.delete().execute();
+        this.allInAllRajaStore.delete().execute();
         this.connectionStore.delete().execute();
     }
 
@@ -107,14 +107,14 @@ class AzaguRajaTest {
                 this.connectionStore.insert().values(connectionsToTest.get(0))
                         .returning();
 
-        AzaguRaja azaguRaja = azaguRajasToTest.get(0);
+        Raja azaguRaja = azaguRajasToTest.get(0);
         azaguRaja.setReferenceCode(connection.getCode());
 
-        AzaguRaja insertedAzaguRaja =
-                this.allInAllAzaguRajaStore.insert().values(azaguRaja)
+        Raja insertedRaja =
+                this.allInAllRajaStore.insert().values(azaguRaja)
                         .returning();
         Assertions.assertEquals(azaguRaja.getReferenceCode(),
-                insertedAzaguRaja.getReferenceCode(),
+                insertedRaja.getReferenceCode(),
                 "Single Insert Returning");
     }
 
@@ -122,23 +122,23 @@ class AzaguRajaTest {
     void testMultiInsertAndGetInsertedObjects() throws SQLException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
-        List<AzaguRaja> insertedAzaguRajas =
-                this.allInAllAzaguRajaStore.insert().values(azaguRajasToTest)
+        List<Raja> insertedRajas =
+                this.allInAllRajaStore.insert().values(azaguRajasToTest)
                         .returning();
         Assertions.assertEquals(azaguRajasToTest.size(),
-                insertedAzaguRajas.size(), "Multi Insert Returning");
+                insertedRajas.size(), "Multi Insert Returning");
     }
 
     @Test
     void testMultiSequenceInsertAndGetInsertedObjects() throws SQLException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
-        List<AzaguRaja> insertedAzaguRajas =
-                this.allInAllAzaguRajaStore.insert()
+        List<Raja> insertedRajas =
+                this.allInAllRajaStore.insert()
                         .values(azaguRajasToTest.get(0))
                         .values(azaguRajasToTest.get(1))
                         .values(azaguRajasToTest.get(2)).returning();
-        Assertions.assertEquals(3, insertedAzaguRajas.size(),
+        Assertions.assertEquals(3, insertedRajas.size(),
                 "Multi Sequence Insert Returning");
     }
 
@@ -146,14 +146,14 @@ class AzaguRajaTest {
     void testTableFilterMaps() throws SQLException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
-        AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore.insert()
+        Raja insertedRaja = this.allInAllRajaStore.insert()
                 .values(azaguRajasToTest.get(0)).returning();
-        Assertions.assertEquals(4, insertedAzaguRaja.getAInteger(),
+        Assertions.assertEquals(4, insertedRaja.getAInteger(),
                 "Insert Map with Table and Column");
-        // this.allInAllAzaguRajaStore.update(insertedAzaguRaja);
-        // insertedAzaguRaja = this.allInAllAzaguRajaStore.select
-        // (insertedAzaguRaja.getId()).get();
-        // Assertions.assertEquals(5, insertedAzaguRaja.getAInteger(),
+        // this.allInAllRajaStore.update(insertedRaja);
+        // insertedRaja = this.allInAllRajaStore.select
+        // (insertedRaja.getId()).get();
+        // Assertions.assertEquals(5, insertedRaja.getAInteger(),
         // "Insert Map with Table and Column");
 
     }
@@ -164,10 +164,10 @@ class AzaguRajaTest {
 
         azaguRajasToTest.get(0).setAEncryptedText("AEncryptedText");
 
-        AzaguRaja insertedAzaguRaja = this.allInAllAzaguRajaStore.insert()
+        Raja insertedRaja = this.allInAllRajaStore.insert()
                 .values(azaguRajasToTest.get(0)).returning();
         Assertions.assertEquals("AEncryptedText",
-                insertedAzaguRaja.getAEncryptedText(),
+                insertedRaja.getAEncryptedText(),
                 "Insert Map with Table and Column");
 
     }
@@ -176,19 +176,19 @@ class AzaguRajaTest {
     void testDeleteWhereClause() throws SQLException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
-        List<AzaguRaja> insertedAzaguRajas =
-                this.allInAllAzaguRajaStore.insert()
+        List<Raja> insertedRajas =
+                this.allInAllRajaStore.insert()
                         .values(azaguRajasToTest.get(0))
                         .values(azaguRajasToTest.get(1))
                         .values(azaguRajasToTest.get(2)).returning();
 
-        AzaguRajaStore.WhereClause whereClause =
-                AzaguRajaStore.aBoolean().eq(true);
+        RajaStore.WhereClause whereClause =
+                RajaStore.aBoolean().eq(true);
         int deletedRows =
-                this.allInAllAzaguRajaStore.delete(whereClause).execute();
+                this.allInAllRajaStore.delete(whereClause).execute();
 
         Assertions.assertEquals(azaguRajasToTest.size() - deletedRows,
-                this.allInAllAzaguRajaStore.select(whereClause).count(),
+                this.allInAllRajaStore.select(whereClause).count(),
                 "Multi Delete Where Clause");
 
         Assertions.assertEquals(1,
