@@ -64,3 +64,5 @@ mvn clean package -Dmaven.surefire.debug -Dmaven.failsafe.debug verify
 mvn clean package -Dmaven.test.skip=true  
 mvn versions:use-latest-releases  
 mvn help:active-profiles
+
+How to Publish Maven Plugin in a way that is awailable to others to use it to generate SQL Java Classes?
