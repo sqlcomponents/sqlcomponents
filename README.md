@@ -44,6 +44,12 @@ Clean Code
 2. https://github.com/kyleconroy/sqlc
 3. https://github.com/facebookincubator/CG-SQL
 4. https://github.com/diesel-rs/diesel
+5. https://github.com/smootoo/freeslick
+6. https://business.jooq.org/growth-is-not-the-only-goal/ - focus on this to reach to this product first
+7. http://querydsl.com/
+8. https://scala-slick.org/
+9. https://github.com/antoyo/tql - rust
+10. 
 
 From Directory sqlcomponents
 
