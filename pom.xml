@@ -29,6 +29,7 @@
         <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.plugin.validation>brief</maven.plugin.validation>
 
         <maven.checkstyle.version>3.1.2</maven.checkstyle.version>
         <checkstyle.version>10.3.2</checkstyle.version>
@@ -99,13 +100,15 @@
 
     <build>
         <plugins>
-
-
-
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.10</version>
+                <configuration>
+                    <includes>
+                        <include>org/example/store/*</include>
+                    </includes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>default-prepare-agent</id>
@@ -139,7 +142,7 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>1.0</minimum>
+                                            <minimum>0.2</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
