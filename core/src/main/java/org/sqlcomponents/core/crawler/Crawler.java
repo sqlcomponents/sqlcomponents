@@ -59,9 +59,7 @@ public final class Crawler {
     public Crawler(final Application aApplication) throws SQLException {
         application = aApplication;
         DataSource lDataSource =
-                DataSourceUtil.getDataSource(application.getUrl(),
-                        application.getUserName(),
-                        application.getPassword(), application.getSchemaName());
+                DataSourceUtil.getDataSource(application);
         Connection lConnection = lDataSource.getConnection();
         databaseMetaData = lConnection.getMetaData();
     }

@@ -1,9 +1,11 @@
 package org.sqlcomponents.compiler.java;
 
 import freemarker.template.TemplateException;
+import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.sqlcomponents.compiler.base.FTLTemplate;
 import org.sqlcomponents.compiler.java.mapper.JavaMapper;
 import org.sqlcomponents.core.compiler.Compiler;
+import org.sqlcomponents.core.crawler.util.DataSourceUtil;
 import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.Entity;
@@ -53,6 +55,8 @@ public final class JavaCompiler implements Compiler {
         aApplication.setOrm(mapper.getOrm());
         ORM orm = aApplication.getOrm();
 
+        runFlywayMigrations(aApplication);
+
         String packageFolder = getPackageAsFolder(aApplication.getSrcFolder(),
                 aApplication.getRootPackage());
         new File(packageFolder).mkdirs();
@@ -75,6 +79,26 @@ public final class JavaCompiler implements Compiler {
                 e.printStackTrace();
             }
         });
+    }
+
+    /**
+     * Run Flyway Migrations if Flyway is in the classpath.
+     * @param application
+     */
+    private void runFlywayMigrations(final Application application) {
+        if (Class.forName(
+                JavaCompiler.class.getModule(),
+                "org.flywaydb.core.Flyway") != null) {
+
+            FluentConfiguration fluentConfiguration =
+                    new FluentConfiguration(ClassLoader
+                            .getSystemClassLoader());
+
+            fluentConfiguration
+                    .dataSource(DataSourceUtil.getDataSource(application))
+                    .load().migrate();
+
+        }
     }
 
     /**
