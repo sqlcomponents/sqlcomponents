@@ -51,11 +51,12 @@ public final class JavaCompiler implements Compiler {
 
     @Override
     public void compile(final Application aApplication) throws SQLException {
+
+        runFlywayMigrations(aApplication);
+
         Mapper mapper = new JavaMapper(aApplication);
         aApplication.setOrm(mapper.getOrm());
         ORM orm = aApplication.getOrm();
-
-        runFlywayMigrations(aApplication);
 
         String packageFolder = getPackageAsFolder(aApplication.getSrcFolder(),
                 aApplication.getRootPackage());
@@ -93,6 +94,9 @@ public final class JavaCompiler implements Compiler {
             FluentConfiguration fluentConfiguration =
                     new FluentConfiguration(ClassLoader
                             .getSystemClassLoader());
+
+            fluentConfiguration
+                    .locations("filesystem:src/main/resources/db/migration");
 
             fluentConfiguration
                     .dataSource(DataSourceUtil.getDataSource(application))
