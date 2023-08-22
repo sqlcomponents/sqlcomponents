@@ -91,16 +91,26 @@ public final class JavaCompiler implements Compiler {
                 JavaCompiler.class.getModule(),
                 "org.flywaydb.core.Flyway") != null) {
 
-            FluentConfiguration fluentConfiguration =
-                    new FluentConfiguration(ClassLoader
-                            .getSystemClassLoader());
+            String filePath = "src/main/resources/db/migration";
 
-            fluentConfiguration
-                    .locations("filesystem:src/main/resources/db/migration");
+            if (new File(filePath).exists()) {
 
-            fluentConfiguration
-                    .dataSource(DataSourceUtil.getDataSource(application))
-                    .load().migrate();
+                System.out.println("Hay Man "
+                        + new File(filePath).getAbsolutePath());
+
+                FluentConfiguration fluentConfiguration =
+                        new FluentConfiguration(ClassLoader
+                                .getSystemClassLoader());
+
+                fluentConfiguration
+                        .locations("filesystem:" + filePath);
+
+                fluentConfiguration
+                        .dataSource(DataSourceUtil.getDataSource(application))
+                        .load().migrate();
+            }
+
+
 
         }
     }

@@ -61,7 +61,12 @@ public class CompilerTestUtil {
 
             application.setMethodSpecification(
                     Application.METHOD_SPECIFICATION);
-            application.setSrcFolder("../datastore/src/main/java");
+            File file = new File("datastore/src/main/java");
+            if (!file.exists()) {
+                file = new File("../datastore/src/main/java");
+            }
+            application.setSrcFolder(file.getAbsolutePath());
+
         } else {
             application = CoreConsts.buildApplication(
                     new File(System.getenv("SQLCOMPONENTS_CONFIG")));
