@@ -37,6 +37,7 @@ Clean Code
 11. https://engineering.fb.com/2021/07/22/data-infrastructure/mysql/
 12. https://mariadb.com/resources/customer-stories/dbs-bank-oracle-to-mariadb/
 13. https://www.infoq.com/news/2022/04/red-hat-releases-hibernate-6/
+14. https://www.youtube.com/watch?v=ykoUBctblno
 
 ## Related
 

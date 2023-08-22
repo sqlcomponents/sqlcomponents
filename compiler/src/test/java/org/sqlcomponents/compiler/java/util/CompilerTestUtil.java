@@ -17,7 +17,14 @@ public class CompilerTestUtil {
         if (System.getenv("SQLCOMPONENTS_CONFIG") == null) {
             application = new Application();
             Properties props = new Properties();
-            props.load(new FileReader("../database.properties"));
+            File dbPropertiesFile = new File("../database.properties");
+
+            if (!dbPropertiesFile.exists()) {
+                dbPropertiesFile = new File("database.properties");
+            }
+
+
+            props.load(new FileReader(dbPropertiesFile));
 
             String databaseType =
                     System.getenv("DATABASE_TYPE") == null ? "postgres" :
