@@ -22,6 +22,9 @@ public final class DataSourceUtil {
         config.setUsername(application.getUserName());
         config.setPassword(application.getPassword());
         config.setSchema(application.getSchemaName());
+        if (application.getUrl().contains(":postgresql:")) {
+            config.setDriverClassName("org.postgresql.Driver");
+        }
         return new HikariDataSource(config);
     }
 }
