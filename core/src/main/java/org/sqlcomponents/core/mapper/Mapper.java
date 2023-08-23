@@ -15,23 +15,45 @@ import org.sqlcomponents.core.model.relational.Table;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The type Mapper.
+ */
 public abstract class Mapper {
+    /**
+     * The constant DOT.
+     */
     private static final String DOT = ".";
 
+    /**
+     * The Application.
+     */
     private final Application application;
 
+    /**
+     * Instantiates a new Mapper.
+     *
+     * @param aApplication the a application
+     */
     public Mapper(final Application aApplication) {
         application = aApplication;
     }
 
-    public abstract String getDataType(final Column aColumn);
+    /**
+     * Gets data type.
+     *
+     * @param aColumn the a column
+     * @return the data type
+     */
+    public abstract String getDataType(Column aColumn);
 
     /**
-     * @return ORM
+     * Gets orm.
+     *
+     * @return ORM orm
+     * @throws SQLException the sql exception
      */
     public ORM getOrm() throws SQLException {
         ORM orm = application.getOrm();
@@ -46,8 +68,15 @@ public abstract class Mapper {
         return orm;
     }
 
+    /**
+     * Gets method.
+     *
+     * @param aProcedure the a procedure
+     * @return the method
+     */
     private Method getMethod(final Procedure aProcedure) {
-        List<Property> lProperties = new ArrayList<>(aProcedure.getParameters().size());
+        List<Property> lProperties =
+                new ArrayList<>(aProcedure.getParameters().size());
         Method lMethod = new Method(aProcedure);
         lMethod.setName(getPropertyName(aProcedure.getFunctionName()));
 
@@ -60,6 +89,11 @@ public abstract class Mapper {
         return lMethod;
     }
 
+    /**
+     * Gets methods.
+     *
+     * @return the methods
+     */
     private List<Method> getMethods() {
         Database database = application.getOrm().getDatabase();
         ArrayList<Method> methods = new ArrayList<>();
@@ -71,11 +105,17 @@ public abstract class Mapper {
         return methods;
     }
 
+    /**
+     * Gets services.
+     *
+     * @return the services
+     */
     private List<Service> getServices() {
         ArrayList<Service> services = new ArrayList<>();
         if (application.getOrm().getDatabase().getPackages() != null) {
             Service service;
-            for (Package package1 : application.getOrm().getDatabase().getPackages()) {
+            for (Package package1 : application.getOrm().getDatabase()
+                    .getPackages()) {
                 service = new Service();
                 service.setPackage(package1);
                 service.setServiceName(getServiceName(service.getName()));
@@ -91,22 +131,36 @@ public abstract class Mapper {
         return services;
     }
 
+    /**
+     * Gets property.
+     *
+     * @param aEntity the a entity
+     * @param aColumn the a column
+     * @return the property
+     */
     private Property getProperty(final Entity aEntity, final Column aColumn) {
         if (aColumn != null) {
             Property property = new Property(aEntity, aColumn);
             if (aColumn.getColumnName() != null) {
                 property.setName(getPropertyName(aColumn.getColumnName()));
             }
-            property.setUniqueConstraintGroup(getEntityName(property.getColumn().getUniqueConstraintName()));
+            property.setUniqueConstraintGroup(getEntityName(
+                    property.getColumn().getUniqueConstraintName()));
             property.setDataType(getDataType(aColumn));
             return property;
         }
         return null;
     }
 
+    /**
+     * Gets entities.
+     *
+     * @return the entities
+     */
     private List<Entity> getEntities() {
         Database lDatabase = application.getOrm().getDatabase();
-        ArrayList<Entity> lEntities = new ArrayList<>(lDatabase.getTables().size());
+        ArrayList<Entity> lEntities =
+                new ArrayList<>(lDatabase.getTables().size());
 
         List<Property> lProperties;
         Entity lEntity;
@@ -129,13 +183,21 @@ public abstract class Mapper {
         return lEntities;
     }
 
+    /**
+     * Gets service name.
+     *
+     * @param aPackageName the a package name
+     * @return the service name
+     */
     protected String getServiceName(final String aPackageName) {
         if (aPackageName != null) {
             StringBuilder lStringBuilder = new StringBuilder();
-            String[] bRelationalWords = aPackageName.split(application.getDatabaseWordSeparator());
+            String[] bRelationalWords =
+                    aPackageName.split(application.getDatabaseWordSeparator());
 
             for (final String aRelationalWord : bRelationalWords) {
-                lStringBuilder.append(toTileCase(getObjectOrientedWord(aRelationalWord)));
+                lStringBuilder.append(
+                        toTileCase(getObjectOrientedWord(aRelationalWord)));
             }
 
             lStringBuilder.append("Service");
@@ -144,12 +206,20 @@ public abstract class Mapper {
         return null;
     }
 
+    /**
+     * Gets entity name.
+     *
+     * @param aTableName the a table name
+     * @return the entity name
+     */
     protected String getEntityName(final String aTableName) {
         if (aTableName != null) {
             StringBuilder lStringBuilder = new StringBuilder();
-            String[] bRelationalWords = aTableName.split(application.getDatabaseWordSeparator());
+            String[] bRelationalWords =
+                    aTableName.split(application.getDatabaseWordSeparator());
             for (final String aRelationalWord : bRelationalWords) {
-                lStringBuilder.append(toTileCase(getObjectOrientedWord(aRelationalWord)));
+                lStringBuilder.append(
+                        toTileCase(getObjectOrientedWord(aRelationalWord)));
             }
 
             return lStringBuilder.toString();
@@ -157,18 +227,33 @@ public abstract class Mapper {
         return null;
     }
 
+    /**
+     * Gets object oriented word.
+     *
+     * @param aRelationalWord the a relational word
+     * @return the object oriented word
+     */
     protected String getObjectOrientedWord(final String aRelationalWord) {
         String lObjectOrientedWord = null;
         if (application.getWordsMap() != null) {
-            for (String bRelationalWordKey : application.getWordsMap().keySet()) {
+            for (String bRelationalWordKey : application.getWordsMap()
+                    .keySet()) {
                 if (aRelationalWord.equalsIgnoreCase(bRelationalWordKey)) {
-                    lObjectOrientedWord = application.getWordsMap().get(bRelationalWordKey);
+                    lObjectOrientedWord =
+                            application.getWordsMap().get(bRelationalWordKey);
                 }
             }
         }
-        return lObjectOrientedWord == null ? aRelationalWord : lObjectOrientedWord;
+        return lObjectOrientedWord == null ? aRelationalWord
+                : lObjectOrientedWord;
     }
 
+    /**
+     * Gets plural name.
+     *
+     * @param aEntityName the a entity name
+     * @return the plural name
+     */
     protected String getPluralName(final String aEntityName) {
         String lPluralName = null;
         Map<String, String> lPluralMap = application.getPluralMap();
@@ -178,8 +263,10 @@ public abstract class Mapper {
             for (String pluralKey : lPluralMap.keySet()) {
                 lPluralValue = lPluralMap.get(pluralKey).toUpperCase();
                 if (lToUpperCase.endsWith(pluralKey.toUpperCase())) {
-                    int lastIndex = lToUpperCase.lastIndexOf(pluralKey.toUpperCase());
-                    lPluralName = aEntityName.substring(0, lastIndex) + toTileCase(lPluralValue);
+                    int lastIndex =
+                            lToUpperCase.lastIndexOf(pluralKey.toUpperCase());
+                    lPluralName = aEntityName.substring(0, lastIndex)
+                            + toTileCase(lPluralValue);
                     break;
                 }
             }
@@ -192,7 +279,15 @@ public abstract class Mapper {
         return lPluralName;
     }
 
-    private String getPackage(final String aTableName, final String aIdentifier) {
+    /**
+     * Gets package.
+     *
+     * @param aTableName  the a table name
+     * @param aIdentifier the a identifier
+     * @return the package
+     */
+    private String getPackage(final String aTableName,
+                              final String aIdentifier) {
         StringBuilder lBuffer = new StringBuilder();
         if (application.getRootPackage() != null) {
             lBuffer.append(application.getRootPackage());
@@ -223,16 +318,35 @@ public abstract class Mapper {
         return lBuffer.toString().toLowerCase();
     }
 
+    /**
+     * Gets dao package.
+     *
+     * @param aTableName the a table name
+     * @return the dao package
+     */
     protected String getDaoPackage(final String aTableName) {
         return getPackage(aTableName, "store");
     }
 
+    /**
+     * Gets bean package.
+     *
+     * @param aTableName the a table name
+     * @return the bean package
+     */
     protected String getBeanPackage(final String aTableName) {
         return getPackage(aTableName, "model");
     }
 
+    /**
+     * Gets module name.
+     *
+     * @param aTableName the a table name
+     * @return the module name
+     */
     protected String getModuleName(final String aTableName) {
-        String[] lDbWords = aTableName.split(application.getDatabaseWordSeparator());
+        String[] lDbWords =
+                aTableName.split(application.getDatabaseWordSeparator());
         Map<String, String> lModulesMap = application.getModulesMap();
         if (lModulesMap != null) {
             for (String moduleKey : lModulesMap.keySet()) {
@@ -246,20 +360,35 @@ public abstract class Mapper {
         return null;
     }
 
+    /**
+     * Gets property name.
+     *
+     * @param aColumnName the a column name
+     * @return the property name
+     */
     protected String getPropertyName(final String aColumnName) {
         StringBuilder lStringBuilder = new StringBuilder();
-        String[] lRelationalWords = aColumnName.split(application.getDatabaseWordSeparator());
+        String[] lRelationalWords =
+                aColumnName.split(application.getDatabaseWordSeparator());
         int lRelationalWordsCount = lRelationalWords.length;
         for (int index = 0; index < lRelationalWordsCount; index++) {
             if (index == 0) {
-                lStringBuilder.append(getObjectOrientedWord(lRelationalWords[index]).toLowerCase());
+                lStringBuilder.append(getObjectOrientedWord(
+                        lRelationalWords[index]).toLowerCase());
             } else {
-                lStringBuilder.append(toTileCase(getObjectOrientedWord(lRelationalWords[index])));
+                lStringBuilder.append(toTileCase(
+                        getObjectOrientedWord(lRelationalWords[index])));
             }
         }
         return lStringBuilder.toString();
     }
 
+    /**
+     * To tile case string.
+     *
+     * @param aWord the a word
+     * @return the string
+     */
     protected String toTileCase(final String aWord) {
         char[] lCharArray = aWord.toLowerCase().toCharArray();
         int lLetterCount = lCharArray.length;

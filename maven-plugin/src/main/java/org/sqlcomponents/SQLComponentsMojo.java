@@ -17,36 +17,82 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
 
-@Mojo(name = SQLComponentsMojo.GENERATED_SOURCES, defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.RUNTIME)
+/**
+ * The type Sql components mojo.
+ */
+@Mojo(name = SQLComponentsMojo.GENERATED_SOURCES, defaultPhase =
+        LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution =
+        ResolutionScope.RUNTIME)
 public final class SQLComponentsMojo extends AbstractMojo {
+    /**
+     * The Generated sources.
+     */
     static final String GENERATED_SOURCES = "generated-sources";
-    private static final String GENERATE_SOURCES_DIR = CoreConsts.BACK_SLASH + GENERATED_SOURCES
-            + CoreConsts.BACK_SLASH;
+    /**
+     * The constant GENERATE_SOURCES_DIR.
+     */
+    private static final String GENERATE_SOURCES_DIR =
+            CoreConsts.BACK_SLASH + GENERATED_SOURCES
+                    + CoreConsts.BACK_SLASH;
+    /**
+     * The constant YML_SPEC_FILE_NAME.
+     */
     private static final String YML_SPEC_FILE_NAME = "sql-components.yml";
 
     /**
-     * @parameter expression="${project}"
+     * The Project.
      *
+     * @parameter expression ="${project}"
      * @required
-     *
      * @readonly
      */
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
-    public MavenProject project;
+    private MavenProject project;
 
+    /**
+     * Sets project.
+     *
+     * @param paramProject the param project
+     */
+    public void setProject(final MavenProject paramProject) {
+        this.project = paramProject;
+    }
+
+    /**
+     * Gets project.
+     *
+     * @return the project
+     */
+    public MavenProject getProject() {
+        return this.project;
+    }
+
+    /**
+     * Method to execute the plugin.
+     */
     @SneakyThrows
     public void execute() {
         Application lApplication = createApplicationFromYMLSpec();
-        lApplication.getOrm().setApplicationClassLoader(getClassLoader(this.project));
-        lApplication.compile(new JavaCompiler()); // todo: why compiler has to be passed, why not created within
+        lApplication.getOrm()
+                .setApplicationClassLoader(getClassLoader(this.project));
+        lApplication.compile(
+                new JavaCompiler()); // todo: why compiler has to be passed,
+        // why not created within
         // compile method, is Compiler Injectable?
     }
 
-    private ClassLoader getClassLoader(MavenProject project) {
+    /**
+     * Gets class loader.
+     *
+     * @param paramProject the project
+     * @return the class loader
+     */
+    private ClassLoader getClassLoader(final MavenProject paramProject) {
         try {
-            List classpathElements = project.getCompileClasspathElements();
-            classpathElements.add(project.getBuild().getOutputDirectory());
-            classpathElements.add(project.getBuild().getTestOutputDirectory());
+            List classpathElements = paramProject.getCompileClasspathElements();
+            classpathElements.add(paramProject.getBuild().getOutputDirectory());
+            classpathElements.add(
+                    paramProject.getBuild().getTestOutputDirectory());
             URL[] urls = new URL[classpathElements.size()];
             for (int i = 0; i < classpathElements.size(); ++i) {
                 urls[i] = new File((String) classpathElements.get(i)).toURL();
@@ -58,12 +104,21 @@ public final class SQLComponentsMojo extends AbstractMojo {
         }
     }
 
-    // todo: what if the name of yaml file customization to be supported?
+    /**
+     * Create application from yml spec application.
+     *
+     * @return the application
+     * @throws IOException the io exception
+     */
+// todo: what if the name of yaml file customization to be supported?
     private Application createApplicationFromYMLSpec() throws IOException {
-        Application lApplication = CoreConsts.buildApplication(new File(project.getBasedir(), YML_SPEC_FILE_NAME));
+        Application lApplication = CoreConsts.buildApplication(
+                new File(project.getBasedir(), YML_SPEC_FILE_NAME));
         lApplication.setSrcFolder(
-                project.getBuild().getDirectory() + GENERATE_SOURCES_DIR + lApplication.getName().toLowerCase());
-        getLog().info("'" + GENERATED_SOURCES + "' directory is: " + lApplication.getSrcFolder());
+                project.getBuild().getDirectory() + GENERATE_SOURCES_DIR
+                        + lApplication.getName().toLowerCase());
+        getLog().info("'" + GENERATED_SOURCES + "' directory is: "
+                + lApplication.getSrcFolder());
         project.addCompileSourceRoot(lApplication.getSrcFolder());
         return lApplication;
     }

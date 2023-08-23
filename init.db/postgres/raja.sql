@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS azagu_raja;
+DROP TABLE IF EXISTS raja;
 DROP TABLE IF EXISTS connection;
 
 CREATE TABLE connection (
@@ -7,7 +7,7 @@ CREATE TABLE connection (
     UNIQUE(name)
 );
 
-CREATE TABLE azagu_raja(
+CREATE TABLE raja(
    id SERIAL PRIMARY KEY,
    a_boolean boolean,
    reference_code VARCHAR(80),

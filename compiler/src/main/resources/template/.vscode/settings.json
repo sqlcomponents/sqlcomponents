@@ -1,10 +1,10 @@
 {
-    "emeraldwalk.runonsave": {
-        "commands": [
-            {
-                "match": "\\.ftl$",
-                "cmd": "cd ../../../../../ && ./mvnw test -Dtest=JavaCompilerTest -DfailIfNoTests=false -pl compiler -am"
-            }
-        ]
-    }
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": "\\.ftl$",
+        "cmd": "cd ../../../../../ && ./mvnw test -Dtest=JavaCompilerTest -DfailIfNoTests=false -pl compiler -am"
+      }
+    ]
+  }
 }

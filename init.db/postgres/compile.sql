@@ -1,4 +1,4 @@
--- No Primary Keys, Table and Column Name  has keywpords
+-- No Primary Keys, Table and Column Name has key words
 DROP TABLE IF EXISTS cache;
 
 CREATE TABLE cache (

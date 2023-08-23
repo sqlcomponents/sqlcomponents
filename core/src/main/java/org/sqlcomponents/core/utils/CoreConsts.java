@@ -8,14 +8,33 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class CoreConsts {
+/**
+ * The type Core consts.
+ */
+public final class CoreConsts {
+    /**
+     * The constant BACK_SLASH.
+     */
     public static final String BACK_SLASH = "/";
 
-    public static Application buildApplication(final File configFile) throws IOException {
-        Application lApplication = new Yaml(new Constructor(Application.class)).load(new FileReader(configFile));
+    /**
+     * Build application application.
+     *
+     * @param configFile the config file
+     * @return the application
+     * @throws IOException the io exception
+     */
+    public static Application buildApplication(final File configFile)
+            throws IOException {
+        Application lApplication =
+                new Yaml(new Constructor(Application.class)).load(
+                        new FileReader(configFile));
 
         lApplication.setMethodSpecification(Application.METHOD_SPECIFICATION);
 
         return lApplication;
+    }
+    private CoreConsts() {
+        throw new UnsupportedOperationException("Utility class");
     }
 }

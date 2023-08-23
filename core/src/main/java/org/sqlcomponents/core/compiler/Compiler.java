@@ -1,11 +1,19 @@
 package org.sqlcomponents.core.compiler;
 
-import org.sqlcomponents.core.exception.SQLComponentsException;
 import org.sqlcomponents.core.model.Application;
 
 import java.sql.SQLException;
 
+/**
+ * The interface Compiler.
+ */
 //todo: Is it compiler or generator?
 public interface Compiler {
-    public void compile(final Application aApplication) throws SQLException;
+    /**
+     * Compile.
+     *
+     * @param aApplication the a application
+     * @throws SQLException the sql exception
+     */
+    void compile(Application aApplication) throws SQLException;
 }

@@ -73,6 +73,51 @@ public final class ${name}Store  {
 	</#if>	
 	-->	
 
+  private ${name} rowMapperForReturning(final ResultSet rs,final ${name} inserting${name}) throws SQLException {
+    final ${name} ${name?uncap_first} = new ${name}();
+        <#assign index=1>
+		<#list returningProperties as property>
+		<#switch property.dataType>
+          <#case "java.time.LocalDate">
+            ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalDate());
+        	 <#break>
+          <#case "java.time.LocalTime">
+        	 ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalTime());
+              <#break>
+           <#case "java.time.LocalDateTime">
+             ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalDateTime());
+          <#break>
+          <#case "java.nio.ByteBuffer">
+             ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : ByteBuffer.wrap(rs.get${getJDBCClassName(property.dataType)}(${index})));
+          <#break>
+          <#case "java.lang.Character">
+          	 ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).charAt(0));
+           <#break>
+        	   <#case "org.json.JSONObject">
+        	    ${name?uncap_first}.set${property.name?cap_first}(this.get${property.column.typeName?cap_first}.apply(rs,${index}));
+                 <#break>
+           <#case "java.util.UUID">
+        	    ${name?uncap_first}.set${property.name?cap_first}(this.get${property.column.typeName?cap_first}.apply(rs,${index}));
+                 <#break>
+                        <#case "java.time.Duration">
+        	    ${name?uncap_first}.set${property.name?cap_first}(this.get${property.column.typeName?cap_first}.apply(rs,${index}));
+                 <#break>
+          <#default>
+          <#if containsEncryption(property)>
+            ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
+          <#else>
+          ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}));
+          </#if>
+          <#break>
+        </#switch>
+		<#assign index = index + 1>
+		</#list>
+    <#list nonReturningProperties as property>
+        ${name?uncap_first}.set${property.name?cap_first}(inserting${name}.get${property.name?cap_first}());
+    </#list>
+        return ${name?uncap_first};
+    }
+
 	private ${name} rowMapper(ResultSet rs) throws SQLException {
         final ${name} ${name?uncap_first} = new ${name}();<#assign index=1>
 		<#list properties as property>
