@@ -6,11 +6,12 @@
 
     private final PGobject convertJson(final JSONObject jsonObject) throws SQLException {
         if(jsonObject == null) {
-            PGobject pGobject = new PGobject();
-            pGobject.setType("json");
-            pGobject.setValue(jsonObject.toString());
+            return null;
         }
-        return null;
+        PGobject pGobject = new PGobject();
+        pGobject.setType("json");
+        pGobject.setValue(jsonObject.toString());
+        return pGobject;
     }
     <#assign a=addImportStatement("org.postgresql.util.PGobject")>
     <#assign a=addImportStatement("org.json.JSONObject")>
