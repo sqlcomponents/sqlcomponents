@@ -146,6 +146,9 @@ public static final class SelectStatement {
 <#if table.hasPrimaryKey>
 <#assign a=addImportStatement("java.util.Optional")>
     public Optional<${name}> select(${getPrimaryKeysAsParameterString()}) throws SQLException  {
+            return select(${getPrimaryKeysAsParameters()}, null);
+    }
+    public Optional<${name}> select(${getPrimaryKeysAsParameterString()}, WhereClause whereClause) throws SQLException  {
         ${name} ${name?uncap_first} = null;
 		final String query = <@compress single_line=true>"
                 SELECT
@@ -158,7 +161,9 @@ public static final class SelectStatement {
 			<#if index == 0><#assign index=1><#else>AND </#if>${property.column.escapedName?j_string} = ?
 			</#if>
 		</#list>
-                </@compress>";
+                </@compress>"
+
+                + ( whereClause == null ? "" : (" AND " + whereClause.asSql()) );
         try (java.sql.Connection dbConnection = dbDataSource.getConnection();
             PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
             ${getPrimaryKeysAsPreparedStatements()}

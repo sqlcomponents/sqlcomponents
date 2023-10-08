@@ -13,6 +13,7 @@ import org.junit.jupiter.api.TestInstance;
 
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +55,21 @@ class RajaTest {
         // Clean Up
         this.allInAllRajaStore.delete().execute();
         this.connectionStore.delete().execute();
+    }
+
+    @Test
+    void testSelectWithWhere() throws SQLException {
+        Connection connection = connectionsToTest.get(0);
+
+        this.connectionStore.insert().values(connection).execute();
+
+        Assertions.assertFalse(this.connectionStore.select(connection.getCode(),
+                        ConnectionStore.name().eq(new Date().toString())).isPresent(),
+                "Get Unique Value Execution");
+
+        Assertions.assertTrue(this.connectionStore.select(connection.getCode(),
+                        ConnectionStore.name().eq(connection.getName())).isPresent(),
+                "Get Unique Value Execution");
     }
 
     @Test
