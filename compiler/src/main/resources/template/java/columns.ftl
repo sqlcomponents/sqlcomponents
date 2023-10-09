@@ -51,8 +51,8 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 
 <#macro UUIDColumn property>
 <@columnheader property=property/>
-    public final WhereClause  eq(final String value) {
-        sql = "${property.column.escapedName?j_string} ='" + value + "'";
+    public final WhereClause  eq(final UUID value) {
+        sql = "${property.column.escapedName?j_string} ='" + value.toString() + "'";
         return getWhereClause();
     }
 <@columnfooter property=property/>
