@@ -6,6 +6,9 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
     public ${property.name?cap_first}Column(final PartialWhereClause  whereClause) {
         super(whereClause);
     }
+
+    <@ColumnFoundation property=property/>
+
 </#macro>
 
 <#macro columnfooter property>
@@ -20,6 +23,17 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 }
 </#macro>
 
+<#macro ColumnFoundation property>
+            public final WhereClause isNull() {
+                sql = "${property.column.escapedName?j_string} IS NULL";
+                return getWhereClause();
+            }
+
+            public final WhereClause isNotNull() {
+                sql = "${property.column.escapedName?j_string} IS NOT NULL";
+                return getWhereClause();
+            }
+</#macro>
 
 <#macro StringColumn property>
 <@columnheader property=property/>

@@ -64,6 +64,14 @@ class RajaTest {
         this.connectionStore.insert().values(connection).execute();
 
         Assertions.assertFalse(this.connectionStore.select(connection.getCode(),
+                        ConnectionStore.name().isNull()).isPresent(),
+                "Get Unique Value Execution");
+
+        Assertions.assertTrue(this.connectionStore.select(connection.getCode(),
+                        ConnectionStore.name().isNotNull()).isPresent(),
+                "Get Unique Value Execution");
+
+        Assertions.assertFalse(this.connectionStore.select(connection.getCode(),
                         ConnectionStore.name().eq(new Date().toString())).isPresent(),
                 "Get Unique Value Execution");
 
