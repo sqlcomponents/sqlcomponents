@@ -15,7 +15,8 @@
         			<#if index == 0><#assign index=1><#else> AND </#if>${property.column.escapedName?j_string} = ${getPreparedValue(property,orm.updateMap)}
         			</#if>
         		</#list>
-		</@compress>";
+		</@compress>"
++ ( this.whereClause == null ? "" : (" AND " + this.whereClause.asSql()) );
 </#macro>
 
 <#if table.tableType == 'TABLE' >
@@ -140,6 +141,7 @@ public int update(${name} ${name?uncap_first}) throws SQLException {
         public static final class SetByPKClause  {
                 private final javax.sql.DataSource dbDataSource;
                 private final UpdateStatement updateStatement;
+                private WhereClause whereClause;
                 private ${name} ${name?uncap_first};
 
                 SetByPKClause(final javax.sql.DataSource dbDataSource,final ${name} ${name?uncap_first},final UpdateStatement updateStatement) {
@@ -147,6 +149,12 @@ public int update(${name} ${name?uncap_first}) throws SQLException {
                     this.${name?uncap_first} = ${name?uncap_first};
                     this.updateStatement = updateStatement;
                 }
+
+                public final SetByPKClause where(final WhereClause whereClause) {
+                    this.whereClause = whereClause;
+                    return this;
+                }
+
 
                 public final int execute() throws SQLException  {
                     int updtedRows = 0;
