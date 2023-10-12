@@ -235,10 +235,21 @@ class RajaTest {
         Connection connection = this.connectionStore.insert()
                 .values(this.connectionsToTest.get(0)).returning();
 
+        final String originalName = connection.getName();
+
         connection.setName("Changed");
 
-        Assertions.assertEquals(0, this.connectionStore.update()
-                        .set(connection).where(ConnectionStore.name().eq(connection.getName() + "Something"))
+        Assertions.assertEquals(0, this.connectionStore
+                        .update()
+                        .set(connection)
+                        .where(ConnectionStore.name().eq(originalName+"SOMETHINGELSE"))
+                        .execute(),
+                "Single Update Execution");
+
+        Assertions.assertEquals(1, this.connectionStore
+                        .update()
+                        .set(connection)
+                        .where(ConnectionStore.name().eq(originalName))
                         .execute(),
                 "Single Update Execution");
     }
