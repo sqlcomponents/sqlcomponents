@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS raja;
 DROP TABLE IF EXISTS connection;
 
 CREATE TABLE connection (
-    code VARCHAR(80) PRIMARY KEY,
+    code uuid PRIMARY KEY,
     name VARCHAR(80),
     UNIQUE(name)
 );
@@ -10,7 +10,7 @@ CREATE TABLE connection (
 CREATE TABLE raja(
    id SERIAL PRIMARY KEY,
    a_boolean boolean,
-   reference_code VARCHAR(80),
+   reference_code uuid,
    a_char CHAR(1),
    a_text text,
    a_encrypted_text text,
@@ -32,6 +32,7 @@ CREATE TABLE raja(
    	a_xml xml,
     a_time time,
     a_interval interval,
+    UNIQUE(a_uuid),
    CONSTRAINT fk_code
       FOREIGN KEY(reference_code) 
 	  REFERENCES connection(code)

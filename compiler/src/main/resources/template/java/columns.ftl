@@ -44,7 +44,13 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 <@columnheader property=property/>
 
     protected void set(final PreparedStatement preparedStatement, final int i, final String value) throws SQLException {
+        
+        <#if containsEncryption(property)>
+        preparedStatement.setString(i,this.getWhereClause().getStore().encryptionFunction.apply(value));
+        <#else>
         preparedStatement.setString(i,value);
+        </#if>
+        
     }
 
     public final WhereClause  eq(final String value) {

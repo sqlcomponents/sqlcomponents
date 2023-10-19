@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Azaguraja 1. Reference for all the data types. 2. All Persistence
@@ -46,6 +47,9 @@ class RajaTest {
             // Declare and initialize the byte array
             byte[] bb = {10, 20, 30};
             azaguRaja.setABlob(ByteBuffer.wrap(bb));
+
+            azaguRaja.setAUuid(UUID.randomUUID());
+
         });
 
     }

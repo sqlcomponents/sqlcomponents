@@ -198,9 +198,6 @@ public static final class SelectStatement {
 		return isExists;
 	}
 
-    public List<${name}> selectBy(${getPrimaryKeysAsParameterStringExceptHighest()}) throws SQLException  {
-        return null;
-	}
 </#if>
 
 
@@ -321,7 +318,7 @@ public static final class SelectStatement {
     	    <#if uniqueColumn.name == uniqueConstraintGroupName>
     	        <#list uniqueColumn.columns as column>
     	            <#local property=getPropertyByColumnName(column.columnName)>
-    	            <#local pkAsParameterStr = pkAsParameterStr + "preparedStatement.set${getJDBCClassName(property.dataType)}(${index},${wrapSet(property.name,property)});\n\t"><#assign index=index+1>
+    	            <#local pkAsParameterStr = pkAsParameterStr + "${property.name?uncap_first}(${property.name}).set(preparedStatement,${index});\n\t"><#assign index=index+1>
     	        </#list>
     	    </#if>
     	</#list>
