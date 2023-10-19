@@ -7,6 +7,10 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
         super(whereClause);
     }
 
+    protected String name() {
+        return "${property.name}";
+    }
+
     <@ColumnFoundation property=property/>
 
 </#macro>

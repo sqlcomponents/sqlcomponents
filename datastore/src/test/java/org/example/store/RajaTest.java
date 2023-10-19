@@ -231,6 +231,21 @@ class RajaTest {
     }
 
     @Test
+    void testSingleValueUpdateWithWhere() throws SQLException {
+        Connection connection = this.connectionStore.insert()
+                .values(this.connectionsToTest.get(0)).returning();
+        final String originalName = connection.getName();
+
+        Assertions.assertEquals(0, this.connectionStore
+                        .update()
+                        .set(ConnectionStore.name("Changed"))
+                        .where(ConnectionStore.name().eq(originalName))
+                        .execute(),
+                "Single Update Execution");
+
+    }
+
+    @Test
     void testSingleUpdateWithWhere() throws SQLException {
         Connection connection = this.connectionStore.insert()
                 .values(this.connectionsToTest.get(0)).returning();

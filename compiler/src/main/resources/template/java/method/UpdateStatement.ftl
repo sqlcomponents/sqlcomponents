@@ -19,6 +19,22 @@
 + ( this.whereClause == null ? "" : (" AND " + this.whereClause.asSql()) );
 </#macro>
 
+<#macro updatewithsetquery>
+  final String query = <@compress single_line=true>"
+		UPDATE ${table.escapedName?j_string} SET "+
+                getSetValues()
+                + "
+        		WHERE
+        	    <#assign index=0>
+        		<#list properties as property>
+        			<#if property.column.primaryKeyIndex != 0>
+        			<#if index == 0><#assign index=1><#else> AND </#if>${property.column.escapedName?j_string} = ${getPreparedValue(property,orm.updateMap)}
+        			</#if>
+        		</#list>
+		</@compress>"
++ ( this.whereClause == null ? "" : (" AND " + this.whereClause.asSql()) );
+</#macro>
+
 <#if table.tableType == 'TABLE' >
 
 
@@ -207,6 +223,7 @@ public int update(${name} ${name?uncap_first}) throws SQLException {
             private ${name} ${name?uncap_first};
 
             private Value[] values;
+        
 
             SetClause(final Value[] values,final UpdateStatement updateStatement) {
                 this.values = values;
@@ -219,35 +236,53 @@ public int update(${name} ${name?uncap_first}) throws SQLException {
             }
 
             public SetWhereClause where(WhereClause whereClause) {
-                return new SetWhereClause(this);
-            }
-
-            
+                return new SetWhereClause(this, whereClause);
+            } 
 
             public static final class SetWhereClause  {
                 private final SetClause setClause;
+                private WhereClause whereClause;
 
-                SetWhereClause(final SetClause setClause) {
+                SetWhereClause(final SetClause setClause, WhereClause whereClause) {
                     this.setClause = setClause;
+                    this.whereClause = whereClause;
                 }
 
+                private String getSetValues() {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    boolean isFirst = true;
+                    for (Value value:
+                            this.setClause.values) {
+                        if(isFirst) {
+                            isFirst = false;
+                        } else {
+                            stringBuilder.append(",");
+                        }
+                        stringBuilder.append(value.column.name()).append("=?");
+                    }
+                    return stringBuilder.toString();
+                }
+                
                 public final int execute() throws SQLException  {
-                    return 0;
+                    int updtedRows = 0;
+                    <@updatewithsetquery/>
+
+                    //try (java.sql.Connection dbConnection = this.setClause.updateStatement.${name?uncap_first}Store.dbDataSource.getConnection();
+                        //PreparedStatement preparedStatement = dbConnection.prepareStatement(query)){
+
+                        // this.setClause.updateStatement.prepare(preparedStatement,${name?uncap_first});
+
+                        //updtedRows = preparedStatement.executeUpdate();
+                    //}
+                    return updtedRows;
                 }
 
                 public final List<${name}> returning() throws SQLException  {
                     return null;
                 }
             }
-
-
-            
-
             
         }
-
-
-
 
     }	
 </#if>

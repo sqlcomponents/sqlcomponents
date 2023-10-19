@@ -261,6 +261,8 @@ public final class ${name}Store  {
                 return (WhereClause) whereClause ;
             }
 
+            protected abstract String name();
+
             protected abstract String asSql();
 
             protected abstract Boolean validate(T value);
