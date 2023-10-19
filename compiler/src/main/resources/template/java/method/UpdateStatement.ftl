@@ -23,16 +23,8 @@
   final String query = <@compress single_line=true>"
 		UPDATE ${table.escapedName?j_string} SET "+
                 getSetValues()
-                + "
-        		WHERE
-        	    <#assign index=0>
-        		<#list properties as property>
-        			<#if property.column.primaryKeyIndex != 0>
-        			<#if index == 0><#assign index=1><#else> AND </#if>${property.column.escapedName?j_string} = ${getPreparedValue(property,orm.updateMap)}
-        			</#if>
-        		</#list>
-		</@compress>"
-+ ( this.whereClause == null ? "" : (" AND " + this.whereClause.asSql()) );
+		</@compress>
++ ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
 </#macro>
 
 <#if table.tableType == 'TABLE' >
@@ -129,12 +121,14 @@ public int update(${name} ${name?uncap_first}) throws SQLException {
         }
 
         private void prepare(final PreparedStatement preparedStatement,final ${name} ${name?uncap_first}) throws SQLException {
+
+
             <#assign index=0>
             <#assign column_index=1>
             <#list updatableProperties as property>
                 <#if containsProperty(property,orm.updateMap)>
                     <#if property.column.primaryKeyIndex == 0>
-                    <#if index == 0><#assign index=1><#else></#if>preparedStatement.set${getJDBCClassName(property.dataType)}(${column_index},${wrapSet(name?uncap_first+".get"+property.name?cap_first + "()",property)});
+                    <#if index == 0><#assign index=1><#else></#if>${property.name?uncap_first}(${name?uncap_first+".get"+property.name?cap_first + "()"}).set(preparedStatement,${column_index});
                                                                                 <#assign column_index = column_index + 1>
                     </#if>
                 </#if>
@@ -143,10 +137,14 @@ public int update(${name} ${name?uncap_first}) throws SQLException {
             <#assign index=0>
             <#list properties as property>
                 <#if property.column.primaryKeyIndex != 0>
-                <#if index == 0><#assign index=1><#else></#if>preparedStatement.set${getJDBCClassName(property.dataType)}(${column_index},${wrapSet(name?uncap_first+".get"+property.name?cap_first + "()",property)});
+                <#if index == 0><#assign index=1><#else></#if>${property.name?uncap_first}(${name?uncap_first+".get"+property.name?cap_first + "()"}).set(preparedStatement,${column_index});
                                                                             <#assign column_index = column_index + 1>
                 </#if>
             </#list>
+            
+            
+
+            
         }
 
 
@@ -267,13 +265,18 @@ public int update(${name} ${name?uncap_first}) throws SQLException {
                     int updtedRows = 0;
                     <@updatewithsetquery/>
 
-                    //try (java.sql.Connection dbConnection = this.setClause.updateStatement.${name?uncap_first}Store.dbDataSource.getConnection();
-                        //PreparedStatement preparedStatement = dbConnection.prepareStatement(query)){
+                    try (java.sql.Connection dbConnection = this.setClause.updateStatement.${name?uncap_first}Store.dbDataSource.getConnection();
+                        PreparedStatement preparedStatement = dbConnection.prepareStatement(query)){
 
-                        // this.setClause.updateStatement.prepare(preparedStatement,${name?uncap_first});
+                        int index = 1;
+                        for (Value value:
+                                this.setClause.values) {
+                            value.set(preparedStatement,index++);
+                        }
 
-                        //updtedRows = preparedStatement.executeUpdate();
-                    //}
+
+                        updtedRows = preparedStatement.executeUpdate();
+                    }
                     return updtedRows;
                 }
 

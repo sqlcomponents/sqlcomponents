@@ -236,7 +236,7 @@ class RajaTest {
                 .values(this.connectionsToTest.get(0)).returning();
         final String originalName = connection.getName();
 
-        Assertions.assertEquals(0, this.connectionStore
+        Assertions.assertEquals(1, this.connectionStore
                         .update()
                         .set(ConnectionStore.name("Changed"))
                         .where(ConnectionStore.name().eq(originalName))

@@ -14,6 +14,37 @@ import java.util.stream.Collectors;
  */
 public final class ${name}Store  {
 
+    private static ${name}Store THIS ;
+
+    public static ${name}Store get${name}Store(final javax.sql.DataSource theDataSource
+                ,final ${orm.application.name}Manager.Observer theObserver
+                    <#list sampleDistinctCustomColumnTypeProperties as property>
+                    ,final ${orm.application.name}Manager.GetFunction<ResultSet, Integer, ${getClassName(property.dataType)}> theGet${property.column.typeName?cap_first}
+                    ,final ${orm.application.name}Manager.ConvertFunction<${getClassName(property.dataType)},Object> theConvert${property.column.typeName?cap_first}
+                    </#list>
+
+                    <#if containsEncryptedProperty() >
+                        <#assign a=addImportStatement("java.util.function.Function")>
+                        ,final Function<String,String> encryptionFunction
+                        ,final Function<String,String> decryptionFunction
+                    </#if>) {
+        if(THIS == null) {
+            THIS = new ${name}Store(theDataSource
+                ,theObserver
+                    <#list sampleDistinctCustomColumnTypeProperties as property>
+                    ,theGet${property.column.typeName?cap_first}
+                    ,theConvert${property.column.typeName?cap_first}
+                    </#list>
+
+                    <#if containsEncryptedProperty() >
+                        <#assign a=addImportStatement("java.util.function.Function")>
+                        ,encryptionFunction
+                        ,decryptionFunction
+                    </#if>);
+        }
+        return THIS;
+    }
+
     private final javax.sql.DataSource dbDataSource;
 
     private final ${orm.application.name}Manager.Observer observer;
@@ -35,7 +66,7 @@ public final class ${name}Store  {
     /**
      * Datastore
      */
-    public ${name}Store(final javax.sql.DataSource theDataSource
+    private ${name}Store(final javax.sql.DataSource theDataSource
                 ,final ${orm.application.name}Manager.Observer theObserver
                     <#list sampleDistinctCustomColumnTypeProperties as property>
                     ,final ${orm.application.name}Manager.GetFunction<ResultSet, Integer, ${getClassName(property.dataType)}> theGet${property.column.typeName?cap_first}
@@ -58,6 +89,8 @@ public final class ${name}Store  {
             this.encryptionFunction = encryptionFunction;
             this.decryptionFunction = decryptionFunction;
         </#if>
+
+        THIS = this;
     }
 
 	<#list orm.methodSpecification as method>
@@ -169,13 +202,14 @@ public final class ${name}Store  {
     }
     
     public static Column.${property.name?cap_first}Column ${property.name}() {
-        return new WhereClause().${property.name}();
+        return new WhereClause(THIS).${property.name}();
     }
 
 </#list>
 
     public static class WhereClause  extends PartialWhereClause  {
-        private WhereClause(){
+        private WhereClause(final ${name}Store ${name?uncap_first}Store){
+            super(${name?uncap_first}Store);
         }
         private String asSql() {
             return nodes.isEmpty() ? null : nodes.stream().map(node -> {
@@ -218,8 +252,17 @@ public final class ${name}Store  {
 
         protected final List<Object> nodes;
 
-        private PartialWhereClause() {
+        private final ${name}Store ${name?uncap_first}Store;
+
+
+
+        private PartialWhereClause(final ${name}Store ${name?uncap_first}Store) {
             this.nodes = new ArrayList<>();
+            this.${name?uncap_first}Store = ${name?uncap_first}Store;
+        }
+
+        ${name}Store getStore() {
+            return ${name?uncap_first}Store;
         }
 <#list properties as property>
 
@@ -245,6 +288,10 @@ public final class ${name}Store  {
             this.column =column;
             this.value = value;
         }
+
+        private void set(final PreparedStatement preparedStatement, final int i) throws SQLException{
+            column.set(preparedStatement,i,value);
+        }
     }
 
 
@@ -266,6 +313,8 @@ public final class ${name}Store  {
             protected abstract String asSql();
 
             protected abstract Boolean validate(T value);
+
+            protected abstract void set(final PreparedStatement preparedStatement, final int i, final T value) throws SQLException;
 
             <#list properties as property>
     <#switch property.dataType>
