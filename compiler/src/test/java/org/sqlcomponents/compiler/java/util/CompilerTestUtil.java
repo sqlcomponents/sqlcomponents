@@ -64,6 +64,9 @@ public class CompilerTestUtil {
             File file = new File("datastore/src/main/java");
             if (!file.exists()) {
                 file = new File("../datastore/src/main/java");
+                if (!file.exists()) {
+                    file = new File("src/main/java");
+                }
             }
             application.setSrcFolder(file.getAbsolutePath());
 
