@@ -90,6 +90,24 @@
 	<#return pkAsParameterStr> 
 </#function>
 
+<#function getPrimaryKeysAsParameters>
+	<#local pkAsParameterStr="">
+	<#local index=0>
+	<#list properties as property>
+		<#if property.column.primaryKeyIndex != 0>
+			<#if index == 0>
+				<#local index=1>
+			<#else>
+				<#local pkAsParameterStr = pkAsParameterStr + "," >
+			</#if>
+
+			<#local pkAsParameterStr = pkAsParameterStr + property.name >
+			<#local a=addImportStatement(property.dataType)>
+		</#if>
+	</#list>
+	<#return pkAsParameterStr>
+</#function>
+
 <#function getPrimaryKeysAsParameterString>
 	<#local pkAsParameterStr="">
 	<#local index=0>

@@ -6,6 +6,13 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
     public ${property.name?cap_first}Column(final PartialWhereClause  whereClause) {
         super(whereClause);
     }
+
+    protected String name() {
+        return "${property.column.escapedName?j_string}";
+    }
+
+    <@ColumnFoundation property=property/>
+
 </#macro>
 
 <#macro columnfooter property>
@@ -17,12 +24,35 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
     protected Boolean validate(${getClassName(property.dataType)} value) {
         return true;
     }
+    
 }
 </#macro>
 
+<#macro ColumnFoundation property>
+            public final WhereClause isNull() {
+                sql = "${property.column.escapedName?j_string} IS NULL";
+                return getWhereClause();
+            }
+
+            public final WhereClause isNotNull() {
+                sql = "${property.column.escapedName?j_string} IS NOT NULL";
+                return getWhereClause();
+            }
+</#macro>
 
 <#macro StringColumn property>
 <@columnheader property=property/>
+
+    protected void set(final PreparedStatement preparedStatement, final int i, final String value) throws SQLException {
+        
+        <#if containsEncryption(property)>
+        preparedStatement.setString(i,this.getWhereClause().getStore().encryptionFunction.apply(value));
+        <#else>
+        preparedStatement.setString(i,value);
+        </#if>
+        
+    }
+
     public final WhereClause  eq(final String value) {
         sql = "${property.column.escapedName?j_string} ='" + value + "'";
         return getWhereClause();
@@ -32,13 +62,18 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
         sql = "${property.column.escapedName?j_string} LIKE '" + value + "'";
         return getWhereClause();
     }
+    
 <@columnfooter property=property/>
 </#macro>
 
 <#macro UUIDColumn property>
 <@columnheader property=property/>
-    public final WhereClause  eq(final String value) {
-        sql = "${property.column.escapedName?j_string} ='" + value + "'";
+    protected void set(final PreparedStatement preparedStatement, final int i, final UUID value) throws SQLException {
+        preparedStatement.setObject(i,this.getWhereClause().getStore().convertUuid.apply(value));
+    }
+
+    public final WhereClause  eq(final UUID value) {
+        sql = "${property.column.escapedName?j_string} ='" + value.toString() + "'";
         return getWhereClause();
     }
 <@columnfooter property=property/>
@@ -46,6 +81,9 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 
 <#macro DurationColumn property>
 <@columnheader property=property/>
+    protected void set(final PreparedStatement preparedStatement, final int i, final Duration value) throws SQLException {
+        preparedStatement.setObject(i,this.getWhereClause().getStore().convertInterval.apply(value));
+    }
     public final WhereClause  eq(final String value) {
         sql = "${property.column.escapedName?j_string} ='" + value + "'";
         return getWhereClause();
@@ -55,6 +93,9 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 
 <#macro ByteBuffer property>
 <@columnheader property=property/>
+    protected void set(final PreparedStatement preparedStatement, final int i, final ByteBuffer value) throws SQLException {
+        preparedStatement.setBytes(i,value == null ? null : value.array());
+    }
     public final WhereClause  eq(final String value) {
         sql = "${property.column.escapedName?j_string} ='" + value + "'";
         return getWhereClause();
@@ -64,6 +105,11 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 
 <#macro JSONObjectColumn property>
 <@columnheader property=property/>
+
+    protected void set(final PreparedStatement preparedStatement, final int i, final  JSONObject value) throws SQLException {
+        preparedStatement.setObject(i,this.getWhereClause().getStore().convertJson.apply(value));
+    }
+
     public final WhereClause  eq(final String value) {
         sql = "${property.column.escapedName?j_string} ='" + value + "'";
         return getWhereClause();
@@ -73,6 +119,9 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 
 <#macro CharacterColumn property>
 <@columnheader property=property/>
+    protected void set(final PreparedStatement preparedStatement, final int i, final Character value) throws SQLException {
+        preparedStatement.setString(i,value == null ? null : String.valueOf(value));
+    }
     public final WhereClause  eq(final String value) {
         sql = "${property.column.escapedName?j_string} ='" + value + "'";
         return getWhereClause();
@@ -88,6 +137,9 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 
 <#macro BooleanColumn property>
 <@columnheader property=property/>
+    protected void set(final PreparedStatement preparedStatement, final int i, final Boolean value) throws SQLException {
+        preparedStatement.setBoolean(i,value);
+    }
     public final WhereClause  eq(final Boolean value) {
         sql = "${property.column.escapedName?j_string} =" + value ;
         return getWhereClause();
@@ -96,6 +148,11 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 </#macro>
 
 <#macro numbercolumn type property>
+
+    protected void set(final PreparedStatement preparedStatement, final int i, final ${type} value) throws SQLException {
+        preparedStatement.set${type}(i,value);
+    }
+
     public final WhereClause eq(final ${type} value) {
         sql = "${property.column.escapedName?j_string} =" + value;
         return getWhereClause();
@@ -120,6 +177,9 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
         sql = "${property.column.escapedName?j_string} <=" + value;
         return getWhereClause();
     }
+
+
+
 </#macro>
 
 <#macro LongColumn property>
@@ -171,6 +231,11 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 
 <#macro LocalDateColumn property>
 <@columnheader property=property/>
+
+    protected void set(final PreparedStatement preparedStatement, final int i, final LocalDate value) throws SQLException {
+        preparedStatement.setDate(i,value == null ? null : java.sql.Date.valueOf(value));
+    }
+
     public final WhereClause  eq(final LocalDate value) {
         sql = "${property.column.escapedName?j_string} =" + value;
         return getWhereClause();
@@ -202,7 +267,9 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 <#macro LocalTimeColumn property>
 <@columnheader property=property/>
 
-
+    protected void set(final PreparedStatement preparedStatement, final int i, final LocalTime value) throws SQLException {
+        preparedStatement.setTime(i,value == null ? null : java.sql.Time.valueOf(value));
+    }
     public final WhereClause  eq(final LocalTime value) {
         sql = "${property.column.escapedName?j_string} =" + value;
         return getWhereClause();
@@ -234,6 +301,10 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 
 <#macro LocalDateTimeColumn property>
 <@columnheader property=property/>
+
+    protected void set(final PreparedStatement preparedStatement, final int i, final LocalDateTime value) throws SQLException {
+        preparedStatement.setTimestamp(i,value == null ? null : java.sql.Timestamp.valueOf(value));
+    }
 
     public final WhereClause  eq(final LocalDateTime value) {
         sql = "${property.column.escapedName?j_string} =" + value;

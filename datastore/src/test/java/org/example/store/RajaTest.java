@@ -13,8 +13,10 @@ import org.junit.jupiter.api.TestInstance;
 
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Azaguraja 1. Reference for all the data types. 2. All Persistence
@@ -45,6 +47,9 @@ class RajaTest {
             // Declare and initialize the byte array
             byte[] bb = {10, 20, 30};
             azaguRaja.setABlob(ByteBuffer.wrap(bb));
+
+            azaguRaja.setAUuid(UUID.randomUUID());
+
         });
 
     }
@@ -54,6 +59,29 @@ class RajaTest {
         // Clean Up
         this.allInAllRajaStore.delete().execute();
         this.connectionStore.delete().execute();
+    }
+
+    @Test
+    void testSelectWithWhere() throws SQLException {
+        Connection connection = connectionsToTest.get(0);
+
+        this.connectionStore.insert().values(connection).execute();
+
+        Assertions.assertFalse(this.connectionStore.select(connection.getCode(),
+                        ConnectionStore.name().isNull()).isPresent(),
+                "Get Unique Value Execution");
+
+        Assertions.assertTrue(this.connectionStore.select(connection.getCode(),
+                        ConnectionStore.name().isNotNull()).isPresent(),
+                "Get Unique Value Execution");
+
+        Assertions.assertFalse(this.connectionStore.select(connection.getCode(),
+                        ConnectionStore.name().eq(new Date().toString())).isPresent(),
+                "Get Unique Value Execution");
+
+        Assertions.assertTrue(this.connectionStore.select(connection.getCode(),
+                        ConnectionStore.name().eq(connection.getName())).isPresent(),
+                "Get Unique Value Execution");
     }
 
     @Test
@@ -203,6 +231,45 @@ class RajaTest {
         connection.setName("Changed");
         Integer noOfUpdatedRajaRefs = this.connectionStore.update(connection);
         Assertions.assertEquals(1, noOfUpdatedRajaRefs,
+                "Single Update Execution");
+    }
+
+    @Test
+    void testSingleValueUpdateWithWhere() throws SQLException {
+        Connection connection = this.connectionStore.insert()
+                .values(this.connectionsToTest.get(0)).returning();
+        final String originalName = connection.getName();
+
+        Assertions.assertEquals(1, this.connectionStore
+                        .update()
+                        .set(ConnectionStore.name("Changed"))
+                        .where(ConnectionStore.name().eq(originalName))
+                        .execute(),
+                "Single Update Execution");
+
+    }
+
+    @Test
+    void testSingleUpdateWithWhere() throws SQLException {
+        Connection connection = this.connectionStore.insert()
+                .values(this.connectionsToTest.get(0)).returning();
+
+        final String originalName = connection.getName();
+
+        connection.setName("Changed");
+
+        Assertions.assertEquals(0, this.connectionStore
+                        .update()
+                        .set(connection)
+                        .where(ConnectionStore.name().eq(originalName+"SOMETHINGELSE"))
+                        .execute(),
+                "Single Update Execution");
+
+        Assertions.assertEquals(1, this.connectionStore
+                        .update()
+                        .set(connection)
+                        .where(ConnectionStore.name().eq(originalName))
+                        .execute(),
                 "Single Update Execution");
     }
 
