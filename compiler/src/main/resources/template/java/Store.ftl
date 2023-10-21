@@ -295,7 +295,7 @@ public final class ${name}Store  {
     }
 
 
-    public static abstract class Column<T> {
+    public static abstract class Column<T> implements ${orm.application.name}Manager.Column<T> {
 
   
             private final PartialWhereClause  whereClause ;
@@ -308,14 +308,7 @@ public final class ${name}Store  {
                 return (WhereClause) whereClause ;
             }
 
-            protected abstract String name();
-
-            protected abstract String asSql();
-
-            protected abstract Boolean validate(T value);
-
-            protected abstract void set(final PreparedStatement preparedStatement, final int i, final T value) throws SQLException;
-
+            
             <#list properties as property>
     <#switch property.dataType>
     <#case "java.lang.String">

@@ -79,6 +79,16 @@ public final class ${name}Manager {
         <#break>
      </#switch>
 </#list>
+    public static abstract interface Column<T> {
+        String name();
+
+        String asSql();
+
+        boolean validate(T value);
+
+        void set(final PreparedStatement preparedStatement, final int i, final T value) throws SQLException;
+
+    }
 
     public class Observer
     {
