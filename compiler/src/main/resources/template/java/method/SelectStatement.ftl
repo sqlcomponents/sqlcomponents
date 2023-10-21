@@ -1,6 +1,7 @@
 <#assign a=addImportStatement(beanPackage+"."+name)>
 <#assign a=addImportStatement("java.util.List")>
 <#assign a=addImportStatement("java.util.ArrayList")>
+<#assign a=addImportStatement("java.util.Optional")>
 
 public SelectStatement select() {
         return new SelectStatement(this);
@@ -71,7 +72,64 @@ public static final class SelectStatement {
                                 return count;
                 } 
 	}
+public SelectQuery sql(final String sql) {
+            return new SelectQuery(this, sql);
+    }
 
+    public static final class SelectQuery  {
+
+        private final SelectStatement selectStatement;
+        private final String sql;
+        private final List<Value> values;
+
+        public SelectQuery(final SelectStatement selectStatement, final String sql) {
+            this.selectStatement = selectStatement;
+            this.sql = sql;
+            this.values = new ArrayList<>();
+        }
+
+
+        public SelectQuery param(final Value value) {
+            this.values.add(value);
+            return this;
+        }
+
+        public Optional<${name}> optional() throws SQLException {
+            ${name} ${name?uncap_first} = null;
+            try (java.sql.Connection dbConnection = this.selectStatement.${name?uncap_first}Store.dbDataSource.getConnection(); 
+                 PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
+                int index = 1;
+                for (Value value:values
+                     ) {
+                    value.set(preparedStatement, index++);
+                }
+
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.next()) ${name?uncap_first} = this.selectStatement.${name?uncap_first}Store.rowMapper(resultSet);
+            }
+            return Optional.ofNullable(${name?uncap_first});
+        }
+
+        public List<${name}> list() throws SQLException{
+            List<${name}> arrays = new ArrayList();
+            try (java.sql.Connection dbConnection = this.selectStatement.${name?uncap_first}Store.dbDataSource.getConnection(); 
+                 PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
+                int index = 1;
+                for (Value value:values
+                     ) {
+                    value.set(preparedStatement, index++);
+                }
+
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                while (resultSet.next()) {
+                    arrays.add(this.selectStatement.${name?uncap_first}Store.rowMapper(resultSet));
+                }
+            }
+            return arrays;
+        }
+    }
 
 
         public static final class LimitClause  {
