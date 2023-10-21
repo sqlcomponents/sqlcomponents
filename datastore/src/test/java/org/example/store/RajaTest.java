@@ -272,5 +272,57 @@ class RajaTest {
                         .execute(),
                 "Single Update Execution");
     }
+    @Test
+    void testSelectOptional() throws SQLException {
+        Connection connection = this.connectionStore.insert()
+                .values(this.connectionsToTest.get(0)).returning();
+        final String originalName = connection.getName();
+        Optional<Connection> optionalConnection = this.connectionStore
+                .select().sql("SELECT code,name FROM \"connection\" WHERE name = ?")
+                .param(ConnectionStore.name(originalName))
+                .optional();
+
+        Assertions.assertEquals(connection.getCode(),
+                optionalConnection.get().getCode(),
+                "Single Update Execution");
+    }
+
+    @Test
+    void testSelectList() throws SQLException {
+        Connection connection = this.connectionStore.insert()
+                .values(this.connectionsToTest.get(0)).returning();
+        final String originalName = connection.getName();
+        List<Connection> optionalConnection = this.connectionStore
+                .select().sql("SELECT code,name FROM \"connection\" WHERE name = ?")
+                .param(ConnectionStore.name(originalName))
+                .list();
+
+        Assertions.assertEquals(connection.getCode(),
+                optionalConnection.get(0).getCode(),
+                "Single Update Execution");
+    }
+
+
+    @Test
+    void testSelectCrossColumns() throws SQLException {
+        this.connectionStore.insert().values(connectionsToTest).execute();
+
+        List<Raja> insertedRajas =
+                this.allInAllRajaStore.insert()
+                        .values(azaguRajasToTest.get(0))
+                        .values(azaguRajasToTest.get(1))
+                        .values(azaguRajasToTest.get(2)).returning();
+
+        UUID rajaCode = azaguRajasToTest.get(0).getReferenceCode();
+
+        Optional<Connection> optionalConnection = this.connectionStore
+                .select().sql("SELECT code,name FROM \"connection\" WHERE code = ?")
+                .param(RajaStore.referenceCode(rajaCode))
+                .optional();
+
+        Assertions.assertEquals(rajaCode,
+                optionalConnection.get().getCode(),
+                "Single Update Execution");
+    }
 
 }

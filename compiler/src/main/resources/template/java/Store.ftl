@@ -49,6 +49,7 @@ public final class ${name}Store  {
 
     private final ${orm.application.name}Manager.Observer observer;
     <#assign a=addImportStatement(orm.application.rootPackage+ "." + orm.application.name + "Manager")>
+    <#assign a=addImportStatement(orm.application.rootPackage+ "." + orm.application.name + "Manager.Value")>
 
 
     <#list sampleDistinctCustomColumnTypeProperties as property>
@@ -280,22 +281,10 @@ public final class ${name}Store  {
 
     }
 
-    public static class Value<T extends Column<R>,R> {
-        private final T column;
-        private final R value;
-
-        private Value(final T column,final R value) {
-            this.column =column;
-            this.value = value;
-        }
-
-        private void set(final PreparedStatement preparedStatement, final int i) throws SQLException{
-            column.set(preparedStatement,i,value);
-        }
-    }
 
 
-    public static abstract class Column<T> {
+
+    public static abstract class Column<T> implements ${orm.application.name}Manager.Column<T> {
 
   
             private final PartialWhereClause  whereClause ;
@@ -308,14 +297,7 @@ public final class ${name}Store  {
                 return (WhereClause) whereClause ;
             }
 
-            protected abstract String name();
-
-            protected abstract String asSql();
-
-            protected abstract Boolean validate(T value);
-
-            protected abstract void set(final PreparedStatement preparedStatement, final int i, final T value) throws SQLException;
-
+            
             <#list properties as property>
     <#switch property.dataType>
     <#case "java.lang.String">

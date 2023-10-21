@@ -79,6 +79,35 @@ public final class ${name}Manager {
         <#break>
      </#switch>
 </#list>
+    <#assign a=addImportStatement("java.sql.PreparedStatement")>
+    public static abstract interface Column<T> {
+        String name();
+
+        String asSql();
+
+        boolean validate(T value);
+
+        void set(final PreparedStatement preparedStatement, final int i, final T value) throws SQLException;
+
+    }
+
+    public static class Value<T extends Column<R>,R> {
+        private final T column;
+        private final R value;
+
+        public Value(final T column,final R value) {
+            this.column =column;
+            this.value = value;
+        }
+
+        public T column() {
+            return column;
+        }
+
+        public void set(final PreparedStatement preparedStatement, final int i) throws SQLException{
+            column.set(preparedStatement,i,value);
+        }
+    }
 
     public class Observer
     {

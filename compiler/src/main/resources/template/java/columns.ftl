@@ -7,7 +7,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
         super(whereClause);
     }
 
-    protected String name() {
+    public String name() {
         return "${property.column.escapedName?j_string}";
     }
 
@@ -17,11 +17,11 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 
 <#macro columnfooter property>
     @Override
-    protected String asSql() {
+    public String asSql() {
         return sql;
     }
 
-    protected Boolean validate(${getClassName(property.dataType)} value) {
+    public boolean validate(${getClassName(property.dataType)} value) {
         return true;
     }
     
@@ -43,7 +43,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 <#macro StringColumn property>
 <@columnheader property=property/>
 
-    protected void set(final PreparedStatement preparedStatement, final int i, final String value) throws SQLException {
+    public void set(final PreparedStatement preparedStatement, final int i, final String value) throws SQLException {
         
         <#if containsEncryption(property)>
         preparedStatement.setString(i,this.getWhereClause().getStore().encryptionFunction.apply(value));
@@ -68,7 +68,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 
 <#macro UUIDColumn property>
 <@columnheader property=property/>
-    protected void set(final PreparedStatement preparedStatement, final int i, final UUID value) throws SQLException {
+    public void set(final PreparedStatement preparedStatement, final int i, final UUID value) throws SQLException {
         preparedStatement.setObject(i,this.getWhereClause().getStore().convertUuid.apply(value));
     }
 
@@ -81,7 +81,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 
 <#macro DurationColumn property>
 <@columnheader property=property/>
-    protected void set(final PreparedStatement preparedStatement, final int i, final Duration value) throws SQLException {
+    public void set(final PreparedStatement preparedStatement, final int i, final Duration value) throws SQLException {
         preparedStatement.setObject(i,this.getWhereClause().getStore().convertInterval.apply(value));
     }
     public final WhereClause  eq(final String value) {
@@ -93,7 +93,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 
 <#macro ByteBuffer property>
 <@columnheader property=property/>
-    protected void set(final PreparedStatement preparedStatement, final int i, final ByteBuffer value) throws SQLException {
+    public void set(final PreparedStatement preparedStatement, final int i, final ByteBuffer value) throws SQLException {
         preparedStatement.setBytes(i,value == null ? null : value.array());
     }
     public final WhereClause  eq(final String value) {
@@ -106,7 +106,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 <#macro JSONObjectColumn property>
 <@columnheader property=property/>
 
-    protected void set(final PreparedStatement preparedStatement, final int i, final  JSONObject value) throws SQLException {
+    public void set(final PreparedStatement preparedStatement, final int i, final  JSONObject value) throws SQLException {
         preparedStatement.setObject(i,this.getWhereClause().getStore().convertJson.apply(value));
     }
 
@@ -119,7 +119,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 
 <#macro CharacterColumn property>
 <@columnheader property=property/>
-    protected void set(final PreparedStatement preparedStatement, final int i, final Character value) throws SQLException {
+    public void set(final PreparedStatement preparedStatement, final int i, final Character value) throws SQLException {
         preparedStatement.setString(i,value == null ? null : String.valueOf(value));
     }
     public final WhereClause  eq(final String value) {
@@ -137,7 +137,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 
 <#macro BooleanColumn property>
 <@columnheader property=property/>
-    protected void set(final PreparedStatement preparedStatement, final int i, final Boolean value) throws SQLException {
+    public void set(final PreparedStatement preparedStatement, final int i, final Boolean value) throws SQLException {
         preparedStatement.setBoolean(i,value);
     }
     public final WhereClause  eq(final Boolean value) {
@@ -149,7 +149,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 
 <#macro numbercolumn type property>
 
-    protected void set(final PreparedStatement preparedStatement, final int i, final ${type} value) throws SQLException {
+    public void set(final PreparedStatement preparedStatement, final int i, final ${type} value) throws SQLException {
         preparedStatement.set${type}(i,value);
     }
 
@@ -232,7 +232,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 <#macro LocalDateColumn property>
 <@columnheader property=property/>
 
-    protected void set(final PreparedStatement preparedStatement, final int i, final LocalDate value) throws SQLException {
+    public void set(final PreparedStatement preparedStatement, final int i, final LocalDate value) throws SQLException {
         preparedStatement.setDate(i,value == null ? null : java.sql.Date.valueOf(value));
     }
 
@@ -267,7 +267,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 <#macro LocalTimeColumn property>
 <@columnheader property=property/>
 
-    protected void set(final PreparedStatement preparedStatement, final int i, final LocalTime value) throws SQLException {
+    public void set(final PreparedStatement preparedStatement, final int i, final LocalTime value) throws SQLException {
         preparedStatement.setTime(i,value == null ? null : java.sql.Time.valueOf(value));
     }
     public final WhereClause  eq(final LocalTime value) {
@@ -302,7 +302,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 <#macro LocalDateTimeColumn property>
 <@columnheader property=property/>
 
-    protected void set(final PreparedStatement preparedStatement, final int i, final LocalDateTime value) throws SQLException {
+    public void set(final PreparedStatement preparedStatement, final int i, final LocalDateTime value) throws SQLException {
         preparedStatement.setTimestamp(i,value == null ? null : java.sql.Timestamp.valueOf(value));
     }
 
