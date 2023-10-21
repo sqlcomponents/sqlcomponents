@@ -79,6 +79,7 @@ public final class ${name}Manager {
         <#break>
      </#switch>
 </#list>
+    <#assign a=addImportStatement("java.sql.PreparedStatement")>
     public static abstract interface Column<T> {
         String name();
 
