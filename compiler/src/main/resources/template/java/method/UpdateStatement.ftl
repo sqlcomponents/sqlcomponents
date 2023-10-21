@@ -256,7 +256,7 @@ public int update(${name} ${name?uncap_first}) throws SQLException {
                         } else {
                             stringBuilder.append(",");
                         }
-                        stringBuilder.append(value.column.name()).append("=?");
+                        stringBuilder.append(value.column().name()).append("=?");
                     }
                     return stringBuilder.toString();
                 }
