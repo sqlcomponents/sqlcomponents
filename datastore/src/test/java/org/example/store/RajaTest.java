@@ -229,7 +229,8 @@ class RajaTest {
         Connection connection = this.connectionStore.insert()
                 .values(this.connectionsToTest.get(0)).returning();
         connection.setName("Changed");
-        Integer noOfUpdatedRajaRefs = this.connectionStore.update(connection);
+        Integer noOfUpdatedRajaRefs = this.connectionStore.update()
+                .set(connection).execute();
         Assertions.assertEquals(1, noOfUpdatedRajaRefs,
                 "Single Update Execution");
     }

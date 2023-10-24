@@ -69,7 +69,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 <#macro UUIDColumn property>
 <@columnheader property=property/>
     public void set(final PreparedStatement preparedStatement, final int i, final UUID value) throws SQLException {
-        preparedStatement.setObject(i,this.getWhereClause().getStore().convertUuid.apply(value));
+        preparedStatement.setObject(i,this.getWhereClause().getStore().convertUuid.apply(value), java.sql.Types.OTHER);
     }
 
     public final WhereClause  eq(final UUID value) {
@@ -107,7 +107,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 <@columnheader property=property/>
 
     public void set(final PreparedStatement preparedStatement, final int i, final  JSONObject value) throws SQLException {
-        preparedStatement.setObject(i,this.getWhereClause().getStore().convertJson.apply(value));
+        preparedStatement.setObject(i,this.getWhereClause().getStore().convertJson.apply(value), java.sql.Types.OTHER);
     }
 
     public final WhereClause  eq(final String value) {
