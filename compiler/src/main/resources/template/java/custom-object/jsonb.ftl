@@ -1,18 +1,12 @@
 <#if orm.database.dbType == 'POSTGRES' >
     private final JSONObject getJsonb(final ResultSet rs,final int index) throws SQLException {
-        PGobject pGobject = (PGobject) rs.getObject(index);
-        return pGobject == null ? null : new JSONObject(pGobject.getValue());
+        String jsonText = rs.getString(index);
+        return jsonText == null ? null : new JSONObject(jsonText);
     }
 
-    private final PGobject convertJsonb(final JSONObject jsonObject) throws SQLException {
-        if(jsonObject == null) {
-            PGobject pGobject = new PGobject();
-            pGobject.setType("jsonb");
-            pGobject.setValue(jsonObject.toString());
-        }
-        return null;
+    private final String convertJsonb(final JSONObject jsonObject) throws SQLException {
+        return (jsonObject == null) ? null : jsonObject.toString();
     }
-    <#assign a=addImportStatement("org.postgresql.util.PGobject")>
     <#assign a=addImportStatement("org.json.JSONObject")>
     <#assign a=addImportStatement("java.sql.ResultSet")>
     <#assign a=addImportStatement("java.sql.SQLException")>
