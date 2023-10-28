@@ -241,6 +241,46 @@
             }
             
         }
+        
+    public UpdateQuery sql(final String sql) {
+        return new UpdateQuery(this, sql);
+    }
+
+    public static final class UpdateQuery  {
+
+        private final UpdateStatement updateStatement;
+        private final String sql;
+        private final List<Value> values;
+
+        public UpdateQuery(final UpdateStatement updateStatement, final String sql) {
+            this.updateStatement = updateStatement;
+            this.sql = sql;
+            this.values = new ArrayList<>();
+        }
+
+
+        public UpdateQuery param(final Value value) {
+            this.values.add(value);
+            return this;
+        }
+
+        public int execute() throws SQLException {
+            try (java.sql.Connection dbConnection = this.updateStatement.${name?uncap_first}Store.dbDataSource.getConnection();
+                PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
+
+                    int index = 1;
+                for (Value value:values
+                    ) {
+                    value.set(preparedStatement, index++);
+                }
+
+                return preparedStatement.executeUpdate();
+            }
+        }
+
+
+    }
+
 
     }	
 </#if>

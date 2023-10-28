@@ -326,4 +326,31 @@ class RajaTest {
                 "Single Update Execution");
     }
 
+    @Test
+    void testUpdateAndDeleteWithQuery() throws SQLException {
+        this.connectionStore.insert().values(connectionsToTest).execute();
+
+        List<Raja> insertedRajas =
+                this.allInAllRajaStore.insert()
+                        .values(azaguRajasToTest.get(0))
+                        .values(azaguRajasToTest.get(1))
+                        .values(azaguRajasToTest.get(2)).returning();
+
+        UUID rajaCode = azaguRajasToTest.get(0).getReferenceCode();
+
+        int updateRows = this.allInAllRajaStore.update()
+                .sql("UPDATE raja SET a_text=? WHERE reference_code = ?")
+                .param(RajaStore.aText("NEW TEXT"))
+                .param(RajaStore.referenceCode(rajaCode))
+                .execute();
+
+        Assertions.assertEquals(updateRows,
+                this.allInAllRajaStore.delete()
+                        .sql("DELETE FROM raja WHERE reference_code = ?")
+                        .param(RajaStore.referenceCode(rajaCode))
+                        .execute());
+
+
+    }
+
 }

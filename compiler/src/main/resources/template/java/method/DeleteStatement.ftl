@@ -50,6 +50,46 @@ public static final class DeleteStatement {
             return statement.executeUpdate(query);
         }
 	}
+
+    public DeleteQuery sql(final String sql) {
+            return new DeleteQuery(this, sql);
+    }
+
+    public static final class DeleteQuery  {
+
+        private final DeleteStatement deleteStatement;
+        private final String sql;
+        private final List<Value> values;
+
+        public DeleteQuery(final DeleteStatement deleteStatement, final String sql) {
+            this.deleteStatement = deleteStatement;
+            this.sql = sql;
+            this.values = new ArrayList<>();
+        }
+
+
+        public DeleteQuery param(final Value value) {
+            this.values.add(value);
+            return this;
+        }
+
+        public int execute() throws SQLException {
+            try (java.sql.Connection dbConnection = this.deleteStatement.${name?uncap_first}Store.dbDataSource.getConnection();
+                PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
+
+                    int index = 1;
+                for (Value value:values
+                     ) {
+                    value.set(preparedStatement, index++);
+                }
+
+                return preparedStatement.executeUpdate();
+            }
+        }
+
+
+    }
+
 }
 
 
