@@ -4,7 +4,9 @@
 <#assign capturedOutput>
 public final class ${name}Manager {
 
+    <#if !multipleManagers>
     private static ${name}Manager ${name?uncap_first}Manager;
+    </#if>
 
     private final javax.sql.DataSource dbDataSource;
 
@@ -15,7 +17,7 @@ public final class ${name}Manager {
     private final ${entity.name}Store ${entity.name?uncap_first}Store;
     </#list>
 
-    private ${name}Manager(final javax.sql.DataSource dbDataSource
+<#if multipleManagers>public <#else>private</#if> ${name}Manager(final javax.sql.DataSource dbDataSource
     <#if encryption?has_content  >
     <#assign a=addImportStatement("java.util.function.Function")>
     ,final Function<String,String> encryptionFunction
@@ -37,7 +39,7 @@ public final class ${name}Manager {
         );
         </#list>
     }
-
+    <#if !multipleManagers>
     public static final ${name}Manager getManager(final DataSource dbDataSource
     <#if encryption?has_content  >
     <#assign a=addImportStatement("javax.sql.DataSource")>
@@ -56,6 +58,8 @@ public final class ${name}Manager {
         }
         return ${name?uncap_first}Manager;
     }
+</#if>
+
     <#assign a=addImportStatement("javax.sql.DataSource")>
     <#list orm.entities as entity>
     public final ${entity.name}Store get${entity.name}Store() {
