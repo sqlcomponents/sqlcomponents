@@ -27,6 +27,7 @@
         }
         return null;
     }
+    <#assign a=addImportStatement("org.postgresql.util.PGobject")>
     <#assign a=addImportStatement("org.postgresql.util.PGInterval")>
     <#assign a=addImportStatement("java.time.Duration")>
     <#assign a=addImportStatement("java.time.temporal.ChronoUnit")>
