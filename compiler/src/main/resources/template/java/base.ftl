@@ -41,17 +41,14 @@
 <#case "java.nio.ByteBuffer">
   	 <#return "${wText} == null ? null : ${wText}.array()">
   <#case "org.json.JSONObject">
-  	 <#return "this.convert${property.column.typeName?cap_first}.apply(${wText})">
+  	 <#return "convert${property.column.typeName?cap_first}(${wText})">
     <#case "java.util.UUID">
-  	 <#return "this.convert${property.column.typeName?cap_first}.apply(${wText})">
+  	 <#return "convert${property.column.typeName?cap_first}(${wText})">
 	<#case "java.time.Duration">
-	<#return "this.convert${property.column.typeName?cap_first}.apply(${wText})">
+	<#return "convert${property.column.typeName?cap_first}(${wText})">
   <#default>
-  <#if containsEncryption(property)>
-  <#return "this.encryptionFunction.apply(${wText})">
-  <#else>
   <#return "${wText}">
-  </#if>
+
 </#switch>
 </#function>
 

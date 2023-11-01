@@ -30,10 +30,7 @@
 
 	public final InsertStatement insert() {
         return new InsertStatement(this
-        <#list sampleDistinctCustomColumnTypeProperties as property>
-                                                      ,this.convert${property.column.typeName?cap_first}
-                                               </#list>
-                                               <#if containsEncryptedProperty() >
+        <#if containsEncryptedProperty() >
             ,this.encryptionFunction
             ,this.decryptionFunction
         </#if>);
@@ -47,9 +44,7 @@
             <#assign index=1>
             </#list>) {
         return new InsertStatement(this
-        <#list sampleDistinctCustomColumnTypeProperties as property>
-               ,this.convert${property.column.typeName?cap_first}
-        </#list>
+        
         <#if containsEncryptedProperty() >
             ,this.encryptionFunction
             ,this.decryptionFunction
@@ -60,9 +55,6 @@
     public static final class InsertStatement {
         private final ${name}Store ${name?uncap_first}Store;
 
-        <#list sampleDistinctCustomColumnTypeProperties as property>
-        private final ${orm.application.name}Manager.ConvertFunction<${getClassName(property.dataType)},Object> convert${property.column.typeName?cap_first};
-        </#list>
 
         <#if containsEncryptedProperty() >
             private final Function<String,String> encryptionFunction;
@@ -70,18 +62,13 @@
         </#if>
 
         private InsertStatement(final ${name}Store ${name?uncap_first}Store
-        <#list sampleDistinctCustomColumnTypeProperties as property>
-         ,final ${orm.application.name}Manager.ConvertFunction<${getClassName(property.dataType)},Object> theConvert${property.column.typeName?cap_first}
-        </#list>
         <#if containsEncryptedProperty() >
             ,final Function<String,String> encryptionFunction
             ,final Function<String,String> decryptionFunction
         </#if>
                 ) {
             this.${name?uncap_first}Store = ${name?uncap_first}Store;
-            <#list sampleDistinctCustomColumnTypeProperties as property>
-            this.convert${property.column.typeName?cap_first} =  theConvert${property.column.typeName?cap_first};
-            </#list>
+
             <#if containsEncryptedProperty() >
             this.encryptionFunction = encryptionFunction;
             this.decryptionFunction = decryptionFunction;

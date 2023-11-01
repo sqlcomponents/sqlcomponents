@@ -28,10 +28,7 @@ public final class ${name}Manager {
         this.observer = new Observer();
         <#list orm.entities as entity>
         this.${entity.name?uncap_first}Store = ${entity.name}Store.get${entity.name}Store(dbDataSource,this.observer
-        <#list entity.sampleDistinctCustomColumnTypeProperties as property>
-                    ,this::get${property.column.typeName?cap_first}
-                    ,this::convert${property.column.typeName?cap_first}
-        </#list>
+        
         <#if entity.containsEncryptedProperty() >
             ,encryptionFunction
             , decryptionFunction

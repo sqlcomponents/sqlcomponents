@@ -44,13 +44,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 <@columnheader property=property/>
 
     public void set(final PreparedStatement preparedStatement, final int i, final String value) throws SQLException {
-        
-        <#if containsEncryption(property)>
-        preparedStatement.setString(i,this.getWhereClause().getStore().encryptionFunction.apply(value));
-        <#else>
         preparedStatement.setString(i,value);
-        </#if>
-        
     }
 
     public final WhereClause  eq(final String value) {
@@ -69,7 +63,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 <#macro UUIDColumn property>
 <@columnheader property=property/>
     public void set(final PreparedStatement preparedStatement, final int i, final UUID value) throws SQLException {
-        preparedStatement.setObject(i,this.getWhereClause().getStore().convertUuid.apply(value), java.sql.Types.OTHER);
+        preparedStatement.setObject(i,convertUuid(value), java.sql.Types.OTHER);
     }
 
     public final WhereClause  eq(final UUID value) {
@@ -82,7 +76,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 <#macro DurationColumn property>
 <@columnheader property=property/>
     public void set(final PreparedStatement preparedStatement, final int i, final Duration value) throws SQLException {
-        preparedStatement.setObject(i,this.getWhereClause().getStore().convertInterval.apply(value));
+        preparedStatement.setObject(i,convertInterval(value));
     }
     public final WhereClause  eq(final String value) {
         sql = "${property.column.escapedName?j_string} ='" + value + "'";
@@ -107,7 +101,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 <@columnheader property=property/>
 
     public void set(final PreparedStatement preparedStatement, final int i, final  JSONObject value) throws SQLException {
-        preparedStatement.setObject(i,this.getWhereClause().getStore().convertJson.apply(value), java.sql.Types.OTHER);
+        preparedStatement.setObject(i,convertJson(value), java.sql.Types.OTHER);
     }
 
     public final WhereClause  eq(final String value) {

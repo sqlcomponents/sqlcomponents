@@ -8,41 +8,38 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+<#list sampleDistinctCustomColumnTypeProperties as property>
+import static ${orm.application.rootPackage}.${orm.application.name}Manager.get${property.column.typeName?cap_first};
+import static ${orm.application.rootPackage}.${orm.application.name}Manager.convert${property.column.typeName?cap_first};
+</#list>
+
 <#assign capturedOutput>
 /**
  * Datastore for the table - ${table.tableName}.
  */
 public final class ${name}Store  {
 
-    private static ${name}Store THIS ;
+
 
     public static ${name}Store get${name}Store(final javax.sql.DataSource theDataSource
                 ,final ${orm.application.name}Manager.Observer theObserver
-                    <#list sampleDistinctCustomColumnTypeProperties as property>
-                    ,final ${orm.application.name}Manager.GetFunction<ResultSet, Integer, ${getClassName(property.dataType)}> theGet${property.column.typeName?cap_first}
-                    ,final ${orm.application.name}Manager.ConvertFunction<${getClassName(property.dataType)},Object> theConvert${property.column.typeName?cap_first}
-                    </#list>
+                    
 
                     <#if containsEncryptedProperty() >
                         <#assign a=addImportStatement("java.util.function.Function")>
                         ,final Function<String,String> encryptionFunction
                         ,final Function<String,String> decryptionFunction
                     </#if>) {
-        if(THIS == null) {
-            THIS = new ${name}Store(theDataSource
+        return new ${name}Store(theDataSource
                 ,theObserver
-                    <#list sampleDistinctCustomColumnTypeProperties as property>
-                    ,theGet${property.column.typeName?cap_first}
-                    ,theConvert${property.column.typeName?cap_first}
-                    </#list>
+                    
 
                     <#if containsEncryptedProperty() >
                         <#assign a=addImportStatement("java.util.function.Function")>
                         ,encryptionFunction
                         ,decryptionFunction
                     </#if>);
-        }
-        return THIS;
+
     }
 
     private final javax.sql.DataSource dbDataSource;
@@ -51,13 +48,6 @@ public final class ${name}Store  {
     <#assign a=addImportStatement(orm.application.rootPackage+ "." + orm.application.name + "Manager")>
     <#assign a=addImportStatement(orm.application.rootPackage+ "." + orm.application.name + "Manager.Value")>
 
-
-    <#list sampleDistinctCustomColumnTypeProperties as property>
-    <#assign a=addImportStatement(property.dataType)>
-    <#assign a=addImportStatement("java.sql.ResultSet")>
-    private final ${orm.application.name}Manager.GetFunction<ResultSet, Integer, ${getClassName(property.dataType)}> get${property.column.typeName?cap_first};
-    private final ${orm.application.name}Manager.ConvertFunction<${getClassName(property.dataType)},Object> convert${property.column.typeName?cap_first};
-    </#list>
 
     <#if containsEncryptedProperty() >
         private final Function<String,String> encryptionFunction;
@@ -69,10 +59,7 @@ public final class ${name}Store  {
      */
     private ${name}Store(final javax.sql.DataSource theDataSource
                 ,final ${orm.application.name}Manager.Observer theObserver
-                    <#list sampleDistinctCustomColumnTypeProperties as property>
-                    ,final ${orm.application.name}Manager.GetFunction<ResultSet, Integer, ${getClassName(property.dataType)}> theGet${property.column.typeName?cap_first}
-                    ,final ${orm.application.name}Manager.ConvertFunction<${getClassName(property.dataType)},Object> theConvert${property.column.typeName?cap_first}
-                    </#list>
+
 
                     <#if containsEncryptedProperty() >
                         <#assign a=addImportStatement("java.util.function.Function")>
@@ -82,16 +69,13 @@ public final class ${name}Store  {
                 ) {
         this.dbDataSource = theDataSource;
         this.observer = theObserver;
-        <#list sampleDistinctCustomColumnTypeProperties as property>
-        this.get${property.column.typeName?cap_first} =  theGet${property.column.typeName?cap_first};
-        this.convert${property.column.typeName?cap_first} =  theConvert${property.column.typeName?cap_first};
-        </#list>
+
         <#if containsEncryptedProperty() >
             this.encryptionFunction = encryptionFunction;
             this.decryptionFunction = decryptionFunction;
         </#if>
 
-        THIS = this;
+
     }
 
 	<#list orm.methodSpecification as method>
@@ -128,13 +112,13 @@ public final class ${name}Store  {
           	 ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).charAt(0));
            <#break>
         	   <#case "org.json.JSONObject">
-        	    ${name?uncap_first}.set${property.name?cap_first}(this.get${property.column.typeName?cap_first}.apply(rs,${index}));
+        	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                  <#break>
            <#case "java.util.UUID">
-        	    ${name?uncap_first}.set${property.name?cap_first}(this.get${property.column.typeName?cap_first}.apply(rs,${index}));
+        	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                  <#break>
                         <#case "java.time.Duration">
-        	    ${name?uncap_first}.set${property.name?cap_first}(this.get${property.column.typeName?cap_first}.apply(rs,${index}));
+        	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                  <#break>
           <#default>
           <#if containsEncryption(property)>
@@ -172,13 +156,13 @@ public final class ${name}Store  {
           	 ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).charAt(0));
            <#break>
         	   <#case "org.json.JSONObject">
-        	    ${name?uncap_first}.set${property.name?cap_first}(this.get${property.column.typeName?cap_first}.apply(rs,${index}));
+        	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                  <#break>
            <#case "java.util.UUID">
-        	    ${name?uncap_first}.set${property.name?cap_first}(this.get${property.column.typeName?cap_first}.apply(rs,${index}));
+        	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                  <#break>
                         <#case "java.time.Duration">
-        	    ${name?uncap_first}.set${property.name?cap_first}(this.get${property.column.typeName?cap_first}.apply(rs,${index}));
+        	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                  <#break>
           <#default>
           <#if containsEncryption(property)>
@@ -203,14 +187,14 @@ public final class ${name}Store  {
     }
     
     public static Column.${property.name?cap_first}Column ${property.name}() {
-        return new WhereClause(THIS).${property.name}();
+        return new WhereClause().${property.name}();
     }
 
 </#list>
 
     public static class WhereClause  extends PartialWhereClause  {
-        private WhereClause(final ${name}Store ${name?uncap_first}Store){
-            super(${name?uncap_first}Store);
+        private WhereClause(){
+            super();
         }
         private String asSql() {
             return nodes.isEmpty() ? null : nodes.stream().map(node -> {
@@ -253,18 +237,11 @@ public final class ${name}Store  {
 
         protected final List<Object> nodes;
 
-        private final ${name}Store ${name?uncap_first}Store;
-
-
-
-        private PartialWhereClause(final ${name}Store ${name?uncap_first}Store) {
+        private PartialWhereClause() {
             this.nodes = new ArrayList<>();
-            this.${name?uncap_first}Store = ${name?uncap_first}Store;
         }
 
-        ${name}Store getStore() {
-            return ${name?uncap_first}Store;
-        }
+
 <#list properties as property>
 
         public Column.${property.name?cap_first}Column ${property.name}() {
