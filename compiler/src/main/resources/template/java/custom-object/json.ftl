@@ -1,10 +1,10 @@
 <#if orm.database.dbType == 'POSTGRES' >
-    private final JSONObject getJson(final ResultSet rs,final int index) throws SQLException {
+    public static final JSONObject getJson(final ResultSet rs,final int index) throws SQLException {
         String jsonText = rs.getString(index);
         return jsonText == null ? null : new JSONObject(jsonText);
     }
 
-    private final String convertJson(final JSONObject jsonObject) throws SQLException {
+    public static final String convertJson(final JSONObject jsonObject) throws SQLException {
         return (jsonObject == null) ? null : jsonObject.toString();
     }
     <#assign a=addImportStatement("org.json.JSONObject")>
