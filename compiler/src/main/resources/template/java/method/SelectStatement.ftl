@@ -6,7 +6,7 @@
 public SelectStatement select() {
         return new SelectStatement(this);
 }
-public SelectStatement select(WhereClause whereClause) throws SQLException  {
+public SelectStatement select(WhereClause whereClause) throws <@throwsblock/>  {
         return new SelectStatement(this,whereClause);
 }
 
@@ -32,7 +32,7 @@ public static final class SelectStatement {
             this.whereClause = whereClause;
         }
 
-        public List<${name}> execute() throws SQLException {
+        public List<${name}> execute() throws <@throwsblock/> {
 		final String query = <@compress single_line=true>"
                 SELECT
 		<@columnSelection/> 
@@ -94,7 +94,7 @@ public SelectQuery sql(final String sql) {
             return this;
         }
 
-        public Optional<${name}> optional() throws SQLException {
+        public Optional<${name}> optional() throws <@throwsblock/> {
             ${name} ${name?uncap_first} = null;
             try (java.sql.Connection dbConnection = this.selectStatement.${name?uncap_first}Store.dbDataSource.getConnection(); 
                  PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
@@ -111,7 +111,7 @@ public SelectQuery sql(final String sql) {
             return Optional.ofNullable(${name?uncap_first});
         }
 
-        public List<${name}> list() throws SQLException{
+        public List<${name}> list() throws <@throwsblock/>{
             List<${name}> arrays = new ArrayList();
             try (java.sql.Connection dbConnection = this.selectStatement.${name?uncap_first}Store.dbDataSource.getConnection(); 
                  PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
@@ -155,12 +155,12 @@ public SelectQuery sql(final String sql) {
                 <#assign a=addImportStatement("org.springframework.data.domain.Page")>
                 <#assign a=addImportStatement("org.springframework.data.domain.PageImpl")>
                 <#assign a=addImportStatement("org.springframework.data.domain.Pageable")>
-                public Page<${name}> execute(final Pageable pageable) throws SQLException {
+                public Page<${name}> execute(final Pageable pageable) throws <@throwsblock/> {
                     return new PageImpl(this.selectStatement.execute(), pageable,
                                 selectStatement.count());
                 }
                 <#else>
-                public ${orm.application.name}Manager.Page<${name}> execute() throws SQLException {
+                public ${orm.application.name}Manager.Page<${name}> execute() throws <@throwsblock/> {
                     return ${orm.application.name}Manager.page(this.selectStatement.execute(), selectStatement.count());
                 }
                 </#if>
@@ -181,11 +181,11 @@ public SelectQuery sql(final String sql) {
                         }
 
                         <#if hasJavaClass("org.springframework.data.domain.Page") >
-                        public Page<${name}> execute(final Pageable pageable) throws SQLException {
+                        public Page<${name}> execute(final Pageable pageable) throws <@throwsblock/> {
                                 return this.limitClause.execute(pageable);
                         }
                         <#else>
-                        public ${orm.application.name}Manager.Page<${name}> execute() throws SQLException {
+                        public ${orm.application.name}Manager.Page<${name}> execute() throws <@throwsblock/> {
                                 return this.limitClause.execute();
                         }
                         </#if>
@@ -203,10 +203,10 @@ public SelectQuery sql(final String sql) {
 
 <#if table.hasPrimaryKey>
 <#assign a=addImportStatement("java.util.Optional")>
-    public Optional<${name}> select(${getPrimaryKeysAsParameterString()}) throws SQLException  {
+    public Optional<${name}> select(${getPrimaryKeysAsParameterString()}) throws <@throwsblock/>  {
             return select(${getPrimaryKeysAsParameters()}, null);
     }
-    public Optional<${name}> select(${getPrimaryKeysAsParameterString()}, WhereClause whereClause) throws SQLException  {
+    public Optional<${name}> select(${getPrimaryKeysAsParameterString()}, WhereClause whereClause) throws <@throwsblock/>  {
         ${name} ${name?uncap_first} = null;
 		final String query = <@compress single_line=true>"
                 SELECT
@@ -263,7 +263,7 @@ public SelectQuery sql(final String sql) {
 <#assign a=addImportStatement(beanPackage+"."+name)>
 <#assign a=addImportStatement("java.util.Optional")>
     <#list table.uniqueColumns as uniqueColumn>
-    public Optional<${name}> selectBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws SQLException {
+    public Optional<${name}> selectBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws <@throwsblock/> {
         ${name} ${name?uncap_first} = null;
             final String query = <@compress single_line=true>"
                     SELECT
@@ -284,7 +284,7 @@ public SelectQuery sql(final String sql) {
             return Optional.ofNullable(${name?uncap_first});
     }
 
-    public boolean existsBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws SQLException {
+    public boolean existsBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws <@throwsblock/> {
 
             final String query = <@compress single_line=true>"
                     SELECT

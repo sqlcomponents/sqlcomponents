@@ -97,10 +97,10 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 <@columnfooter property=property/>
 </#macro>
 
-<#macro JSONObjectColumn property>
+<#macro JsonNodeColumn property>
 <@columnheader property=property/>
 
-    public void set(final PreparedStatement preparedStatement, final int i, final  JSONObject value) throws SQLException {
+    public void set(final PreparedStatement preparedStatement, final int i, final  JsonNode value) throws SQLException {
         preparedStatement.setObject(i,convertJson(value), java.sql.Types.OTHER);
     }
 

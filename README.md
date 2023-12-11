@@ -38,6 +38,7 @@ Clean Code
 12. https://mariadb.com/resources/customer-stories/dbs-bank-oracle-to-mariadb/
 13. https://www.infoq.com/news/2022/04/red-hat-releases-hibernate-6/
 14. https://www.youtube.com/watch?v=ykoUBctblno
+15. https://www.youtube.com/watch?v=XaC1rQZ_LKs
 
 ## Related
 

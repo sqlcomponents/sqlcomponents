@@ -42,6 +42,12 @@
 	<#return pkAsParameterStr> 
 </#function>
 
+<#macro throwsblock>
+SQLException 
+<#if hasJavaType("com.fasterxml.jackson.databind.JsonNode")>
+<#assign a=addImportStatement("com.fasterxml.jackson.core.JsonProcessingException")>,JsonProcessingException
+</#if>
+</#macro>
 
 <#macro columnSelection><#assign index=0><#list properties as property><#if index == 0><#assign index=1><#else>,</#if>${property.column.escapedName?j_string}</#list></#macro>
 

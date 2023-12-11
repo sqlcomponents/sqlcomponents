@@ -1,13 +1,15 @@
 <#if orm.database.dbType == 'POSTGRES' >
-    public static final JSONObject getJsonb(final ResultSet rs,final int index) throws SQLException {
+    public static final JsonNode getJsonb(final ResultSet rs,final int index) throws SQLException, JsonProcessingException {
         String jsonText = rs.getString(index);
-        return jsonText == null ? null : new JSONObject(jsonText);
+        return jsonText == null ? null : new ObjectMapper().readTree(jsonText);
     }
 
-    public static final String convertJsonb(final JSONObject jsonObject) throws SQLException {
-        return (jsonObject == null) ? null : jsonObject.toString();
+    public static final String convertJsonb(final JsonNode jsonNode) throws SQLException {
+        return (jsonNode == null) ? null : jsonNode.toString();
     }
-    <#assign a=addImportStatement("org.json.JSONObject")>
+    <#assign a=addImportStatement("com.fasterxml.jackson.databind.ObjectMapper")>
+    <#assign a=addImportStatement("com.fasterxml.jackson.databind.JsonNode")>
+    <#assign a=addImportStatement("com.fasterxml.jackson.core.JsonProcessingException")>
     <#assign a=addImportStatement("java.sql.ResultSet")>
     <#assign a=addImportStatement("java.sql.SQLException")>
 </#if>
