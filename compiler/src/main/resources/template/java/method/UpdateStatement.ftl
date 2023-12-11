@@ -132,7 +132,7 @@
 
                 <#if table.hasPrimaryKey>
 
-                public final ${name} returning() throws SQLException  {
+                public final ${name} returning() throws <@throwsblock/>  {
                     ${name} updated${name} = null ;
                     <@updatetquery/>
 
@@ -226,7 +226,7 @@
                     return updtedRows;
                 }
 
-                public final List<${name}> returning() throws SQLException  {
+                public final List<${name}> returning() throws <@throwsblock/>  {
                     return null;
                 }
             }

@@ -18,7 +18,7 @@
 		<#local pkAsParameterStr="Timestamp">
 	<#elseif pkAsParameterStr == "ByteBuffer">
 		<#local pkAsParameterStr="Bytes">
-	<#elseif pkAsParameterStr == "JSONObject">
+	<#elseif pkAsParameterStr == "JsonNode">
 	<#local pkAsParameterStr="Object">
 	<#elseif pkAsParameterStr == "UUID">
 	<#local pkAsParameterStr="Object">
@@ -40,7 +40,7 @@
   	 <#return "${wText} == null ? null : String.valueOf(${wText})">
 <#case "java.nio.ByteBuffer">
   	 <#return "${wText} == null ? null : ${wText}.array()">
-  <#case "org.json.JSONObject">
+  <#case "com.fasterxml.jackson.databind.JsonNode">
   	 <#return "convert${property.column.typeName?cap_first}(${wText})">
     <#case "java.util.UUID">
   	 <#return "convert${property.column.typeName?cap_first}(${wText})">

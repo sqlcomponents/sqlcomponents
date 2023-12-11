@@ -91,7 +91,7 @@ public final class ${name}Store  {
 	</#if>	
 	-->	
 
-  private ${name} rowMapperForReturning(final ResultSet rs,final ${name} inserting${name}) throws SQLException {
+  private ${name} rowMapperForReturning(final ResultSet rs,final ${name} inserting${name}) throws <@throwsblock/>{
     final ${name} ${name?uncap_first} = new ${name}();
         <#assign index=1>
 		<#list returningProperties as property>
@@ -111,7 +111,7 @@ public final class ${name}Store  {
           <#case "java.lang.Character">
           	 ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).charAt(0));
            <#break>
-        	   <#case "org.json.JSONObject">
+        	   <#case "com.fasterxml.jackson.databind.JsonNode">
         	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                  <#break>
            <#case "java.util.UUID">
@@ -136,7 +136,7 @@ public final class ${name}Store  {
         return ${name?uncap_first};
     }
 
-	private ${name} rowMapper(ResultSet rs) throws SQLException {
+	private ${name} rowMapper(ResultSet rs) throws <@throwsblock/> {
         final ${name} ${name?uncap_first} = new ${name}();<#assign index=1>
 		<#list properties as property>
 		<#switch property.dataType>
@@ -155,7 +155,7 @@ public final class ${name}Store  {
           <#case "java.lang.Character">
           	 ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).charAt(0));
            <#break>
-        	   <#case "org.json.JSONObject">
+        	   <#case "com.fasterxml.jackson.databind.JsonNode">
         	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                  <#break>
            <#case "java.util.UUID">
@@ -316,8 +316,8 @@ public final class ${name}Store  {
     <#case "java.util.UUID">
         <@columns.UUIDColumn property=property/>
         <#break>
-    <#case "org.json.JSONObject" >
-        <@columns.JSONObjectColumn property=property/>
+    <#case "com.fasterxml.jackson.databind.JsonNode" >
+        <@columns.JsonNodeColumn property=property/>
         <#break>
     <#case "java.nio.ByteBuffer" >
         <@columns.ByteBuffer property=property/>

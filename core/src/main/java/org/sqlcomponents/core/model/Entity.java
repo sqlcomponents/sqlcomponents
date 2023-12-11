@@ -75,6 +75,18 @@ public class Entity {
     }
 
     /**
+     * Has java type boolean.
+     *
+     * @param type the class name
+     * @return the boolean
+     */
+    public boolean hasJavaType(final String type) {
+        return this.getProperties().stream()
+                .filter(property -> property.getDataType().equals(type))
+                .findFirst().isPresent();
+    }
+
+    /**
      * Contains encryption boolean.
      *
      * @param property the property

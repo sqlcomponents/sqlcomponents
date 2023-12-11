@@ -137,7 +137,7 @@
 
             <#if table.hasPrimaryKey>
 
-            public final ${name} returning() throws SQLException  {
+            public final ${name} returning() throws <@throwsblock/>  {
                 ${name} inserted${name} = null ;
                 <@insertquery isReturning=true/>
 
@@ -209,7 +209,7 @@
                 return insertedRows;
             }
             <#if table.hasPrimaryKey>
-            public final List<${name}> returning() throws SQLException  {
+            public final List<${name}> returning() throws <@throwsblock/>  {
                 List<${name}> insertedList = null ;
                 <@insertquery isReturning=true/>
 

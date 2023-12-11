@@ -68,7 +68,7 @@ public final class JavaMapper extends Mapper {
         switch (aColumn.getColumnType()) {
             case JSON:
             case JSONB:
-                return "org.json.JSONObject";
+                return "com.fasterxml.jackson.databind.JsonNode";
             default:
                 return Objects.requireNonNull(getDataTypeClass(aColumn))
                         .getName();

@@ -1,5 +1,6 @@
 package org.example.store;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.RajaManager;
 import org.example.model.Raja;
 import org.example.model.Connection;
@@ -129,7 +130,7 @@ class RajaTest {
     }
 
     @Test
-    void testSingleInsertAndGetInsertedObject() throws SQLException {
+    void testSingleInsertAndGetInsertedObject() throws SQLException, JsonProcessingException {
 
         Connection connection =
                 this.connectionStore.insert().values(connectionsToTest.get(0))
@@ -147,7 +148,7 @@ class RajaTest {
     }
 
     @Test
-    void testMultiInsertAndGetInsertedObjects() throws SQLException {
+    void testMultiInsertAndGetInsertedObjects() throws SQLException, JsonProcessingException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
         List<Raja> insertedRajas =
@@ -158,7 +159,7 @@ class RajaTest {
     }
 
     @Test
-    void testMultiSequenceInsertAndGetInsertedObjects() throws SQLException {
+    void testMultiSequenceInsertAndGetInsertedObjects() throws SQLException, JsonProcessingException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
         List<Raja> insertedRajas =
@@ -171,7 +172,7 @@ class RajaTest {
     }
 
     @Test
-    void testTableFilterMaps() throws SQLException {
+    void testTableFilterMaps() throws SQLException, JsonProcessingException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
         Raja insertedRaja = this.allInAllRajaStore.insert()
@@ -187,7 +188,7 @@ class RajaTest {
     }
 
     @Test
-    void testEncryption() throws SQLException {
+    void testEncryption() throws SQLException, JsonProcessingException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
         azaguRajasToTest.get(0).setAEncryptedText("AEncryptedText");
@@ -201,7 +202,7 @@ class RajaTest {
     }
 
     @Test
-    void testDeleteWhereClause() throws SQLException {
+    void testDeleteWhereClause() throws SQLException, JsonProcessingException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
         List<Raja> insertedRajas =
@@ -305,7 +306,7 @@ class RajaTest {
 
 
     @Test
-    void testSelectCrossColumns() throws SQLException {
+    void testSelectCrossColumns() throws SQLException, JsonProcessingException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
         List<Raja> insertedRajas =
@@ -327,7 +328,7 @@ class RajaTest {
     }
 
     @Test
-    void testUpdateAndDeleteWithQuery() throws SQLException {
+    void testUpdateAndDeleteWithQuery() throws SQLException, JsonProcessingException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
         List<Raja> insertedRajas =
