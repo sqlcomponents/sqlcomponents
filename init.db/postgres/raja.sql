@@ -12,6 +12,7 @@ CREATE TABLE raja(
    a_boolean boolean,
    reference_code uuid,
    a_char CHAR(1),
+   a_bpchar bpchar,
    a_text text,
    a_encrypted_text text,
 	a_smallint smallint CHECK (a_smallint>=0),
