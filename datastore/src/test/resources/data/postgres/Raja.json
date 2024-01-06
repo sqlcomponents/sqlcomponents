@@ -11,7 +11,7 @@
     },
     "asmallint": 3,
     "abigint": 9,
-    "a_bpchar": "bpchar",
+    "abpchar": "bpchar",
     "adecimal": 88,
     "adouble": 9.0,
     "anumeric": 8,
