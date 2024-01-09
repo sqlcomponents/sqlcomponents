@@ -205,9 +205,9 @@ public final class JavaMapper extends Mapper {
         if (aColumn.getSize() <= MAX_DIGITS_FOR_FLOAT) {
             lDecimalType = Float.class;
         } else {
-            if(aColumn.getTypeName().equalsIgnoreCase("money")){
+            if (aColumn.getTypeName().equalsIgnoreCase("money")) {
                 lDecimalType = BigDecimal.class;
-            }else {
+            } else {
                 lDecimalType = Double.class;
             }
         }
