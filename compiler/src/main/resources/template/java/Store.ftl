@@ -301,6 +301,9 @@ public final class ${name}Store  {
     <#case "java.lang.Double">
         <@columns.DoubleColumn property=property/>
         <#break>
+   <#case "java.math.BigDecimal">
+        <@columns.BigDecimalColumn property=property/>
+        <#break>
     <#case "java.lang.Boolean">
         <@columns.BooleanColumn property=property/>
         <#break>

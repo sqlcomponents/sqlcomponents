@@ -215,6 +215,13 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 
 <@columnfooter property=property/>
 </#macro>
+<#macro BigDecimalColumn property>
+<@columnheader property=property/>
+
+   <@numbercolumn type="BigDecimal" property=property/>
+
+<@columnfooter property=property/>
+</#macro>
 
 <#macro FloatColumn property>
 <@columnheader property=property/>

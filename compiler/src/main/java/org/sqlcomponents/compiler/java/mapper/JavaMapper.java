@@ -5,6 +5,7 @@ import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.Column;
 
+import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -204,7 +205,11 @@ public final class JavaMapper extends Mapper {
         if (aColumn.getSize() <= MAX_DIGITS_FOR_FLOAT) {
             lDecimalType = Float.class;
         } else {
-            lDecimalType = Double.class;
+            if(aColumn.getTypeName().equalsIgnoreCase("money")){
+                lDecimalType = BigDecimal.class;
+            }else {
+                lDecimalType = Double.class;
+            }
         }
 
         return lDecimalType;
