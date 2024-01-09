@@ -15,6 +15,7 @@
     "adecimal": 88,
     "adouble": 9.0,
     "anumeric": 8,
+    "amoney": 8,
     "areal": 1.2,
     "ainteger": 8,
     "aboolean": true,
