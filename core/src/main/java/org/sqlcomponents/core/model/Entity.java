@@ -1,7 +1,6 @@
 package org.sqlcomponents.core.model;
 
-import lombok.Getter;
-import lombok.Setter;
+
 import org.sqlcomponents.core.model.relational.Table;
 import org.sqlcomponents.core.model.relational.enums.DBType;
 import org.sqlcomponents.core.model.relational.enums.Flag;
@@ -17,8 +16,7 @@ import java.util.stream.Collectors;
 /**
  * The type Entity.
  */
-@Getter
-@Setter
+
 public class Entity {
 
     /**
@@ -312,5 +310,61 @@ public class Entity {
         });
 
         return sampleDistinctCustomColumnTypeProperties;
+    }
+
+    public Table getTable() {
+        return table;
+    }
+
+    public void setTable(final Table theTable) {
+        this.table = theTable;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String theName) {
+        this.name = theName;
+    }
+
+    public String getPluralName() {
+        return pluralName;
+    }
+
+    public void setPluralName(final String thePluralName) {
+        this.pluralName = thePluralName;
+    }
+
+    public String getBeanPackage() {
+        return beanPackage;
+    }
+
+    public void setBeanPackage(final String theBeanPackage) {
+        this.beanPackage = theBeanPackage;
+    }
+
+    public String getDaoPackage() {
+        return daoPackage;
+    }
+
+    public void setDaoPackage(final String theDaoPackage) {
+        this.daoPackage = theDaoPackage;
+    }
+
+    public ORM getOrm() {
+        return orm;
+    }
+
+    public void setOrm(final ORM theOrm) {
+        this.orm = theOrm;
+    }
+
+    public List<Property> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(final List<Property> theProperties) {
+        this.properties = theProperties;
     }
 }

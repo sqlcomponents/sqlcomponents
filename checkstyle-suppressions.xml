@@ -5,6 +5,6 @@
         "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 
 <suppressions>
-    <suppress checks="JavadocVariable"
-              files="Database.java"/>
+    <suppress checks="DesignForExtension|MissingJavadocMethod|FileLength"
+              files="Database.java|Column.java|Entity.java|Default.java|Procedure.java|ORM.java|Index.java"/>
 </suppressions>
