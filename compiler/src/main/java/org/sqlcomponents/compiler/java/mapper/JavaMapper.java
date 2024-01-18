@@ -67,6 +67,7 @@ public final class JavaMapper extends Mapper {
     @Override
     public String getDataType(final Column aColumn) {
         switch (aColumn.getColumnType()) {
+            case MACADDR8:
             case INET:
                 return "java.net.InetAddress";
             case LSEG:

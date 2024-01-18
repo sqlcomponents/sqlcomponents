@@ -23,6 +23,10 @@ public enum ColumnType {
      */
     LSEG("LSEG"),
     /**
+     * MACADDR8 column type.
+     */
+    MACADDR8("MACADDR8"),
+    /**
      * Bit column type.
      */
     BIT("BIT"),
