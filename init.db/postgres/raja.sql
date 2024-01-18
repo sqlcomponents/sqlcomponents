@@ -37,6 +37,7 @@ CREATE TABLE raja(
     a_macaddr8 macaddr8,
     a_closed lseg,
     a_inet inet,
+    a_point point,
     a_circle circle,
     a_path varchar,
     UNIQUE(a_uuid),

@@ -12,6 +12,14 @@ public enum ColumnType {
      */
     CIRCLE("CIRCLE"),
 
+
+    /**
+     * Point column type.
+     */
+
+    POINT("POINT"),
+
+
     /**
      * Inetaddress column type.
      */
