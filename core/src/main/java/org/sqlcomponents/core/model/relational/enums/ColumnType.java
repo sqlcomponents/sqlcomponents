@@ -8,6 +8,11 @@ import java.sql.JDBCType;
 public enum ColumnType {
 
     /**
+     * Circle column type.
+     */
+    CIRCLE("CIRCLE"),
+
+    /**
      * Inetaddress column type.
      */
 

@@ -71,6 +71,8 @@ public final class JavaMapper extends Mapper {
                 return "java.net.InetAddress";
             case LSEG:
                 return "org.locationtech.jts.geom.LineSegment";
+            case CIRCLE:
+                return "org.locationtech.spatial4j.shape.Circle";
             case JSON:
             case JSONB:
                 return "com.fasterxml.jackson.databind.JsonNode";
