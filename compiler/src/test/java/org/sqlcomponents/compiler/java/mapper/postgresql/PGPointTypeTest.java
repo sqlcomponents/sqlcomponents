@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Test Mappings of Circle Types in Postgres.
+ * Test Mappings of Point Types in Postgres.
  * Ref: https://www.postgresql.org/docs/current/datatype-geometric.html
  */
 public class PGPointTypeTest extends BaseMapperTest {
