@@ -6,6 +6,22 @@ import java.sql.JDBCType;
  * The enum Column type.
  */
 public enum ColumnType {
+
+    /**
+     * Circle column type.
+     */
+    CIRCLE("CIRCLE"),
+
+    /**
+     * Inetaddress column type.
+     */
+
+    INET("INET"),
+
+    /**
+     * LSEG column type.
+     */
+    LSEG("LSEG"),
     /**
      * MACADDR8 column type.
      */
