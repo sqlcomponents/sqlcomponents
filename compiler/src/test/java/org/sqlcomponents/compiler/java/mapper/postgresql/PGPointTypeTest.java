@@ -2,6 +2,7 @@ package org.sqlcomponents.compiler.java.mapper.postgresql;
 
 import org.junit.jupiter.api.Test;
 import org.locationtech.spatial4j.shape.Circle;
+import org.locationtech.spatial4j.shape.Point;
 import org.sqlcomponents.compiler.java.mapper.BaseMapperTest;
 
 import java.io.IOException;
@@ -21,6 +22,6 @@ public class PGPointTypeTest extends BaseMapperTest {
 
     @Test
     void getDataType() throws Exception {
-        assertEquals(Circle.class, Class.forName(getDataType("a_point")), "Type Mismatch");
+        assertEquals(Point.class, Class.forName(getDataType("a_point")), "Type Mismatch");
     }
 }
