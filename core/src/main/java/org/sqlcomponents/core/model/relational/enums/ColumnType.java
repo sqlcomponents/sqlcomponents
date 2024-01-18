@@ -7,6 +7,10 @@ import java.sql.JDBCType;
  */
 public enum ColumnType {
     /**
+     * LSEG column type.
+     */
+    LSEG("LSEG"),
+    /**
      * Bit column type.
      */
     BIT("BIT"),
