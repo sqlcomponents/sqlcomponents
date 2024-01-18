@@ -7,21 +7,28 @@ import java.sql.JDBCType;
  */
 public enum ColumnType {
     /**
-     * INET column type.
+     * Cidr column type.
      */
+    CIDR("CIDR"),
+    /**
+     * Circle column type.
+     */
+    CIRCLE("CIRCLE"),
+
+    /**
+     * Inetaddress column type.
+     */
+
     INET("INET"),
+
     /**
      * LSEG column type.
      */
     LSEG("LSEG"),
     /**
-     * CIRCLE column type.
+     * MACADDR8 column type.
      */
-    CIRCLE("CIRCLE"),
-    /**
-     * CIDR column type.
-     */
-    CIDR("CIDR"),
+    MACADDR8("MACADDR8"),
     /**
      * Bit column type.
      */
