@@ -6,9 +6,10 @@ import org.sqlcomponents.compiler.java.util.CompilerTestUtil;
 import org.sqlcomponents.core.crawler.Crawler;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.Database;
-
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.Inet6Address;
+import java.net.InetAddress;
 import java.sql.SQLException;
 import java.util.UUID;
 
@@ -28,7 +29,7 @@ class JavaMapperTest {
     @Test
     void getDataType() throws Exception {
 //        assertEquals(UUID.class, Class.forName(getDataType("a_uuid")), "Type Mismatch");
-        assertEquals(BigDecimal.class, Class.forName(getDataType("a_money")), "Type Mismatch");
+        assertEquals(InetAddress.class, Class.forName(getDataType("a_macaddr")), "Type Mismatch");
     }
 
     @NotNull

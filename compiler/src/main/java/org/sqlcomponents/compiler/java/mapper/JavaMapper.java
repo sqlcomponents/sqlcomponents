@@ -67,6 +67,8 @@ public final class JavaMapper extends Mapper {
     @Override
     public String getDataType(final Column aColumn) {
         switch (aColumn.getColumnType()) {
+            case MACADDR:
+                return "java.net.InetAddress";
             case JSON:
             case JSONB:
                 return "com.fasterxml.jackson.databind.JsonNode";
