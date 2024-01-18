@@ -6,6 +6,13 @@ import java.sql.JDBCType;
  * The enum Column type.
  */
 public enum ColumnType {
+
+    /**
+     * Inetaddress column type.
+     */
+
+    INET("INET"),
+
     /**
      * LSEG column type.
      */
