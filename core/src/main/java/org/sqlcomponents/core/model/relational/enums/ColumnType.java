@@ -6,6 +6,10 @@ import java.sql.JDBCType;
  * The enum Column type.
  */
 public enum ColumnType {
+    /**
+     * ENVELOPE column type.
+     */
+    BOX("BOX"),
 
     /**
      * Circle column type.
