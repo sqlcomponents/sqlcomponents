@@ -38,6 +38,7 @@ CREATE TABLE raja(
     a_closed lseg,
     a_inet inet,
     a_circle circle,
+    a_path varchar,
     UNIQUE(a_uuid),
    CONSTRAINT fk_code
       FOREIGN KEY(reference_code) 
