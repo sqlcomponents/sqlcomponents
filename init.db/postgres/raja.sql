@@ -36,6 +36,7 @@ CREATE TABLE raja(
     a_interval interval,
     a_closed lseg,
     a_inet inet,
+    a_circle circle,
     UNIQUE(a_uuid),
    CONSTRAINT fk_code
       FOREIGN KEY(reference_code) 
