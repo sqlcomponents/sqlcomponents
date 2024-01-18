@@ -6,6 +6,11 @@ import java.sql.JDBCType;
  * The enum Column type.
  */
 public enum ColumnType {
+
+    /**
+     * CIDR column type.
+     */
+    CIDR("CIDR"),
     /**
      * Bit column type.
      */
