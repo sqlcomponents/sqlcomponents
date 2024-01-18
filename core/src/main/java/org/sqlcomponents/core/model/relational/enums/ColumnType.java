@@ -31,6 +31,10 @@ public enum ColumnType {
      */
     BIT("BIT"),
     /**
+     * Path column type.
+     */
+    PATH("PATH"),
+    /**
      * Identifies the generic SQL type {@code TINYINT}.
      */
     TINYINT("TINYINT"),
