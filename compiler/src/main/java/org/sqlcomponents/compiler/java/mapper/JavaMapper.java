@@ -67,6 +67,8 @@ public final class JavaMapper extends Mapper {
     @Override
     public String getDataType(final Column aColumn) {
         switch (aColumn.getColumnType()) {
+            case PATH:
+                return "java.lang.String";
             case JSON:
             case JSONB:
                 return "com.fasterxml.jackson.databind.JsonNode";
