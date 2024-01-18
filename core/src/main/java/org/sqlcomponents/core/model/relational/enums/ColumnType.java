@@ -7,6 +7,10 @@ import java.sql.JDBCType;
  */
 public enum ColumnType {
     /**
+     * MACADDR8 column type.
+     */
+    MACADDR8("MACADDR8"),
+    /**
      * Bit column type.
      */
     BIT("BIT"),

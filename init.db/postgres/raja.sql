@@ -34,6 +34,7 @@ CREATE TABLE raja(
    	a_xml xml,
     a_time time,
     a_interval interval,
+    a_macaddr8 macaddr8,
     UNIQUE(a_uuid),
    CONSTRAINT fk_code
       FOREIGN KEY(reference_code) 
