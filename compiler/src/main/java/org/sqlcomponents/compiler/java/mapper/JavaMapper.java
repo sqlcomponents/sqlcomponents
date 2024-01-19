@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.Column;
-
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.time.Duration;
@@ -67,6 +66,25 @@ public final class JavaMapper extends Mapper {
     @Override
     public String getDataType(final Column aColumn) {
         switch (aColumn.getColumnType()) {
+            case BOX:
+                return "org.locationtech.jts.geom.Envelope";
+            case LINE:
+                return "org.locationtech.jts.geom.LineString";
+            case POLYGON:
+                return "org.locationtech.jts.geom.Polygon";
+            case PATH:
+                return "java.lang.String";
+            case MACADDR8:
+            case MACADDR:
+            case INET:
+            case CIDR:
+                return "java.net.InetAddress";
+            case LSEG:
+                return "org.locationtech.jts.geom.LineSegment";
+            case CIRCLE:
+                return "org.locationtech.spatial4j.shape.Circle";
+            case POINT:
+                return "org.locationtech.spatial4j.shape.Point";
             case JSON:
             case JSONB:
                 return "com.fasterxml.jackson.databind.JsonNode";
