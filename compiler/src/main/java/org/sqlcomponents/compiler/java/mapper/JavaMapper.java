@@ -74,6 +74,7 @@ public final class JavaMapper extends Mapper {
             case PATH:
                 return "java.lang.String";
             case MACADDR8:
+            case MACADDR:
             case INET:
                 return "java.net.InetAddress";
             case LSEG:

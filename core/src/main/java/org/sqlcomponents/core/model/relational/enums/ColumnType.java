@@ -44,6 +44,10 @@ public enum ColumnType {
      */
     MACADDR8("MACADDR8"),
     /**
+     * MACADDR column type.
+     */
+    MACADDR("MACADDR"),
+    /**
      * Bit column type.
      */
     BIT("BIT"),
