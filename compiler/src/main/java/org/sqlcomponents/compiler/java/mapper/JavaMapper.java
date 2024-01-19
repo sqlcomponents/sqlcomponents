@@ -67,6 +67,12 @@ public final class JavaMapper extends Mapper {
     @Override
     public String getDataType(final Column aColumn) {
         switch (aColumn.getColumnType()) {
+            case LINE:
+                return "org.locationtech.jts.geom.LineString";
+            case POLYGON:
+                return "org.locationtech.jts.geom.Polygon";
+            case PATH:
+                return "java.lang.String";
             case MACADDR8:
             case MACADDR:
             case INET:
@@ -75,6 +81,8 @@ public final class JavaMapper extends Mapper {
                 return "org.locationtech.jts.geom.LineSegment";
             case CIRCLE:
                 return "org.locationtech.spatial4j.shape.Circle";
+            case POINT:
+                return "org.locationtech.spatial4j.shape.Point";
             case JSON:
             case JSONB:
                 return "com.fasterxml.jackson.databind.JsonNode";

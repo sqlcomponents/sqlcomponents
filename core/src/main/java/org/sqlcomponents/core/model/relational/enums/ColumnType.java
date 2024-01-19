@@ -8,9 +8,26 @@ import java.sql.JDBCType;
 public enum ColumnType {
 
     /**
+     * Line column type.
+     */
+    LINE("LINE"),
+
+    /**
      * Circle column type.
      */
     CIRCLE("CIRCLE"),
+    /**
+     * POLYGON column type.
+     */
+    POLYGON("POLYGON"),
+
+
+    /**
+     * Point column type.
+     */
+
+    POINT("POINT"),
+
 
     /**
      * Inetaddress column type.
@@ -34,6 +51,10 @@ public enum ColumnType {
      * Bit column type.
      */
     BIT("BIT"),
+    /**
+     * Path column type.
+     */
+    PATH("PATH"),
     /**
      * Identifies the generic SQL type {@code TINYINT}.
      */
