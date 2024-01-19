@@ -19,10 +19,11 @@
             <version>2.3.31</version>
         </dependency>
         <dependency>
-            <groupId>s</groupId>
+            <groupId>org.locationtech.jts</groupId>
             <artifactId>jts-core</artifactId>
             <version>1.19.0</version>
         </dependency>
+
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>

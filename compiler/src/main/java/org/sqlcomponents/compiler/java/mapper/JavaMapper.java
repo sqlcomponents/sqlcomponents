@@ -66,6 +66,8 @@ public final class JavaMapper extends Mapper {
     @Override
     public String getDataType(final Column aColumn) {
         switch (aColumn.getColumnType()) {
+            case BOX:
+                return "org.locationtech.jts.geom.Envelope";
             case LINE:
                 return "org.locationtech.jts.geom.LineString";
             case POLYGON:
