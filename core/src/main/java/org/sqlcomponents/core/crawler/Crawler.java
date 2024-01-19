@@ -253,6 +253,9 @@ public final class Crawler {
             case POSTGRES_DB:
                 database.setDbType(DBType.POSTGRES);
                 break;
+            case H2_DB:
+                database.setDbType(DBType.H2);
+                break;
             case MYSQL_DB:
                 database.setDbType(DBType.MYSQL);
                 break;
@@ -276,6 +279,10 @@ public final class Crawler {
      * The constant POSTGRES_DB.
      */
     private static final String POSTGRES_DB = "postgresql";
+    /**
+     * The constant H2_DB.
+     */
+    private static final String H2_DB = "h2";
     /**
      * The constant COMMA_STR.
      */
@@ -362,7 +369,7 @@ public final class Crawler {
         List<Table> lTables = new ArrayList<>();
 
         String lSchemaNamePattern =
-                (database.getDbType() == DBType.MYSQL) ? aSchemeName : null;
+                (database.getDbType() == DBType.MYSQL || database.getDbType() == DBType.H2) ? aSchemeName : null;
         String lCatalog =
                 database.getDbType() == DBType.MYSQL ? aSchemeName : null;
 
@@ -376,8 +383,12 @@ public final class Crawler {
                 bTable.setTableName(tableName);
                 bTable.setCategoryName(lResultSet.getString("table_cat"));
                 bTable.setSchemaName(lResultSet.getString("table_schem"));
+                String tableType = lResultSet.getString("table_type");
+                if(database.getDbType() == DBType.H2 && tableType.equals("BASE TABLE")) {
+                    tableType = "TABLE";
+                }
                 bTable.setTableType(
-                        TableType.value(lResultSet.getString("table_type")));
+                        TableType.value(tableType));
                 bTable.setRemarks(lResultSet.getString("remarks"));
                 // bTable.setCategoryType(lResultSet.getString("type_cat"));
                 // bTable.setSchemaType(lResultSet.getString("type_schem"));
@@ -545,6 +556,9 @@ public final class Crawler {
      */
     private ColumnType getColumnTypeForOthers(final Column aColumn) {
         if (aColumn.getTable().getDatabase().getDbType() == DBType.POSTGRES) {
+            return ColumnType.findEnum(aColumn.getTypeName());
+        }
+        else if (aColumn.getTable().getDatabase().getDbType() == DBType.H2) {
             return ColumnType.findEnum(aColumn.getTypeName());
         }
 

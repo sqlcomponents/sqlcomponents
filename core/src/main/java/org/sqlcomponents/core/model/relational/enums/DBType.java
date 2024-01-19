@@ -9,6 +9,10 @@ public enum DBType {
      */
     POSTGRES("POSTGRES"),
     /**
+     * H2 db type.
+     */
+    H2("H2"),
+    /**
      * Mysql db type.
      */
     MYSQL("MYSQL"),
