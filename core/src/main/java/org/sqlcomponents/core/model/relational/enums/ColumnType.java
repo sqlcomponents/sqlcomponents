@@ -6,6 +6,13 @@ import java.sql.JDBCType;
  * The enum Column type.
  */
 public enum ColumnType {
+
+    /**
+     * Box column type.
+     */
+    BOX("BOX"),
+
+
     /**
      * Cidr column type.
      */
