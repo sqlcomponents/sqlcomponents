@@ -11,9 +11,26 @@ public enum ColumnType {
      */
     CIDR("CIDR"),
     /**
+     * Line column type.
+     */
+    LINE("LINE"),
+
+    /**
      * Circle column type.
      */
     CIRCLE("CIRCLE"),
+    /**
+     * POLYGON column type.
+     */
+    POLYGON("POLYGON"),
+
+
+    /**
+     * Point column type.
+     */
+
+    POINT("POINT"),
+
 
     /**
      * Inetaddress column type.
@@ -30,9 +47,17 @@ public enum ColumnType {
      */
     MACADDR8("MACADDR8"),
     /**
+     * MACADDR column type.
+     */
+    MACADDR("MACADDR"),
+    /**
      * Bit column type.
      */
     BIT("BIT"),
+    /**
+     * Path column type.
+     */
+    PATH("PATH"),
     /**
      * Identifies the generic SQL type {@code TINYINT}.
      */

@@ -1,5 +1,6 @@
 package org.sqlcomponents.compiler.java.mapper;
 
+import org.junit.jupiter.api.Test;
 import org.sqlcomponents.compiler.java.util.CompilerTestUtil;
 import org.sqlcomponents.core.crawler.Crawler;
 import org.sqlcomponents.core.model.Application;
@@ -7,6 +8,8 @@ import org.sqlcomponents.core.model.relational.Database;
 
 import java.io.IOException;
 import java.sql.SQLException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BaseMapperTest {
 
@@ -17,6 +20,12 @@ public class BaseMapperTest {
         Application application = CompilerTestUtil.getApplication();
         this.database = new Crawler(application).getDatabase();
         this.javaMapper = new JavaMapper(application);
+    }
+    @Test
+    void getDataType() throws Exception {
+//        assertEquals(UUID.class, Class.forName(getDataType("a_uuid")), "Type Mismatch");
+        //   assertEquals(BigDecimal.class, Class.forName(getDataType("a_money")), "Type Mismatch");
+        assertEquals(String.class, Class.forName(getDataType("a_path")), "Type Mismatch");
     }
 
     protected String getDataType(final String columnName) {
