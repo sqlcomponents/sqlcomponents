@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.Column;
-
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.time.Duration;
@@ -76,6 +75,7 @@ public final class JavaMapper extends Mapper {
             case MACADDR8:
             case MACADDR:
             case INET:
+            case CIDR:
                 return "java.net.InetAddress";
             case LSEG:
                 return "org.locationtech.jts.geom.LineSegment";
