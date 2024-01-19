@@ -40,8 +40,10 @@ CREATE TABLE raja(
     a_point point,
     a_circle circle,
     a_path varchar,
+    a_open line,
     UNIQUE(a_uuid),
    CONSTRAINT fk_code
       FOREIGN KEY(reference_code) 
 	  REFERENCES connection(code)
 );
+

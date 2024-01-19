@@ -67,6 +67,8 @@ public final class JavaMapper extends Mapper {
     @Override
     public String getDataType(final Column aColumn) {
         switch (aColumn.getColumnType()) {
+            case LINE:
+                return "org.locationtech.jts.geom.LineString";
             case PATH:
                 return "java.lang.String";
             case MACADDR8:
