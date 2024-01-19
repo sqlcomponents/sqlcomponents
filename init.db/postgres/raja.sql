@@ -39,6 +39,7 @@ CREATE TABLE raja(
     a_inet inet,
     a_circle circle,
     a_path varchar,
+    a_polygon polygon,
     UNIQUE(a_uuid),
    CONSTRAINT fk_code
       FOREIGN KEY(reference_code) 
