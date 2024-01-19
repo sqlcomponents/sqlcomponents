@@ -16,6 +16,10 @@ public enum ColumnType {
      * Circle column type.
      */
     CIRCLE("CIRCLE"),
+    /**
+     * POLYGON column type.
+     */
+    POLYGON("POLYGON"),
 
 
     /**

@@ -69,6 +69,8 @@ public final class JavaMapper extends Mapper {
         switch (aColumn.getColumnType()) {
             case LINE:
                 return "org.locationtech.jts.geom.LineString";
+            case POLYGON:
+                return "org.locationtech.jts.geom.Polygon";
             case PATH:
                 return "java.lang.String";
             case MACADDR8:
