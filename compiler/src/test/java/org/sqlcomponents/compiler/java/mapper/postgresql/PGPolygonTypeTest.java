@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * Test Mappings of Polygon Types in Postgres.
  * Ref: https://www.postgresql.org/docs/current/datatype-geometric.html
- */
+ */ 
 public class PGPolygonTypeTest extends BaseMapperTest {
     public PGPolygonTypeTest() throws IOException, SQLException {
         super();
