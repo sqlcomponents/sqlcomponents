@@ -164,6 +164,9 @@ public final class ${name}Store  {
                         <#case "java.time.Duration">
         	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                  <#break>
+                 <#case "org.locationtech.jts.geom.Point">
+        	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
+                 <#break>
           <#default>
           <#if containsEncryption(property)>
             ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
@@ -327,7 +330,10 @@ public final class ${name}Store  {
         <#break>
     <#case "java.time.Duration" >
         <@columns.DurationColumn property=property/>
-        <#break>    
+        <#break>   
+    <#case "org.locationtech.jts.geom.Point">
+        <@columns.PointColumn property=property/>
+        <#break>
     </#switch>
 		</#list>
 

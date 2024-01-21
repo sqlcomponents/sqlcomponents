@@ -84,7 +84,7 @@ public final class JavaMapper extends Mapper {
             case CIRCLE:
                 return "org.locationtech.spatial4j.shape.Circle";
             case POINT:
-                return "org.locationtech.spatial4j.shape.Point";
+                return "org.locationtech.jts.geom.Point";
             case JSON:
             case JSONB:
                 return "com.fasterxml.jackson.databind.JsonNode";

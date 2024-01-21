@@ -2,7 +2,7 @@ package org.sqlcomponents.compiler.java.mapper.postgresql;
 
 import org.junit.jupiter.api.Test;
 import org.locationtech.spatial4j.shape.Circle;
-import org.locationtech.spatial4j.shape.Point;
+import org.locationtech.jts.geom.Point;
 import org.sqlcomponents.compiler.java.mapper.BaseMapperTest;
 
 import java.io.IOException;

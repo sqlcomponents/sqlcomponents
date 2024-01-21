@@ -334,3 +334,13 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 
 <@columnfooter property=property/>
 </#macro>
+
+<#macro PointColumn property>
+<@columnheader property=property/>
+
+    public void set(final PreparedStatement preparedStatement, final int i, final Point value) throws SQLException {
+        preparedStatement.setObject(i,convertPoint(value), java.sql.Types.OTHER);
+    }
+    
+<@columnfooter property=property/>
+</#macro>

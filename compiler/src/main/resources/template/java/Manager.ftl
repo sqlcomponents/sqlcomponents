@@ -66,18 +66,21 @@ public final class ${name}Manager {
 
 <#list orm.database.distinctCustomColumnTypeNames as typeName>
     <#switch typeName>
-    <#case "json">
-        <#include "/template/java/custom-object/json.ftl">
-        <#break>
-            <#case "jsonb">
-        <#include "/template/java/custom-object/jsonb.ftl">
-        <#break>
+        <#case "json">
+            <#include "/template/java/custom-object/json.ftl">
+            <#break>
+        <#case "jsonb">
+            <#include "/template/java/custom-object/jsonb.ftl">
+            <#break>
         <#case "uuid">
-        <#include "/template/java/custom-object/uuid.ftl">
-        <#break>
-         <#case "interval">
-        <#include "/template/java/custom-object/interval.ftl">
-        <#break>
+            <#include "/template/java/custom-object/uuid.ftl">
+            <#break>
+        <#case "interval">
+            <#include "/template/java/custom-object/interval.ftl">
+            <#break>
+        <#case "point">
+            <#include "/template/java/custom-object/point.ftl">
+            <#break>
      </#switch>
 </#list>
     <#assign a=addImportStatement("java.sql.PreparedStatement")>

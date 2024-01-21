@@ -9,6 +9,10 @@ public enum TableType {
      */
     TABLE("TABLE"),
     /**
+     * Table table type.
+     */
+    BASE_TABLE("BASE TABLE"),
+    /**
      * The Foreign table.
      */
     FOREIGN_TABLE("FOREIGN TABLE"),
