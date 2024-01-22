@@ -16,51 +16,71 @@ public class Index {
     /**
      * The Non unique.
      */
-    private boolean nonUnique;
+    private final boolean nonUnique;
     /**
      * The Index qualifier.
      */
-    private String indexQualifier;
+    private final String indexQualifier;
     /**
      * The Index name.
      */
-    private String indexName;
+    private final String indexName;
     /**
      * The Type.
      */
-    private short type;
+    private final short type;
     /**
      * The Ordinal position.
      */
-    private short ordinalPosition;
+    private final short ordinalPosition;
     /**
      * The Column name.
      */
-    private String columnName;
+    private final String columnName;
     /**
      * The Order.
      */
-    private Order order;
+    private final Order order;
     /**
      * The Cardinality.
      */
-    private int cardinality;
+    private final int cardinality;
     /**
      * The Pages.
      */
-    private int pages;
+    private final int pages;
     /**
      * The Filter condition.
      */
-    private String filterCondition;
+    private final String filterCondition;
 
     /**
      * Instantiates a new Index.
      *
-     * @param paramTable the table
+     * @param paramTable      the table
+     * @param nonUnique
+     * @param indexQualifier
+     * @param indexName
+     * @param type
+     * @param ordinalPosition
+     * @param columnName
+     * @param order
+     * @param cardinality
+     * @param pages
+     * @param filterCondition
      */
-    public Index(final Table paramTable) {
+    public Index(final Table paramTable, boolean nonUnique, String indexQualifier, String indexName, short type, short ordinalPosition, String columnName, Order order, int cardinality, int pages, String filterCondition) {
         this.table = paramTable;
+        this.nonUnique = nonUnique;
+        this.indexQualifier = indexQualifier;
+        this.indexName = indexName;
+        this.type = type;
+        this.ordinalPosition = ordinalPosition;
+        this.columnName = columnName;
+        this.order = order;
+        this.cardinality = cardinality;
+        this.pages = pages;
+        this.filterCondition = filterCondition;
     }
 
     public Table getTable() {
@@ -71,79 +91,49 @@ public class Index {
         return nonUnique;
     }
 
-    public void setNonUnique(final boolean theNonUnique) {
-        this.nonUnique = theNonUnique;
-    }
 
     public String getIndexQualifier() {
         return indexQualifier;
     }
 
-    public void setIndexQualifier(final String theIndexQualifier) {
-        this.indexQualifier = theIndexQualifier;
-    }
 
     public String getIndexName() {
         return indexName;
     }
 
-    public void setIndexName(final String theIndexName) {
-        this.indexName = theIndexName;
-    }
 
     public short getType() {
         return type;
     }
 
-    public void setType(final short theType) {
-        this.type = theType;
-    }
 
     public short getOrdinalPosition() {
         return ordinalPosition;
     }
 
-    public void setOrdinalPosition(final short theOrdinalPosition) {
-        this.ordinalPosition = theOrdinalPosition;
-    }
 
     public String getColumnName() {
         return columnName;
     }
 
-    public void setColumnName(final String theColumnName) {
-        this.columnName = theColumnName;
-    }
 
     public Order getOrder() {
         return order;
     }
 
-    public void setOrder(final Order theOrder) {
-        this.order = theOrder;
-    }
 
     public int getCardinality() {
         return cardinality;
     }
 
-    public void setCardinality(final int theCardinality) {
-        this.cardinality = theCardinality;
-    }
 
     public int getPages() {
         return pages;
     }
 
-    public void setPages(final int thePages) {
-        this.pages = thePages;
-    }
 
     public String getFilterCondition() {
         return filterCondition;
     }
 
-    public void setFilterCondition(final String theFilterCondition) {
-        this.filterCondition = theFilterCondition;
-    }
-}
+  }

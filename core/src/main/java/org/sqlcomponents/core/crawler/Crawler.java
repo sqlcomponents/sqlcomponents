@@ -428,28 +428,25 @@ public final class Crawler {
                         true, true);
 
         while (indexResultset.next()) {
-            Index bIndex = new Index(aTable);
-            bIndex.setColumnName(indexResultset.getString("COLUMN_NAME"));
-            bIndex.setOrdinalPosition(
-                    indexResultset.getShort("ORDINAL_POSITION"));
+            Index bIndex = new Index(
+                    aTable,
+                    indexResultset.getBoolean("NON_UNIQUE"),
+                    indexResultset.getString("INDEX_QUALIFIER"),
+                    indexResultset.getString("INDEX_NAME"),
+                    indexResultset.getShort("TYPE"),
+                    indexResultset.getShort("ORDINAL_POSITION"),
+                    indexResultset.getString("COLUMN_NAME"),
+                    Order.value(indexResultset.getString("ASC_OR_DESC")),
+                    indexResultset.getInt("CARDINALITY"),
+                    indexResultset.getInt("PAGES"),
+                    indexResultset.getString("FILTER_CONDITION")
+            );
 
-            bIndex.setIndexName(indexResultset.getString("INDEX_NAME"));
-            bIndex.setIndexQualifier(
-                    indexResultset.getString("INDEX_QUALIFIER"));
-            bIndex.setCardinality(indexResultset.getInt("CARDINALITY"));
-            String ascDesc = indexResultset.getString("ASC_OR_DESC");
-            if (ascDesc != null) {
-                bIndex.setOrder(Order.value(ascDesc));
-            }
-            bIndex.setFilterCondition(
-                    indexResultset.getString("FILTER_CONDITION"));
-            bIndex.setPages(indexResultset.getInt("PAGES"));
-            bIndex.setType(indexResultset.getShort("TYPE"));
-            bIndex.setNonUnique(indexResultset.getBoolean("NON_UNIQUE"));
             indices.add(bIndex);
         }
         return indices;
     }
+
 
     /**
      * Gets columns.
@@ -575,13 +572,16 @@ public final class Crawler {
         List<Procedure> lProcedures = new ArrayList<>();
         ResultSet lResultSet = databaseMetaData.getProcedures(null, null, null);
         while (lResultSet.next()) {
-            Procedure function = new Procedure();
-            function.setFunctionName(lResultSet.getString("PROCEDURE_NAME"));
-            function.setFunctionCategory(lResultSet.getString("PROCEDURE_CAT"));
-            function.setFunctionSchema(lResultSet.getString("PROCEDURE_SCHEM"));
-            function.setFunctionType(lResultSet.getShort("PROCEDURE_TYPE"));
-            function.setRemarks(lResultSet.getString("REMARKS"));
-            function.setSpecificName(lResultSet.getString("SPECIFIC_NAME"));
+            Procedure function = new Procedure(
+                    lResultSet.getString("PROCEDURE_NAME"),
+                    lResultSet.getString("PROCEDURE_CAT"),
+                    lResultSet.getString("PROCEDURE_SCHEM"),
+                    lResultSet.getString("REMARKS"),
+                    lResultSet.getShort("PROCEDURE_TYPE"),
+                    lResultSet.getString("SPECIFIC_NAME"),
+                    null, // You may need to adjust this based on your specific implementation for parameters
+                    null  // You may need to adjust this based on your specific implementation for output
+            );
             lProcedures.add(function);
         }
         return lProcedures;

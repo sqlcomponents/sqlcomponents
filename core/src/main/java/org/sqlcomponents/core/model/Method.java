@@ -32,7 +32,7 @@ public class Method {
      * @param paramFunction the function
      */
     public Method(final Procedure paramFunction) {
-        setFunction(paramFunction);
+
     }
 
     /**
@@ -49,9 +49,7 @@ public class Method {
      *
      * @param paramFunctionName the function name
      */
-    public void setFunctionName(final String paramFunctionName) {
-        function.setFunctionName(paramFunctionName);
-    }
+
 
     /**
      * Gets remarks.
@@ -67,9 +65,6 @@ public class Method {
      *
      * @param paramRemarks the remarks
      */
-    public void setRemarks(final String paramRemarks) {
-        function.setRemarks(paramRemarks);
-    }
 
     /**
      * Gets name.
@@ -85,9 +80,6 @@ public class Method {
      *
      * @param paramName the name
      */
-    public void setName(final String paramName) {
-        this.name = paramName;
-    }
 
     /**
      * Gets input parameters.
@@ -103,9 +95,7 @@ public class Method {
      *
      * @param paramInputParameters the input parameters
      */
-    public void setInputParameters(final List<Property> paramInputParameters) {
-        this.inputParameters = paramInputParameters;
-    }
+
 
     /**
      * Gets output property.
@@ -121,9 +111,6 @@ public class Method {
      *
      * @param paramOutputProperty the output property
      */
-    public void setOutputProperty(final Property paramOutputProperty) {
-        this.outputProperty = paramOutputProperty;
-    }
 
     /**
      * Gets function.
@@ -139,9 +126,6 @@ public class Method {
      *
      * @param paramFunction the function
      */
-    public void setFunction(final Procedure paramFunction) {
-        this.function = paramFunction;
-    }
 
     /**
      * Gets output.
@@ -157,9 +141,6 @@ public class Method {
      *
      * @param paramOutput the output
      */
-    public void setOutput(final Column paramOutput) {
-        function.setOutput(paramOutput);
-    }
 
     /**
      * Gets parameters.
@@ -175,9 +156,6 @@ public class Method {
      *
      * @param paramParameters the parameters
      */
-    public void setParametes(final List<Column> paramParameters) {
-        function.setParameters(paramParameters);
-    }
 
     /**
      * Should return the name of the method.

@@ -78,14 +78,10 @@ public abstract class Mapper {
         List<Property> lProperties =
                 new ArrayList<>(aProcedure.getParameters().size());
         Method lMethod = new Method(aProcedure);
-        lMethod.setName(getPropertyName(aProcedure.getFunctionName()));
 
         for (Column column : aProcedure.getParameters()) {
             lProperties.add(getProperty(null, column));
         }
-        lMethod.setInputParameters(lProperties);
-
-        lMethod.setOutputProperty(getProperty(null, aProcedure.getOutput()));
         return lMethod;
     }
 
