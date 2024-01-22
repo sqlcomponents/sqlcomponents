@@ -355,3 +355,13 @@
     }
 <@columnfooter property=property/>
 </#macro>
+
+<#macro MacAddressColumn property>
+<@columnheader property=property/>
+    <#assign a=addImportStatement("java.net.InetAddress")>
+    public void set(final PreparedStatement preparedStatement, final int i, final InetAddress value) throws SQLException {
+        byte[] macBytes = value.getAddress();
+        preparedStatement.setBytes(i,value == null ? null : macBytes);
+    }
+<@columnfooter property=property/>
+</#macro>

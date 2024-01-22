@@ -183,6 +183,15 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
                            <#break>
 
                 <#break>
+                <#case "java.net.InetAddress">
+                     <#assign a=addImportStatement("java.net.InetAddress")>
+                         byte[] macBytes = rs.getBytes(${index});
+                         if(macBytes != null){
+                             InetAddress macAddress = InetAddress.getByAddress(macBytes);
+                             ${name?uncap_first}.set${property.name?cap_first}
+                             get${property.column.typeName?cap_first}(macAddress);
+                         }
+                <#break>
             <#default>
                 <#if containsEncryption(property)>
                     ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
@@ -354,6 +363,10 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "java.lang.String">
                  @columns.PathColumn property=property/>
                  <#break>
+
+            <#case "java.net.InetAddress" >
+                <@columns.MacAddressColumn property=property/>
+                <#break>
 
         </#switch>
     </#list>
