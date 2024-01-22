@@ -375,3 +375,22 @@
     }
 <@columnfooter property=property/>
 </#macro>
+<#macro PolygonColumn property>
+<@columnheader property=property/>
+
+    <#assign a-addImportStatement("org.locationtech.jts.geom.Polygon")>
+    <#assign a-addImportStatement("org.postgresql.geometric.PGpolygon")>
+    <#assign a-addImportStatement("org.postgresql.geometric.PGpoint")>
+
+    public void set(final PreparedStatement preparedStatement, final int i, final PGpolygon value) throws SQLException {
+        PGpoint[] pgPoints = new PGpoint[value.getCoordinates().length];
+                for (int i = 0; i < value.getCoordinates().length; i++) {
+                    pgPoints[i] = new PGpoint(value.getCoordinates()[i].getX(), value.getCoordinates()[i].getY());
+                }
+
+
+        preparedStatement.setObject(i,value==null ? null : new PGpolygon(pgPoints));
+    }
+
+<@columnfooter property=property/>
+</#macro>
