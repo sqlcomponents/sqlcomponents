@@ -155,6 +155,14 @@ public final class ${name}Store  {
         final ${name} ${name?uncap_first} = new ${name}();<#assign index=1>
 		<#list properties as property>
 		<#switch property.dataType>
+		  <#case "org.locationtech.jts.geom.Envelope">
+                 <#assign a=addImportStatement("org.locationtech.jts.geom.*")>
+                 <#assign a=addImportStatement("org.postgresql.geometric.PGbox")>
+                 PGbox pGbox = (PGbox) rs.getObject(${index});
+                     if(pGbox!= null){
+                       ${name?uncap_first}.set${property.name?cap_first}(new Envelope(pGbox.point[0].x,pGbox.point[1].x,pGbox.point[0].y,pGbox.point[1].y));
+                       }
+                 <#break>
           <#case "java.time.LocalDate">
             ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalDate());
         	 <#break>
@@ -367,6 +375,9 @@ public final class ${name}Store  {
     <#case "java.net.InetAddress">
         <@columns.InetColumn property=property/>
         <#break>
+    <#case "org.locationtech.jts.geom.Envelope">
+         <@columns.BoxColumn property=property/>
+         <#break>
 
     </#switch>
 		</#list>

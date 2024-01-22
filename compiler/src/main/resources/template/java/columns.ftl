@@ -363,3 +363,19 @@ public void set(final PreparedStatement preparedStatement,final int i, final Lin
     }
     <@columnfooter property=property/>
 </#macro>
+<#macro BoxColumn property>
+<@columnheader property=property/>
+    <#assign a=addImportStatement("org.locationtech.jts.geom.Envelope")>
+    <#assign a=addImportStatement("org.postgresql.geometric.PGbox")>
+    public void set(final PreparedStatement preparedStatement, final int i, final Envelope value) throws SQLException {
+        preparedStatement.setObject(i,value == null ? null : new PGbox(value.getMinX(), value.getMinY(),
+                                                                             value.getMaxX(), value.getMaxY()));
+    }
+<@columnfooter property=property/>
+</#macro>
+
+
+
+
+
+
