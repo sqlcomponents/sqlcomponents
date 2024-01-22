@@ -205,6 +205,26 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
                              get${property.column.typeName?cap_first}(macAddress);
                          }
                 <#break>
+                <#case "org.locationtech.jts.geom.*">
+                                  <#assign a=addImportStatement("org.postgresql.geometric.PGpoint")>
+                                  <#assign a=addImportStatement("org.postgresql.geometric.PGpolygon")>
+                                  <#assign a=addImportStatement("org.locationtech.jts.geom.Polygon")>
+                                  <#assign a=addImportStatement("org.locationtech.jts.geom.Coordinate")>
+                                  <#assign a=addImportStatement("org.locationtech.jts.geom.CoordinateXY")>
+                                  <#assign a=addImportStatement("org.locationtech.jts.geom.GeometryFactory")>
+                                  <#assign a=addImportStatement("org.locationtech.jts.geom.LinearRing")>
+                                      PGpolygon pgPolygon = (PGpolygon) rs.getObject(${index});
+                                      Coordinate[] coordinates = new Coordinate[pgPolygon.points.length];
+                                              for (int i = 0; i < pgPolygon.points.length; i++) {
+                                                  coordinates[i] = new CoordinateXY(pgPolygon.points[i].x, pgPolygon.points[i].y);
+                                              }
+                                              LinearRing linearRing = new GeometryFactory().createLinearRing(coordinates);
+                                              Polygon polygon = new Polygon(linearRing, null, new GeometryFactory());
+
+                                      if(polygon!=null){
+                                      ${name?uncap_first}.set${property.name?cap_first}(polygon);
+                                      }
+                                      <#break>
             <#default>
                 <#if containsEncryption(property)>
                     ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
@@ -383,6 +403,9 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "java.net.InetAddress" >
                  <@columns.Macaddr8Column property=property/>
                 <#break>
+            <#case "org.locationtech.jts.geom.Polygon" >
+                    <@columns.PolygonColumn property=property/>
+                    <#break>
 
         </#switch>
     </#list>
