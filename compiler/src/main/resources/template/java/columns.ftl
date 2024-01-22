@@ -24,7 +24,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
     public boolean validate(${getClassName(property.dataType)} value) {
         return true;
     }
-    
+
 }
 </#macro>
 
@@ -56,7 +56,7 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
         sql = "${property.column.escapedName?j_string} LIKE '" + value + "'";
         return getWhereClause();
     }
-    
+
 <@columnfooter property=property/>
 </#macro>
 
@@ -335,12 +335,12 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
 <@columnfooter property=property/>
 </#macro>
 
-<#macro PointColumn property>
+<#macro PathColumn property>
 <@columnheader property=property/>
+     <#assign a=addImportStatement("java.lang.String")>
 
-    public void set(final PreparedStatement preparedStatement, final int i, final Point value) throws SQLException {
-        preparedStatement.setObject(i,convertPoint(value), java.sql.Types.OTHER);
+    public void set(final PreparedStatement preparedStatement, final int i, final String value) throws SQLException {
+     preparedStatement.setString(i,value == null ? null: value);
     }
-    
 <@columnfooter property=property/>
 </#macro>

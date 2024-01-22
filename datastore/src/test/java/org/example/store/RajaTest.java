@@ -354,4 +354,21 @@ class RajaTest {
 
     }
 
+    @Test
+    void testGeo() throws SQLException, JsonProcessingException {
+        this.connectionStore.insert().values(connectionsToTest).execute();
+
+        azaguRajasToTest.stream().forEach(raja -> setGeoTypes(raja));
+
+        List<Raja> insertedRajas =
+                this.allInAllRajaStore.insert()
+                        .values(azaguRajasToTest.get(0))
+                        .values(azaguRajasToTest.get(1))
+                        .values(azaguRajasToTest.get(2)).returning();
+    }
+
+    private void setGeoTypes(Raja raja) {
+        raja.setAPath("[(1,1), (2,2), (3,3), (4,4)]");
+    }
+
 }

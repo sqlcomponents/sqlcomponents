@@ -23,7 +23,7 @@ public final class ${name}Store  {
 
     public static ${name}Store get${name}Store(final javax.sql.DataSource theDataSource
                 ,final ${orm.application.name}Manager.Observer theObserver
-                    
+
 
                     <#if containsEncryptedProperty() >
                         <#assign a=addImportStatement("java.util.function.Function")>
@@ -32,7 +32,7 @@ public final class ${name}Store  {
                     </#if>) {
         return new ${name}Store(theDataSource
                 ,theObserver
-                    
+
 
                     <#if containsEncryptedProperty() >
                         <#assign a=addImportStatement("java.util.function.Function")>
@@ -88,8 +88,8 @@ public final class ${name}Store  {
 	<#if exportedKeys?size != 0>
 	public List<${name}> get${name}s(Search${name} search${name}) throws SQLException;
 		<#assign a=addImportStatement(javaPackageName+ ".search.Search" + name)>
-	</#if>	
-	-->	
+	</#if>
+	-->
 
   private ${name} rowMapperForReturning(final ResultSet rs,final ${name} inserting${name}) throws <@throwsblock/>{
     final ${name} ${name?uncap_first} = new ${name}();
@@ -160,13 +160,16 @@ public final class ${name}Store  {
                  <#break>
            <#case "java.util.UUID">
         	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                 <#break>
+                  <#break>
                         <#case "java.time.Duration">
         	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                  <#break>
-                 <#case "org.locationtech.jts.geom.Point">
-        	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                 <#break>
+                 <#case "java.lang.String">
+                                   String newone = rs.getString(${index});
+                                      if(newone!= null){
+                                         ${name?uncap_first}.set${property.name?cap_first}(newone);
+                                         }
+                                      <#break>
           <#default>
           <#if containsEncryption(property)>
             ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
@@ -188,7 +191,7 @@ public final class ${name}Store  {
     public static Value<Column.${property.name?cap_first}Column,${getClassName(property.dataType)}> ${property.name}(final ${getClassName(property.dataType)} value) {
         return new Value<>(${property.name}(),value);
     }
-    
+
     public static Column.${property.name?cap_first}Column ${property.name}() {
         return new WhereClause().${property.name}();
     }
@@ -255,9 +258,9 @@ public final class ${name}Store  {
 
 		</#list>
 
-       
 
-        
+
+
 
     }
 
@@ -266,7 +269,7 @@ public final class ${name}Store  {
 
     public static abstract class Column<T> implements ${orm.application.name}Manager.Column<T> {
 
-  
+
             private final PartialWhereClause  whereClause ;
 
             protected Column(final PartialWhereClause  whereClause) {
@@ -277,7 +280,7 @@ public final class ${name}Store  {
                 return (WhereClause) whereClause ;
             }
 
-            
+
             <#list properties as property>
     <#switch property.dataType>
     <#case "java.lang.String">
@@ -330,15 +333,15 @@ public final class ${name}Store  {
         <#break>
     <#case "java.time.Duration" >
         <@columns.DurationColumn property=property/>
-        <#break>   
-    <#case "org.locationtech.jts.geom.Point">
-        <@columns.PointColumn property=property/>
         <#break>
+    <#case "java.lang.String">
+            <@columns.PathColumn property=property/>
+            <#break>
     </#switch>
 		</#list>
 
         }
-    
+
 
 }<#assign a=addImportStatement("java.util.ArrayList")><#assign a=addImportStatement("java.time.LocalDate")>
 </#assign>
