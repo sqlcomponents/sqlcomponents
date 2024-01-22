@@ -391,6 +391,23 @@
 
         preparedStatement.setObject(i,value==null ? null : new PGpolygon(pgPoints));
     }
+ <@columnfooter property=property/>
+</#macro>
+<#macro LineColumn property>
+<@columnheader property=property/>
+    <#assign a-addImportStatement("org.postgresql.geometric.PGline")>
+    <#assign a-addImportStatement("org.postgresql.geometric.PGpoint")>
+    <#assign a-addImportStatement("org.locationtech.jts.geom.Coordinate")>
+    <#assign a-addImportStatement("org.locationtech.jts.geom.LineString")>
+    public void set(final PreparedStatement preparedStatement, final int i, final LineString value) throws SQLException {
+            LineString lineString = myEntity.value();
+                        Coordinate[] coordinates = lineString.getCoordinates();
 
+                        // Create PGline with start and end points
+                        PGpoint start = new PGpoint(coordinates[0].getX(), coordinates[0].getY());
+                        PGpoint end = new PGpoint(coordinates[1].getX(), coordinates[1].getY());
+                        PGline pLine = new PGline(start, end);
+            preparedStatement.setObject(i,value==null ? null : pLine);
+        }
 <@columnfooter property=property/>
 </#macro>

@@ -225,6 +225,17 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
                                       ${name?uncap_first}.set${property.name?cap_first}(polygon);
                                       }
                                       <#break>
+                                       <#case "java.net.InetAddress">
+                                                        <#assign a=addImportStatement("org.postgresql.geometric.PGline")>
+                                                        <#assign a=addImportStatement("org.postgresql.geometric.PGpoint")>
+                                                        <#assign a=addImportStatement("org.locationtech.jts.geom.Coordinate")>
+                                                        <#assign a=addImportStatement("org.locationtech.jts.geom.LineString")>
+                                                            PGobject macadd = (PGobject) rs.getObject(${index});
+                                                            InetAddress macAddress = InetAddress.getByAddress(macadd.getValue().getBytes());
+                                                            if(macAddress!=null){
+                                                            ${name?uncap_first}.set${property.name?cap_first}(macAddress);
+                                                            }
+                                                            <#break>
             <#default>
                 <#if containsEncryption(property)>
                     ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
@@ -406,6 +417,9 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "org.locationtech.jts.geom.Polygon" >
                     <@columns.PolygonColumn property=property/>
                     <#break>
+            <#case "org.locationtech.jts.geom.LineString" >
+                                <@columns.LineColumn property=property/>
+                                <#break>
 
         </#switch>
     </#list>
