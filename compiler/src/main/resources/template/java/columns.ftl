@@ -344,3 +344,13 @@ public static class ${property.name?cap_first}Column extends Column<${getClassNa
     
 <@columnfooter property=property/>
 </#macro>
+
+<#macro LineSegmentColumn property>
+<@columnheader property=property/>
+<#assign a=addImportStatement("org.locationtech.jts.geom.LineSegment")>
+<#assign a=addImportStatement("org.postgresql.geometric.PGlseg")>
+public void set(final PreparedStatement preparedStatement,final int i, final LineSegment value) throws SQLException {
+   preparedStatement.setObject(i,value == null ? null : new PGlseg(value.minX(),value.minY(),value.maxX(),value.maxY()));
+}
+<@columnfooter property=property/>
+</#macro>
