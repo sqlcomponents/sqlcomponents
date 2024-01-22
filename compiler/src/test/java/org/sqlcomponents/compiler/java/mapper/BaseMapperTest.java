@@ -22,6 +22,7 @@ public class BaseMapperTest {
         this.javaMapper = new JavaMapper(application);
     }
     @Test
+
     void getDataType() throws Exception {
 //        assertEquals(UUID.class, Class.forName(getDataType("a_uuid")), "Type Mismatch");
         //   assertEquals(BigDecimal.class, Class.forName(getDataType("a_money")), "Type Mismatch");

@@ -6,6 +6,7 @@ import org.sqlcomponents.core.model.Application;
 
 class JavaCompilerTest {
     @Test
+    @SuppressWarnings("squid:S2699")
     void writeCode() throws Exception {
         Application application = CompilerTestUtil.getApplication();
         application.compile(new JavaCompiler());
