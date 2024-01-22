@@ -120,7 +120,22 @@ public final class ${name}Store  {
                         <#case "java.time.Duration">
         	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                  <#break>
-          <#default>
+
+            <#case "java.net.InetAddress">
+                <#assign a=addImportStatement("java.net.InetAddress")>
+
+                String inetAddressStr = rs.getString(${index});
+                InetAddress inetAddress = null;
+                try {
+                inetAddress = InetAddress.getByName(inetAddressStr);
+                } catch (UnknownHostException e) {
+                // Handle the exception according to your application's requirements
+                e.printStackTrace(); // or log the exception
+                }
+                ${name?uncap_first}.set${property.name?cap_first}(inetAddress);
+                <#break>
+
+            <#default>
           <#if containsEncryption(property)>
             ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
           <#else>
@@ -347,6 +362,12 @@ public final class ${name}Store  {
     <#case "org.locationtech.jts.geom.LineSegment" >
         <@columns.LineSegmentColumn property=property/>
         <#break>
+
+
+    <#case "java.net.InetAddress">
+        <@columns.InetColumn property=property/>
+        <#break>
+
     </#switch>
 		</#list>
 
