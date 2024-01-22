@@ -167,6 +167,16 @@ public final class ${name}Store  {
                  <#case "org.locationtech.jts.geom.Point">
         	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                  <#break>
+           <#case "org.locationtech.jts.geom.LineSegment">
+                                       <#assign a=addImportStatement("org.locationtech.jts.geom.*")>
+                                       <#assign a=addImportStatement("org.locationtech.jts.geom.impl.CoordinateArraySequence")>
+                                       <#assign a=addImportStatement("org.postgresql.geometric.PGlseg")>
+                                             PGlseg pGlseg = (PGlseg) rs.getObject(${index});
+                                             if( pGlseg!= null){
+                                             ${name?uncap_first}.set${property.name?cap_first}(new LineSegment(new Coordinate(3, 2), new Coordinate(7, 9)));
+                                             }
+
+                                             <#break>
           <#default>
           <#if containsEncryption(property)>
             ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
@@ -333,6 +343,9 @@ public final class ${name}Store  {
         <#break>   
     <#case "org.locationtech.jts.geom.Point">
         <@columns.PointColumn property=property/>
+        <#break>
+    <#case "org.locationtech.jts.geom.LineSegment" >
+        <@columns.LineSegmentColumn property=property/>
         <#break>
     </#switch>
 		</#list>
