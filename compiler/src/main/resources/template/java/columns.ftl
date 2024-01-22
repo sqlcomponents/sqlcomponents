@@ -344,5 +344,14 @@
     preparedStatement.setObject(i,value == null ? null : new PGcircle(new PGpoint(value.getCenter().getX(),value.getCenter().getY()),value.getRadius()) );
     }
 
-    <@columnfooter property=property/>
+   <@columnfooter property=property/>
+</#macro>
+<#macro PathColumn property>
+<@columnheader property=property/>
+     <#assign a=addImportStatement("java.lang.String")>
+
+    public void set(final PreparedStatement preparedStatement, final int i, final String value) throws SQLException {
+     preparedStatement.setString(i,value == null ? null: value);
+    }
+<@columnfooter property=property/>
 </#macro>

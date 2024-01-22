@@ -175,6 +175,13 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
                 , pGcircle.radius));
                 }
 
+                <#case "java.lang.String">
+                         String newone = rs.getString(${index});
+                           if(newone!= null){
+                           ${name?uncap_first}.set${property.name?cap_first}(newone);
+                           }
+                           <#break>
+
                 <#break>
             <#default>
                 <#if containsEncryption(property)>
@@ -343,6 +350,10 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "org.locationtech.spatial4j.shape.Circle">
                 <@columns.CircleColumn property=property/>
                 <#break>
+
+            <#case "java.lang.String">
+                 @columns.PathColumn property=property/>
+                 <#break>
 
         </#switch>
     </#list>
