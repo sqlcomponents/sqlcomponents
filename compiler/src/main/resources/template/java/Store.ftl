@@ -181,6 +181,19 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
                            ${name?uncap_first}.set${property.name?cap_first}(newone);
                            }
                            <#break>
+                           <#case "java.net.InetAddress">
+                                            <#assign a=addImportStatement("java.net.InetAddress")>
+                                            <#assign a=addImportStatement("org.postgresql.util.PGobject")>
+                                                PGobject macadd = (PGobject) rs.getObject(${index});
+                                                try{
+                                                InetAddress macAddress = InetAddress.getByAddress(macadd.getValue().getBytes());
+                                                if(macAddress!=null){
+                                                ${name?uncap_first}.set${property.name?cap_first}(macAddress);
+                                                }
+                                                }
+                                                catch(Exception e){}
+
+                                                <#break>
 
                 <#break>
                 <#case "java.net.InetAddress">
@@ -366,6 +379,9 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
 
             <#case "java.net.InetAddress" >
                 <@columns.MacAddressColumn property=property/>
+                <#break>
+            <#case "java.net.InetAddress" >
+                 <@columns.Macaddr8Column property=property/>
                 <#break>
 
         </#switch>
