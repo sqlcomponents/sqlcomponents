@@ -354,3 +354,12 @@ public void set(final PreparedStatement preparedStatement,final int i, final Lin
 }
 <@columnfooter property=property/>
 </#macro>
+
+<#macro InetColumn property>
+    <@columnheader property=property/>
+    <#assign a=addImportStatement("java.net.InetAddress")>
+    public void set(final PreparedStatement preparedStatement, final int i, final InetAddress value) throws SQLException {
+    preparedStatement.setObject(i, value == null ? null : value.getHostAddress(), java.sql.Types.OTHER);
+    }
+    <@columnfooter property=property/>
+</#macro>
