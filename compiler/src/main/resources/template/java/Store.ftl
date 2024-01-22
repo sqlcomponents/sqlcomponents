@@ -236,6 +236,19 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
                                                             ${name?uncap_first}.set${property.name?cap_first}(macAddress);
                                                             }
                                                             <#break>
+            <#case "java.net.InetAddress">
+                                             <#assign a=addImportStatement("java.net.InetAddress")>
+
+                                                 String inetAddressStr = rs.getString(${index});
+                                                 InetAddress inetAddress = null;
+                                                 try {
+                                                 inetAddress = InetAddress.getByName(inetAddressStr);
+                                                 } catch (UnknownHostException e) {
+                                                 // Handle the exception according to your application's requirements
+                                                 e.printStackTrace(); // or log the exception
+                                                 }
+                                                 ${name?uncap_first}.set${property.name?cap_first}(inetAddress);
+                                                 <#break>
             <#default>
                 <#if containsEncryption(property)>
                     ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
@@ -420,6 +433,9 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "org.locationtech.jts.geom.LineString" >
                                 <@columns.LineColumn property=property/>
                                 <#break>
+            <#case "java.net.InetAddress">
+                    <@columns.cidrColumn property=property/>
+                    <#break>
 
         </#switch>
     </#list>
