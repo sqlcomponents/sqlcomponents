@@ -12,6 +12,17 @@ services:
       - "5432:5432"
     volumes:
       - ${PWD}/init.db/postgres:/docker-entrypoint-initdb.d
+  h2db:
+    image: oscarfonts/h2:latest
+    container_name: h2db
+    environment:
+      - H2_DATABASE_NAME=moviedb
+      - H2_USER=moviedb
+      - H2_PASSWORD=moviedb
+    ports:
+      - "1521:1521"
+    volumes:
+      - ./init.db/h2:/docker-entrypoint-initdb.d
 
 #  mariadb:
 #    image: mariadb:10.5
