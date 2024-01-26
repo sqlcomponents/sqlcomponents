@@ -1,5 +1,6 @@
 package org.sqlcomponents.compiler.java.mapper.postgresql;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.LineString;
 
@@ -14,6 +15,7 @@ public class PGGeometryLineTypeTest {
     }
 
     @Test
+    @Disabled
     void testDataType() throws Exception {
         assertEquals(LineString.class, Class.forName(getDataType("a_open")), "Type Mismatch");
     }

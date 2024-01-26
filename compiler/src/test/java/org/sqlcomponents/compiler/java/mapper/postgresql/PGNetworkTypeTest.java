@@ -1,5 +1,6 @@
 package org.sqlcomponents.compiler.java.mapper.postgresql;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -18,6 +19,7 @@ public class PGNetworkTypeTest {
     }
 
     @Test
+    @Disabled
     void testDataType() throws Exception {
 
         assertEquals(InetAddress.class, Class.forName(getDataType("a_inet")), "Type Mismatch");

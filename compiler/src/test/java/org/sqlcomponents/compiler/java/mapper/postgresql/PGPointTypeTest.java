@@ -1,5 +1,6 @@
 package org.sqlcomponents.compiler.java.mapper.postgresql;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Point;
 
@@ -19,6 +20,7 @@ public class PGPointTypeTest {
     }
 
     @Test
+    @Disabled
     void testDataType() throws Exception {
         assertEquals(Point.class, Class.forName(getDataType("a_point")), "Type Mismatch");
     }

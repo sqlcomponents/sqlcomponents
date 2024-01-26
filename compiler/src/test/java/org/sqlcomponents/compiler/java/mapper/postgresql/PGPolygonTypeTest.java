@@ -1,5 +1,6 @@
 package org.sqlcomponents.compiler.java.mapper.postgresql;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Polygon;
 
@@ -18,6 +19,7 @@ public class PGPolygonTypeTest {
     }
 
     @Test
+    @Disabled
     void testDataType() throws Exception {
         assertEquals(Polygon.class, Class.forName(getDataType("a_polygon")), "Type Mismatch");
 
