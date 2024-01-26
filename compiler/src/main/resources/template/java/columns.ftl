@@ -378,9 +378,9 @@
 <#macro PolygonColumn property>
 <@columnheader property=property/>
 
-    <#assign a-addImportStatement("org.locationtech.jts.geom.Polygon")>
-    <#assign a-addImportStatement("org.postgresql.geometric.PGpolygon")>
-    <#assign a-addImportStatement("org.postgresql.geometric.PGpoint")>
+    <#assign a=addImportStatement("org.locationtech.jts.geom.Polygon")>
+    <#assign a=addImportStatement("org.postgresql.geometric.PGpolygon")>
+    <#assign a=addImportStatement("org.postgresql.geometric.PGpoint")>
 
     public void set(final PreparedStatement preparedStatement, final int i, final PGpolygon value) throws SQLException {
         PGpoint[] pgPoints = new PGpoint[value.getCoordinates().length];
@@ -395,10 +395,10 @@
 </#macro>
 <#macro LineColumn property>
 <@columnheader property=property/>
-    <#assign a-addImportStatement("org.postgresql.geometric.PGline")>
-    <#assign a-addImportStatement("org.postgresql.geometric.PGpoint")>
-    <#assign a-addImportStatement("org.locationtech.jts.geom.Coordinate")>
-    <#assign a-addImportStatement("org.locationtech.jts.geom.LineString")>
+    <#assign a=addImportStatement("org.postgresql.geometric.PGline")>
+    <#assign a=addImportStatement("org.postgresql.geometric.PGpoint")>
+    <#assign a=addImportStatement("org.locationtech.jts.geom.Coordinate")>
+    <#assign a=addImportStatement("org.locationtech.jts.geom.LineString")>
     public void set(final PreparedStatement preparedStatement, final int i, final LineString value) throws SQLException {
             LineString lineString = myEntity.value();
                         Coordinate[] coordinates = lineString.getCoordinates();

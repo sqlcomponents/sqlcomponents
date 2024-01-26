@@ -1,21 +1,19 @@
 package org.sqlcomponents.compiler.java.mapper.postgresql;
 
 import org.junit.jupiter.api.Test;
-import org.locationtech.spatial4j.shape.Circle;
-import org.sqlcomponents.compiler.java.mapper.BaseMapperTest;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-public class PGGeometryPathType extends BaseMapperTest {
+import static  org.sqlcomponents.compiler.java.util.CompilerTestUtil.getDataType;
+public class PGGeometryPathType {
     public PGGeometryPathType() throws IOException, SQLException {
         super();
     }
 
     @Test
-    void getDataType() throws Exception {
+    void testDataType() throws Exception {
         assertEquals(String.class, Class.forName(getDataType("a_path")), "Type Mismatch");
     }
 }

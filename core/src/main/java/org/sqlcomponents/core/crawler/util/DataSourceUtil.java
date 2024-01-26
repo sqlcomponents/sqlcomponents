@@ -24,8 +24,7 @@ public final class DataSourceUtil {
         config.setSchema(application.getSchemaName());
         if (application.getUrl().contains(":postgresql:")) {
             config.setDriverClassName("org.postgresql.Driver");
-        }
-        else if (application.getUrl().contains(":h2:")) {
+        } else if (application.getUrl().contains(":h2:")) {
             config.setDriverClassName("org.h2.Driver");
         }
         return new HikariDataSource(config);

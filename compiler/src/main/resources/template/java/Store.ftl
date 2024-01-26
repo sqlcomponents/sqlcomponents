@@ -176,10 +176,9 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
                 }
 
                 <#case "java.lang.String">
-                         String newone = rs.getString(${index});
-                           if(newone!= null){
-                           ${name?uncap_first}.set${property.name?cap_first}(newone);
-                           }
+                         
+                           ${name?uncap_first}.set${property.name?cap_first}(rs.getString(${index}));
+                           
                            <#break>
                            <#case "java.net.InetAddress">
                                             <#assign a=addImportStatement("java.net.InetAddress")>

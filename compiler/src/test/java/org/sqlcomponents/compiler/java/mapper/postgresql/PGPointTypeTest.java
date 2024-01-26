@@ -1,27 +1,25 @@
 package org.sqlcomponents.compiler.java.mapper.postgresql;
 
 import org.junit.jupiter.api.Test;
-import org.locationtech.spatial4j.shape.Circle;
 import org.locationtech.jts.geom.Point;
-import org.sqlcomponents.compiler.java.mapper.BaseMapperTest;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import static  org.sqlcomponents.compiler.java.util.CompilerTestUtil.getDataType;
 /**
  * Test Mappings of Point Types in Postgres.
  * Ref: https://www.postgresql.org/docs/current/datatype-geometric.html
  */
-public class PGPointTypeTest extends BaseMapperTest {
+public class PGPointTypeTest {
 
     public PGPointTypeTest() throws IOException, SQLException {
         super();
     }
 
     @Test
-    void getDataType() throws Exception {
+    void testDataType() throws Exception {
         assertEquals(Point.class, Class.forName(getDataType("a_point")), "Type Mismatch");
     }
 }

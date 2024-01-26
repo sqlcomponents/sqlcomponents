@@ -369,7 +369,9 @@ public final class Crawler {
         List<Table> lTables = new ArrayList<>();
 
         String lSchemaNamePattern =
-                (database.getDbType() == DBType.MYSQL || database.getDbType() == DBType.H2) ? aSchemeName : null;
+                (database.getDbType() == DBType.MYSQL
+                        || database.getDbType() == DBType.H2)
+                        ? aSchemeName : null;
         String lCatalog =
                 database.getDbType() == DBType.MYSQL ? aSchemeName : null;
 
@@ -384,7 +386,8 @@ public final class Crawler {
                 bTable.setCategoryName(lResultSet.getString("table_cat"));
                 bTable.setSchemaName(lResultSet.getString("table_schem"));
                 String tableType = lResultSet.getString("table_type");
-                if(database.getDbType() == DBType.H2 && tableType.equals("BASE TABLE")) {
+                if (database.getDbType() == DBType.H2
+                        && tableType.equals("BASE TABLE")) {
                     tableType = "TABLE";
                 }
                 bTable.setTableType(
@@ -557,8 +560,7 @@ public final class Crawler {
     private ColumnType getColumnTypeForOthers(final Column aColumn) {
         if (aColumn.getTable().getDatabase().getDbType() == DBType.POSTGRES) {
             return ColumnType.findEnum(aColumn.getTypeName());
-        }
-        else if (aColumn.getTable().getDatabase().getDbType() == DBType.H2) {
+        } else if (aColumn.getTable().getDatabase().getDbType() == DBType.H2) {
             return ColumnType.findEnum(aColumn.getTypeName());
         }
 
