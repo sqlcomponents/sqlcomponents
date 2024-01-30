@@ -2,9 +2,6 @@ package org.sqlcomponents.compiler.java.mapper.postgresql;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static  org.sqlcomponents.compiler.java.util.CompilerTestUtil.getDataType;
 
@@ -12,10 +9,7 @@ import static  org.sqlcomponents.compiler.java.util.CompilerTestUtil.getDataType
  * Test Mappings of Character Types in Postgres.
  * Ref: https://www.postgresql.org/docs/current/datatype-character.html
  */
-public class PGCharacterTypeTest {
-    public PGCharacterTypeTest() throws IOException, SQLException {
-        super();
-    }
+class PGCharacterTypeTest {
 
     @Test
     void testDataType() throws Exception {

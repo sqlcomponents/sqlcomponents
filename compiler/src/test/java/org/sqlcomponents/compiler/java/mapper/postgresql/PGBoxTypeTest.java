@@ -5,15 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.locationtech.spatial4j.shape.Circle;
 import static  org.sqlcomponents.compiler.java.util.CompilerTestUtil.getDataType;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PGBoxTypeTest {
-    public PGBoxTypeTest() throws IOException, SQLException {
-        super();
-    }
+class PGBoxTypeTest {
 
     @Test
     @Disabled
