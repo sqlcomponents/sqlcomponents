@@ -164,6 +164,15 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "java.time.Duration">
                 ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                 <#break>
+             <#case "org.locationtech.jts.geom.LineSegment">
+                                       <#assign a=addImportStatement("org.locationtech.jts.geom.*")>
+                                       <#assign a=addImportStatement("org.locationtech.jts.geom.impl.CoordinateArraySequence")>
+                                       <#assign a=addImportStatement("org.postgresql.geometric.PGlseg")>
+                                             PGlseg pGlseg = (PGlseg) rs.getObject(${index});
+                                             if( pGlseg!= null){
+                                             ${name?uncap_first}.set${property.name?cap_first}(new LineSegment(new Coordinate(3, 2), new Coordinate(7, 9)));
+                                             }
+                                             <#break>
             <#default>
                 <#if containsEncryption(property)>
                     ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
@@ -331,9 +340,12 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "org.locationtech.spatial4j.shape.Circle">
                 <@columns.CircleColumn property=property/>
                 <#break>
+            <#--  <#case "org.locationtech.jts.geom.LineSegment">
+                <@columns.ClosedColumn property=property/>
+                <#break>  -->
 
             <#case "java.lang.String">
-                 @columns.PathColumn property=property/>
+                 <@columns.PathColumn property=property/>
                  <#break>
 
             <#case "java.net.InetAddress" >
@@ -348,6 +360,9 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "org.locationtech.jts.geom.LineString" >
                                 <@columns.LineColumn property=property/>
                                 <#break>
+            <#case "org.locationtech.jts.geom.LineSegment" >
+                    <@columns.ClosedColumn property=property/>
+                    <#break>
 
         </#switch>
     </#list>

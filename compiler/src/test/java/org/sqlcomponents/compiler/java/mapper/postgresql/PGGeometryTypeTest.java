@@ -17,7 +17,7 @@ import static  org.sqlcomponents.compiler.java.util.CompilerTestUtil.getDataType
 class PGGeometryTypeTest {
 
     @Test
-    @Disabled
+//    @Disabled
     void testDataType() throws Exception {
         assertEquals(LineSegment.class, Class.forName(getDataType("a_closed")), "Type Mismatch");
     }
