@@ -84,6 +84,9 @@ public final class ${name}Manager {
         <#case "box">
             <#include "/template/java/custom-object/box.ftl">
             <#break>
+        <#case "lseg">
+            <#include "/template/java/custom-object/lseg.ftl">
+            <#break>    
         <#case "inet">
             <#include "/template/java/custom-object/inet.ftl">
             <#break>        
