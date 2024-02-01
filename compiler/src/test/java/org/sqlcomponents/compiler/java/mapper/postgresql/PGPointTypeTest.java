@@ -15,7 +15,6 @@ import static  org.sqlcomponents.compiler.java.util.CompilerTestUtil.getDataType
  */
 class PGPointTypeTest {
     @Test
-    @Disabled
     void testDataType() throws Exception {
         assertEquals(Point.class, Class.forName(getDataType("a_point")), "Type Mismatch");
     }

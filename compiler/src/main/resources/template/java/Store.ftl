@@ -164,10 +164,15 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "java.time.Duration">
                 ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                 <#break>
+
             <#case "org.locationtech.jts.geom.Envelope">
                 ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                 <#break>    
-               
+       
+            <#case "org.locationtech.jts.geom.Point">
+                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
+                <#break>
+                
             <#default>
                 <#if containsEncryption(property)>
                     ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
@@ -335,7 +340,9 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "org.locationtech.spatial4j.shape.Circle">
                 <@columns.CircleColumn property=property/>
                 <#break>
-
+            <#case "org.locationtech.jts.geom.Point">
+                <@columns.PointColumn property=property/>
+                <#break>
             <#case "java.lang.String">
                  @columns.PathColumn property=property/>
                  <#break>
