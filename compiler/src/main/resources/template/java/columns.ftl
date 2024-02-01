@@ -336,13 +336,30 @@
 </#macro>
 
 
-
-<#macro ClosedColumn property>
+<#macro BoxColumn property>
 <@columnheader property=property/>
-<#assign a=addImportStatement("org.locationtech.jts.geom.LineSegment")>
-<#assign a=addImportStatement("org.postgresql.geometric.PGlseg")>
-public void set(final PreparedStatement preparedStatement,final int i, final LineSegment value) throws SQLException {
-   preparedStatement.setObject(i,value == null ? null : new PGlseg(value.minX(),value.minY(),value.maxX(),value.maxY()));
-}
-<@columnfooter property=property/>
+ 
+    public void set(final PreparedStatement preparedStatement, final int i, final Envelope value) throws SQLException {
+    preparedStatement.setObject(i,convertBox(value),java.sql.Types.OTHER);
+    }
+    <@columnfooter property=property/>
+</#macro>
+ 
+ 
+<#macro PointColumn property>
+    <@columnheader property=property/>
+
+    public void set(final PreparedStatement preparedStatement, final int i, final Point value) throws SQLException {
+    preparedStatement.setObject(i,convertPoint(value),java.sql.Types.OTHER);
+    }
+
+    <@columnfooter property=property/>
+</#macro>
+
+<#macro LineSegmentColumn property>
+    <@columnheader property=property/>
+    public void set(final PreparedStatement preparedStatement, final int i, final LineSegment value) throws SQLException {
+    preparedStatement.setObject(i,convertLseg(value));
+    }
+    <@columnfooter property=property/>
 </#macro>
