@@ -343,18 +343,18 @@
     public void set(final PreparedStatement preparedStatement, final int i, final Circle value) throws SQLException {
     preparedStatement.setObject(i,value == null ? null : new PGcircle(new PGpoint(value.getCenter().getX(),value.getCenter().getY()),value.getRadius()) );
     }
-    <@columnheader property=property/>
-        <#assign a=addImportStatement("java.net.InetAddress")>
-        <#assign a=addImportStatement("org.postgresql.util.PGobject")>
-        public void set(final PreparedStatement preparedStatement, final int i, final  InetAddress value) throws SQLException {
-        PGobject pGobject = new PGobject();
-                pGobject.setType("macaddr8");
-                pGobject.setValue(value.getHostAddress());
-            preparedStatement.setObject(i,value==null ? null : pGobject);
-        }
-
+   
 
    <@columnfooter property=property/>
+</#macro>
+
+<#macro InetAddressColumn property>
+    <@columnheader property=property/>
+        public void set(final PreparedStatement preparedStatement, final int i, final  InetAddress value) throws SQLException {
+    
+            preparedStatement.setObject(i,convertInet(value));
+        }
+    <@columnfooter property=property/>
 </#macro>
 <#macro PathColumn property>
 <@columnheader property=property/>

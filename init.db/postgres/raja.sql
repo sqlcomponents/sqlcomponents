@@ -36,7 +36,7 @@ CREATE TABLE raja(
     a_interval interval,
 --    a_macaddr8 macaddr8,
 --    a_closed lseg,
---    a_inet inet,
+    a_inet inet,
 --    a_point point,
 --    a_circle circle,
 --    a_cidr cidr,

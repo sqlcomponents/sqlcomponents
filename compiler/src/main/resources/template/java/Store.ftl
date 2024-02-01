@@ -416,6 +416,7 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "org.locationtech.jts.geom.Polygon" >
                     <@columns.PolygonColumn property=property/>
                     <#break>
+                  
             <#case "org.locationtech.jts.geom.LineString" >
                                 <@columns.LineColumn property=property/>
                                 <#break>
