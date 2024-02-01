@@ -172,7 +172,13 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "org.locationtech.jts.geom.Point">
                 ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                 <#break>
+
             <#case "org.locationtech.jts.geom.LineSegment">
+                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
+                <#break>
+
+             <#case "java.net.InetAddress">
+
                 ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                 <#break>
                 
@@ -350,22 +356,18 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
                  @columns.PathColumn property=property/>
                  <#break>
 
-            <#case "java.net.InetAddress" >
-                <@columns.MacAddressColumn property=property/>
-                <#break>
             <#case "org.locationtech.jts.geom.Envelope" >
                 <@columns.BoxColumn property=property/>
                 <#break>
-
+            
             <#case "java.net.InetAddress" >
-                 <@columns.Macaddr8Column property=property/>
-                <#break>
+                <@columns.InetAddressColumn property=property/>
+                <#break> 
+           
             <#case "org.locationtech.jts.geom.Polygon" >
                     <@columns.PolygonColumn property=property/>
                     <#break>
-            <#case "org.locationtech.jts.geom.LineString" >
-                                <@columns.LineColumn property=property/>
-                                <#break>
+              
              <#case "org.locationtech.jts.geom.LineSegment" >
                     <@columns.LineSegmentColumn property=property/>
                     <#break>

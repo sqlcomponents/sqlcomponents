@@ -356,10 +356,22 @@
     <@columnfooter property=property/>
 </#macro>
 
+
 <#macro LineSegmentColumn property>
     <@columnheader property=property/>
     public void set(final PreparedStatement preparedStatement, final int i, final LineSegment value) throws SQLException {
     preparedStatement.setObject(i,convertLseg(value));
     }
+    <@columnfooter property=property/>
+</#macro>
+
+<#macro InetAddressColumn property>
+    <@columnheader property=property/>
+     public void set(final PreparedStatement preparedStatement, final int i, final  InetAddress value) throws SQLException {
+    
+     preparedStatement.setObject(i,convertInet(value));
+    }
+    
+
     <@columnfooter property=property/>
 </#macro>

@@ -87,6 +87,9 @@ public final class ${name}Manager {
         <#case "lseg">
             <#include "/template/java/custom-object/lseg.ftl">
             <#break>    
+        <#case "inet">
+            <#include "/template/java/custom-object/inet.ftl">
+            <#break>        
      </#switch>
 </#list>
     <#assign a=addImportStatement("java.sql.PreparedStatement")>

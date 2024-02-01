@@ -38,6 +38,8 @@ CREATE TABLE raja(
     a_lseg lseg,
 --    a_inet inet,
     a_point point,
+    a_inet inet,
+--    a_point point,
 --    a_circle circle,
 --    a_cidr cidr,
 --    a_macaddr macaddr,
