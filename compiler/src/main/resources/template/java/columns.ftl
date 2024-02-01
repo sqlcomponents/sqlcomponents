@@ -335,6 +335,17 @@
     <@columnfooter property=property/>
 </#macro>
 
+
+<#macro BoxColumn property>
+<@columnheader property=property/>
+ 
+    public void set(final PreparedStatement preparedStatement, final int i, final Envelope value) throws SQLException {
+    preparedStatement.setObject(i,convertBox(value),java.sql.Types.OTHER);
+    }
+    <@columnfooter property=property/>
+</#macro>
+ 
+ 
 <#macro PointColumn property>
     <@columnheader property=property/>
 

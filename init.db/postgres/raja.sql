@@ -44,7 +44,7 @@ CREATE TABLE raja(
 --    a_polygon polygon,
 --    a_path varchar,
 --    a_open line,
---    a_box box,
+    a_box box,
     UNIQUE(a_uuid),
    CONSTRAINT fk_code
       FOREIGN KEY(reference_code) 
