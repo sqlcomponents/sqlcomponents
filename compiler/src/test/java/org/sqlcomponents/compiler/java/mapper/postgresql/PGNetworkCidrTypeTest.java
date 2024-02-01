@@ -12,10 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Test Mappings of Network Types in Postgres.
  * Ref: https://www.postgresql.org/docs/current/datatype-net-types.html
  */
-public class PGNetworkCidrTypeTest {
-    public PGNetworkCidrTypeTest() throws IOException, SQLException {
-        super();
-    }
+class PGNetworkCidrTypeTest {
 
     @Test
     @Disabled

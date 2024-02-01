@@ -334,80 +334,34 @@
 
     <@columnfooter property=property/>
 </#macro>
-<#macro CircleColumn property>
+
+
+<#macro BoxColumn property>
+<@columnheader property=property/>
+ 
+    public void set(final PreparedStatement preparedStatement, final int i, final Envelope value) throws SQLException {
+    preparedStatement.setObject(i,convertBox(value),java.sql.Types.OTHER);
+    }
+    <@columnfooter property=property/>
+</#macro>
+ 
+ 
+<#macro PointColumn property>
     <@columnheader property=property/>
 
-    <#assign a=addImportStatement("org.locationtech.spatial4j.shape.Circle")>
-    <#assign a=addImportStatement("org.postgresql.geometric.PGpoint")>
-    <#assign a=addImportStatement("org.postgresql.geometric.PGcircle")>
-    public void set(final PreparedStatement preparedStatement, final int i, final Circle value) throws SQLException {
-    preparedStatement.setObject(i,value == null ? null : new PGcircle(new PGpoint(value.getCenter().getX(),value.getCenter().getY()),value.getRadius()) );
+    public void set(final PreparedStatement preparedStatement, final int i, final Point value) throws SQLException {
+    preparedStatement.setObject(i,convertPoint(value),java.sql.Types.OTHER);
     }
-   
 
-   <@columnfooter property=property/>
+    <@columnfooter property=property/>
 </#macro>
 
 <#macro InetAddressColumn property>
     <@columnheader property=property/>
-        public void set(final PreparedStatement preparedStatement, final int i, final  InetAddress value) throws SQLException {
+     public void set(final PreparedStatement preparedStatement, final int i, final  InetAddress value) throws SQLException {
     
-            preparedStatement.setObject(i,convertInet(value));
-        }
+     preparedStatement.setObject(i,convertInet(value));
+    }
+    
     <@columnfooter property=property/>
-</#macro>
-<#macro PathColumn property>
-<@columnheader property=property/>
-     <#assign a=addImportStatement("java.lang.String")>
-
-    public void set(final PreparedStatement preparedStatement, final int i, final String value) throws SQLException {
-     preparedStatement.setString(i,value == null ? null: value);
-    }
-<@columnfooter property=property/>
-</#macro>
-
-<#macro MacAddressColumn property>
-<@columnheader property=property/>
-    <#assign a=addImportStatement("java.net.InetAddress")>
-    public void set(final PreparedStatement preparedStatement, final int i, final InetAddress value) throws SQLException {
-        byte[] macBytes = value.getAddress();
-        preparedStatement.setBytes(i,value == null ? null : macBytes);
-    }
-<@columnfooter property=property/>
-</#macro>
-<#macro PolygonColumn property>
-<@columnheader property=property/>
-
-    <#assign a=addImportStatement("org.locationtech.jts.geom.Polygon")>
-    <#assign a=addImportStatement("org.postgresql.geometric.PGpolygon")>
-    <#assign a=addImportStatement("org.postgresql.geometric.PGpoint")>
-
-    public void set(final PreparedStatement preparedStatement, final int i, final PGpolygon value) throws SQLException {
-        PGpoint[] pgPoints = new PGpoint[value.getCoordinates().length];
-                for (int i = 0; i < value.getCoordinates().length; i++) {
-                    pgPoints[i] = new PGpoint(value.getCoordinates()[i].getX(), value.getCoordinates()[i].getY());
-                }
-
-
-        preparedStatement.setObject(i,value==null ? null : new PGpolygon(pgPoints));
-    }
- <@columnfooter property=property/>
-</#macro>
-<#macro LineColumn property>
-<@columnheader property=property/>
-    <#assign a=addImportStatement("org.postgresql.geometric.PGline")>
-    <#assign a=addImportStatement("org.postgresql.geometric.PGpoint")>
-    <#assign a=addImportStatement("org.locationtech.jts.geom.Coordinate")>
-    <#assign a=addImportStatement("org.locationtech.jts.geom.LineString")>
-    public void set(final PreparedStatement preparedStatement, final int i, final LineString value) throws SQLException {
-            LineString lineString = myEntity.value();
-                        Coordinate[] coordinates = lineString.getCoordinates();
-
-                        // Create PGline with start and end points
-                        PGpoint start = new PGpoint(coordinates[0].getX(), coordinates[0].getY());
-                        PGpoint end = new PGpoint(coordinates[1].getX(), coordinates[1].getY());
-                        PGline pLine = new PGline(start, end);
-            preparedStatement.setObject(i,value==null ? null : pLine);
-        }
-<@columnfooter property=property/>
 </#macro>

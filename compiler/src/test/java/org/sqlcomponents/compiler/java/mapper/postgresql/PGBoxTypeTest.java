@@ -1,23 +1,24 @@
 package org.sqlcomponents.compiler.java.mapper.postgresql;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.locationtech.spatial4j.shape.Circle;
-import static  org.sqlcomponents.compiler.java.util.CompilerTestUtil.getDataType;
 
-import java.io.IOException;
-import java.sql.SQLException;
+import org.junit.jupiter.api.Test;
+
+import org.locationtech.jts.geom.Envelope;
+import static  org.sqlcomponents.compiler.java.util.CompilerTestUtil.getDataType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PGBoxTypeTest {
-    public PGBoxTypeTest() throws IOException, SQLException {
-        super();
-    }
+class PGBoxTypeTest {
+
+//    @Test
+//    @Disabled
+//    void testDataType() throws Exception {
+//        assertEquals(Circle.class, Class.forName(getDataType("a_circle")), "Type Mismatch");
+//    }
 
     @Test
-    @Disabled
+//    @Disabled
     void testDataType() throws Exception {
-        assertEquals(Circle.class, Class.forName(getDataType("a_circle")), "Type Mismatch");
+        assertEquals(Envelope.class, Class.forName(getDataType("a_box")), "Type Mismatch");
     }
 }

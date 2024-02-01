@@ -164,77 +164,19 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "java.time.Duration">
                 ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                 <#break>
-            <#case "org.locationtech.spatial4j.shape.Circle">
-                <#assign a=addImportStatement("org.locationtech.spatial4j.shape.*")>
-                <#assign a=addImportStatement("org.postgresql.geometric.*")>
-                <#assign a=addImportStatement("org.locationtech.spatial4j.context.SpatialContext")>
-                PGcircle pGcircle = (PGcircle) rs.getObject(${index});
-                if(pGcircle!= null){
 
-                ${name?uncap_first}.set${property.name?cap_first}(SpatialContext.GEO.makeCircle(SpatialContext.GEO.makePoint(pGcircle.center.x,pGcircle.center.y)
-                , pGcircle.radius));
-                }
-
-                <#case "java.lang.String">
-                         
-                           ${name?uncap_first}.set${property.name?cap_first}(rs.getString(${index}));
-                           
-                           <#break>
-                           <#case "java.net.InetAddress">
-                                            <#assign a=addImportStatement("java.net.InetAddress")>
-                                            <#assign a=addImportStatement("org.postgresql.util.PGobject")>
-                                                PGobject macadd = (PGobject) rs.getObject(${index});
-                                                try{
-                                                InetAddress macAddress = InetAddress.getByAddress(macadd.getValue().getBytes());
-                                                if(macAddress!=null){
-                                                ${name?uncap_first}.set${property.name?cap_first}(macAddress);
-                                                }
-                                                }
-                                                catch(Exception e){}
-
-                                                <#break>
-
+            <#case "org.locationtech.jts.geom.Envelope">
+                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
+                <#break>    
+       
+            <#case "org.locationtech.jts.geom.Point">
+                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                 <#break>
-                <#case "java.net.InetAddress">
-                     <#assign a=addImportStatement("java.net.InetAddress")>
-                         byte[] macBytes = rs.getBytes(${index});
-                         if(macBytes != null){
-                             InetAddress macAddress = InetAddress.getByAddress(macBytes);
-                             ${name?uncap_first}.set${property.name?cap_first}
-                             get${property.column.typeName?cap_first}(macAddress);
-                         }
-                <#break>
-                <#case "org.locationtech.jts.geom.*">
-                                  <#assign a=addImportStatement("org.postgresql.geometric.PGpoint")>
-                                  <#assign a=addImportStatement("org.postgresql.geometric.PGpolygon")>
-                                  <#assign a=addImportStatement("org.locationtech.jts.geom.Polygon")>
-                                  <#assign a=addImportStatement("org.locationtech.jts.geom.Coordinate")>
-                                  <#assign a=addImportStatement("org.locationtech.jts.geom.CoordinateXY")>
-                                  <#assign a=addImportStatement("org.locationtech.jts.geom.GeometryFactory")>
-                                  <#assign a=addImportStatement("org.locationtech.jts.geom.LinearRing")>
-                                      PGpolygon pgPolygon = (PGpolygon) rs.getObject(${index});
-                                      Coordinate[] coordinates = new Coordinate[pgPolygon.points.length];
-                                              for (int i = 0; i < pgPolygon.points.length; i++) {
-                                                  coordinates[i] = new CoordinateXY(pgPolygon.points[i].x, pgPolygon.points[i].y);
-                                              }
-                                              LinearRing linearRing = new GeometryFactory().createLinearRing(coordinates);
-                                              Polygon polygon = new Polygon(linearRing, null, new GeometryFactory());
 
-                                      if(polygon!=null){
-                                      ${name?uncap_first}.set${property.name?cap_first}(polygon);
-                                      }
-                                      <#break>
-                                       <#case "java.net.InetAddress">
-                                                        <#assign a=addImportStatement("org.postgresql.geometric.PGline")>
-                                                        <#assign a=addImportStatement("org.postgresql.geometric.PGpoint")>
-                                                        <#assign a=addImportStatement("org.locationtech.jts.geom.Coordinate")>
-                                                        <#assign a=addImportStatement("org.locationtech.jts.geom.LineString")>
-                                                            PGobject macadd = (PGobject) rs.getObject(${index});
-                                                            InetAddress macAddress = InetAddress.getByAddress(macadd.getValue().getBytes());
-                                                            if(macAddress!=null){
-                                                            ${name?uncap_first}.set${property.name?cap_first}(macAddress);
-                                                            }
-                                                            <#break>
+             <#case "java.net.InetAddress">
+                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
+                <#break>
+                
             <#default>
                 <#if containsEncryption(property)>
                     ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
@@ -402,17 +344,21 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "org.locationtech.spatial4j.shape.Circle">
                 <@columns.CircleColumn property=property/>
                 <#break>
-
+            <#case "org.locationtech.jts.geom.Point">
+                <@columns.PointColumn property=property/>
+                <#break>
             <#case "java.lang.String">
                  @columns.PathColumn property=property/>
                  <#break>
 
-            <#case "java.net.InetAddress" >
-                <@columns.MacAddressColumn property=property/>
+            <#case "org.locationtech.jts.geom.Envelope" >
+                <@columns.BoxColumn property=property/>
                 <#break>
+            
             <#case "java.net.InetAddress" >
-                 <@columns.Macaddr8Column property=property/>
-                <#break>
+                <@columns.InetAddressColumn property=property/>
+                <#break> 
+           
             <#case "org.locationtech.jts.geom.Polygon" >
                     <@columns.PolygonColumn property=property/>
                     <#break>

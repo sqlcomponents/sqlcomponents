@@ -14,18 +14,12 @@ import static  org.sqlcomponents.compiler.java.util.CompilerTestUtil.getDataType
  * Test Mappings of Geometry Types in Postgres.
  * Ref: https://www.postgresql.org/docs/current/datatype-geometric.html
  */
-public class PGGeometryTypeTest {
-    public PGGeometryTypeTest() throws IOException, SQLException {
-        super();
-    }
+class PGGeometryTypeTest {
 
     @Test
     @Disabled
     void testDataType() throws Exception {
         assertEquals(LineSegment.class, Class.forName(getDataType("a_closed")), "Type Mismatch");
-
-
-
     }
 }
 

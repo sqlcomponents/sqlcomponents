@@ -4,15 +4,9 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.LineString;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static  org.sqlcomponents.compiler.java.util.CompilerTestUtil.getDataType;
-public class PGGeometryLineTypeTest {
-    public PGGeometryLineTypeTest() throws IOException, SQLException {
-        super();
-    }
+class PGGeometryLineTypeTest {
 
     @Test
     @Disabled

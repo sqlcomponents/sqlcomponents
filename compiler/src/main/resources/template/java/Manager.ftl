@@ -81,9 +81,12 @@ public final class ${name}Manager {
         <#case "point">
             <#include "/template/java/custom-object/point.ftl">
             <#break>
+        <#case "box">
+            <#include "/template/java/custom-object/box.ftl">
+            <#break>
         <#case "inet">
             <#include "/template/java/custom-object/inet.ftl">
-            <#break>
+            <#break>        
      </#switch>
 </#list>
     <#assign a=addImportStatement("java.sql.PreparedStatement")>

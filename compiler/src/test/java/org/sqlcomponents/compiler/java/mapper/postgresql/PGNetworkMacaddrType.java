@@ -8,10 +8,7 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static  org.sqlcomponents.compiler.java.util.CompilerTestUtil.getDataType;
-public class PGNetworkMacaddrType {
-    public PGNetworkMacaddrType() throws IOException, SQLException {
-        super();
-    }
+class PGNetworkMacaddrType {
 
     @Test
     void testDataType() throws Exception {
