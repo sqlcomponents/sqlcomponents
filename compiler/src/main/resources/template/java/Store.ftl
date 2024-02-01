@@ -164,6 +164,15 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "java.time.Duration">
                 ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                 <#break>
+            
+            <#case "org.locationtech.jts.geom.Envelope">
+                 <#assign a=addImportStatement("org.locationtech.jts.geom.*")>
+                 <#assign a=addImportStatement("org.postgresql.geometric.PGbox")>
+                 PGbox pGbox = (PGbox) rs.getObject(${index});
+                     if(pGbox!= null){
+                       ${name?uncap_first}.set${property.name?cap_first}(new Envelope(pGbox.point[0].x,pGbox.point[1].x,pGbox.point[0].y,pGbox.point[1].y));
+                       }
+                 <#break>   
             <#default>
                 <#if containsEncryption(property)>
                     ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
@@ -339,6 +348,10 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "java.net.InetAddress" >
                 <@columns.MacAddressColumn property=property/>
                 <#break>
+            <#case "org.locationtech.jts.geom.Envelope" >
+                <@columns.BoxColumn property=property/>
+                <#break>
+
             <#case "java.net.InetAddress" >
                  <@columns.Macaddr8Column property=property/>
                 <#break>
