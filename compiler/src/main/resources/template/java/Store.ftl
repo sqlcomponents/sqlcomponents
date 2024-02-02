@@ -300,8 +300,11 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
     <#list properties as property>
         <#switch property.dataType>
             <#case "java.lang.String">
+                 <#if property.column.typeName == "macaddr8" >
+                    <#assign a=addImportStatement("org.postgresql.util.PGobject")>
+                </#if>
                 <@columns.StringColumn property=property/>
-                <#break>
+                <#break>           
             <#case "java.lang.Character">
                 <@columns.CharacterColumn property=property/>
                 <#break>

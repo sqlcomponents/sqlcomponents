@@ -76,6 +76,7 @@ public final class JavaMapper extends Mapper {
                 return "java.lang.String";
             case MACADDR8:
             case MACADDR:
+                return "java.lang.String";
             case INET:
                 return "java.net.InetAddress";
             case CIDR:

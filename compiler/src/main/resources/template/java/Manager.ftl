@@ -92,6 +92,9 @@ public final class ${name}Manager {
             <#break>  
         <#case "cidr">
             <#include "/template/java/custom-object/cidr.ftl">
+            <#break>
+        <#case "macaddr8">
+            <#assign a=addImportStatement("org.postgresql.util.PGobject")>
             <#break>        
      </#switch>
 </#list>
