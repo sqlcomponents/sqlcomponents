@@ -1,5 +1,6 @@
 package org.sqlcomponents.compiler.java.mapper.postgresql;
 
+import org.apache.commons.net.util.SubnetUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import static  org.sqlcomponents.compiler.java.util.CompilerTestUtil.getDataType;
@@ -15,10 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class PGNetworkCidrTypeTest {
 
     @Test
-    @Disabled
+    //@Disabled
     void testDataType() throws Exception {
 
-        assertEquals(InetAddress.class, Class.forName(getDataType("a_cidr")), "Type Mismatch");
+        assertEquals(SubnetUtils.class, Class.forName(getDataType("a_cidr")), "Type Mismatch");
 
 
     }

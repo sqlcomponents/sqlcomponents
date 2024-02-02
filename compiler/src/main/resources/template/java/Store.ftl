@@ -182,6 +182,10 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
                 ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                 <#break>
                 
+            <#case "org.apache.commons.net.util.SubnetUtils">
+                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
+                <#break>
+
             <#default>
                 <#if containsEncryption(property)>
                     ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
@@ -363,6 +367,10 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "java.net.InetAddress" >
                 <@columns.InetAddressColumn property=property/>
                 <#break> 
+                 
+            <#case "org.apache.commons.net.util.SubnetUtils" >
+                <@columns.CidrColumn property=property/>
+                <#break>
            
             <#case "org.locationtech.jts.geom.Polygon" >
                     <@columns.PolygonColumn property=property/>

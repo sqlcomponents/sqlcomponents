@@ -89,6 +89,9 @@ public final class ${name}Manager {
             <#break>    
         <#case "inet">
             <#include "/template/java/custom-object/inet.ftl">
+            <#break>  
+        <#case "cidr">
+            <#include "/template/java/custom-object/cidr.ftl">
             <#break>        
      </#switch>
 </#list>
