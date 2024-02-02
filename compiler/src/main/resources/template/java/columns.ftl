@@ -334,3 +334,12 @@
 
     <@columnfooter property=property/>
 </#macro>
+
+<#macro CidrColumn property>
+    <@columnheader property=property/>
+
+    public void set(final PreparedStatement preparedStatement, final int i, final String value) throws SQLException {
+    preparedStatement.setObject(i,convertCidr(value));
+    }
+    <@columnfooter property=property/>
+</#macro>
