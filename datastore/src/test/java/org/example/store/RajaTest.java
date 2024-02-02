@@ -1,6 +1,7 @@
 package org.example.store;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import java.net.UnknownHostException;
 import org.example.RajaManager;
 import org.example.model.Raja;
 import org.example.model.Connection;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
 import java.util.Date;
@@ -130,7 +132,7 @@ class RajaTest {
     }
 
     @Test
-    void testSingleInsertAndGetInsertedObject() throws SQLException, JsonProcessingException {
+    void testSingleInsertAndGetInsertedObject() throws SQLException, JsonProcessingException, UnknownHostException {
 
         Connection connection =
                 this.connectionStore.insert().values(connectionsToTest.get(0))
@@ -148,7 +150,7 @@ class RajaTest {
     }
 
     @Test
-    void testMultiInsertAndGetInsertedObjects() throws SQLException, JsonProcessingException {
+    void testMultiInsertAndGetInsertedObjects() throws SQLException, JsonProcessingException, UnknownHostException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
         List<Raja> insertedRajas =
@@ -159,7 +161,7 @@ class RajaTest {
     }
 
     @Test
-    void testMultiSequenceInsertAndGetInsertedObjects() throws SQLException, JsonProcessingException {
+    void testMultiSequenceInsertAndGetInsertedObjects() throws SQLException, JsonProcessingException, UnknownHostException{
         this.connectionStore.insert().values(connectionsToTest).execute();
 
         List<Raja> insertedRajas =
@@ -172,7 +174,7 @@ class RajaTest {
     }
 
     @Test
-    void testTableFilterMaps() throws SQLException, JsonProcessingException {
+    void testTableFilterMaps() throws SQLException, JsonProcessingException, UnknownHostException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
         Raja insertedRaja = this.allInAllRajaStore.insert()
@@ -188,7 +190,7 @@ class RajaTest {
     }
 
     @Test
-    void testEncryption() throws SQLException, JsonProcessingException {
+    void testEncryption() throws SQLException, JsonProcessingException, UnknownHostException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
         azaguRajasToTest.get(0).setAEncryptedText("AEncryptedText");
@@ -202,7 +204,7 @@ class RajaTest {
     }
 
     @Test
-    void testDeleteWhereClause() throws SQLException, JsonProcessingException {
+    void testDeleteWhereClause() throws SQLException, JsonProcessingException, UnknownHostException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
         List<Raja> insertedRajas =
@@ -306,7 +308,7 @@ class RajaTest {
 
 
     @Test
-    void testSelectCrossColumns() throws SQLException, JsonProcessingException {
+    void testSelectCrossColumns() throws SQLException, JsonProcessingException, UnknownHostException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
         List<Raja> insertedRajas =
@@ -328,7 +330,7 @@ class RajaTest {
     }
 
     @Test
-    void testUpdateAndDeleteWithQuery() throws SQLException, JsonProcessingException {
+    void testUpdateAndDeleteWithQuery() throws SQLException, JsonProcessingException, UnknownHostException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
         List<Raja> insertedRajas =

@@ -335,11 +335,54 @@
     <@columnfooter property=property/>
 </#macro>
 
-<#macro CidrColumn property>
+
+<#macro BoxColumn property>
+<@columnheader property=property/>
+ 
+    public void set(final PreparedStatement preparedStatement, final int i, final Envelope value) throws SQLException {
+    preparedStatement.setObject(i,convertBox(value),java.sql.Types.OTHER);
+    }
+    <@columnfooter property=property/>
+</#macro>
+ 
+ 
+<#macro PointColumn property>
     <@columnheader property=property/>
 
-    public void set(final PreparedStatement preparedStatement, final int i, final String value) throws SQLException {
-    preparedStatement.setObject(i,convertCidr(value));
+    public void set(final PreparedStatement preparedStatement, final int i, final Point value) throws SQLException {
+    preparedStatement.setObject(i,convertPoint(value),java.sql.Types.OTHER);
     }
+
+    <@columnfooter property=property/>
+</#macro>
+
+
+<#macro LineSegmentColumn property>
+    <@columnheader property=property/>
+    public void set(final PreparedStatement preparedStatement, final int i, final LineSegment value) throws SQLException {
+    preparedStatement.setObject(i,convertLseg(value));
+    }
+    <@columnfooter property=property/>
+</#macro>
+
+<#macro InetAddressColumn property>
+    <@columnheader property=property/>
+     public void set(final PreparedStatement preparedStatement, final int i, final  InetAddress value) throws SQLException {
+    
+     preparedStatement.setObject(i,convertInet(value));
+    }
+    
+
+    <@columnfooter property=property/>
+</#macro>
+
+<#macro CidrColumn property>
+    <@columnheader property=property/>
+     public void set(final PreparedStatement preparedStatement, final int i, final SubnetUtils value) throws SQLException {
+    
+     preparedStatement.setObject(i,convertCidr(value));
+    }
+    
+
     <@columnfooter property=property/>
 </#macro>

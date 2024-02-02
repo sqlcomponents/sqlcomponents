@@ -164,9 +164,28 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "java.time.Duration">
                 ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                 <#break>
-            <#case "java.net.InetAddress">
+
+            <#case "org.locationtech.jts.geom.Envelope">
+                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
+                <#break>    
+       
+            <#case "org.locationtech.jts.geom.Point">
                 ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                 <#break>
+
+            <#case "org.locationtech.jts.geom.LineSegment">
+                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
+                <#break>
+
+             <#case "java.net.InetAddress">
+
+                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
+                <#break>
+                
+            <#case "org.apache.commons.net.util.SubnetUtils">
+                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
+                <#break>
+
             <#default>
                 <#if containsEncryption(property)>
                     ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
@@ -334,26 +353,32 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "org.locationtech.spatial4j.shape.Circle">
                 <@columns.CircleColumn property=property/>
                 <#break>
-
+            <#case "org.locationtech.jts.geom.Point">
+                <@columns.PointColumn property=property/>
+                <#break>
             <#case "java.lang.String">
                  @columns.PathColumn property=property/>
                  <#break>
 
+            <#case "org.locationtech.jts.geom.Envelope" >
+                <@columns.BoxColumn property=property/>
+                <#break>
+            
             <#case "java.net.InetAddress" >
-                @columns.MacAddressColumn property=property/>
+                <@columns.InetAddressColumn property=property/>
+                <#break> 
+                 
+            <#case "org.apache.commons.net.util.SubnetUtils" >
+                <@columns.CidrColumn property=property/>
                 <#break>
-            <#case "java.net.InetAddress" >
-                 @columns.Macaddr8Column property=property/>
-                <#break>
-                <#case "java.net.InetAddress" >
-                 @columns.CidrColumn property=property/>
-                <#break>
+           
             <#case "org.locationtech.jts.geom.Polygon" >
                     <@columns.PolygonColumn property=property/>
                     <#break>
-            <#case "org.locationtech.jts.geom.LineString" >
-                                <@columns.LineColumn property=property/>
-                                <#break>
+              
+             <#case "org.locationtech.jts.geom.LineSegment" >
+                    <@columns.LineSegmentColumn property=property/>
+                    <#break>
 
         </#switch>
     </#list>

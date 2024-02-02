@@ -47,6 +47,10 @@ SQLException
 <#if hasJavaType("com.fasterxml.jackson.databind.JsonNode")>
 <#assign a=addImportStatement("com.fasterxml.jackson.core.JsonProcessingException")>,JsonProcessingException
 </#if>
+<#if hasJavaType("java.net.InetAddress")>
+    <#assign a=addImportStatement("java.net.UnknownHostException")>,UnknownHostException
+</#if>
+
 </#macro>
 
 <#macro columnSelection><#assign index=0><#list properties as property><#if index == 0><#assign index=1><#else>,</#if>${property.column.escapedName?j_string}</#list></#macro>

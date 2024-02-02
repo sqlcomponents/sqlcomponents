@@ -35,8 +35,10 @@ CREATE TABLE raja(
     a_time time,
     a_interval interval,
 --    a_macaddr8 macaddr8,
---    a_closed lseg,
+    a_lseg lseg,
 --    a_inet inet,
+    a_point point,
+    a_inet inet,
 --    a_point point,
 --    a_circle circle,
     a_cidr cidr,
@@ -44,7 +46,7 @@ CREATE TABLE raja(
 --    a_polygon polygon,
 --    a_path varchar,
 --    a_open line,
---    a_box box,
+    a_box box,
     UNIQUE(a_uuid),
    CONSTRAINT fk_code
       FOREIGN KEY(reference_code) 
