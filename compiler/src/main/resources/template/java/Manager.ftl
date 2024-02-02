@@ -81,6 +81,21 @@ public final class ${name}Manager {
         <#case "point">
             <#include "/template/java/custom-object/point.ftl">
             <#break>
+        <#case "box">
+            <#include "/template/java/custom-object/box.ftl">
+            <#break>
+        <#case "lseg">
+            <#include "/template/java/custom-object/lseg.ftl">
+            <#break>    
+        <#case "inet">
+            <#include "/template/java/custom-object/inet.ftl">
+            <#break>  
+        <#case "cidr">
+            <#include "/template/java/custom-object/cidr.ftl">
+            <#break>
+        <#case "macaddr8">
+            <#assign a=addImportStatement("org.postgresql.util.PGobject")>
+            <#break>        
      </#switch>
 </#list>
     <#assign a=addImportStatement("java.sql.PreparedStatement")>

@@ -44,7 +44,14 @@
     <@columnheader property=property/>
 
     public void set(final PreparedStatement preparedStatement, final int i, final String value) throws SQLException {
+    <#if property.column.typeName == "macaddr8" >
+    PGobject pgObject = new PGobject();
+     pgObject.setType("macaddr8");
+    pgObject.setValue(value);
+    preparedStatement.setObject(i, pgObject);
+    <#else>
     preparedStatement.setString(i,value);
+    </#if>
     }
 
     public final WhereClause  eq(final String value) {
@@ -331,6 +338,58 @@
     sql = "${property.column.escapedName?j_string} <=" + value;
     return getWhereClause();
     }
+
+    <@columnfooter property=property/>
+</#macro>
+
+
+<#macro BoxColumn property>
+<@columnheader property=property/>
+ 
+    public void set(final PreparedStatement preparedStatement, final int i, final Envelope value) throws SQLException {
+    preparedStatement.setObject(i,convertBox(value),java.sql.Types.OTHER);
+    }
+    <@columnfooter property=property/>
+</#macro>
+ 
+ 
+<#macro PointColumn property>
+    <@columnheader property=property/>
+
+    public void set(final PreparedStatement preparedStatement, final int i, final Point value) throws SQLException {
+    preparedStatement.setObject(i,convertPoint(value),java.sql.Types.OTHER);
+    }
+
+    <@columnfooter property=property/>
+</#macro>
+
+
+<#macro LineSegmentColumn property>
+    <@columnheader property=property/>
+    public void set(final PreparedStatement preparedStatement, final int i, final LineSegment value) throws SQLException {
+    preparedStatement.setObject(i,convertLseg(value));
+    }
+    <@columnfooter property=property/>
+</#macro>
+
+<#macro InetAddressColumn property>
+    <@columnheader property=property/>
+     public void set(final PreparedStatement preparedStatement, final int i, final  InetAddress value) throws SQLException {
+    
+     preparedStatement.setObject(i,convertInet(value));
+    }
+    
+
+    <@columnfooter property=property/>
+</#macro>
+
+<#macro CidrColumn property>
+    <@columnheader property=property/>
+     public void set(final PreparedStatement preparedStatement, final int i, final SubnetUtils value) throws SQLException {
+    
+     preparedStatement.setObject(i,convertCidr(value));
+    }
+    
 
     <@columnfooter property=property/>
 </#macro>
