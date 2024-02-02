@@ -42,7 +42,7 @@ CREATE TABLE raja(
 --    a_cidr cidr,
 --    a_macaddr macaddr,
 --    a_polygon polygon,
---    a_path varchar,
+    a_path varchar,
 --    a_open line,
 --    a_box box,
     UNIQUE(a_uuid),
