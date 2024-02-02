@@ -44,7 +44,14 @@
     <@columnheader property=property/>
 
     public void set(final PreparedStatement preparedStatement, final int i, final String value) throws SQLException {
+    <#if property.column.typeName == "macaddr8" >
+    PGobject pgObject = new PGobject();
+     pgObject.setType("macaddr8");
+    pgObject.setValue(value);
+    preparedStatement.setObject(i, pgObject);
+    <#else>
     preparedStatement.setString(i,value);
+    </#if>
     }
 
     public final WhereClause  eq(final String value) {
