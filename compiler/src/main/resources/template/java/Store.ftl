@@ -300,7 +300,9 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
     <#list properties as property>
         <#switch property.dataType>
             <#case "java.lang.String">
-                 <#if property.column.typeName == "macaddr8" >
+                <#if property.column.typeName == "macaddr8" >
+                    <#assign a=addImportStatement("org.postgresql.util.PGobject")>
+                <#elseif property.column.typeName == "macaddr" >
                     <#assign a=addImportStatement("org.postgresql.util.PGobject")>
                 <#elseif property.column.typeName == "path">
                     <#assign a=addImportStatement("org.postgresql.util.PGobject")>

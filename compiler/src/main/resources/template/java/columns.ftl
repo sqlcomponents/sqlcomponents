@@ -49,6 +49,12 @@
      pgObject.setType("macaddr8");
     pgObject.setValue(value);
     preparedStatement.setObject(i, pgObject);
+     <#elseif property.column.typeName == "macaddr" >
+    PGobject pgObject = new PGobject();
+     pgObject.setType("macaddr");
+    pgObject.setValue(value);
+    preparedStatement.setObject(i, pgObject);
+   
     <#elseif property.column.typeName == "path" >
     PGobject pgObject = new PGobject();
      pgObject.setType("path");
