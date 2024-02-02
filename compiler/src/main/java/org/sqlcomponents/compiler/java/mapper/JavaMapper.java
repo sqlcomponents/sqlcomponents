@@ -73,7 +73,6 @@ public final class JavaMapper extends Mapper {
             case POLYGON:
                 return "org.locationtech.jts.geom.Polygon";
             case PATH:
-                return "java.lang.String";
             case MACADDR8:
             case MACADDR:
                 return "java.lang.String";
