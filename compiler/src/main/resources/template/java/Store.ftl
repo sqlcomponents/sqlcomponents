@@ -302,6 +302,8 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "java.lang.String">
                  <#if property.column.typeName == "macaddr8" >
                     <#assign a=addImportStatement("org.postgresql.util.PGobject")>
+                <#elseif property.column.typeName == "path">
+                    <#assign a=addImportStatement("org.postgresql.util.PGobject")>
                 </#if>
                 <@columns.StringColumn property=property/>
                 <#break>           
@@ -359,9 +361,7 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "org.locationtech.jts.geom.Point">
                 <@columns.PointColumn property=property/>
                 <#break>
-            <#case "java.lang.String">
-                 @columns.PathColumn property=property/>
-                 <#break>
+            
 
             <#case "org.locationtech.jts.geom.Envelope" >
                 <@columns.BoxColumn property=property/>

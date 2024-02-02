@@ -95,6 +95,9 @@ public final class ${name}Manager {
             <#break>
         <#case "macaddr8">
             <#assign a=addImportStatement("org.postgresql.util.PGobject")>
+            <#break>
+        <#case "path">
+            <#assign a=addImportStatement("org.postgresql.util.PGobject")>
             <#break>        
      </#switch>
 </#list>

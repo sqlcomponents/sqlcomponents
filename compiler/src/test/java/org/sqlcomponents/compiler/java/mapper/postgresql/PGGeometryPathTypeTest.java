@@ -1,5 +1,6 @@
 package org.sqlcomponents.compiler.java.mapper.postgresql;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 
