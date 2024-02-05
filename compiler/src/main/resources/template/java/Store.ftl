@@ -185,6 +185,10 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "org.apache.commons.net.util.SubnetUtils">
                 ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                 <#break>
+            
+            <#case "org.locationtech.spatial4j.shape.Circle">
+                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
+                <#break>
 
             <#default>
                 <#if containsEncryption(property)>
@@ -384,6 +388,12 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
              <#case "org.locationtech.jts.geom.LineSegment" >
                     <@columns.LineSegmentColumn property=property/>
                     <#break>
+
+             <#case "org.locationtech.spatial4j.shape.Circle" >
+                    <@columns.CircleColumn property=property/>
+                    <#break>
+
+            
 
         </#switch>
     </#list>

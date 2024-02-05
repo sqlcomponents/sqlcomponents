@@ -404,3 +404,14 @@
 
     <@columnfooter property=property/>
 </#macro>
+
+<#macro CircleColumn property>
+    <@columnheader property=property/>
+     public void set(final PreparedStatement preparedStatement, final int i, final Circle value) throws SQLException {
+    
+     preparedStatement.setObject(i,convertCircle(value));
+    }
+    
+
+    <@columnfooter property=property/>
+</#macro>

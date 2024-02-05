@@ -101,7 +101,10 @@ public final class ${name}Manager {
             <#break>
         <#case "path">
             <#assign a=addImportStatement("org.postgresql.util.PGobject")>
-            <#break>        
+            <#break> 
+        <#case "circle">
+            <#include "/template/java/custom-object/circle.ftl">
+            <#break>     
      </#switch>
 </#list>
     <#assign a=addImportStatement("java.sql.PreparedStatement")>
