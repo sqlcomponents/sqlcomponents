@@ -14,7 +14,7 @@ import static  org.sqlcomponents.compiler.java.util.CompilerTestUtil.getDataType
 class PGCircleTypeTest {
 
     @Test
-    @Disabled
+    //@Disabled
     void testDataType() throws Exception {
         assertEquals(Circle.class, Class.forName(getDataType("a_circle")), "Type Mismatch");
     }
