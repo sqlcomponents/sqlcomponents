@@ -45,7 +45,7 @@ CREATE TABLE raja(
     a_macaddr macaddr,
 --    a_polygon polygon,
     a_path path,
---    a_open line,
+    a_line line,
     a_box box,
     UNIQUE(a_uuid),
    CONSTRAINT fk_code

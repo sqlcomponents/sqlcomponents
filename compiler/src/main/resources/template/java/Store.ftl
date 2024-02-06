@@ -177,6 +177,10 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
                 ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                 <#break>
 
+            <#case "org.locationtech.jts.geom.LineString">
+                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
+                <#break>    
+
              <#case "java.net.InetAddress">
 
                 ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
@@ -391,6 +395,10 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
 
              <#case "org.locationtech.spatial4j.shape.Circle" >
                     <@columns.CircleColumn property=property/>
+                    <#break>
+
+            <#case "org.locationtech.jts.geom.LineString" >
+                    <@columns.LineColumn property=property/>
                     <#break>
 
             
