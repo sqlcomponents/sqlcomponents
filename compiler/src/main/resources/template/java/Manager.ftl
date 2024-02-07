@@ -107,7 +107,10 @@ public final class ${name}Manager {
             <#break> 
         <#case "circle">
             <#include "/template/java/custom-object/circle.ftl">
-            <#break>     
+            <#break> 
+        <#case "polygon">
+            <#include "/template/java/custom-object/polygon.ftl">
+            <#break>    
      </#switch>
 </#list>
     <#assign a=addImportStatement("java.sql.PreparedStatement")>

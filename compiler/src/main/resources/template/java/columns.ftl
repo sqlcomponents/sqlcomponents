@@ -426,3 +426,12 @@
 
     <@columnfooter property=property/>
 </#macro>
+<#macro PolygonColumn property>
+    <@columnheader property=property/>
+     public void set(final PreparedStatement preparedStatement, final int i, final Polygon value) throws SQLException {
+    
+     preparedStatement.setObject(i,convertPolygon(value));
+    }
+    
+    <@columnfooter property=property/>
+</#macro>

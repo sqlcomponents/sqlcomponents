@@ -13,7 +13,7 @@ import static  org.sqlcomponents.compiler.java.util.CompilerTestUtil.getDataType
 class PGPolygonTypeTest {
 
     @Test
-    @Disabled
+    //@Disabled
     void testDataType() throws Exception {
         assertEquals(Polygon.class, Class.forName(getDataType("a_polygon")), "Type Mismatch");
 

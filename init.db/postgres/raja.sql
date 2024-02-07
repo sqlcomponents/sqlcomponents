@@ -43,7 +43,7 @@ CREATE TABLE raja(
  a_circle circle,
     a_cidr cidr,
     a_macaddr macaddr,
---    a_polygon polygon,
+    a_polygon polygon,
     a_path path,
     a_line line,
     a_box box,
