@@ -25,6 +25,18 @@
     "apath": "((1,1),(2,2),(3,1))",
     "atext": "Text",
     "apoint":  { "type": "Point", "coordinates": [100.0, 0.0] },
+    "apolygon": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [0.0, 0.0],
+          [10.0, 0.0],
+          [10.0, 10.0],
+          [0.0, 10.0],
+          [0.0, 0.0]
+        ]
+      ]
+    },
     "adate": [
       2020,
       12,
