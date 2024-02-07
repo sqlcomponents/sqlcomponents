@@ -415,3 +415,14 @@
 
     <@columnfooter property=property/>
 </#macro>
+
+<#macro LineColumn property>
+    <@columnheader property=property/>
+     public void set(final PreparedStatement preparedStatement, final int i, final LineString value) throws SQLException {
+    
+     preparedStatement.setObject(i,convertLine(value));
+    }
+    
+
+    <@columnfooter property=property/>
+</#macro>
