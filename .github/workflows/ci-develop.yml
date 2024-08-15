@@ -11,7 +11,7 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Build Infrastructure
         run: docker compose up -d
       - name: Setup JDK
@@ -21,9 +21,5 @@ jobs:
           distribution: zulu
           server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
           settings-path: ${{ github.workspace }} # location for the settings.xml file
-  test:
-    runs-on: ubuntu-latest
-    needs: prepare
-    steps:
       - name: Test
         run: mvn test && cd datastore && mvn jacoco:prepare-agent install jacoco:report
