@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Docker Compose
-        run: docker-compose up -d
+        run: docker compose up -d
       - name: Setup JDK
         uses: actions/setup-java@v2
         with:
