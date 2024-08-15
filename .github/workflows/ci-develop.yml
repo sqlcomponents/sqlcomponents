@@ -22,4 +22,4 @@ jobs:
           server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
           settings-path: ${{ github.workspace }} # location for the settings.xml file
       - name: Test
-        run: mvn test && cd datastore && mvn jacoco:prepare-agent install jacoco:report
+        run: mvn clean package && cd datastore && mvn jacoco:prepare-agent install jacoco:report
