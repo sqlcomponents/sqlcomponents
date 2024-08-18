@@ -72,3 +72,10 @@ services:
 #      ACCEPT_EULA: 'Y'
 #      SA_PASSWORD: P@ssw0rd
 #      DATABASE: moviedb
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  data:
+    driver: local
