@@ -12,6 +12,7 @@ services:
       - "5432:5432"
     volumes:
       - ./init.db/postgres:/docker-entrypoint-initdb.d
+      - ./postgres-config/pg_hba.conf:/etc/postgresql/pg_hba.conf
 #  h2db:
 #    image: oscarfonts/h2:latest
 #    container_name: h2db
