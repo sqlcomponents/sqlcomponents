@@ -256,6 +256,9 @@ public final class Crawler {
             case H2_DB:
                 database.setDbType(DBType.H2);
                 break;
+            case ORACLE_DB:
+                database.setDbType(DBType.ORACLE);
+                break;
             case MYSQL_DB:
                 database.setDbType(DBType.MYSQL);
                 break;
@@ -283,6 +286,10 @@ public final class Crawler {
      * The constant H2_DB.
      */
     private static final String H2_DB = "h2";
+    /**
+     * The constant ORACLE_DB.
+     */
+    private static final String ORACLE_DB = "oracle";
     /**
      * The constant COMMA_STR.
      */
@@ -370,7 +377,8 @@ public final class Crawler {
 
         String lSchemaNamePattern =
                 (database.getDbType() == DBType.MYSQL
-                        || database.getDbType() == DBType.H2)
+                        || database.getDbType() == DBType.H2
+                        || database.getDbType() == DBType.ORACLE)
                         ? aSchemeName : null;
         String lCatalog =
                 database.getDbType() == DBType.MYSQL ? aSchemeName : null;
@@ -472,8 +480,10 @@ public final class Crawler {
             bColumn.setColumnName(lColumnResultSet.getString("COLUMN_NAME"));
             bColumn.setTableName(lColumnResultSet.getString("TABLE_NAME"));
             bColumn.setTypeName(lColumnResultSet.getString("TYPE_NAME"));
+
             lColumnType = ColumnType.value(
                     JDBCType.valueOf(lColumnResultSet.getInt("DATA_TYPE")));
+
             bColumn.setColumnType(lColumnType == ColumnType.OTHER
                     ? getColumnTypeForOthers(bColumn) : lColumnType);
             bColumn.setSize(lColumnResultSet.getInt("COLUMN_SIZE"));
@@ -488,8 +498,8 @@ public final class Crawler {
             bColumn.setBufferLength(lColumnResultSet.getInt("BUFFER_LENGTH"));
             bColumn.setNumberPrecisionRadix(
                     lColumnResultSet.getInt("NUM_PREC_RADIX"));
-            bColumn.setColumnDefinition(
-                    lColumnResultSet.getString("COLUMN_DEF"));
+//            bColumn.setColumnDefinition(
+//                    lColumnResultSet.getString("COLUMN_DEF"));
             bColumn.setOrdinalPosition(
                     lColumnResultSet.getInt("ORDINAL_POSITION"));
             bColumn.setScopeCatalog(
@@ -629,7 +639,7 @@ public final class Crawler {
                                 .filter(column -> column.getColumnName()
                                         .equals(columnName)).findFirst().get());
 
-            } else {
+            } else if (columnName != null) {
                 UniqueConstraint bUniqueConstraint = new UniqueConstraint();
                 bUniqueConstraint.setName(indexName);
                 List<Column> bColumns = new ArrayList<>();
