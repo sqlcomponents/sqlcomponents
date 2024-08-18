@@ -9,9 +9,9 @@ services:
       POSTGRES_USER: moviedb
       POSTGRES_PASSWORD: moviedb
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
-      - ${PWD}/init.db/postgres:/docker-entrypoint-initdb.d
+      - ./init.db/postgres:/docker-entrypoint-initdb.d
 #  h2db:
 #    image: oscarfonts/h2:latest
 #    container_name: h2db
