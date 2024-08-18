@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
   postgresdb:
-    image: postgres:11
+    image: postgres:16
     container_name: postgresdb
     environment:
       POSTGRES_DB: moviedb
@@ -11,20 +11,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./init.db/postgres:/docker-entrypoint-initdb.d
-      - ./postgres-config/pg_hba.conf:/etc/postgresql/pg_hba.conf
-    command: ["postgres", "-c", "hba_file=/etc/postgresql/pg_hba.conf",]
-#  h2db:
-#    image: oscarfonts/h2:latest
-#    container_name: h2db
-#    environment:
-#      - H2_DATABASE_NAME=moviedb
-#      - H2_USER=moviedb
-#      - H2_PASSWORD=moviedb
-#    ports:
-#      - "1521:1521"
-#    volumes:
-#      - ./init.db/h2:/docker-entrypoint-initdb.d
+      - ${PWD}/init.db/postgres:/docker-entrypoint-initdb.d
 
 #  mariadb:
 #    image: mariadb:10.5
@@ -72,10 +59,3 @@ services:
 #      ACCEPT_EULA: 'Y'
 #      SA_PASSWORD: P@ssw0rd
 #      DATABASE: moviedb
-networks:
-  default:
-    driver: bridge
-
-volumes:
-  data:
-    driver: local
