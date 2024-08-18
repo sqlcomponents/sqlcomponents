@@ -12,8 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run docker-compose
-        uses: hoverkraft-tech/compose-action@v2.0.1
+      - name: Build the Infrastructure
+        run: docker compose up -d
       - name: Setup JDK
         uses: actions/setup-java@v2
         with:
