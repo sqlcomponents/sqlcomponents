@@ -4,8 +4,6 @@ services:
   postgresdb:
     image: postgres:16.4-alpine
     container_name: postgresdb
-    networks:
-      - web
     environment:
       POSTGRES_DB: moviedb
       POSTGRES_USER: moviedb
@@ -72,6 +70,3 @@ services:
 #      ACCEPT_EULA: 'Y'
 #      SA_PASSWORD: P@ssw0rd
 #      DATABASE: moviedb
-networks:
-  web:
-    external: true
