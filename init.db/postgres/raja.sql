@@ -59,7 +59,6 @@ CREATE TABLE raja(
     -- Ceometric Types
     -- Ref: https://www.postgresql.org/docs/current/datatype-geometric.html
     a_point point,
-    a_inet inet,
     a_lseg lseg,
     a_circle circle,
     a_polygon polygon,
