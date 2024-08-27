@@ -56,10 +56,9 @@ CREATE TABLE raja(
     -- Ref: https://www.postgresql.org/docs/current/datatype-enum.html
     -- todo: ENUM
 
-    -- Ceometric Types
+    -- Geometric Types
     -- Ref: https://www.postgresql.org/docs/current/datatype-geometric.html
     a_point point,
-    a_inet inet,
     a_lseg lseg,
     a_circle circle,
     a_polygon polygon,
