@@ -76,7 +76,7 @@ CREATE TABLE raja(
 
     -- Bit String Types
     -- Ref: https://www.postgresql.org/docs/current/datatype-bit.html
-    -- todo: BIT
+    a_bit bit,
 
     -- Text Search Types
     -- Ref: https://www.postgresql.org/docs/current/datatype-textsearch.html
