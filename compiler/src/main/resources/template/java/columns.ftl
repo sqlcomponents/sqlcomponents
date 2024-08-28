@@ -150,7 +150,15 @@
 <#macro BooleanColumn property>
     <@columnheader property=property/>
     public void set(final PreparedStatement preparedStatement, final int i, final Boolean value) throws SQLException {
-    preparedStatement.setBoolean(i,value);
+    <#if property.column.typeName == "bit" >
+        PGobject bitObject = new PGobject();
+        bitObject.setType("bit");
+        bitObject.setValue(value == null || !value ? "0" : "1" );
+        preparedStatement.setObject(i, bitObject);
+    <#else>
+        preparedStatement.setBoolean(i,value);
+    </#if>
+    
     }
     public final WhereClause  eq(final Boolean value) {
     sql = "${property.column.escapedName?j_string} =" + value ;
