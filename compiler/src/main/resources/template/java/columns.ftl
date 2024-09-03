@@ -167,6 +167,25 @@
     <@columnfooter property=property/>
 </#macro>
 
+
+<#macro BitSetColumn property>
+    <@columnheader property=property/>
+    public void set(final PreparedStatement preparedStatement, final int i, final BitSet value) throws SQLException {
+
+        PGobject bitObject = new PGobject();
+        bitObject.setType("bit");
+        bitObject.setValue(value == null || !value ? "0" : "1" );
+        preparedStatement.setObject(i, bitObject);
+    
+    
+    }
+    public final WhereClause  eq(final BitSet value) {
+    sql = "${property.column.escapedName?j_string} =" + value ;
+    return getWhereClause();
+    }
+    <@columnfooter property=property/>
+</#macro>
+
 <#macro numbercolumn type property>
 
     public void set(final PreparedStatement preparedStatement, final int i, final ${type} value) throws SQLException {

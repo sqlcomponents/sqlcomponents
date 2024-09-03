@@ -346,6 +346,9 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "java.lang.Boolean">
                 <@columns.BooleanColumn property=property/>
                 <#break>
+            <#case "java.util.BitSet">
+                <@columns.BitSetColumn property=property/>
+                <#break>
             <#case "java.time.LocalDate">
                 <@columns.LocalDateColumn property=property/>
                 <#break>

@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.util.BitSet;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -103,8 +104,9 @@ public final class JavaMapper extends Mapper {
      */
     private Class getDataTypeClass(final Column aColumn) {
         switch (aColumn.getColumnType()) {
-            case TINYINT:
             case BIT:
+                return aColumn.getSize() == 1 ? Boolean.class : BitSet.class;
+            case TINYINT:
             case SMALLINT:
                 return aColumn.getSize() == 1 ? Boolean.class : Short.class;
             case BIGINT:
