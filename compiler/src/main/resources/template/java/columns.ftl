@@ -175,7 +175,11 @@
         if(value != null) {
             PGobject bitObject = new PGobject();
             bitObject.setType("bit");
-            bitObject.setValue(value.toString());
+            StringBuffer valueBuffer = new StringBuffer();
+            for (int j=0;j< value.length();j++) {
+                valueBuffer.append(value.get(j)==true?"1":"0");
+            }
+            bitObject.setValue(valueBuffer.toString());
             preparedStatement.setObject(i, bitObject);
         }
     
