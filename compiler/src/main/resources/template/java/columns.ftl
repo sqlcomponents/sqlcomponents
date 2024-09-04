@@ -172,10 +172,12 @@
     <@columnheader property=property/>
     public void set(final PreparedStatement preparedStatement, final int i, final BitSet value) throws SQLException {
 
-        PGobject bitObject = new PGobject();
-        bitObject.setType("bit");
-        bitObject.setValue(value == null || !value ? "0" : "1" );
-        preparedStatement.setObject(i, bitObject);
+        if(value != null) {
+            PGobject bitObject = new PGobject();
+            bitObject.setType("bit");
+            bitObject.setValue(value.toString());
+            preparedStatement.setObject(i, bitObject);
+        }
     
     
     }

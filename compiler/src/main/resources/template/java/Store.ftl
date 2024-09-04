@@ -161,6 +161,9 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
             <#case "java.util.UUID">
                 ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                 <#break>
+            <#case "java.util.BitSet">
+                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
+                <#break>
             <#case "java.time.Duration">
                 ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
                 <#break>
