@@ -1,7 +1,9 @@
 package org.example.store;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import java.net.UnknownHostException;
+
 import org.example.RajaManager;
 import org.example.model.Raja;
 import org.example.model.Connection;
@@ -161,7 +163,7 @@ class RajaTest {
     }
 
     @Test
-    void testMultiSequenceInsertAndGetInsertedObjects() throws SQLException, JsonProcessingException, UnknownHostException{
+    void testMultiSequenceInsertAndGetInsertedObjects() throws SQLException, JsonProcessingException, UnknownHostException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
         List<Raja> insertedRajas =
@@ -265,7 +267,7 @@ class RajaTest {
         Assertions.assertEquals(0, this.connectionStore
                         .update()
                         .set(connection)
-                        .where(ConnectionStore.name().eq(originalName+"SOMETHINGELSE"))
+                        .where(ConnectionStore.name().eq(originalName + "SOMETHINGELSE"))
                         .execute(),
                 "Single Update Execution");
 
@@ -276,6 +278,7 @@ class RajaTest {
                         .execute(),
                 "Single Update Execution");
     }
+
     @Test
     void testSelectOptional() throws SQLException {
         Connection connection = this.connectionStore.insert()

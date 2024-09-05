@@ -62,7 +62,7 @@ public enum ColumnType {
      */
     BIT("BIT"),
     /**
-     * Bit column
+     * Bit column with varying length.
      */
     VARBIT("VARBIT"),
     /**

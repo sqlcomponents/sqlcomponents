@@ -8,8 +8,6 @@ public final class ${name}Manager {
     private static ${name}Manager ${name?uncap_first}Manager;
     </#if>
 
-    private final javax.sql.DataSource dbDataSource;
-
     private final Observer observer;
 
     <#list orm.entities as entity>
@@ -24,7 +22,6 @@ public final class ${name}Manager {
     ,final Function<String,String> decryptionFunction
     </#if>
     ) {
-        this.dbDataSource = dbDataSource;
         this.observer = new Observer();
         <#list orm.entities as entity>
         this.${entity.name?uncap_first}Store = ${entity.name}Store.get${entity.name}Store(dbDataSource,this.observer
@@ -74,6 +71,9 @@ public final class ${name}Manager {
             <#break>
         <#case "bit">
             <#include "/template/java/custom-object/bit.ftl">
+            <#break>
+        <#case "varbit">
+            <#include "/template/java/custom-object/varbit.ftl">
             <#break>
         <#case "uuid">
             <#include "/template/java/custom-object/uuid.ftl">
