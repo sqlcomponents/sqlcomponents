@@ -22,6 +22,7 @@
     "abit": true,
     "achar": "A",
     "a3bit": [true,true,false],
+    "avaryingBit": [true,true,false,true],
     "amacaddr8": "00:1A:2B:3C:4D:5E",
     "amacaddr": "00:1A:2B:3C:4D:5E",
     "apath": "((1,1),(2,2),(3,1))",

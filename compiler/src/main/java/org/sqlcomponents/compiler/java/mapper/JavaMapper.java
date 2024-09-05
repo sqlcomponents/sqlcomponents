@@ -105,6 +105,7 @@ public final class JavaMapper extends Mapper {
     private Class getDataTypeClass(final Column aColumn) {
         switch (aColumn.getColumnType()) {
             case BIT:
+            case VARBIT:
                 return aColumn.getSize() == 1 ? Boolean.class : BitSet.class;
             case TINYINT:
             case SMALLINT:

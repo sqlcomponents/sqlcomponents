@@ -78,7 +78,7 @@ CREATE TABLE raja(
     -- Ref: https://www.postgresql.org/docs/current/datatype-bit.html
     a_bit bit,
     a_3bit BIT(3),
-    -- a_varying_bit BIT VARYING(5),
+    a_varying_bit BIT VARYING(5),
 
 
     -- Text Search Types

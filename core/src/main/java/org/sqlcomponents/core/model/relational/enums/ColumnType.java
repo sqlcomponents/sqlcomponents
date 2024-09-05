@@ -62,6 +62,10 @@ public enum ColumnType {
      */
     BIT("BIT"),
     /**
+     * Bit column
+     */
+    VARBIT("VARBIT"),
+    /**
      * Path column type.
      */
     PATH("PATH"),
