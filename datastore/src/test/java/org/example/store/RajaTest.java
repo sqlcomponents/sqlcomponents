@@ -1,12 +1,9 @@
 package org.example.store;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-
-import java.net.UnknownHostException;
-
 import org.example.RajaManager;
-import org.example.model.Raja;
 import org.example.model.Connection;
+import org.example.model.Raja;
 import org.example.util.DataSourceProvider;
 import org.example.util.EncryptionUtil;
 import org.example.util.JsonUtil;

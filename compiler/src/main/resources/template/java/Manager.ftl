@@ -117,7 +117,7 @@ public final class ${name}Manager {
      </#switch>
 </#list>
     <#assign a=addImportStatement("java.sql.PreparedStatement")>
-    public static abstract interface Column<T> {
+    public interface Column<T> {
         String name();
 
         String asSql();
@@ -125,6 +125,8 @@ public final class ${name}Manager {
         boolean validate(T value);
 
         void set(final PreparedStatement preparedStatement, final int i, final T value) throws SQLException;
+
+        T get(final ResultSet resultSet, final int i) throws SQLException;
 
     }
 

@@ -65,6 +65,11 @@
     </#if>
     }
 
+    @Override
+    public String get(final ResultSet resultSet, final int i) throws SQLException {
+        return resultSet.getString(i);
+    }
+
     public final WhereClause  eq(final String value) {
     sql = "${property.column.escapedName?j_string} ='" + value + "'";
     return getWhereClause();
@@ -84,6 +89,10 @@
     preparedStatement.setObject(i,convertUuid(value), java.sql.Types.OTHER);
     }
 
+    public UUID get(final ResultSet rs,final int index) throws SQLException {
+        return (UUID) rs.getObject(index);
+    }
+
     public final WhereClause  eq(final UUID value) {
     sql = "${property.column.escapedName?j_string} ='" + value.toString() + "'";
     return getWhereClause();
@@ -96,10 +105,32 @@
     public void set(final PreparedStatement preparedStatement, final int i, final Duration value) throws SQLException {
     preparedStatement.setObject(i,convertInterval(value));
     }
+
+    public Duration get(final ResultSet rs,final int index) throws SQLException {
+        final PGInterval interval = (PGInterval) rs.getObject(index);
+
+        if (interval == null) {
+            return null;
+        }
+
+        final int days = interval.getDays();
+        final int hours = interval.getHours();
+        final int minutes = interval.getMinutes();
+        final double seconds = interval.getSeconds();
+
+        return Duration.ofDays(days)
+                .plus(hours, ChronoUnit.HOURS)
+                .plus(minutes, ChronoUnit.MINUTES)
+                .plus((long) Math.floor(seconds), ChronoUnit.SECONDS);
+    }
+
     public final WhereClause  eq(final String value) {
     sql = "${property.column.escapedName?j_string} ='" + value + "'";
     return getWhereClause();
     }
+
+    
+
     <@columnfooter property=property/>
 </#macro>
 
@@ -107,6 +138,10 @@
     <@columnheader property=property/>
     public void set(final PreparedStatement preparedStatement, final int i, final ByteBuffer value) throws SQLException {
     preparedStatement.setBytes(i,value == null ? null : value.array());
+    }
+    @Override
+    public ByteBuffer get(final ResultSet resultSet, final int i) throws SQLException {
+        return resultSet.getBytes(i) == null ? null : ByteBuffer.wrap(resultSet.getBytes(i));
     }
     public final WhereClause  eq(final String value) {
     sql = "${property.column.escapedName?j_string} ='" + value + "'";
@@ -122,18 +157,43 @@
     preparedStatement.setObject(i,convertJson(value), java.sql.Types.OTHER);
     }
 
+    public JsonNode get(final ResultSet rs,final int index) throws SQLException {
+        String jsonText = rs.getString(index);
+        if (jsonText == null) {
+            return null;
+        }
+
+        try {
+            return new ObjectMapper().readTree(jsonText);
+        } catch (JsonProcessingException e) {
+            throw new SQLException(e);
+        }
+    }
+
     public final WhereClause  eq(final String value) {
     sql = "${property.column.escapedName?j_string} ='" + value + "'";
     return getWhereClause();
     }
+    <#assign a=addImportStatement("com.fasterxml.jackson.databind.ObjectMapper")>
+    <#assign a=addImportStatement("com.fasterxml.jackson.databind.JsonNode")>
+    <#assign a=addImportStatement("com.fasterxml.jackson.core.JsonProcessingException")>
     <@columnfooter property=property/>
 </#macro>
 
 <#macro CharacterColumn property>
     <@columnheader property=property/>
+    
+    @Override
     public void set(final PreparedStatement preparedStatement, final int i, final Character value) throws SQLException {
     preparedStatement.setString(i,value == null ? null : String.valueOf(value));
     }
+
+    @Override
+    public Character get(final ResultSet resultSet, final int i) throws SQLException {
+        String charString = resultSet.getString(i);
+        return charString == null ? null : charString.charAt(0);
+    }
+
     public final WhereClause  eq(final String value) {
     sql = "${property.column.escapedName?j_string} ='" + value + "'";
     return getWhereClause();
@@ -160,6 +220,12 @@
     </#if>
     
     }
+
+    @Override
+    public Boolean get(final ResultSet resultSet, final int i) throws SQLException {
+        return resultSet.getBoolean(i);
+    }
+
     public final WhereClause  eq(final Boolean value) {
     sql = "${property.column.escapedName?j_string} =" + value ;
     return getWhereClause();
@@ -185,6 +251,11 @@
     
     
     }
+
+    public BitSet get(final ResultSet rs,final int index) throws SQLException {
+        String jsonText = rs.getString(index);
+        return jsonText == null ? null : BitSet.valueOf(jsonText.getBytes());
+    }
     public final WhereClause  eq(final BitSet value) {
     sql = "${property.column.escapedName?j_string} =" + value ;
     return getWhereClause();
@@ -196,6 +267,11 @@
 
     public void set(final PreparedStatement preparedStatement, final int i, final ${type} value) throws SQLException {
     preparedStatement.set${type}(i,value);
+    }
+
+    @Override
+    public ${type} get(final ResultSet resultSet, final int i) throws SQLException {
+        return resultSet.get${type}(i);
     }
 
     public final WhereClause eq(final ${type} value) {
@@ -288,6 +364,11 @@
     preparedStatement.setDate(i,value == null ? null : java.sql.Date.valueOf(value));
     }
 
+    @Override
+    public LocalDate get(final ResultSet resultSet, final int i) throws SQLException {
+        return resultSet.getDate(i) == null ? null : resultSet.getDate(i).toLocalDate();
+    }
+
     public final WhereClause  eq(final LocalDate value) {
     sql = "${property.column.escapedName?j_string} =" + value;
     return getWhereClause();
@@ -321,6 +402,11 @@
 
     public void set(final PreparedStatement preparedStatement, final int i, final LocalTime value) throws SQLException {
     preparedStatement.setTime(i,value == null ? null : java.sql.Time.valueOf(value));
+    }
+
+    @Override
+    public LocalTime get(final ResultSet resultSet, final int i) throws SQLException {
+        return resultSet.getTime(i) == null ? null : resultSet.getTime(i).toLocalTime();
     }
     public final WhereClause  eq(final LocalTime value) {
     sql = "${property.column.escapedName?j_string} =" + value;
@@ -393,6 +479,12 @@
     public void set(final PreparedStatement preparedStatement, final int i, final Envelope value) throws SQLException {
     preparedStatement.setObject(i,convertBox(value),java.sql.Types.OTHER);
     }
+
+    public Envelope get(final ResultSet rs,final int index) throws SQLException {
+        PGbox pGbox = (PGbox) rs.getObject(index);
+        return pGbox == null ? null : new Envelope(pGbox.point[0].x,pGbox.point[1].x,pGbox.point[0].y,pGbox.point[1].y);
+    }
+
     <@columnfooter property=property/>
 </#macro>
  
@@ -404,6 +496,13 @@
     preparedStatement.setObject(i,convertPoint(value),java.sql.Types.OTHER);
     }
 
+    public Point get(final ResultSet rs,final int index) throws SQLException {
+        PGpoint pGpoint = (PGpoint) rs.getObject(index);
+        return pGpoint == null ? null : new GeometryFactory().createPoint(new Coordinate(pGpoint.x,pGpoint.y));
+    }
+
+
+
     <@columnfooter property=property/>
 </#macro>
 
@@ -413,6 +512,12 @@
     public void set(final PreparedStatement preparedStatement, final int i, final LineSegment value) throws SQLException {
     preparedStatement.setObject(i,convertLseg(value));
     }
+
+    public LineSegment get(final ResultSet rs,final int index) throws SQLException {
+        PGlseg pGlseg = (PGlseg) rs.getObject(index);
+        return pGlseg == null ? null : new LineSegment(pGlseg.point[0].x,pGlseg.point[0].y,pGlseg.point[1].x,pGlseg.point[1].y);
+    }
+    
     <@columnfooter property=property/>
 </#macro>
 
@@ -422,7 +527,17 @@
     
      preparedStatement.setObject(i,convertInet(value));
     }
-    
+    public InetAddress get(final ResultSet rs,final int index) throws SQLException {
+    String addressText = rs.getString(index);
+    if(addressText == null) {
+        return null;
+    }
+        try {
+            return InetAddress.getByName(addressText);
+        } catch (UnknownHostException e) {
+            throw new SQLException(e);
+        }
+    }
 
     <@columnfooter property=property/>
 </#macro>
@@ -432,6 +547,11 @@
      public void set(final PreparedStatement preparedStatement, final int i, final SubnetUtils value) throws SQLException {
     
      preparedStatement.setObject(i,convertCidr(value));
+    }
+
+    public SubnetUtils get(final ResultSet rs,final int index) throws SQLException {
+    String cidrAddress = rs.getString(index);
+    return cidrAddress == null ? null : new SubnetUtils(cidrAddress);
     }
     
 
@@ -444,7 +564,19 @@
     
      preparedStatement.setObject(i,convertCircle(value));
     }
-    
+
+    public Circle get(final ResultSet rs,final int index) throws SQLException {
+
+        PGcircle pGcircle = (PGcircle) rs.getObject(index);
+          if(pGcircle == null) {
+            return null;
+        }
+        PGpoint centerPoint = pGcircle.center;
+        double radius = pGcircle.radius;
+        return SpatialContext.GEO.makeCircle(centerPoint.x, centerPoint.y, radius);
+
+    }
+
 
     <@columnfooter property=property/>
 </#macro>
@@ -455,8 +587,39 @@
     
      preparedStatement.setObject(i,convertLine(value));
     }
-    
 
+    private static Coordinate calculateStartPoint(double a, double b, double c) {
+        double startX = 0; // Define the x-coordinate for the start point
+        double startY = (-c - a * startX) / b; // Calculate the corresponding y-coordinate
+        return new Coordinate(startX, startY);
+    }
+
+    private static Coordinate calculateEndPoint(double a, double b, double c) {
+        double endX = 1; // Define the x-coordinate for the end point
+        double endY = (-c - a * endX) / b; // Calculate the corresponding y-coordinate
+        return new Coordinate(endX, endY);
+    }
+    
+public LineString get(final ResultSet rs,final int index) throws SQLException {
+        PGline pGline = (PGline) rs.getObject(index);
+        if(pGline == null) {
+            return null;
+        }
+            double a = pGline.a;
+            double b = pGline.b;
+            double c = pGline.c;
+
+            Coordinate startPoint = calculateStartPoint(a, b, c);
+            Coordinate endPoint = calculateEndPoint(a, b, c);
+
+            Coordinate[] coordinates = new Coordinate[]{
+                    startPoint, endPoint
+            };
+
+            GeometryFactory geometryFactory = new GeometryFactory();
+        return geometryFactory.createLineString(coordinates);
+    }
+    
     <@columnfooter property=property/>
 </#macro>
 <#macro PolygonColumn property>
@@ -465,6 +628,22 @@
     
      preparedStatement.setObject(i,convertPolygon(value));
     }
-    
+
+    public Polygon get(final ResultSet rs,final int index) throws SQLException {
+        PGpolygon pgPolygon = (PGpolygon) rs.getObject(index);
+          if(pgPolygon == null) {
+            return null;
+        }
+        Coordinate[] coordinates = new Coordinate[pgPolygon.points.length + 1];
+                for (int i = 0; i < pgPolygon.points.length; i++) {
+                    org.postgresql.geometric.PGpoint point = pgPolygon.points[i];
+                    coordinates[i] = new Coordinate(point.x, point.y);
+                }
+        // Close the ring by adding the first point at the end
+        coordinates[pgPolygon.points.length] = coordinates[0];
+        GeometryFactory factory = new GeometryFactory();
+        LinearRing ring = factory.createLinearRing(coordinates);
+        return factory.createPolygon(ring, null);
+    }
     <@columnfooter property=property/>
 </#macro>

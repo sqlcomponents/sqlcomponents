@@ -1,8 +1,5 @@
 <#if orm.database.dbType == 'POSTGRES' >
-    public static final SubnetUtils getCidr(final ResultSet rs,final int index) throws SQLException {
-    String cidrAddress = rs.getString(index);
-    return cidrAddress == null ? null : new SubnetUtils(cidrAddress);
-    }
+
 
     public static final PGobject convertCidr(final SubnetUtils cidrAddress) throws SQLException {
     if(cidrAddress == null) {

@@ -1,8 +1,4 @@
 <#if orm.database.dbType == 'POSTGRES' >
-    public static final BitSet getVarbit(final ResultSet rs,final int index) throws SQLException {
-        String jsonText = rs.getString(index);
-        return jsonText == null ? null : BitSet.valueOf(jsonText.getBytes());
-    }
 
     public static final String convertVarbit(final BitSet uuid) throws SQLException {
         return (uuid == null) ? null : uuid.toString();

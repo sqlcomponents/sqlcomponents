@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 <#list sampleDistinctCustomColumnTypeProperties as property>
-    import static ${orm.application.rootPackage}.${orm.application.name}Manager.get${property.column.typeName?cap_first};
     import static ${orm.application.rootPackage}.${orm.application.name}Manager.convert${property.column.typeName?cap_first};
 </#list>
 
@@ -139,74 +138,7 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
     private ${name} rowMapper(ResultSet rs) throws <@throwsblock/> {
     final ${name} ${name?uncap_first} = new ${name}();<#assign index=1>
     <#list properties as property>
-        <#switch property.dataType>
-            <#case "java.time.LocalDate">
-                ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalDate());
-                <#break>
-            <#case "java.time.LocalTime">
-                ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalTime());
-                <#break>
-            <#case "java.time.LocalDateTime">
-                ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalDateTime());
-                <#break>
-            <#case "java.nio.ByteBuffer">
-                ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : ByteBuffer.wrap(rs.get${getJDBCClassName(property.dataType)}(${index})));
-                <#break>
-            <#case "java.lang.Character">
-                ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).charAt(0));
-                <#break>
-            <#case "com.fasterxml.jackson.databind.JsonNode">
-                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                <#break>
-            <#case "java.util.UUID">
-                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                <#break>
-            <#case "java.util.BitSet">
-                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                <#break>
-            <#case "java.time.Duration">
-                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                <#break>
-
-            <#case "org.locationtech.jts.geom.Envelope">
-                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                <#break>    
-       
-            <#case "org.locationtech.jts.geom.Point">
-                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                <#break>
-
-            <#case "org.locationtech.jts.geom.LineSegment">
-                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                <#break>
-
-            <#case "org.locationtech.jts.geom.LineString">
-                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                <#break>    
-
-             <#case "java.net.InetAddress">
-
-                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                <#break>
-                
-            <#case "org.apache.commons.net.util.SubnetUtils">
-                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                <#break>
-            
-            <#case "org.locationtech.spatial4j.shape.Circle">
-                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                <#break>
-            <#case "org.locationtech.jts.geom.Polygon">
-                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                <#break>
-            <#default>
-                <#if containsEncryption(property)>
-                    ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
-                <#else>
-                    ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}));
-                </#if>
-                <#break>
-        </#switch>
+        ${name?uncap_first}.set${property.name?cap_first}(${property.name}().get(rs,${index}));
         <#assign index = index + 1>
     </#list>
     return ${name?uncap_first};
@@ -371,17 +303,28 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
                 <@columns.ByteBuffer property=property/>
                 <#break>
             <#case "java.time.Duration" >
+                <#assign a=addImportStatement("org.postgresql.util.PGobject")>
+                <#assign a=addImportStatement("org.postgresql.util.PGInterval")>
+                <#assign a=addImportStatement("java.time.temporal.ChronoUnit")>
                 <@columns.DurationColumn property=property/>
                 <#break>
             <#case "org.locationtech.spatial4j.shape.Circle">
+                <#assign a=addImportStatement("org.locationtech.spatial4j.shape.Circle")>
+                <#assign a=addImportStatement("org.locationtech.spatial4j.context.SpatialContext")>
+                <#assign a=addImportStatement("org.postgresql.geometric.PGpoint")>
+                <#assign a=addImportStatement("org.postgresql.geometric.PGcircle")>
                 <@columns.CircleColumn property=property/>
                 <#break>
             <#case "org.locationtech.jts.geom.Point">
+                <#assign a=addImportStatement("org.locationtech.jts.geom.GeometryFactory")>
+    <#assign a=addImportStatement("org.locationtech.jts.geom.Coordinate")>
                 <@columns.PointColumn property=property/>
                 <#break>
             
 
             <#case "org.locationtech.jts.geom.Envelope" >
+                <#assign a=addImportStatement("org.locationtech.jts.geom.Envelope")>
+    <#assign a=addImportStatement("org.postgresql.geometric.PGbox")>
                 <@columns.BoxColumn property=property/>
                 <#break>
             
@@ -394,18 +337,32 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
                 <#break>
            
             <#case "org.locationtech.jts.geom.Polygon" >
+                    <#assign a=addImportStatement("org.postgresql.geometric.PGpolygon")>
+                    <#assign a=addImportStatement("org.locationtech.jts.geom.Coordinate")>
+                    <#assign a=addImportStatement("org.locationtech.jts.geom.GeometryFactory")>
+                    <#assign a=addImportStatement("org.locationtech.jts.geom.LinearRing")>
+                    <#assign a=addImportStatement("org.locationtech.jts.geom.Polygon")>
+                    <#assign a=addImportStatement("org.locationtech.jts.io.ParseException")>
                     <@columns.PolygonColumn property=property/>
                     <#break>
               
              <#case "org.locationtech.jts.geom.LineSegment" >
+             <#assign a=addImportStatement("org.locationtech.jts.geom.GeometryFactory")>
+    <#assign a=addImportStatement("org.locationtech.jts.geom.Coordinate")>
+    <#assign a=addImportStatement("org.locationtech.jts.geom.LineSegment")>
+    <#assign a=addImportStatement("org.postgresql.geometric.PGpoint")>
+    <#assign a=addImportStatement("org.postgresql.geometric.PGlseg")>
                     <@columns.LineSegmentColumn property=property/>
                     <#break>
 
-             <#case "org.locationtech.spatial4j.shape.Circle" >
-                    <@columns.CircleColumn property=property/>
-                    <#break>
+            
 
             <#case "org.locationtech.jts.geom.LineString" >
+                    <#assign a=addImportStatement("org.locationtech.jts.geom.GeometryFactory")>
+                    <#assign a=addImportStatement("org.locationtech.jts.geom.Coordinate")>
+                    <#assign a=addImportStatement("org.locationtech.jts.geom.LineString")>
+                    <#assign a=addImportStatement("org.postgresql.geometric.PGpoint")>
+                    <#assign a=addImportStatement("org.postgresql.geometric.PGline")>
                     <@columns.LineColumn property=property/>
                     <#break>
 

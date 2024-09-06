@@ -1,20 +1,4 @@
 <#if orm.database.dbType == 'POSTGRES' >
-    public static final Polygon getPolygon(final ResultSet rs,final int index) throws SQLException, JsonProcessingException {
-        PGpolygon pgPolygon = (PGpolygon) rs.getObject(index);
-          if(pgPolygon == null) {
-            return null;
-        }
-        Coordinate[] coordinates = new Coordinate[pgPolygon.points.length + 1];
-                for (int i = 0; i < pgPolygon.points.length; i++) {
-                    org.postgresql.geometric.PGpoint point = pgPolygon.points[i];
-                    coordinates[i] = new Coordinate(point.x, point.y);
-                }
-        // Close the ring by adding the first point at the end
-        coordinates[pgPolygon.points.length] = coordinates[0];
-        GeometryFactory factory = new GeometryFactory();
-        LinearRing ring = factory.createLinearRing(coordinates);
-        return factory.createPolygon(ring, null);
-    }
     public static final PGpolygon convertPolygon(final Polygon polygon) throws SQLException {
         if(polygon == null) {
             return null;

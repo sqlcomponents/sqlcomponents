@@ -1,8 +1,5 @@
 <#if orm.database.dbType == 'POSTGRES' >
-    public static final LineSegment getLseg(final ResultSet rs,final int index) throws SQLException, JsonProcessingException {
-        PGlseg pGlseg = (PGlseg) rs.getObject(index);
-        return pGlseg == null ? null : new LineSegment(pGlseg.point[0].x,pGlseg.point[0].y,pGlseg.point[1].x,pGlseg.point[1].y);
-    }
+
     public static final PGlseg convertLseg(final LineSegment lineSegment) throws SQLException {
         if(lineSegment == null) {
             return null;

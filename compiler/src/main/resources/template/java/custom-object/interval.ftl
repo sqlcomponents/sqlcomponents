@@ -1,21 +1,5 @@
 <#if orm.database.dbType == 'POSTGRES' >
-    public static final Duration getInterval(final ResultSet rs,final int index) throws SQLException {
-        final PGInterval interval = (PGInterval) rs.getObject(index);
 
-        if (interval == null) {
-            return null;
-        }
-
-        final int days = interval.getDays();
-        final int hours = interval.getHours();
-        final int minutes = interval.getMinutes();
-        final double seconds = interval.getSeconds();
-
-        return Duration.ofDays(days)
-                .plus(hours, ChronoUnit.HOURS)
-                .plus(minutes, ChronoUnit.MINUTES)
-                .plus((long) Math.floor(seconds), ChronoUnit.SECONDS);
-    }
 
     public static final PGobject convertInterval(final Duration duration) throws SQLException {
         if(duration != null) {

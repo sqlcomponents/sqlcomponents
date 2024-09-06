@@ -1,15 +1,5 @@
 <#if orm.database.dbType == 'POSTGRES' >
-    public static final Circle getCircle(final ResultSet rs,final int index) throws SQLException, JsonProcessingException {
 
-        PGcircle pGcircle = (PGcircle) rs.getObject(index);
-          if(pGcircle == null) {
-            return null;
-        }
-        PGpoint centerPoint = pGcircle.center;
-        double radius = pGcircle.radius;
-        return SpatialContext.GEO.makeCircle(centerPoint.x, centerPoint.y, radius);
-
-    }
 
     public static final PGcircle convertCircle(final Circle circle) throws SQLException {
 
