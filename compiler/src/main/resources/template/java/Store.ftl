@@ -297,6 +297,9 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
                 <@columns.UUIDColumn property=property/>
                 <#break>
             <#case "com.fasterxml.jackson.databind.JsonNode" >
+                <#assign a=addImportStatement("com.fasterxml.jackson.databind.ObjectMapper")>
+                <#assign a=addImportStatement("com.fasterxml.jackson.databind.JsonNode")>
+                <#assign a=addImportStatement("com.fasterxml.jackson.core.JsonProcessingException")>
                 <@columns.JsonNodeColumn property=property/>
                 <#break>
             <#case "java.nio.ByteBuffer" >

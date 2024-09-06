@@ -174,9 +174,7 @@
     sql = "${property.column.escapedName?j_string} ='" + value + "'";
     return getWhereClause();
     }
-    <#assign a=addImportStatement("com.fasterxml.jackson.databind.ObjectMapper")>
-    <#assign a=addImportStatement("com.fasterxml.jackson.databind.JsonNode")>
-    <#assign a=addImportStatement("com.fasterxml.jackson.core.JsonProcessingException")>
+    
     <@columnfooter property=property/>
 </#macro>
 
