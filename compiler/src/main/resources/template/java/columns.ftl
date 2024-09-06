@@ -153,8 +153,9 @@
 <#macro JsonNodeColumn property>
     <@columnheader property=property/>
 
-    public void set(final PreparedStatement preparedStatement, final int i, final  JsonNode value) throws SQLException {
-    preparedStatement.setObject(i,convertJson(value), java.sql.Types.OTHER);
+    public void set(final PreparedStatement preparedStatement, final int i, final  JsonNode jsonNode) throws SQLException {
+    final String jsonText  = (jsonNode == null) ? null : jsonNode.toString() ;
+    preparedStatement.setObject(i,jsonText, java.sql.Types.OTHER);
     }
 
     public JsonNode get(final ResultSet rs,final int index) throws SQLException {

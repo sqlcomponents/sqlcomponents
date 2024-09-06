@@ -63,12 +63,6 @@ public final class ${name}Manager {
 
 <#list orm.database.distinctCustomColumnTypeNames as typeName>
     <#switch typeName>
-        <#case "json">
-            <#include "/template/java/custom-object/json.ftl">
-            <#break>
-        <#case "jsonb">
-            <#include "/template/java/custom-object/jsonb.ftl">
-            <#break>
         <#case "bit">
             <#include "/template/java/custom-object/bit.ftl">
             <#break>
