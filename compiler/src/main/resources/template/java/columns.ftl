@@ -85,8 +85,8 @@
 
 <#macro UUIDColumn property>
     <@columnheader property=property/>
-    public void set(final PreparedStatement preparedStatement, final int i, final UUID value) throws SQLException {
-    preparedStatement.setObject(i,convertUuid(value), java.sql.Types.OTHER);
+    public void set(final PreparedStatement preparedStatement, final int i, final UUID uuid) throws SQLException {
+    preparedStatement.setObject(i,(uuid == null) ? null : uuid.toString(), java.sql.Types.OTHER);
     }
 
     public UUID get(final ResultSet rs,final int index) throws SQLException {
@@ -102,8 +102,20 @@
 
 <#macro DurationColumn property>
     <@columnheader property=property/>
-    public void set(final PreparedStatement preparedStatement, final int i, final Duration value) throws SQLException {
-    preparedStatement.setObject(i,convertInterval(value));
+    public void set(final PreparedStatement preparedStatement, final int i, final Duration duration) throws SQLException {
+    
+    if(duration == null) {
+        preparedStatement.setObject(i,null);
+            
+        } else {
+            final int days = (int) duration.toDays();
+            final int hours = (int) (duration.toHours() % 24);
+            final int minutes = (int) (duration.toMinutes() % 60);
+            final double seconds = duration.getSeconds() % 60;
+            preparedStatement.setObject(i,new PGInterval(0, 0, days, hours, minutes, seconds));
+        }
+    
+    
     }
 
     public Duration get(final ResultSet rs,final int index) throws SQLException {
@@ -475,8 +487,10 @@
 <#macro BoxColumn property>
 <@columnheader property=property/>
  
-    public void set(final PreparedStatement preparedStatement, final int i, final Envelope value) throws SQLException {
-    preparedStatement.setObject(i,convertBox(value),java.sql.Types.OTHER);
+    public void set(final PreparedStatement preparedStatement, final int i, final Envelope box) throws SQLException {
+    PGbox pgbox = (box == null) ? null : new PGbox(box.getMinX(), box.getMinY(),
+                                                                             box.getMaxX(), box.getMaxY());
+    preparedStatement.setObject(i,pgbox,java.sql.Types.OTHER);
     }
 
     public Envelope get(final ResultSet rs,final int index) throws SQLException {
@@ -491,8 +505,8 @@
 <#macro PointColumn property>
     <@columnheader property=property/>
 
-    public void set(final PreparedStatement preparedStatement, final int i, final Point value) throws SQLException {
-    preparedStatement.setObject(i,convertPoint(value),java.sql.Types.OTHER);
+    public void set(final PreparedStatement preparedStatement, final int i, final Point point) throws SQLException {
+    preparedStatement.setObject(i,(point == null) ? null : new PGpoint(point.getX(),point.getY()),java.sql.Types.OTHER);
     }
 
     public Point get(final ResultSet rs,final int index) throws SQLException {
@@ -508,8 +522,17 @@
 
 <#macro LineSegmentColumn property>
     <@columnheader property=property/>
-    public void set(final PreparedStatement preparedStatement, final int i, final LineSegment value) throws SQLException {
-    preparedStatement.setObject(i,convertLseg(value));
+    public void set(final PreparedStatement preparedStatement, final int i, final LineSegment lineSegment) throws SQLException {
+    if(lineSegment == null) {
+            preparedStatement.setObject(i,null);
+        } else {
+PGpoint pGpoint1 = new PGpoint(lineSegment.p0.x, lineSegment.p0.y);
+        PGpoint pGpoint2 = new PGpoint(lineSegment.p1.x, lineSegment.p1.y);
+  
+    
+    preparedStatement.setObject(i,new PGlseg(pGpoint1,pGpoint2));
+        }
+        
     }
 
     public LineSegment get(final ResultSet rs,final int index) throws SQLException {
@@ -522,9 +545,16 @@
 
 <#macro InetAddressColumn property>
     <@columnheader property=property/>
-     public void set(final PreparedStatement preparedStatement, final int i, final  InetAddress value) throws SQLException {
+     public void set(final PreparedStatement preparedStatement, final int i, final  InetAddress inetAddress) throws SQLException {
+    if(inetAddress == null) {
+    preparedStatement.setObject(i,null);
+    } else {
+PGobject pgObject = new PGobject();
+    pgObject.setType("inet");
+    pgObject.setValue(inetAddress.getHostAddress());
+     preparedStatement.setObject(i,pgObject);
+    }
     
-     preparedStatement.setObject(i,convertInet(value));
     }
     public InetAddress get(final ResultSet rs,final int index) throws SQLException {
     String addressText = rs.getString(index);
@@ -543,9 +573,14 @@
 
 <#macro CidrColumn property>
     <@columnheader property=property/>
-     public void set(final PreparedStatement preparedStatement, final int i, final SubnetUtils value) throws SQLException {
-    
-     preparedStatement.setObject(i,convertCidr(value));
+     public void set(final PreparedStatement preparedStatement, final int i, final SubnetUtils cidrAddress) throws SQLException {
+    PGobject pgObject = null ;
+        if(cidrAddress != null) {
+            pgObject = new PGobject();
+            pgObject.setType("cidr");
+            pgObject.setValue(cidrAddress.getInfo().getCidrSignature());
+    }
+     preparedStatement.setObject(i,pgObject);
     }
 
     public SubnetUtils get(final ResultSet rs,final int index) throws SQLException {
@@ -559,9 +594,15 @@
 
 <#macro CircleColumn property>
     <@columnheader property=property/>
-     public void set(final PreparedStatement preparedStatement, final int i, final Circle value) throws SQLException {
-    
-     preparedStatement.setObject(i,convertCircle(value));
+     public void set(final PreparedStatement preparedStatement, final int i, final Circle circle) throws SQLException {
+   if(circle == null) {
+            preparedStatement.setObject(i,null);
+        } else {
+PGpoint pGpoint = new PGpoint(circle.getCenter().getX(), circle.getCenter().getY());
+     preparedStatement.setObject(i,new PGcircle(pGpoint, circle.getRadius()));
+        }
+
+        
     }
 
     public Circle get(final ResultSet rs,final int index) throws SQLException {
@@ -582,9 +623,17 @@
 
 <#macro LineColumn property>
     <@columnheader property=property/>
-     public void set(final PreparedStatement preparedStatement, final int i, final LineString value) throws SQLException {
-    
-     preparedStatement.setObject(i,convertLine(value));
+     public void set(final PreparedStatement preparedStatement, final int i, final LineString line) throws SQLException {
+    if(line == null) {
+            preparedStatement.setObject(i,null);
+        } else {
+PGpoint startPoint = new PGpoint(line.getCoordinateN(0).getX(),
+                    line.getCoordinateN(0).getY());
+        PGpoint endPoint = new PGpoint(line.getCoordinateN(1).getX(),
+                    line.getCoordinateN(1).getY());
+     preparedStatement.setObject(i,new PGline(startPoint,endPoint));
+        }
+        
     }
 
     private static Coordinate calculateStartPoint(double a, double b, double c) {
@@ -623,9 +672,20 @@ public LineString get(final ResultSet rs,final int index) throws SQLException {
 </#macro>
 <#macro PolygonColumn property>
     <@columnheader property=property/>
-     public void set(final PreparedStatement preparedStatement, final int i, final Polygon value) throws SQLException {
-    
-     preparedStatement.setObject(i,convertPolygon(value));
+     public void set(final PreparedStatement preparedStatement, final int i, final Polygon polygon) throws SQLException {
+    if(polygon == null) {
+            preparedStatement.setObject(i,null);
+        } else {
+// Extract the coordinates from the exterior ring of the polygon
+        Coordinate[] exteriorRingCoordinates = polygon.getExteriorRing().getCoordinates();
+        // Convert the coordinates to PGpoint objects
+        PGpoint[] pgPoints = new PGpoint[exteriorRingCoordinates.length];
+        for (int j = 0; j < exteriorRingCoordinates.length; j++) {
+            pgPoints[j] = new PGpoint(exteriorRingCoordinates[j].x, exteriorRingCoordinates[j].y);
+        }
+     preparedStatement.setObject(i,new PGpolygon(pgPoints));
+        }
+        
     }
 
     public Polygon get(final ResultSet rs,final int index) throws SQLException {

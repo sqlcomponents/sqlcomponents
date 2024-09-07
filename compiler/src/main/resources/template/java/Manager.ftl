@@ -63,36 +63,8 @@ public final class ${name}Manager {
 
 <#list orm.database.distinctCustomColumnTypeNames as typeName>
     <#switch typeName>
-        <#case "bit">
-            <#include "/template/java/custom-object/bit.ftl">
-            <#break>
-        <#case "varbit">
-            <#include "/template/java/custom-object/varbit.ftl">
-            <#break>
-        <#case "uuid">
-            <#include "/template/java/custom-object/uuid.ftl">
-            <#break>
-        <#case "interval">
-            <#include "/template/java/custom-object/interval.ftl">
-            <#break>
-        <#case "point">
-            <#include "/template/java/custom-object/point.ftl">
-            <#break>
-        <#case "box">
-            <#include "/template/java/custom-object/box.ftl">
-            <#break>
-        <#case "lseg">
-            <#include "/template/java/custom-object/lseg.ftl">
-            <#break>
-        <#case "line">
-            <#include "/template/java/custom-object/line.ftl">
-            <#break>        
-        <#case "inet">
-            <#include "/template/java/custom-object/inet.ftl">
-            <#break>  
-        <#case "cidr">
-            <#include "/template/java/custom-object/cidr.ftl">
-            <#break>
+
+  
         <#case "macaddr8">
             <#assign a=addImportStatement("org.postgresql.util.PGobject")>
             <#break>
@@ -101,13 +73,8 @@ public final class ${name}Manager {
             <#break>
         <#case "path">
             <#assign a=addImportStatement("org.postgresql.util.PGobject")>
-            <#break> 
-        <#case "circle">
-            <#include "/template/java/custom-object/circle.ftl">
-            <#break> 
-        <#case "polygon">
-            <#include "/template/java/custom-object/polygon.ftl">
-            <#break>    
+            <#break>  
+  
      </#switch>
 </#list>
     <#assign a=addImportStatement("java.sql.PreparedStatement")>
