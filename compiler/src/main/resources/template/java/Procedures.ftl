@@ -2,8 +2,10 @@ public Procedure call() {
     return new Procedure();
 }
 
-final class Procedure {
+public final class Procedure {
     <#list orm.methods as method>
-    // ${method.name}
+    public void ${method.name}(){
+
+    }
     </#list>
 }
