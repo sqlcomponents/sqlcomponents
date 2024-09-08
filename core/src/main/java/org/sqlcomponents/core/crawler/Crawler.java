@@ -554,7 +554,9 @@ public final class Crawler {
         return lColumns;
     }
 
-    private void extractColumnValues(final Column bColumn, final ResultSet lColumnResultSet) throws SQLException {
+    private void extractColumnValues(final Column bColumn,
+                                     final ResultSet lColumnResultSet)
+            throws SQLException {
         ColumnType lColumnType;
         bColumn.setColumnName(lColumnResultSet.getString("COLUMN_NAME"));
         bColumn.setTypeName(lColumnResultSet.getString("TYPE_NAME"));
@@ -611,7 +613,8 @@ public final class Crawler {
         return lProcedures;
     }
 
-    private List<Column> getParameters(final Procedure procedure) throws SQLException {
+    private List<Column> getParameters(final Procedure procedure)
+            throws SQLException {
 
         List<Column> columns = new ArrayList<>();
 
