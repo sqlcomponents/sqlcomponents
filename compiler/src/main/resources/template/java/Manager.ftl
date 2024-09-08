@@ -8,6 +8,8 @@ public final class ${name}Manager {
     private static ${name}Manager ${name?uncap_first}Manager;
     </#if>
 
+    private final javax.sql.DataSource dbDataSource;
+
     private final Observer observer;
 
     <#list orm.entities as entity>
@@ -23,6 +25,7 @@ public final class ${name}Manager {
     </#if>
     ) {
         this.observer = new Observer();
+        this.dbDataSource = dbDataSource;
         <#list orm.entities as entity>
         this.${entity.name?uncap_first}Store = ${entity.name}Store.get${entity.name}Store(dbDataSource,this.observer
         
