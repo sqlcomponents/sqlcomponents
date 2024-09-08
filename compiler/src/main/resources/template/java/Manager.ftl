@@ -160,6 +160,8 @@ public final class ${name}Manager {
     }
     </#if>
 
+    <#include "/template/java/Procedures.ftl">
+
 }
 </#assign>
 <@importStatements/>
