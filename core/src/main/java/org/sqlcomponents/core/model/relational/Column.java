@@ -14,7 +14,13 @@ public class Column {
     /**
      * The Table.
      */
-    private final Table table;
+    private Table table;
+
+    /**
+     * The procedure.
+     */
+    private Procedure procedure;
+
     /**
      * The Column name.
      */
@@ -109,12 +115,21 @@ public class Column {
     private SortedSet<Key> exportedKeys;
 
     /**
-     * Instantiates a new Column.
+     * Instantiates a new Column of Table.
      *
      * @param aTable the table
      */
     public Column(final Table aTable) {
         this.table = aTable;
+    }
+
+    /**
+     * Instantiates a new Column for procedure.
+     *
+     * @param aProcedure the table
+     */
+    public Column(final Procedure aProcedure) {
+        this.procedure = aProcedure;
     }
 
     /**
@@ -330,5 +345,9 @@ public class Column {
 
     public void setExportedKeys(final SortedSet<Key> theExportedKeys) {
         this.exportedKeys = theExportedKeys;
+    }
+
+    public Procedure getProcedure() {
+        return procedure;
     }
 }

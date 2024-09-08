@@ -21,6 +21,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.JDBCType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -211,6 +212,7 @@ public final class Crawler {
         database.setTables(getTables(application.getSchemaName(),
                 tableName -> matches(application.getTablePatterns(),
                         tableName)));
+        database.setFunctions(getProcedures());
         repair();
         return database;
     }
@@ -474,42 +476,33 @@ public final class Crawler {
         ResultSet lColumnResultSet =
                 databaseMetaData.getColumns(null, null, aTable.getTableName(),
                         null);
-        ColumnType lColumnType;
+
         while (lColumnResultSet.next()) {
             Column bColumn = new Column(aTable);
-            bColumn.setColumnName(lColumnResultSet.getString("COLUMN_NAME"));
             bColumn.setTableName(lColumnResultSet.getString("TABLE_NAME"));
-            bColumn.setTypeName(lColumnResultSet.getString("TYPE_NAME"));
-
-            lColumnType = ColumnType.value(
-                    JDBCType.valueOf(lColumnResultSet.getInt("DATA_TYPE")));
-
-            bColumn.setColumnType(lColumnType == ColumnType.OTHER
-                    ? getColumnTypeForOthers(bColumn) : lColumnType);
-            bColumn.setSize(lColumnResultSet.getInt("COLUMN_SIZE"));
-            bColumn.setDecimalDigits(lColumnResultSet.getInt("DECIMAL_DIGITS"));
-            bColumn.setRemarks(lColumnResultSet.getString("REMARKS"));
-            bColumn.setNullable(
-                    Flag.value(lColumnResultSet.getString("IS_NULLABLE")));
-            bColumn.setAutoIncrement(
-                    Flag.value(lColumnResultSet.getString("IS_AUTOINCREMENT")));
             bColumn.setTableCategory(lColumnResultSet.getString("TABLE_CAT"));
             bColumn.setTableSchema(lColumnResultSet.getString("TABLE_SCHEM"));
+
+            bColumn.setSize(lColumnResultSet.getInt("COLUMN_SIZE"));
+            bColumn.setDecimalDigits(lColumnResultSet.getInt("DECIMAL_DIGITS"));
+            bColumn.setAutoIncrement(
+                    Flag.value(lColumnResultSet.getString("IS_AUTOINCREMENT")));
             bColumn.setBufferLength(lColumnResultSet.getInt("BUFFER_LENGTH"));
             bColumn.setNumberPrecisionRadix(
                     lColumnResultSet.getInt("NUM_PREC_RADIX"));
-//            bColumn.setColumnDefinition(
-//                    lColumnResultSet.getString("COLUMN_DEF"));
-            bColumn.setOrdinalPosition(
-                    lColumnResultSet.getInt("ORDINAL_POSITION"));
             bColumn.setScopeCatalog(
                     lColumnResultSet.getString("SCOPE_CATALOG"));
             bColumn.setScopeSchema(lColumnResultSet.getString("SCOPE_SCHEMA"));
             bColumn.setScopeTable(lColumnResultSet.getString("SCOPE_TABLE"));
+
             bColumn.setSourceDataType(
                     lColumnResultSet.getString("SOURCE_DATA_TYPE"));
+
             bColumn.setGeneratedColumn(Flag.value(
                     lColumnResultSet.getString("IS_GENERATEDCOLUMN")));
+
+            extractColumnValues(bColumn, lColumnResultSet);
+
             bColumn.setExportedKeys(new TreeSet<>());
             lColumns.add(bColumn);
         }
@@ -561,6 +554,30 @@ public final class Crawler {
         return lColumns;
     }
 
+    private void extractColumnValues(final Column bColumn, final ResultSet lColumnResultSet) throws SQLException {
+        ColumnType lColumnType;
+        bColumn.setColumnName(lColumnResultSet.getString("COLUMN_NAME"));
+        bColumn.setTypeName(lColumnResultSet.getString("TYPE_NAME"));
+        lColumnType = ColumnType.value(
+                JDBCType.valueOf(lColumnResultSet.getInt("DATA_TYPE")));
+        bColumn.setColumnType(lColumnType == ColumnType.OTHER
+                ? getColumnTypeForOthers(bColumn) : lColumnType);
+
+
+        bColumn.setRemarks(lColumnResultSet.getString("REMARKS"));
+        bColumn.setNullable(
+                Flag.value(lColumnResultSet.getString("IS_NULLABLE")));
+
+
+
+
+        bColumn.setOrdinalPosition(
+                lColumnResultSet.getInt("ORDINAL_POSITION"));
+
+
+
+    }
+
     /**
      * Gets column type for others.
      *
@@ -568,13 +585,7 @@ public final class Crawler {
      * @return the column type for others
      */
     private ColumnType getColumnTypeForOthers(final Column aColumn) {
-        if (aColumn.getTable().getDatabase().getDbType() == DBType.POSTGRES) {
-            return ColumnType.findEnum(aColumn.getTypeName());
-        } else if (aColumn.getTable().getDatabase().getDbType() == DBType.H2) {
-            return ColumnType.findEnum(aColumn.getTypeName());
-        }
-
-        return null;
+        return ColumnType.findEnum(aColumn.getTypeName());
     }
 
     /**
@@ -594,9 +605,34 @@ public final class Crawler {
             function.setFunctionType(lResultSet.getShort("PROCEDURE_TYPE"));
             function.setRemarks(lResultSet.getString("REMARKS"));
             function.setSpecificName(lResultSet.getString("SPECIFIC_NAME"));
+            function.setParameters(getParameters(function));
             lProcedures.add(function);
         }
         return lProcedures;
+    }
+
+    private List<Column> getParameters(final Procedure procedure) throws SQLException {
+
+        List<Column> columns = new ArrayList<>();
+
+        ResultSet res = databaseMetaData.getProcedureColumns(null, null,
+                procedure.getFunctionName(), "%");
+
+        ResultSetMetaData rsmd = res.getMetaData();
+        int columnsCount = rsmd.getColumnCount();
+
+        while (res.next()) {
+            Column bColumn = new Column(procedure);
+
+            bColumn.setColumnName(res.getString("COLUMN_NAME"));
+
+            extractColumnValues(bColumn, res);
+
+            columns.add(bColumn);
+        }
+
+        res.close();
+        return columns;
     }
 
     /**

@@ -6,7 +6,10 @@ import java.sql.JDBCType;
  * The enum Column type.
  */
 public enum ColumnType {
-
+    /**
+     * Box column type.
+     */
+    VOID("void"),
     /**
      * Box column type.
      */

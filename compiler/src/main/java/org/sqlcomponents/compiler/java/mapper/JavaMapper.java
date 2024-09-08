@@ -148,6 +148,8 @@ public final class JavaMapper extends Mapper {
             case LONGVARBINARY:
             case BINARY:
                 return ByteBuffer.class;
+            case VOID:
+                return Void.class;
             case OTHER:
                 return getDataTypeClassForSpecialType(aColumn);
             default:
