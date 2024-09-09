@@ -8,10 +8,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-<#list sampleDistinctCustomColumnTypeProperties as property>
-    import static ${orm.application.rootPackage}.${orm.application.name}Manager.convert${property.column.typeName?cap_first};
-</#list>
-
 <#assign capturedOutput>
     /**
     * Datastore for the table - ${table.tableName}.
@@ -21,7 +17,7 @@ import java.util.stream.Collectors;
 
 
     public static ${name}Store get${name}Store(final javax.sql.DataSource theDataSource
-    ,final ${orm.application.name}Manager.Observer theObserver
+    ,final DatabaseManager.Observer theObserver
 
 
     <#if containsEncryptedProperty() >
@@ -43,9 +39,9 @@ import java.util.stream.Collectors;
 
     private final javax.sql.DataSource dbDataSource;
 
-    private final ${orm.application.name}Manager.Observer observer;
-    <#assign a=addImportStatement(orm.application.rootPackage+ "." + orm.application.name + "Manager")>
-    <#assign a=addImportStatement(orm.application.rootPackage+ "." + orm.application.name + "Manager.Value")>
+    private final DatabaseManager.Observer observer;
+    <#assign a=addImportStatement(orm.application.rootPackage+ ".DatabaseManager")>
+    <#assign a=addImportStatement(orm.application.rootPackage+ ".DatabaseManager.Value")>
 
 
     <#if containsEncryptedProperty() >
@@ -57,7 +53,7 @@ import java.util.stream.Collectors;
     * Datastore
     */
     private ${name}Store(final javax.sql.DataSource theDataSource
-    ,final ${orm.application.name}Manager.Observer theObserver
+    ,final DatabaseManager.Observer theObserver
 
 
     <#if containsEncryptedProperty() >
@@ -228,7 +224,7 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
 
 
 
-    public static abstract class Column<T> implements ${orm.application.name}Manager.Column<T> {
+    public static abstract class Column<T> implements DatabaseManager.Column<T> {
 
 
     private final PartialWhereClause  whereClause ;

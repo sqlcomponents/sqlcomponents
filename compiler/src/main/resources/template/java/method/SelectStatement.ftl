@@ -160,8 +160,8 @@ public SelectQuery sql(final String sql) {
                                 selectStatement.count());
                 }
                 <#else>
-                public ${orm.application.name}Manager.Page<${name}> execute() throws <@throwsblock/> {
-                    return ${orm.application.name}Manager.page(this.selectStatement.execute(), selectStatement.count());
+                public DatabaseManager.Page<${name}> execute() throws <@throwsblock/> {
+                    return DatabaseManager.page(this.selectStatement.execute(), selectStatement.count());
                 }
                 </#if>
 
@@ -185,7 +185,7 @@ public SelectQuery sql(final String sql) {
                                 return this.limitClause.execute(pageable);
                         }
                         <#else>
-                        public ${orm.application.name}Manager.Page<${name}> execute() throws <@throwsblock/> {
+                        public DatabaseManager.Page<${name}> execute() throws <@throwsblock/> {
                                 return this.limitClause.execute();
                         }
                         </#if>
