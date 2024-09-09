@@ -2,15 +2,22 @@
 <#assign a=addImportStatement("java.sql.SQLException")>
 
 public Procedure call() {
-    return new Procedure();
+    return this.procedure;
 }
 
-public final class Procedure {
+public static final class Procedure {
+
+    private final javax.sql.DataSource dbDataSource;
+
+    private Procedure(final DataSource dbDataSource) {
+        this.dbDataSource = dbDataSource;
+    }
+
     <#list orm.methods as method>
     public void ${method.name}(
     <#list method.inputParameters as parameter>
         <#if getClassName(parameter.dataType) != "Void">
-            ${getClassName(parameter.dataType)} ${parameter.name} <#if parameter?index <  method.inputParameters?size-1> , </#if>
+            final ${getClassName(parameter.dataType)} ${parameter.name} <#if parameter?index <  method.inputParameters?size-1> , </#if>
         </#if>
     </#list>
     ) throws SQLException {
