@@ -21,7 +21,7 @@ public static final class Procedure {
         </#if>
     </#list>
     ) throws SQLException {
-        try (CallableStatement callableStatement = dbDataSource.getConnection().prepareCall("call ${method.functionName}(?,?)")) {
+        try (CallableStatement callableStatement = dbDataSource.getConnection().prepareCall("call ${method.functionName}(<#list 0..< method.inputParameters?size-2 as i>?,</#list>?)")) {
             <#list method.inputParameters as parameter>
                <#if getClassName(parameter.dataType) != "Void">
                    callableStatement.set${getClassName(parameter.dataType)}(${parameter?index}, ${parameter.name});

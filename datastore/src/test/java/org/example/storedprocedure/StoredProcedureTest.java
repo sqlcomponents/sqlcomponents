@@ -1,6 +1,5 @@
 package org.example.storedprocedure;
 
-import org.checkerframework.checker.units.qual.C;
 import org.example.DatabaseManager;
 import org.example.model.Cache;
 import org.example.store.CacheStore;
@@ -15,15 +14,15 @@ import java.util.List;
 
 class StoredProcedureTest {
 
-    private final DatabaseManager rajaManager;
+    private final DatabaseManager databaseManager;
     private final CacheStore cacheStore;
 
     StoredProcedureTest() {
-        rajaManager =
+        databaseManager =
                 DatabaseManager.getManager(DataSourceProvider.dataSource(),
                         EncryptionUtil::enAnDecrypt,
                         EncryptionUtil::enAnDecrypt);
-        this.cacheStore = rajaManager.getCacheStore();
+        this.cacheStore = databaseManager.getCacheStore();
     }
 
     @BeforeEach
@@ -34,9 +33,9 @@ class StoredProcedureTest {
 
     @Test
     void basicCall() throws SQLException {
-        rajaManager.call().createCache("Name", "Raja");
+        databaseManager.call().createCache("Name", "Raja");
         CacheStore.WhereClause whereClause= CacheStore.code().eq("Name");
-        List<Cache> cacheList = rajaManager.getCacheStore().select(whereClause).execute();
+        List<Cache> cacheList = databaseManager.getCacheStore().select(whereClause).execute();
         Assertions.assertEquals(1, cacheList.size());
         Assertions.assertEquals(cacheList.get(0).getCode(),"Name");
         Assertions.assertEquals(cacheList.get(0).getCache(),"Raja");
