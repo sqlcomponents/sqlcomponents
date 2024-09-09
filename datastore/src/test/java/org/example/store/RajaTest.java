@@ -1,7 +1,7 @@
 package org.example.store;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.example.RajaManager;
+import org.example.DatabaseManager;
 import org.example.model.Connection;
 import org.example.model.Raja;
 import org.example.util.DataSourceProvider;
@@ -33,13 +33,13 @@ class RajaTest {
     private final List<Raja> azaguRajasToTest;
 
     RajaTest() {
-        RajaManager movieManager =
-                RajaManager.getManager(DataSourceProvider.dataSource(),
+        DatabaseManager databaseManager =
+                DatabaseManager.getManager(DataSourceProvider.dataSource(),
                         EncryptionUtil::enAnDecrypt,
                         EncryptionUtil::enAnDecrypt);
         // Stores used for testing
-        this.connectionStore = movieManager.getConnectionStore();
-        this.allInAllRajaStore = movieManager.getRajaStore();
+        this.connectionStore = databaseManager.getConnectionStore();
+        this.allInAllRajaStore = databaseManager.getRajaStore();
 
         // Data used for testing
         this.connectionsToTest = JsonUtil.getTestObjects(Connection.class);

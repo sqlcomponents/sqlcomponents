@@ -2,10 +2,10 @@
 <#if rootPackage?? && rootPackage?length != 0 >package ${rootPackage};</#if>
 
 <#assign capturedOutput>
-public final class ${name}Manager {
+public final class DatabaseManager {
 
     <#if !multipleManagers>
-    private static ${name}Manager ${name?uncap_first}Manager;
+    private static DatabaseManager databaseManager;
     </#if>
 
 
@@ -18,7 +18,7 @@ public final class ${name}Manager {
     private final ${entity.name}Store ${entity.name?uncap_first}Store;
     </#list>
 
-<#if multipleManagers>public <#else>private</#if> ${name}Manager(final javax.sql.DataSource dbDataSource
+<#if multipleManagers>public <#else>private</#if> DatabaseManager(final javax.sql.DataSource dbDataSource
     <#if encryption?has_content  >
     <#assign a=addImportStatement("java.util.function.Function")>
     ,final Function<String,String> encryptionFunction
@@ -39,15 +39,15 @@ public final class ${name}Manager {
         </#list>
     }
     <#if !multipleManagers>
-    public static final ${name}Manager getManager(final DataSource dbDataSource
+    public static final DatabaseManager getManager(final DataSource dbDataSource
     <#if encryption?has_content  >
     <#assign a=addImportStatement("javax.sql.DataSource")>
     ,final Function<String,String> encryptionFunction
     ,final Function<String,String> decryptionFunction
     </#if>
                                                             ) {
-        if(${name?uncap_first}Manager == null) {
-            ${name?uncap_first}Manager = new ${name}Manager(dbDataSource
+        if(databaseManager == null) {
+            databaseManager = new DatabaseManager(dbDataSource
             <#if encryption?has_content  >
             
             , encryptionFunction
@@ -55,7 +55,7 @@ public final class ${name}Manager {
             </#if>
             );
         }
-        return ${name?uncap_first}Manager;
+        return databaseManager;
     }
 </#if>
 
@@ -117,7 +117,7 @@ public final class ${name}Manager {
     public class Observer
     {
         // Observer is internal
-        // This also prevents store creation outside ${name}Manager
+        // This also prevents store creation outside DatabaseManager
         private Observer() {
 
         }

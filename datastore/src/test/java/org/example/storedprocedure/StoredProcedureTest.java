@@ -1,7 +1,7 @@
 package org.example.storedprocedure;
 
 import org.checkerframework.checker.units.qual.C;
-import org.example.RajaManager;
+import org.example.DatabaseManager;
 import org.example.model.Cache;
 import org.example.store.CacheStore;
 import org.example.util.DataSourceProvider;
@@ -15,12 +15,12 @@ import java.util.List;
 
 class StoredProcedureTest {
 
-    private final RajaManager rajaManager;
+    private final DatabaseManager rajaManager;
     private final CacheStore cacheStore;
 
     StoredProcedureTest() {
         rajaManager =
-                RajaManager.getManager(DataSourceProvider.dataSource(),
+                DatabaseManager.getManager(DataSourceProvider.dataSource(),
                         EncryptionUtil::enAnDecrypt,
                         EncryptionUtil::enAnDecrypt);
         this.cacheStore = rajaManager.getCacheStore();
