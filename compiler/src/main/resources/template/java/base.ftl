@@ -208,6 +208,18 @@
 <#return "">
 </#function>
 
+
+<#function getColumnType str>
+	<#local columnTypePrefix="java.sql.Types.">
+	<#if str == "JSON">
+	    <#local columnType = columnTypePrefix + "VARCHAR">
+	<#else>
+		<#local columnType = columnTypePrefix + str>
+	</#if>
+	<#return columnType>
+</#function>
+
+
 <#macro importStatements>
 <#list importStatementsList?sort as importStatement>
 import ${importStatement};

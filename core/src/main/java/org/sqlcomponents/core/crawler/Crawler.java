@@ -44,7 +44,7 @@ public final class Crawler {
     /**
      * Constant for output parameter type.
      */
-    public static final int OUTPUT = 3;
+    public static final int OUTPUT = 4;
     /**
      * Constant for inout parameter type.
      */

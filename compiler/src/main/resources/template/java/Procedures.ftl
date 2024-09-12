@@ -45,7 +45,9 @@ public static final class Procedure {
             </#list>
             <#list method.outputParameters as oParameter>
                 <#if getClassName(oParameter.dataType) != "Void">
-                      callableStatement.registerOutParameter(${oParameter?index},${oParameter.dataType} );
+                      callableStatement.registerOutParameter(${method.inputParameters?size+1 + oParameter?index}, ${getColumnType(oParameter.column.columnType)} );
+
+
                 </#if>
             </#list>
             callableStatement.execute();
