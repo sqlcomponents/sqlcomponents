@@ -316,7 +316,8 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
                 <#break>
             <#case "org.locationtech.jts.geom.Point">
                 <#assign a=addImportStatement("org.locationtech.jts.geom.GeometryFactory")>
-    <#assign a=addImportStatement("org.locationtech.jts.geom.Coordinate")>
+                <#assign a=addImportStatement("org.locationtech.jts.geom.Coordinate")>
+                <#assign a=addImportStatement("org.postgresql.geometric.PGpoint")>
                 <@columns.PointColumn property=property/>
                 <#break>
             
