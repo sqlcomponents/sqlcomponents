@@ -23,9 +23,28 @@ public final class ${name} {
      * holds value of the column ${property.column.columnName}.
      */
 	</#if>
-    private ${getClassName(property.dataType)} ${property.name};
+    private final ${getClassName(property.dataType)} ${property.name};
 	<#assign a=addImportStatement(property.dataType)>
 </#list>
+
+public ${name}(
+<#assign index=1>
+<#list properties as property>
+<#if index != 1>
+    ,
+</#if>
+    
+	final ${getClassName(property.dataType)} the${property.name?cap_first}
+    <#assign index = index + 1>
+</#list>
+
+) {
+
+<#list properties as property>
+this.${property.name} = the${property.name?cap_first};
+</#list>
+}
+
 <#list properties as property>
     /**
      * gets value of column - ${property.column.columnName}.
@@ -36,14 +55,7 @@ public final class ${name} {
         return ${property.name};
 	}
 
-	/**
-	 * sets value of column - ${property.column.columnName}.
-	 *
-	 * @param the${property.name?cap_first}
-	 */
-	public void set${property.name?cap_first}(final ${getClassName(property.dataType)} the${property.name?cap_first}) {
-		this.${property.name} = the${property.name?cap_first};
-	}
+
 </#list>
 
 }

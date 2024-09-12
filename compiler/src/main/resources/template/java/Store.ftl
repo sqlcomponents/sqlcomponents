@@ -87,24 +87,38 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
 -->
 
     private ${name} rowMapperForReturning(final ResultSet rs,final ${name} inserting${name}) throws <@throwsblock/>{
-    final ${name} ${name?uncap_first} = new ${name}();
+    final ${name} ${name?uncap_first} = new ${name}(
     <#assign index=1>
     <#list returningProperties as property>
-        ${name?uncap_first}.set${property.name?cap_first}(${property.name}().get(rs,${index}));
+    <#if index != 1>
+        ,
+    </#if>
+        ${property.name}().get(rs,${index})
         <#assign index = index + 1>
     </#list>
+
     <#list nonReturningProperties as property>
-        ${name?uncap_first}.set${property.name?cap_first}(inserting${name}.get${property.name?cap_first}());
+    <#if index != 1>
+    ,
+</#if>
+        inserting${name}.get${property.name?cap_first}()
+        <#assign index = index + 1>
     </#list>
+    );
     return ${name?uncap_first};
     }
 
     private ${name} rowMapper(ResultSet rs) throws <@throwsblock/> {
-    final ${name} ${name?uncap_first} = new ${name}();<#assign index=1>
+    final ${name} ${name?uncap_first} = new ${name}(
+    <#assign index=1>
     <#list properties as property>
-        ${name?uncap_first}.set${property.name?cap_first}(${property.name}().get(rs,${index}));
+    <#if index != 1>
+    ,
+</#if>
+        ${property.name}().get(rs,${index})
         <#assign index = index + 1>
     </#list>
+    );
     return ${name?uncap_first};
     }
 
