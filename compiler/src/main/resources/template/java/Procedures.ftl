@@ -20,6 +20,7 @@ public static final class Procedure {
             final ${getClassName(parameter.dataType)} ${parameter.name} <#if parameter?index <  method.inputParameters?size-1> , </#if>
         </#if>
     </#list>
+
     ) throws SQLException {
         try (CallableStatement callableStatement = dbDataSource.getConnection().prepareCall("call ${method.functionName}(<#list 0..< method.inputParameters?size-1 as i>?,</#list>?)")) {
             <#list method.inputParameters as parameter>
@@ -37,10 +38,15 @@ public static final class Procedure {
                       <#break>
 
                  <#default>
-                      callableStatement.set${getClassName(parameter.dataType)}(${parameter?index}, ${parameter.name});
+                      callableStatement.set${getClassName(parameter.dataType)}(${parameter?index+1}, ${parameter.name});
                </#switch>
                	<#assign a=addImportStatement(parameter.dataType)>
                </#if>
+            </#list>
+            <#list method.outputParameters as oParameter>
+                <#if getClassName(oParameter.dataType) != "Void">
+                      callableStatement.registerOutParameter(${oParameter?index},${oParameter.dataType} );
+                </#if>
             </#list>
             callableStatement.execute();
         } catch (SQLException e) {
