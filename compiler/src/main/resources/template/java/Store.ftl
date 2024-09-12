@@ -90,39 +90,7 @@ public List<${name}> get${name}s(Search${name} search${name}) throws SQLExceptio
     final ${name} ${name?uncap_first} = new ${name}();
     <#assign index=1>
     <#list returningProperties as property>
-        <#switch property.dataType>
-            <#case "java.time.LocalDate">
-                ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalDate());
-                <#break>
-            <#case "java.time.LocalTime">
-                ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalTime());
-                <#break>
-            <#case "java.time.LocalDateTime">
-                ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalDateTime());
-                <#break>
-            <#case "java.nio.ByteBuffer">
-                ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : ByteBuffer.wrap(rs.get${getJDBCClassName(property.dataType)}(${index})));
-                <#break>
-            <#case "java.lang.Character">
-                ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).charAt(0));
-                <#break>
-            <#case "com.fasterxml.jackson.databind.JsonNode">
-                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                <#break>
-            <#case "java.util.UUID">
-                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                <#break>
-            <#case "java.time.Duration">
-                ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                <#break>
-            <#default>
-                <#if containsEncryption(property)>
-                    ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
-                <#else>
-                    ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}));
-                </#if>
-                <#break>
-        </#switch>
+        ${name?uncap_first}.set${property.name?cap_first}(${property.name}().get(rs,${index}));
         <#assign index = index + 1>
     </#list>
     <#list nonReturningProperties as property>
