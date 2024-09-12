@@ -21,10 +21,25 @@ public static final class Procedure {
         </#if>
     </#list>
     ) throws SQLException {
-        try (CallableStatement callableStatement = dbDataSource.getConnection().prepareCall("call ${method.functionName}(<#list 0..< method.inputParameters?size-2 as i>?,</#list>?)")) {
+        try (CallableStatement callableStatement = dbDataSource.getConnection().prepareCall("call ${method.functionName}(<#list 0..< method.inputParameters?size-1 as i>?,</#list>?)")) {
             <#list method.inputParameters as parameter>
                <#if getClassName(parameter.dataType) != "Void">
-                   callableStatement.set${getClassName(parameter.dataType)}(${parameter?index}, ${parameter.name});
+               <#switch parameter.dataType>
+                 <#case "java.time.LocalDate">
+                 <#case "java.time.LocalTime">
+                 <#case "java.time.LocalDateTime">
+                 <#case "java.nio.ByteBuffer">
+                 <#case "com.fasterxml.jackson.databind.JsonNode">
+                 <#case "java.util.UUID">
+                 <#case "java.time.Duration">
+                 <#case "java.util.BitSet">
+                      callableStatement.setObject(${parameter?index}, ${parameter.name});
+                      <#break>
+
+                 <#default>
+                      callableStatement.set${getClassName(parameter.dataType)}(${parameter?index}, ${parameter.name});
+               </#switch>
+               	<#assign a=addImportStatement(parameter.dataType)>
                </#if>
             </#list>
             callableStatement.execute();

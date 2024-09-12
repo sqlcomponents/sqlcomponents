@@ -43,12 +43,12 @@ public class Procedure {
     /**
      * The Parameters.
      */
-    private List<Column> parameters;
+    private List<Column> inputParameters;
 
     /**
-     * The Output.
+     * The Output parameters.
      */
-    private Column output;
+    private List<Column> outputParameters;
 
     public String getFunctionName() {
         return functionName;
@@ -98,19 +98,19 @@ public class Procedure {
         this.specificName = theSpecificName;
     }
 
-    public List<Column> getParameters() {
-        return parameters;
+    public List<Column> getInputParameters() {
+        return inputParameters;
     }
 
-    public void setParameters(final List<Column> theParameters) {
-        this.parameters = theParameters;
+    public void setInputParameters(final List<Column> theParameters) {
+        this.inputParameters = theParameters;
     }
 
-    public Column getOutput() {
-        return output;
+    public List<Column> getOutputParameters() {
+        return outputParameters;
     }
 
-    public void setOutput(final Column theOutput) {
-        this.output = theOutput;
+    public void setOutputParameters(final List<Column> theOutput) {
+        this.outputParameters = theOutput;
     }
 }

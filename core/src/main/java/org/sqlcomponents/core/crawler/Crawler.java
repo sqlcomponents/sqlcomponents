@@ -5,9 +5,9 @@ import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.Column;
 import org.sqlcomponents.core.model.relational.Database;
 import org.sqlcomponents.core.model.relational.Index;
+import org.sqlcomponents.core.model.relational.Table;
 import org.sqlcomponents.core.model.relational.Key;
 import org.sqlcomponents.core.model.relational.Procedure;
-import org.sqlcomponents.core.model.relational.Table;
 import org.sqlcomponents.core.model.relational.UniqueConstraint;
 import org.sqlcomponents.core.model.relational.enums.ColumnType;
 import org.sqlcomponents.core.model.relational.enums.DBType;
@@ -37,6 +37,19 @@ import java.util.regex.Pattern;
  * The type Crawler.
  */
 public final class Crawler {
+    /**
+     * Constant for input parameter type.
+     */
+    public static final int INPUT = 1;
+    /**
+     * Constant for output parameter type.
+     */
+    public static final int OUTPUT = 3;
+    /**
+     * Constant for inout parameter type.
+     */
+    public static final int INOUT = 2;
+
     /**
      * The Database.
      */
@@ -571,8 +584,6 @@ public final class Crawler {
                 Flag.value(lColumnResultSet.getString("IS_NULLABLE")));
 
 
-
-
         bColumn.setOrdinalPosition(
                 lColumnResultSet.getInt("ORDINAL_POSITION"));
 
@@ -607,16 +618,17 @@ public final class Crawler {
             function.setFunctionType(lResultSet.getShort("PROCEDURE_TYPE"));
             function.setRemarks(lResultSet.getString("REMARKS"));
             function.setSpecificName(lResultSet.getString("SPECIFIC_NAME"));
-            function.setParameters(getParameters(function));
+            setParameters(function);
             lProcedures.add(function);
         }
         return lProcedures;
     }
 
-    private List<Column> getParameters(final Procedure procedure)
+    private void setParameters(final Procedure procedure)
             throws SQLException {
 
-        List<Column> columns = new ArrayList<>();
+        List<Column> inputParameters = new ArrayList<>();
+        List<Column> outputParameters = new ArrayList<>();
 
         ResultSet res = databaseMetaData.getProcedureColumns(null, null,
                 procedure.getFunctionName(), "%");
@@ -628,14 +640,21 @@ public final class Crawler {
             Column bColumn = new Column(procedure);
 
             bColumn.setColumnName(res.getString("COLUMN_NAME"));
-
             extractColumnValues(bColumn, res);
-
-            columns.add(bColumn);
+            short parameterType = res.getShort("COLUMN_TYPE");
+            if (parameterType == (short) INPUT) {
+                inputParameters.add(bColumn);
+            } else if (parameterType == (short) OUTPUT) {
+                outputParameters.add(bColumn);
+            } else if (parameterType == (short) INOUT) {
+                inputParameters.add(bColumn);
+                outputParameters.add(bColumn);
+            }
         }
 
         res.close();
-        return columns;
+        procedure.setInputParameters(inputParameters);
+        procedure.setOutputParameters(outputParameters);
     }
 
     /**
