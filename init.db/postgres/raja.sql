@@ -43,7 +43,7 @@ CREATE TABLE raja(
 
     -- Date/Time Types
     -- Ref: https://www.postgresql.org/docs/current/datatype-datetime.html
-   	-- todo: timestamp
+    a_timestamp timestamp,
     a_date date,
     a_time time,
     a_interval interval,

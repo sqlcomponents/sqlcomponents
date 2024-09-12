@@ -455,6 +455,12 @@
     preparedStatement.setTimestamp(i,value == null ? null : java.sql.Timestamp.valueOf(value));
     }
 
+    @Override
+    public LocalDateTime get(final ResultSet resultSet, final int i) throws SQLException {
+        java.sql.Timestamp timestamp = resultSet.getTimestamp(i);
+        return timestamp == null ? null : timestamp.toLocalDateTime();
+    }
+
     public final WhereClause  eq(final LocalDateTime value) {
     sql = "${property.column.escapedName?j_string} =" + value;
     return getWhereClause();
