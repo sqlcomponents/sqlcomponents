@@ -41,5 +41,13 @@ class StoredProcedureTest {
         Assertions.assertEquals(cacheList.get(0).getCache(),"Raja");
     }
 
+    @Test
+    void addFunction() throws SQLException {
+        Byte result = null;
+        databaseManager.call().add((byte)1,(byte)3, result);
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals((byte)4, result);
+    }
+
 
 }
