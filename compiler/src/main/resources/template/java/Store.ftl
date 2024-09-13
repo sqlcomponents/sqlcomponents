@@ -77,8 +77,10 @@ import java.util.stream.Collectors;
         <#include "/template/java/method/${method}.ftl">
     </#list>
 
+    <#if (returningProperties?size > 0) >
+
     private ${name} rowMapperForReturning(final ResultSet rs,final ${name} inserting${name}) throws <@throwsblock/>{
-    final ${name} ${name?uncap_first} = new ${name}(
+    return new ${name}(
 
 <#assign comma=0>
 
@@ -98,11 +100,13 @@ import java.util.stream.Collectors;
         <#assign comma=1>
     </#list>
     );
-    return ${name?uncap_first};
+    
     }
 
+    </#if>
+
     private ${name} rowMapper(ResultSet rs) throws <@throwsblock/> {
-    final ${name} ${name?uncap_first} = new ${name}(
+    return new ${name}(
     <#assign index=1>
     <#list properties as property>
     <#if index != 1>
@@ -112,7 +116,7 @@ import java.util.stream.Collectors;
         <#assign index = index + 1>
     </#list>
     );
-    return ${name?uncap_first};
+    
     }
 
 

@@ -102,7 +102,7 @@
                 private final javax.sql.DataSource dbDataSource;
                 private final UpdateStatement updateStatement;
                 private WhereClause whereClause;
-                private ${name} ${name?uncap_first};
+                private final ${name} ${name?uncap_first};
 
                 SetByPKClause(final javax.sql.DataSource dbDataSource,final ${name} ${name?uncap_first},final UpdateStatement updateStatement) {
                     this.dbDataSource = dbDataSource;
@@ -110,13 +110,13 @@
                     this.updateStatement = updateStatement;
                 }
 
-                public final SetByPKClause where(final WhereClause whereClause) {
+                public SetByPKClause where(final WhereClause whereClause) {
                     this.whereClause = whereClause;
                     return this;
                 }
 
 
-                public final int execute() throws SQLException  {
+                public int execute() throws SQLException  {
                     int updtedRows = 0;
                     <@updatetquery/>
 
@@ -164,18 +164,13 @@
             
             private final UpdateStatement updateStatement;
 
-            private ${name} ${name?uncap_first};
+
 
             private Value[] values;
         
 
             SetClause(final Value[] values,final UpdateStatement updateStatement) {
                 this.values = values;
-                this.updateStatement = updateStatement;
-            }
-
-            SetClause(final ${name} ${name?uncap_first},final UpdateStatement updateStatement) {
-                this.${name?uncap_first} = ${name?uncap_first};
                 this.updateStatement = updateStatement;
             }
 

@@ -28,7 +28,7 @@
 <#if table.tableType == 'TABLE' >
 
 
-	public final InsertStatement insert() {
+	public InsertStatement insert() {
         return new InsertStatement(this
         <#if containsEncryptedProperty() >
             ,this.encryptionFunction
@@ -37,7 +37,7 @@
     }
 
     <#if mustInsertableProperties?size != 0>
-    public final InsertStatement insert(<#assign index=0>
+    public InsertStatement insert(<#assign index=0>
             <#list mustInsertableProperties as property>
             <#if index != 0>,</#if>
             final Column.${property.name?cap_first}Column ${property.name}Column 
@@ -95,11 +95,11 @@
             </#list>
         }
 
-        public final ValueClause values(final ${name} ${name?uncap_first}) {
+        public ValueClause values(final ${name} ${name?uncap_first}) {
             return new ValueClause(${name?uncap_first},this);
         }
 
-        public final ValuesClause values(final List<${name}> listOf${name}) {
+        public ValuesClause values(final List<${name}> listOf${name}) {
             return new ValuesClause(listOf${name},this);
         }
 
@@ -114,7 +114,7 @@
                 this.insertStatement = insertStatement;
             }
 
-            public final ValuesClause values(final ${name} the${name}) {
+            public ValuesClause values(final ${name} the${name}) {
                 List<${name}> listOf${name} = new ArrayList<>();
                 listOf${name}.add(${name?uncap_first});
                 listOf${name}.add(the${name});
@@ -122,7 +122,7 @@
             }
             
 
-            public final int execute() throws SQLException  {
+            public int execute() throws SQLException  {
                 int insertedRows = 0;
                 <@insertquery/>
 
@@ -137,7 +137,7 @@
 
             <#if table.hasPrimaryKey>
 
-            public final ${name} returning() throws <@throwsblock/>  {
+            public ${name} returning() throws <@throwsblock/>  {
                 ${name} inserted${name} = null ;
                 <@insertquery isReturning=true/>
 
@@ -188,12 +188,12 @@
                 this.insertStatement = insertStatement;
             }
 
-            public final ValuesClause values(final ${name} the${name}) {
+            public ValuesClause values(final ${name} the${name}) {
                 this.listOf${name}.add(the${name});
                 return this;
             }
 
-            public final int[] execute() throws SQLException  {
+            public int[] execute() throws SQLException  {
                 int[] insertedRows = null;
                 <@insertquery/>
                 
