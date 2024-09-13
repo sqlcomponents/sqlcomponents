@@ -165,46 +165,8 @@ public class Entity {
      * @return the returning properties
      */
     public List<Property> getReturningProperties() {
-        return this.getProperties().stream().filter(Entity::isReturning)
+        return this.getProperties().stream().filter(Property::isReturning)
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * Gets non returning properties.
-     *
-     * @return the non returning properties
-     */
-    public List<Property> getNonReturningProperties() {
-        return this.getProperties().stream()
-                .filter(property -> !isReturning(property))
-                .collect(Collectors.toList());
-    }
-
-
-    /**
-     * Is returning boolean.
-     *
-     * @param property the property
-     * @return the boolean
-     */
-    private static boolean isReturning(final Property property) {
-        boolean isReturning =
-                property.getColumn().getAutoIncrement() == Flag.YES
-                        || property.getColumn().getGeneratedColumn()
-                        == Flag.YES;
-        Map<String, String> insertMap =
-                property.getEntity().getOrm().getApplication()
-                        .getInsertMap();
-        String mapped = insertMap
-                .get(property.getColumn().getColumnName());
-        String specificTableMapped =
-                insertMap.get(String.format("%s#%s",
-                        property.getEntity().getTable().getTableName(),
-                        property.getColumn().getColumnName()));
-        if (mapped != null || specificTableMapped != null) {
-            isReturning = true;
-        }
-        return isReturning;
     }
 
 
