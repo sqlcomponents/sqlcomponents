@@ -269,8 +269,12 @@ public class Column {
         return dataType;
     }
 
-    public void setDataType(final int dataType) {
-        this.dataType = dataType;
+    /**
+     * Sets the DataType.
+     * @param theDataType
+     */
+    public void setDataType(final int theDataType) {
+        this.dataType = theDataType;
     }
 
     public ColumnType getColumnType() {

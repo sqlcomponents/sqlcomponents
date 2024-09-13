@@ -65,7 +65,7 @@ public static final class SelectStatement {
                 PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
                 
                 ResultSet resultSet = preparedStatement.executeQuery();
-                                List<${name}> arrays = new ArrayList();
+                                
                 while (resultSet.next()) {
                                         count = resultSet.getInt(1);
                                 }

@@ -20,7 +20,6 @@
         <commons-net.version>3.11.1</commons-net.version>
         <postgresql.version>42.7.4</postgresql.version>
         <jackson-databind.version>2.18.0-rc1</jackson-databind.version>
-        <jackson-module-parameter-names.version>2.18.0-rc1</jackson-module-parameter-names.version>
         <jackson-datatype-jts.version>1.2.10</jackson-datatype-jts.version>
         <javax.json-api.version>1.1.4</javax.json-api.version>
     </properties>
@@ -52,31 +51,31 @@
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-parameter-names</artifactId>
-            <version>${jackson-module-parameter-names.version}</version>
+            <version>${jackson-databind.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jdk8</artifactId>
-            <version>${jackson-module-parameter-names.version}</version>
+            <version>${jackson-databind.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>${jackson-module-parameter-names.version}</version>
+            <version>${jackson-databind.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr353</artifactId>
-            <version>${jackson-module-parameter-names.version}</version>
+            <version>${jackson-databind.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-json-org</artifactId>
-            <version>${jackson-module-parameter-names.version}</version>
+            <version>${jackson-databind.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
