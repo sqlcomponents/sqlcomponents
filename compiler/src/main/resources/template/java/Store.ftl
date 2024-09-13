@@ -79,9 +79,12 @@ import java.util.stream.Collectors;
 
     private ${name} rowMapperForReturning(final ResultSet rs,final ${name} inserting${name}) throws <@throwsblock/>{
     final ${name} ${name?uncap_first} = new ${name}(
+
+<#assign comma=0>
+
     <#assign index=1>
     <#list properties as property>
-    <#if index != 1>
+    <#if comma != 0>
     ,
 </#if>
 
@@ -92,7 +95,7 @@ import java.util.stream.Collectors;
         inserting${name}.get${property.name?cap_first}()
         </#if>
         
-        
+        <#assign comma=1>
     </#list>
     );
     return ${name?uncap_first};
