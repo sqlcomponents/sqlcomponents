@@ -6,7 +6,7 @@ import org.sqlcomponents.core.model.relational.enums.Flag;
 import java.util.Map;
 
 /**
- * The type 
+ * The type.
  */
 public class Property {
     /**
@@ -31,7 +31,7 @@ public class Property {
     private String uniqueConstraintGroup;
 
     /**
-     * Instantiates a new 
+     * Instantiates a new.
      *
      * @param paramEntity the entity
      * @param paramColumn the column
