@@ -618,13 +618,25 @@ public final class Crawler {
             function.setFunctionType(lResultSet.getShort("PROCEDURE_TYPE"));
             function.setRemarks(lResultSet.getString("REMARKS"));
             function.setSpecificName(lResultSet.getString("SPECIFIC_NAME"));
-            setParameters(function);
+            setProcedureParameters(function);
+            lProcedures.add(function);
+        }
+        lResultSet = databaseMetaData.getFunctions(null, "public", null);
+        while (lResultSet.next()) {
+            Procedure function = new Procedure();
+            function.setFunctionName(lResultSet.getString("FUNCTION_NAME"));
+            function.setFunctionCategory(lResultSet.getString("FUNCTION_CAT"));
+            function.setFunctionSchema(lResultSet.getString("FUNCTION_SCHEM"));
+            function.setFunctionType(lResultSet.getShort("FUNCTION_TYPE"));
+            function.setRemarks(lResultSet.getString("REMARKS"));
+            function.setSpecificName(lResultSet.getString("SPECIFIC_NAME"));
+            setFunctionParameters(function);
             lProcedures.add(function);
         }
         return lProcedures;
     }
 
-    private void setParameters(final Procedure procedure)
+    private void setProcedureParameters(final Procedure procedure)
             throws SQLException {
 
         List<Column> inputParameters = new ArrayList<>();
@@ -657,6 +669,38 @@ public final class Crawler {
         procedure.setOutputParameters(outputParameters);
     }
 
+    private void setFunctionParameters(final Procedure procedure)
+            throws SQLException {
+
+        List<Column> inputParameters = new ArrayList<>();
+        List<Column> outputParameters = new ArrayList<>();
+
+        ResultSet res = databaseMetaData.getFunctionColumns(null, null,
+                procedure.getFunctionName(), "%");
+
+        ResultSetMetaData rsmd = res.getMetaData();
+        int columnsCount = rsmd.getColumnCount();
+
+        while (res.next()) {
+            Column bColumn = new Column(procedure);
+
+            bColumn.setColumnName(res.getString("COLUMN_NAME"));
+            extractColumnValues(bColumn, res);
+            short parameterType = res.getShort("COLUMN_TYPE");
+            if (parameterType == (short) INPUT) {
+                inputParameters.add(bColumn);
+            } else if (parameterType == (short) OUTPUT) {
+                outputParameters.add(bColumn);
+            } else if (parameterType == (short) INOUT) {
+                inputParameters.add(bColumn);
+                outputParameters.add(bColumn);
+            }
+        }
+
+        res.close();
+        procedure.setInputParameters(inputParameters);
+        procedure.setOutputParameters(outputParameters);
+    }
     /**
      * Repair.
      */
