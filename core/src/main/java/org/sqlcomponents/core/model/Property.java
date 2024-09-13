@@ -1,9 +1,12 @@
 package org.sqlcomponents.core.model;
 
 import org.sqlcomponents.core.model.relational.Column;
+import org.sqlcomponents.core.model.relational.enums.Flag;
+
+import java.util.Map;
 
 /**
- * The type Property.
+ * The type 
  */
 public class Property {
     /**
@@ -28,7 +31,7 @@ public class Property {
     private String uniqueConstraintGroup;
 
     /**
-     * Instantiates a new Property.
+     * Instantiates a new 
      *
      * @param paramEntity the entity
      * @param paramColumn the column
@@ -128,4 +131,30 @@ public class Property {
     public void setDataType(final String paramDataType) {
         this.dataType = paramDataType;
     }
+
+    /**
+     * Is returning boolean.
+     *
+     * @return the boolean
+     */
+    public boolean isReturning() {
+        boolean isReturning =
+                getColumn().getAutoIncrement() == Flag.YES
+                        || getColumn().getGeneratedColumn()
+                        == Flag.YES;
+        Map<String, String> insertMap =
+                getEntity().getOrm().getApplication()
+                        .getInsertMap();
+        String mapped = insertMap
+                .get(getColumn().getColumnName());
+        String specificTableMapped =
+                insertMap.get(String.format("%s#%s",
+                        getEntity().getTable().getTableName(),
+                        getColumn().getColumnName()));
+        if (mapped != null || specificTableMapped != null) {
+            isReturning = true;
+        }
+        return isReturning;
+    }
+
 }

@@ -77,32 +77,22 @@ import java.util.stream.Collectors;
         <#include "/template/java/method/${method}.ftl">
     </#list>
 
-
-
-<#--
-<#if exportedKeys?size != 0>
-public List<${name}> get${name}s(Search${name} search${name}) throws SQLException;
-    <#assign a=addImportStatement(javaPackageName+ ".search.Search" + name)>
-</#if>
--->
-
     private ${name} rowMapperForReturning(final ResultSet rs,final ${name} inserting${name}) throws <@throwsblock/>{
     final ${name} ${name?uncap_first} = new ${name}(
     <#assign index=1>
-    <#list returningProperties as property>
-    <#if index != 1>
-        ,
-    </#if>
-        ${property.name}().get(rs,${index})
-        <#assign index = index + 1>
-    </#list>
-
-    <#list nonReturningProperties as property>
+    <#list properties as property>
     <#if index != 1>
     ,
 </#if>
-        inserting${name}.get${property.name?cap_first}()
+
+        <#if property.returning>
+        ${property.name}().get(rs,${index})
         <#assign index = index + 1>
+        <#else>
+        inserting${name}.get${property.name?cap_first}()
+        </#if>
+        
+        
     </#list>
     );
     return ${name?uncap_first};
