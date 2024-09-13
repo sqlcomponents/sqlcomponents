@@ -222,12 +222,20 @@
     <@columnheader property=property/>
     public void set(final PreparedStatement preparedStatement, final int i, final Boolean value) throws SQLException {
     <#if property.column.typeName == "bit" >
+        if(value == null) {
+            preparedStatement.setNull(i,${property.column.dataType},"${property.column.typeName}" );
+        } else {
         PGobject bitObject = new PGobject();
         bitObject.setType("bit");
-        bitObject.setValue(value == null || !value ? "0" : "1" );
+        bitObject.setValue(!value ? "0" : "1" );
         preparedStatement.setObject(i, bitObject);
+        }
     <#else>
-        preparedStatement.setBoolean(i,value);
+        if(value == null) {
+            preparedStatement.setNull(i,${property.column.dataType},"${property.column.typeName}" );
+        } else {
+            preparedStatement.setBoolean(i,value);
+        }
     </#if>
     
     }
@@ -249,7 +257,11 @@
     <@columnheader property=property/>
     public void set(final PreparedStatement preparedStatement, final int i, final BitSet value) throws SQLException {
 
-        if(value != null) {
+
+        if(value == null) {
+
+            preparedStatement.setNull(i,${property.column.dataType?replace(",", "")},"${property.column.typeName}" );
+        } else {
             PGobject bitObject = new PGobject();
             bitObject.setType("bit");
             StringBuffer valueBuffer = new StringBuffer();
@@ -277,7 +289,14 @@
 <#macro numbercolumn type property>
 
     public void set(final PreparedStatement preparedStatement, final int i, final ${type} value) throws SQLException {
-    preparedStatement.set${type}(i,value);
+    if(value == null) {
+        preparedStatement.setNull(i,${property.column.dataType},"${property.column.typeName}" );
+    } else {
+        preparedStatement.set${type}(i,value);
+    }
+        
+
+    
     }
 
     @Override

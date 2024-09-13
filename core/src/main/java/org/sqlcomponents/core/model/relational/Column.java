@@ -69,6 +69,12 @@ public class Column {
      * The Type name.
      */
     private String typeName;
+
+    /**
+     * The Type name.
+     */
+    private int dataType;
+
     /**
      * The Column type.
      */
@@ -257,6 +263,14 @@ public class Column {
 
     public void setTypeName(final String theTypeName) {
         this.typeName = theTypeName;
+    }
+
+    public int getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(final int dataType) {
+        this.dataType = dataType;
     }
 
     public ColumnType getColumnType() {

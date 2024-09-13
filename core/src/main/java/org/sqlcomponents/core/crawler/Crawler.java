@@ -573,6 +573,7 @@ public final class Crawler {
         ColumnType lColumnType;
         bColumn.setColumnName(lColumnResultSet.getString("COLUMN_NAME"));
         bColumn.setTypeName(lColumnResultSet.getString("TYPE_NAME"));
+        bColumn.setDataType(lColumnResultSet.getInt("DATA_TYPE"));
         lColumnType = ColumnType.value(
                 JDBCType.valueOf(lColumnResultSet.getInt("DATA_TYPE")));
         bColumn.setColumnType(lColumnType == ColumnType.OTHER
