@@ -34,14 +34,14 @@ public ${name}(
     ,
 </#if>
     
-	final ${getClassName(property.dataType)} the${property.name?cap_first}
+	final ${getClassName(property.dataType)} ${property.name}
     <#assign index = index + 1>
 </#list>
 
 ) {
 
 <#list properties as property>
-this.${property.name} = the${property.name?cap_first};
+this.${property.name} = ${property.name};
 </#list>
 }
 
@@ -55,16 +55,19 @@ this.${property.name} = the${property.name?cap_first};
         return ${property.name};
 	}
 
-    public ${name} with${property.name?cap_first}(final String ${property.name}) {
+    public ${name} with${property.name?cap_first}(final ${getClassName(property.dataType)} the${property.name?cap_first}) {
         return new ${name}(
             
             <#assign index=1>
-            <#list properties as property>
-            <#if index != 1>
-                ,
-            </#if>
-                
-                final ${getClassName(property.dataType)} the${property.name?cap_first}
+            <#list properties as iProperty>
+                <#if index != 1>
+                    ,
+                </#if>
+                <#if property.name == iProperty.name>
+                    the${property.name?cap_first}
+                <#else>
+                    ${iProperty.name}
+                </#if>
                 <#assign index = index + 1>
             </#list>
 

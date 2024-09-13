@@ -48,10 +48,8 @@ class RajaTest {
         this.azaguRajasToTest.parallelStream().forEach(azaguRaja -> {
             // Declare and initialize the byte array
             byte[] bb = {10, 20, 30};
-            azaguRaja.setABlob(ByteBuffer.wrap(bb));
-
-            azaguRaja.setAUuid(UUID.randomUUID());
-
+            azaguRaja = azaguRaja.withABlob(ByteBuffer.wrap(bb));
+            azaguRaja = azaguRaja.withAUuid(UUID.randomUUID());
         });
 
     }
@@ -138,7 +136,7 @@ class RajaTest {
                         .returning();
 
         Raja azaguRaja = azaguRajasToTest.get(0);
-        azaguRaja.setReferenceCode(connection.getCode());
+        azaguRaja = azaguRaja.withReferenceCode(connection.getCode());
 
         Raja insertedRaja =
                 this.allInAllRajaStore.insert().values(azaguRaja)
@@ -192,7 +190,7 @@ class RajaTest {
     void testEncryption() throws SQLException, JsonProcessingException, UnknownHostException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
-        azaguRajasToTest.get(0).setAEncryptedText("AEncryptedText");
+        azaguRajasToTest.set(0,azaguRajasToTest.get(0).withAEncryptedText("AEncryptedText"));
 
         Raja insertedRaja = this.allInAllRajaStore.insert()
                 .values(azaguRajasToTest.get(0)).returning();
@@ -230,7 +228,7 @@ class RajaTest {
     void testSingleUpdateAndGetNumberOfRows() throws SQLException {
         Connection connection = this.connectionStore.insert()
                 .values(this.connectionsToTest.get(0)).returning();
-        connection.setName("Changed");
+        connection = connection.withName("Changed");
         Integer noOfUpdatedRajaRefs = this.connectionStore.update()
                 .set(connection).execute();
         Assertions.assertEquals(1, noOfUpdatedRajaRefs,
@@ -259,7 +257,7 @@ class RajaTest {
 
         final String originalName = connection.getName();
 
-        connection.setName("Changed");
+        connection = connection.withName("Changed");
 
         Assertions.assertEquals(0, this.connectionStore
                         .update()
