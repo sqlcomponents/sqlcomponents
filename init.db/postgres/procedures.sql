@@ -43,7 +43,6 @@ BEGIN
 END;
 $$;
 
-
 CREATE FUNCTION add(a integer, b integer) RETURNS integer
     LANGUAGE SQL
     IMMUTABLE
