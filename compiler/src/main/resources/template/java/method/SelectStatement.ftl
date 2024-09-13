@@ -3,20 +3,30 @@
 <#assign a=addImportStatement("java.util.ArrayList")>
 <#assign a=addImportStatement("java.util.Optional")>
 
-public SelectStatement select() {
-        return new SelectStatement(this);
-}
-public SelectStatement select(WhereClause whereClause) throws <@throwsblock/>  {
-        return new SelectStatement(this,whereClause);
+public SelectStatementWithWhere select() {
+        return new SelectStatementWithWhere(this);
 }
 
-public static final class SelectStatement {
+
+public static final class SelectStatementWithWhere extends SelectStatement{
+
+        private SelectStatementWithWhere(final ${name}Store ${name?uncap_first}Store) {
+            super(${name?uncap_first}Store,null);
+        }
+
+        public SelectStatement where(WhereClause whereClause) throws SQLException {
+            return new SelectStatement(super.${name?uncap_first}Store, whereClause);
+        }
+    }
+
+public static class SelectStatement {
 
         private final ${name}Store ${name?uncap_first}Store;
         private final WhereClause whereClause;
 
         private LimitClause limitClause;
         private LimitClause.OffsetClause offsetClause;
+
 
         public LimitClause limit(final int limit) {
                 return new LimitClause(this,limit);

@@ -216,7 +216,7 @@ class RajaTest {
                 this.allInAllRajaStore.delete(whereClause).execute();
 
         Assertions.assertEquals(azaguRajasToTest.size() - deletedRows,
-                this.allInAllRajaStore.select(whereClause).count(),
+                this.allInAllRajaStore.select().where(whereClause).count(),
                 "Multi Delete Where Clause");
 
         Assertions.assertEquals(1,

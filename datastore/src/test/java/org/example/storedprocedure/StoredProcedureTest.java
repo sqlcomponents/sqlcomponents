@@ -35,7 +35,7 @@ class StoredProcedureTest {
     void basicCall() throws SQLException {
         databaseManager.call().createCache("Name", "Raja");
         CacheStore.WhereClause whereClause= CacheStore.code().eq("Name");
-        List<Cache> cacheList = databaseManager.getCacheStore().select(whereClause).execute();
+        List<Cache> cacheList = databaseManager.getCacheStore().select().where(whereClause).execute();
         Assertions.assertEquals(1, cacheList.size());
         Assertions.assertEquals(cacheList.get(0).getCode(),"Name");
         Assertions.assertEquals(cacheList.get(0).getCache(),"Raja");
