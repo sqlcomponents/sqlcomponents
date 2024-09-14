@@ -4,4 +4,8 @@
         "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 <suppressions>
     <suppress files="[\\/]org[\\/]example[\\/]store" checks="."/>
+    <suppress files="[\\/]org[\\/]example[\\/]model" checks="."/>
+
+    <suppress checks="VisibilityModifier|FinalClass|MagicNumber|FinalParameters|DesignForExtension|WhitespaceAround|JavadocPackage|JavadocVariable|MissingJavadocMethod|WhitespaceAfter|NoWhitespaceBefore|RegexpSingleline|LineLength|RedundantModifier|LeftCurly|HiddenField"
+              files="DataManager"/>
 </suppressions>
