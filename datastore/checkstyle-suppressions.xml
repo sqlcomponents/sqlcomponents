@@ -6,6 +6,6 @@
     <suppress files="[\\/]org[\\/]example[\\/]store" checks="."/>
     <suppress files="[\\/]org[\\/]example[\\/]model" checks="."/>
 
-    <suppress checks="FinalClass|MagicNumber|FinalParameters|DesignForExtension|WhitespaceAround|JavadocPackage|JavadocVariable|MissingJavadocMethod|WhitespaceAfter|NoWhitespaceBefore|RegexpSingleline|LineLength|RedundantModifier|LeftCurly|HiddenField"
+    <suppress checks="FinalClass|DesignForExtension|JavadocPackage|RegexpSingleline|RedundantModifier"
               files="DataManager"/>
 </suppressions>
