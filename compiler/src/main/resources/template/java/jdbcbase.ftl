@@ -1,4 +1,4 @@
-<#include "/template/java/base.ftl">
+<#include "base.ftl">
 
 <#function getPrimaryKeysAsPreparedStatements>
 	<#local pkAsParameterStr="">

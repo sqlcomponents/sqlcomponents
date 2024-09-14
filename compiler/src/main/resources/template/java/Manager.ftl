@@ -165,7 +165,7 @@ public final class DataManager {
     }
     </#if>
 
-    <#include "/template/java/Procedures.ftl">
+    <#include "Procedures.ftl">
 
 }
 </#assign>

@@ -1,5 +1,5 @@
-<#include "/template/java/jdbcbase.ftl">
-<#import "/template/java/columns.ftl" as columns>
+<#include "jdbcbase.ftl">
+<#import "columns.ftl" as columns>
 package <#if daoPackage?? && daoPackage?length != 0 >${daoPackage}</#if>;
 
 import java.sql.ResultSet;
@@ -74,7 +74,7 @@ import java.util.stream.Collectors;
     }
 
     <#list orm.methodSpecification as method>
-        <#include "/template/java/method/${method}.ftl">
+        <#include "method/${method}.ftl">
     </#list>
 
     <#if (returningProperties?size > 0) >
