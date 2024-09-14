@@ -147,8 +147,8 @@ public final class DataManager {
     }
 
     public static class Page<T> {
-        final List<T> content;
-        final int totalElements;
+        private final List<T> content;
+        private final int totalElements;
 
         private Page(List<T> content, int totalElements) {
             this.content = content;
