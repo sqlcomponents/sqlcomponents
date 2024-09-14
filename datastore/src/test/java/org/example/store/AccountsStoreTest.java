@@ -1,6 +1,6 @@
 package org.example.store;
 
-import org.example.DatabaseManager;
+import org.example.DataManager;
 import org.example.model.Accounts;
 import org.example.util.DataSourceProvider;
 import org.example.util.EncryptionUtil;
@@ -14,12 +14,12 @@ class AccountsStoreTest {
 //    private final List<Accounts> accountsToTest;
 
     public AccountsStoreTest() {
-        DatabaseManager databaseManager =
-                DatabaseManager.getManager(DataSourceProvider.dataSource(),
+        DataManager dataManager =
+                DataManager.getManager(DataSourceProvider.dataSource(),
                         EncryptionUtil::enAnDecrypt,
                         EncryptionUtil::enAnDecrypt);
         // Stores used for testing
-        this.accountsStore = databaseManager.getAccountsStore();
+        this.accountsStore = dataManager.getAccountsStore();
 
     }
 

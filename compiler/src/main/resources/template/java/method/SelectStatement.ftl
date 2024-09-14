@@ -7,7 +7,6 @@ public SelectStatementWithWhere select() {
         return new SelectStatementWithWhere(this);
 }
 
-
 public static final class SelectStatementWithWhere extends SelectStatement{
 
         private SelectStatementWithWhere(final ${name}Store ${name?uncap_first}Store) {
@@ -42,7 +41,7 @@ public static class SelectStatement {
             this.whereClause = whereClause;
         }
 
-        public List<${name}> execute() throws <@throwsblock/> {
+        public final List<${name}> execute() throws <@throwsblock/> {
 		final String query = <@compress single_line=true>"
                 SELECT
 		<@columnSelection/> 
@@ -63,7 +62,7 @@ public static class SelectStatement {
                 } 
 	}
 
-        public int count() throws SQLException {
+        public final int count() throws SQLException {
                 int count = 0;
 		final String query = <@compress single_line=true>"
                 SELECT
@@ -82,7 +81,7 @@ public static class SelectStatement {
                                 return count;
                 } 
 	}
-public SelectQuery sql(final String sql) {
+public final SelectQuery sql(final String sql) {
             return new SelectQuery(this, sql);
     }
 
@@ -170,8 +169,8 @@ public SelectQuery sql(final String sql) {
                                 selectStatement.count());
                 }
                 <#else>
-                public DatabaseManager.Page<${name}> execute() throws <@throwsblock/> {
-                    return DatabaseManager.page(this.selectStatement.execute(), selectStatement.count());
+                public DataManager.Page<${name}> execute() throws <@throwsblock/> {
+                    return DataManager.page(this.selectStatement.execute(), selectStatement.count());
                 }
                 </#if>
 
@@ -195,7 +194,7 @@ public SelectQuery sql(final String sql) {
                                 return this.limitClause.execute(pageable);
                         }
                         <#else>
-                        public DatabaseManager.Page<${name}> execute() throws <@throwsblock/> {
+                        public DataManager.Page<${name}> execute() throws <@throwsblock/> {
                                 return this.limitClause.execute();
                         }
                         </#if>
