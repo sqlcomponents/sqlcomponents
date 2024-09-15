@@ -1,7 +1,7 @@
 package org.example.store;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.example.DatabaseManager;
+import org.example.DataManager;
 import org.example.model.Connection;
 import org.example.model.Raja;
 import org.example.util.DataSourceProvider;
@@ -33,13 +33,13 @@ class RajaTest {
     private final List<Raja> azaguRajasToTest;
 
     RajaTest() {
-        DatabaseManager databaseManager =
-                DatabaseManager.getManager(DataSourceProvider.dataSource(),
+        DataManager dataManager =
+                DataManager.getManager(DataSourceProvider.dataSource(),
                         EncryptionUtil::enAnDecrypt,
                         EncryptionUtil::enAnDecrypt);
         // Stores used for testing
-        this.connectionStore = databaseManager.getConnectionStore();
-        this.allInAllRajaStore = databaseManager.getRajaStore();
+        this.connectionStore = dataManager.getConnectionStore();
+        this.allInAllRajaStore = dataManager.getRajaStore();
 
         // Data used for testing
         this.connectionsToTest = JsonUtil.getTestObjects(Connection.class);
@@ -216,7 +216,7 @@ class RajaTest {
                 this.allInAllRajaStore.delete(whereClause).execute();
 
         Assertions.assertEquals(azaguRajasToTest.size() - deletedRows,
-                this.allInAllRajaStore.select(whereClause).count(),
+                this.allInAllRajaStore.select().where(whereClause).count(),
                 "Multi Delete Where Clause");
 
         Assertions.assertEquals(1,

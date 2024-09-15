@@ -64,7 +64,7 @@ public final class JavaCompiler implements Compiler {
         try {
             Files.write(
                     new File(packageFolder + File.separator
-                            + "DatabaseManager"
+                            + "DataManager"
                             + DOT_JAVA).toPath(),
                     getJavaContent(managerFTLTemplate.getContent(
                             aApplication)).getBytes());

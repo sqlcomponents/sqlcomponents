@@ -3,20 +3,29 @@
 <#assign a=addImportStatement("java.util.ArrayList")>
 <#assign a=addImportStatement("java.util.Optional")>
 
-public SelectStatement select() {
-        return new SelectStatement(this);
-}
-public SelectStatement select(WhereClause whereClause) throws <@throwsblock/>  {
-        return new SelectStatement(this,whereClause);
+public SelectStatementWithWhere select() {
+        return new SelectStatementWithWhere(this);
 }
 
-public static final class SelectStatement {
+public static final class SelectStatementWithWhere extends SelectStatement{
+
+        private SelectStatementWithWhere(final ${name}Store ${name?uncap_first}Store) {
+            super(${name?uncap_first}Store,null);
+        }
+
+        public SelectStatement where(WhereClause whereClause) throws SQLException {
+            return new SelectStatement(super.${name?uncap_first}Store, whereClause);
+        }
+    }
+
+public static class SelectStatement {
 
         private final ${name}Store ${name?uncap_first}Store;
         private final WhereClause whereClause;
 
         private LimitClause limitClause;
         private LimitClause.OffsetClause offsetClause;
+
 
         public LimitClause limit(final int limit) {
                 return new LimitClause(this,limit);
@@ -32,7 +41,7 @@ public static final class SelectStatement {
             this.whereClause = whereClause;
         }
 
-        public List<${name}> execute() throws <@throwsblock/> {
+        public final List<${name}> execute() throws <@throwsblock/> {
 		final String query = <@compress single_line=true>"
                 SELECT
 		<@columnSelection/> 
@@ -53,7 +62,7 @@ public static final class SelectStatement {
                 } 
 	}
 
-        public int count() throws SQLException {
+        public final int count() throws SQLException {
                 int count = 0;
 		final String query = <@compress single_line=true>"
                 SELECT
@@ -72,7 +81,7 @@ public static final class SelectStatement {
                                 return count;
                 } 
 	}
-public SelectQuery sql(final String sql) {
+public final SelectQuery sql(final String sql) {
             return new SelectQuery(this, sql);
     }
 
@@ -160,8 +169,8 @@ public SelectQuery sql(final String sql) {
                                 selectStatement.count());
                 }
                 <#else>
-                public DatabaseManager.Page<${name}> execute() throws <@throwsblock/> {
-                    return DatabaseManager.page(this.selectStatement.execute(), selectStatement.count());
+                public DataManager.Page<${name}> execute() throws <@throwsblock/> {
+                    return DataManager.page(this.selectStatement.execute(), selectStatement.count());
                 }
                 </#if>
 
@@ -185,7 +194,7 @@ public SelectQuery sql(final String sql) {
                                 return this.limitClause.execute(pageable);
                         }
                         <#else>
-                        public DatabaseManager.Page<${name}> execute() throws <@throwsblock/> {
+                        public DataManager.Page<${name}> execute() throws <@throwsblock/> {
                                 return this.limitClause.execute();
                         }
                         </#if>

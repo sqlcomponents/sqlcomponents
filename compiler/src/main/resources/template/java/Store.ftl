@@ -1,5 +1,5 @@
-<#include "/template/java/jdbcbase.ftl">
-<#import "/template/java/columns.ftl" as columns>
+<#include "jdbcbase.ftl">
+<#import "columns.ftl" as columns>
 package <#if daoPackage?? && daoPackage?length != 0 >${daoPackage}</#if>;
 
 import java.sql.ResultSet;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 
     public static ${name}Store get${name}Store(final javax.sql.DataSource theDataSource
-    ,final DatabaseManager.Observer theObserver
+    ,final DataManager.Observer theObserver
 
 
     <#if containsEncryptedProperty() >
@@ -39,9 +39,9 @@ import java.util.stream.Collectors;
 
     private final javax.sql.DataSource dbDataSource;
 
-    private final DatabaseManager.Observer observer;
-    <#assign a=addImportStatement(orm.application.rootPackage+ ".DatabaseManager")>
-    <#assign a=addImportStatement(orm.application.rootPackage+ ".DatabaseManager.Value")>
+    private final DataManager.Observer observer;
+    <#assign a=addImportStatement(orm.application.rootPackage+ ".DataManager")>
+    <#assign a=addImportStatement(orm.application.rootPackage+ ".DataManager.Value")>
 
 
     <#if containsEncryptedProperty() >
@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
     * Datastore
     */
     private ${name}Store(final javax.sql.DataSource theDataSource
-    ,final DatabaseManager.Observer theObserver
+    ,final DataManager.Observer theObserver
 
 
     <#if containsEncryptedProperty() >
@@ -74,7 +74,7 @@ import java.util.stream.Collectors;
     }
 
     <#list orm.methodSpecification as method>
-        <#include "/template/java/method/${method}.ftl">
+        <#include "method/${method}.ftl">
     </#list>
 
     <#if (returningProperties?size > 0) >
@@ -203,7 +203,7 @@ import java.util.stream.Collectors;
 
 
 
-    public static abstract class Column<T> implements DatabaseManager.Column<T> {
+    public static abstract class Column<T> implements DataManager.Column<T> {
 
 
     private final PartialWhereClause  whereClause ;

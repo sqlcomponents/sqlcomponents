@@ -2,10 +2,10 @@
 <#if rootPackage?? && rootPackage?length != 0 >package ${rootPackage};</#if>
 
 <#assign capturedOutput>
-public final class DatabaseManager {
+public final class DataManager {
 
     <#if !multipleManagers>
-    private static DatabaseManager databaseManager;
+    private static DataManager dataManager;
     </#if>
 
 
@@ -18,7 +18,7 @@ public final class DatabaseManager {
     private final ${entity.name}Store ${entity.name?uncap_first}Store;
     </#list>
 
-<#if multipleManagers>public <#else>private</#if> DatabaseManager(final javax.sql.DataSource dbDataSource
+<#if multipleManagers>public <#else>private</#if> DataManager(final javax.sql.DataSource dbDataSource
     <#if encryption?has_content  >
     <#assign a=addImportStatement("java.util.function.Function")>
     ,final Function<String,String> encryptionFunction
@@ -39,15 +39,15 @@ public final class DatabaseManager {
         </#list>
     }
     <#if !multipleManagers>
-    public static final DatabaseManager getManager(final DataSource dbDataSource
+    public static final DataManager getManager(final DataSource dbDataSource
     <#if encryption?has_content  >
     <#assign a=addImportStatement("javax.sql.DataSource")>
     ,final Function<String,String> encryptionFunction
     ,final Function<String,String> decryptionFunction
     </#if>
                                                             ) {
-        if(databaseManager == null) {
-            databaseManager = new DatabaseManager(dbDataSource
+        if(dataManager == null) {
+            dataManager = new DataManager(dbDataSource
             <#if encryption?has_content  >
             
             , encryptionFunction
@@ -55,7 +55,7 @@ public final class DatabaseManager {
             </#if>
             );
         }
-        return databaseManager;
+        return dataManager;
     }
 </#if>
 
@@ -117,7 +117,7 @@ public final class DatabaseManager {
     public class Observer
     {
         // Observer is internal
-        // This also prevents store creation outside DatabaseManager
+        // This also prevents store creation outside DataManager
         private Observer() {
 
         }
@@ -147,8 +147,8 @@ public final class DatabaseManager {
     }
 
     public static class Page<T> {
-        final List<T> content;
-        final int totalElements;
+        private final List<T> content;
+        private final int totalElements;
 
         private Page(List<T> content, int totalElements) {
             this.content = content;
@@ -165,7 +165,7 @@ public final class DatabaseManager {
     }
     </#if>
 
-    <#include "/template/java/Procedures.ftl">
+    <#include "Procedures.ftl">
 
 }
 </#assign>
