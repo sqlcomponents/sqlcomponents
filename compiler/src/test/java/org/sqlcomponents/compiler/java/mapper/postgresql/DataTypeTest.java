@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.postgresql.ds.PGPoolingDataSource;
 import org.sqlcomponents.compiler.java.JavaCompiler;
 import org.sqlcomponents.compiler.java.util.CompilerTestUtil;
 import org.sqlcomponents.core.model.Application;
@@ -155,11 +156,18 @@ abstract class DataTypeTest<T> {
     }
 
     private DataSource dataSource(Application application) {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(application.getUrl());
-        config.setUsername(application.getUserName());
-        config.setPassword(application.getPassword());
-        return new HikariDataSource(config);
+
+        PGPoolingDataSource source = new PGPoolingDataSource();
+        source.setDataSourceName("A Data Source");
+        source.setServerNames(new String[] {
+                "localhost"
+        });
+        source.setDatabaseName("moviedb");
+        source.setUser("moviedb");
+        source.setPassword("moviedb");
+        source.setMaxConnections(10);
+
+        return source;
     }
 
 }
