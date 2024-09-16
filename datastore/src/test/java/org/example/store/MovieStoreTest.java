@@ -70,16 +70,23 @@ class MovieStoreTest {
                 .select()
                 .where(title().eq("Fight Club")).execute();
 
-        Movie tobeUpdated = movies.get(0);
-        tobeUpdated = tobeUpdated.withDirectedBy("Martyn Scorsese");
+
         int updatedRecords = movieStore
                 .update()
-                        .set(tobeUpdated)
+                        .set(new Movie(null, "Fight Club", "Martyn Scorsese"))
                 .where(title().eq("Fight Club"))
                 .execute();
 
+        Assertions.assertEquals(1, updatedRecords, "Update Failed");
+
+        updatedRecords = movieStore
+                .update()
+                    .set(directedBy("Martyn Scorsese"))
+                    .where(title().eq("Fight Club"))
+                .execute();
 
         Assertions.assertEquals(1, updatedRecords, "Update Failed");
+
         movies = movieStore
                 .select()
                 .where(title().eq("Fight Club")).execute();
