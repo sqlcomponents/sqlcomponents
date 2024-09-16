@@ -39,16 +39,28 @@ abstract class DataTypeTest<T> {
     private final Class<?> myTableClass;
 
     private final Object myTableStore;
+    
+    private static final DataSource DATA_SOURCE;
+
+    static {
+        try {
+            DATA_SOURCE = DATA_SOURCE(CompilerTestUtil.getApplication());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     DataTypeTest() {
         try {
             final Application application = CompilerTestUtil.getApplication();
-            DataSource dataSource = dataSource(application);
-
-            dropTable(dataSource);
-            createTable(dataSource);
-
+            
             application.setTablePatterns(List.of("my_table"));
+
+            dropTable(DATA_SOURCE);
+            createTable(DATA_SOURCE);
+
+
             application.compile(new JavaCompiler());
 
             javax.tools.JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
@@ -66,7 +78,7 @@ abstract class DataTypeTest<T> {
                 myTableClass = classLoader.loadClass("org.example.model.MyTable");
 
                 Method method = loadedClass.getMethod("getManager", DataSource.class, Function.class, Function.class);
-                Object dataManager = method.invoke(null, dataSource, null, null);
+                Object dataManager = method.invoke(null, DATA_SOURCE, null, null);
 
                 this.myTableStoreClass = classLoader.loadClass("org.example.store.MyTableStore");
 
@@ -137,25 +149,25 @@ abstract class DataTypeTest<T> {
         return myTable.getClass().getMethod("getMyValue").invoke(myTable);
     }
 
-    private void createTable(final DataSource dataSource) throws SQLException {
+    private void createTable(final DataSource DATA_SOURCE) throws SQLException {
         final String tableCreateSQL = "CREATE TABLE my_table(my_value " + dataType() + ")";
-        final Connection connection = dataSource.getConnection();
+        final Connection connection = DATA_SOURCE.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(tableCreateSQL);
         preparedStatement.executeUpdate();
         preparedStatement.close();
         connection.close();
     }
 
-    private void dropTable(final DataSource dataSource) throws SQLException {
+    private void dropTable(final DataSource DATA_SOURCE) throws SQLException {
         final String tableCreateSQL = "DROP TABLE IF EXISTS my_table";
-        final Connection connection = dataSource.getConnection();
+        final Connection connection = DATA_SOURCE.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(tableCreateSQL);
         preparedStatement.executeUpdate();
         preparedStatement.close();
         connection.close();
     }
 
-    private DataSource dataSource(Application application) {
+    private static DataSource DATA_SOURCE(Application application) {
 
         PGPoolingDataSource source = new PGPoolingDataSource();
         source.setDataSourceName("A Data Source");
