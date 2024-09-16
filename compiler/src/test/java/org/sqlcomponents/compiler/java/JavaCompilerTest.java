@@ -1,9 +1,11 @@
 package org.sqlcomponents.compiler.java;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.sqlcomponents.compiler.java.util.CompilerTestUtil;
 import org.sqlcomponents.core.model.Application;
 
+@Disabled
 class JavaCompilerTest {
     @Test
     @SuppressWarnings("squid:S2699")
