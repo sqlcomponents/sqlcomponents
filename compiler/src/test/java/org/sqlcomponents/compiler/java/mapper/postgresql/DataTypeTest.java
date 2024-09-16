@@ -54,6 +54,8 @@ abstract class DataTypeTest<T> {
     DataTypeTest() {
         try {
             final Application application = CompilerTestUtil.getApplication();
+
+            application.setSrcFolder(System.getProperty("java.io.tmpdir") + File.separator + System.currentTimeMillis());
             
             application.setTablePatterns(List.of("my_table"));
 
