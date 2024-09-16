@@ -17,14 +17,14 @@ import java.util.Properties;
 
 public class CompilerTestUtil {
 
-    private static Application application;;
     private static Database database;
     private static JavaMapper javaMapper;
 
     public static Application getApplication() throws IOException {
-        if (application == null) {
+        Application application = new Application();
+
             if ( System.getenv("SQLCOMPONENTS_CONFIG") == null) {
-                application = new Application();
+
                 Properties props = new Properties();
                 File dbPropertiesFile = new File("../database.properties");
 
@@ -87,19 +87,10 @@ public class CompilerTestUtil {
                 }
                 application.setSrcFolder(System.getenv("SOURCE_FOLDER"));
             }
-        }
+
 
         return application;
     }
 
-    public static  String getDataType(final String columnName) throws SQLException, IOException {
-        if(javaMapper == null) {
-            database = new Crawler(getApplication()).getDatabase();
-            javaMapper = new JavaMapper(getApplication());
-        }
-        return javaMapper.getDataType(database.getTables().stream()
-                .filter(table -> table.getTableName().equals("raja")).findFirst()
-                .get().getColumns().stream()
-                .filter(column -> column.getColumnName().equals(columnName)).findFirst().get());
-    }
+
 }

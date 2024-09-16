@@ -2,6 +2,7 @@ package org.sqlcomponents.compiler.java.mapper.postgresql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -97,11 +98,16 @@ abstract class DataTypeTest<T> {
 
     }
 
+    @AfterAll
+    void cleanup() throws SQLException {
+        dropTable(DATA_SOURCE);
+    }
 
     abstract Set<T> values();
 
 
     abstract String dataType();
+
 
     @BeforeEach
     void deleteAll() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
