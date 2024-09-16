@@ -58,7 +58,7 @@ abstract class DataTypeTest<T> {
                 javax.tools.JavaCompiler.CompilationTask task = compiler.getTask(null, mgr, ds, null, null, sources);
                 task.call();
 
-                URLClassLoader classLoader = new URLClassLoader(new URL[]{new File("/home/haripriya/Official/sqlcomponents/datastore/src/main/java").toURI().toURL()});
+                URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(application.getSrcFolder()).toURI().toURL()});
                 // Load the class from the classloader by name....
                 Class<?> loadedClass = classLoader.loadClass("org.example.DataManager");
 
