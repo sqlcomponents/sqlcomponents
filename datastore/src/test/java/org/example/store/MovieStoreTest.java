@@ -15,7 +15,7 @@ import java.util.List;
 import static org.example.store.MovieStore.directedBy;
 import static org.example.store.MovieStore.title;
 
-@Disabled
+
 class MovieStoreTest {
 
     private final MovieStore movieStore;

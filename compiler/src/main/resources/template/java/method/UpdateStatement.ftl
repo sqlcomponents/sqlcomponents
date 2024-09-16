@@ -8,15 +8,9 @@
         			<#if index == 0><#assign index=1><#else>,</#if>${property.column.escapedName?j_string} = ${getPreparedValue(property,orm.updateMap)}
         			</#if>
         		</#list>
-        		WHERE
-        	    <#assign index=0>
-        		<#list properties as property>
-        			<#if property.column.primaryKeyIndex != 0>
-        			<#if index == 0><#assign index=1><#else> AND </#if>${property.column.escapedName?j_string} = ${getPreparedValue(property,orm.updateMap)}
-        			</#if>
-        		</#list>
+
 		</@compress>"
-+ ( this.whereClause == null ? "" : (" AND " + this.whereClause.asSql()) );
++ ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
 </#macro>
 
 <#macro updatewithsetquery>
@@ -80,13 +74,7 @@
                 </#if>
             </#list>
 
-            <#assign index=0>
-            <#list properties as property>
-                <#if property.column.primaryKeyIndex != 0>
-                <#if index == 0><#assign index=1><#else></#if>${property.name?uncap_first}(${name?uncap_first+".get"+property.name?cap_first + "()"}).set(preparedStatement,${column_index});
-                                                                            <#assign column_index = column_index + 1>
-                </#if>
-            </#list>
+
             
             
 
