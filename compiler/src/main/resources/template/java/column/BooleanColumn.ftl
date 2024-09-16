@@ -22,7 +22,7 @@
 
     @Override
     public Boolean get(final ResultSet resultSet, final int i) throws SQLException {
-        return resultSet.getBoolean(i);
+        return resultSet.getObject(i) == null ? null : resultSet.getBoolean(i);
     }
 
     public final WhereClause  eq(final Boolean value) {
