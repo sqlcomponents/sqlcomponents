@@ -1,7 +1,6 @@
 package org.sqlcomponents.compiler.java.util;
 
-import org.sqlcomponents.compiler.java.mapper.JavaMapper;
-import org.sqlcomponents.core.crawler.Crawler;
+import org.sqlcomponents.compiler.mapper.JavaMapper;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.Database;
 import org.sqlcomponents.core.utils.CoreConsts;
@@ -9,7 +8,6 @@ import org.sqlcomponents.core.utils.CoreConsts;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;

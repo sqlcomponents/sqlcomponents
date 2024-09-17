@@ -2,8 +2,8 @@ package org.sqlcomponents.compiler.java;
 
 import freemarker.template.TemplateException;
 import org.flywaydb.core.api.configuration.FluentConfiguration;
-import org.sqlcomponents.compiler.base.FTLTemplate;
-import org.sqlcomponents.compiler.java.mapper.JavaMapper;
+import org.sqlcomponents.compiler.template.FTLTemplate;
+import org.sqlcomponents.compiler.mapper.JavaMapper;
 import org.sqlcomponents.core.compiler.Compiler;
 import org.sqlcomponents.core.crawler.util.DataSourceUtil;
 import org.sqlcomponents.core.mapper.Mapper;

@@ -1,5 +1,5 @@
 <#include "jdbcbase.ftl">
-<#import "columns.ftl" as columns>
+<#import "Column.ftl" as columns>
 package <#if daoPackage?? && daoPackage?length != 0 >${daoPackage}</#if>;
 
 import java.sql.ResultSet;
@@ -14,11 +14,8 @@ import java.util.stream.Collectors;
     */
     public final class ${name}Store  {
 
-
-
     public static ${name}Store get${name}Store(final javax.sql.DataSource theDataSource
     ,final DataManager.Observer theObserver
-
 
     <#if containsEncryptedProperty() >
         <#assign a=addImportStatement("java.util.function.Function")>

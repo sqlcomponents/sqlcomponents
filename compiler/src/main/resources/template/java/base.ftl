@@ -4,30 +4,6 @@
 	<#return str?split(".")?last>
 </#function>
 
-<#function getJDBCClassName str> 
-	<#local pkAsParameterStr="${getClassName(str)}">
-	<#if pkAsParameterStr == "Integer">
-			<#local pkAsParameterStr="Int">
-	<#elseif pkAsParameterStr == "Character">
-	    <#local pkAsParameterStr="String">
-	<#elseif pkAsParameterStr == "LocalDate">
-    	<#local pkAsParameterStr="Date">
-    <#elseif pkAsParameterStr == "LocalTime">
-        <#local pkAsParameterStr="Time">
-	<#elseif pkAsParameterStr == "LocalDateTime">
-		<#local pkAsParameterStr="Timestamp">
-	<#elseif pkAsParameterStr == "ByteBuffer">
-		<#local pkAsParameterStr="Bytes">
-	<#elseif pkAsParameterStr == "JsonNode">
-	<#local pkAsParameterStr="Object">
-	<#elseif pkAsParameterStr == "UUID">
-	<#local pkAsParameterStr="Object">
-	<#elseif pkAsParameterStr == "Duration">
-	<#local pkAsParameterStr="Object">
-	</#if>
-	<#return pkAsParameterStr>
-</#function>
-
 <#function wrapSet wText property >
 <#switch property.dataType>
   <#case "java.time.LocalDate">
@@ -152,52 +128,12 @@
 				<#local pkAsParameterStr = pkAsParameterStr + "," >
 			</#if>
 
-			<#local pkAsParameterStr = pkAsParameterStr + "res.get"+ getJDBCClassName(property.dataType) + "(" +index + ")" >
+			<#local pkAsParameterStr = pkAsParameterStr + property.name + "().get(res, " +index+ ")" >
             <#local a=addImportStatement(property.dataType)>
 
 	</#list>
 	<#return pkAsParameterStr>
 </#function>
-
-<#function getPrimaryKeysFromRS>
-	<#local pkAsParameterStr="">
-	<#local index=0>
-	<#list properties as property>
-		<#if property.column.primaryKeyIndex != 0>
-			<#if index == 0>
-				<#local index=1>
-			<#else>
-				<#local pkAsParameterStr = pkAsParameterStr + "," >
-			</#if>
-
-			<#local pkAsParameterStr = pkAsParameterStr + "res.get"+ getJDBCClassName(property.dataType) + "(\"" +property.column.columnName + "\")" >
-            <#local a=addImportStatement(property.dataType)>
-		</#if>
-	</#list>
-	<#return pkAsParameterStr>
-</#function>
-
-
-<#function getPrimaryKeysAsParameterStringExceptHighest>
-	<#local pkAsParameterStr="">
-	<#local index=0>
-	<#list properties as property>
-		<#if property.column.primaryKeyIndex != 0>
-			<#if property.column.primaryKeyIndex != table.highestPKIndex>
-				<#if index == 0>
-					<#local index=1>
-				<#else>
-					<#local pkAsParameterStr = pkAsParameterStr + ",">
-				</#if>
-	
-				<#local pkAsParameterStr = pkAsParameterStr + getClassName(property.dataType) + " " +property.name >
-				<#local a=addImportStatement(property.dataType)>
-			</#if>
-		</#if>
-	</#list>
-	<#return pkAsParameterStr> 
-</#function>
-
 
 <#function addImportStatement importStatement>
 <#if importStatement?contains(".") 

@@ -1,8 +1,9 @@
-package org.sqlcomponents.compiler.base;
+package org.sqlcomponents.compiler.template;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import org.sqlcomponents.compiler.java.JavaCompiler;
+import org.sqlcomponents.compiler.template.directive.ColumnSelectionDirective;
 import org.sqlcomponents.core.utils.CoreConsts;
 
 import java.io.IOException;
@@ -30,6 +31,11 @@ public final class FTLTemplate<T> {
                 new Configuration(Configuration.VERSION_2_3_29);
         lFreemarkerConfiguration.setClassForTemplateLoading(JavaCompiler.class,
                 CoreConsts.BACK_SLASH);
+
+        lFreemarkerConfiguration
+                .setSharedVariable("columnselectionNew",
+                        new ColumnSelectionDirective());
+
         template = lFreemarkerConfiguration.getTemplate(aFTLFile);
     }
 

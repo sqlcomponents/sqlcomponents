@@ -1,4 +1,4 @@
-package org.sqlcomponents.compiler.java.mapper;
+package org.sqlcomponents.compiler.mapper;
 
 import org.jetbrains.annotations.NotNull;
 import org.sqlcomponents.core.mapper.Mapper;
