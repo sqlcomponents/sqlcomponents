@@ -17,7 +17,7 @@
   	    )
   	    <#if isReturning && (returningProperties?size > 0)>
           <#if orm.database.dbType == 'POSTGRES' && orm.database.databaseMajorVersion gt 10>
-            returning <@returningColumnSelection/>
+            returning <@columnSelection properties=returningProperties/>
           </#if>
   	    </#if>
   		"</@compress>;
