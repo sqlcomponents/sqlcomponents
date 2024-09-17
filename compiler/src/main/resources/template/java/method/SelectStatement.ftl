@@ -44,7 +44,7 @@ public static class SelectStatement {
         public final List<${name}> execute() throws <@throwsblock/> {
 		final String query = <@compress single_line=true>"
                 SELECT
-		<@columnSelection/> 
+		<@columnSelection properties=properties/> 
 		FROM ${table.escapedName?j_string}
                 </@compress>" 
                 + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) )
@@ -219,7 +219,7 @@ public final SelectQuery sql(final String sql) {
         ${name} ${name?uncap_first} = null;
 		final String query = <@compress single_line=true>"
                 SELECT
-		<@columnSelection/>
+		<@columnSelection properties=properties/>
 		FROM ${table.escapedName?j_string}
 		WHERE
 	    <#assign index=0>
@@ -276,7 +276,7 @@ public final SelectQuery sql(final String sql) {
         ${name} ${name?uncap_first} = null;
             final String query = <@compress single_line=true>"
                     SELECT
-            <@columnSelection/>
+            <@columnSelection properties=properties/>
             FROM ${table.escapedName?j_string}
             WHERE
 

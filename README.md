@@ -59,8 +59,8 @@ On JDK 8 it will not work
 Min JDK needed is : 11
 Max JDK Tested is : 18
 
-docker-compose up -d [launch in docker postgres on port  5432]
-docker-compose down --volumes  [optional only when sql error is seen to recreate the default tables]
+docker compose up -d [launch in docker postgres on port  5432]
+docker compose down --volumes  [optional only when sql error is seen to recreate the default tables]
 mvn clean package  
 mvn clean package -Dmaven.surefire.debug -Dmaven.failsafe.debug verify  
 mvn clean package -Dmaven.test.skip=true  
