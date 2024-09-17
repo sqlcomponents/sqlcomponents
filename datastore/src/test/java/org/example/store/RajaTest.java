@@ -12,13 +12,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
+import java.lang.reflect.Array;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Azaguraja 1. Reference for all the data types. 2. All Persistence
@@ -121,28 +119,28 @@ class RajaTest {
 
     @Test
     void testMultipleInsertAndGetNumberOfRows() throws SQLException {
-        int[] noOfInsertedRajaRefsArray =
+        int noOfInsertedRajaRefs =
                 this.connectionStore.insert().values(connectionsToTest)
                         .execute();
-        Assertions.assertEquals(5, noOfInsertedRajaRefsArray.length,
+        Assertions.assertEquals(5, noOfInsertedRajaRefs,
                 "Multiple Insert Execution");
     }
 
     @Test
     void testSingleInsertAndGetInsertedObject() throws SQLException, JsonProcessingException, UnknownHostException {
 
-        Connection connection =
+        List<Connection> connections =
                 this.connectionStore.insert().values(connectionsToTest.get(0))
                         .returning();
 
         Raja azaguRaja = azaguRajasToTest.get(0);
-        azaguRaja = azaguRaja.withReferenceCode(connection.getCode());
+        azaguRaja = azaguRaja.withReferenceCode(connections.get(0).getCode());
 
-        Raja insertedRaja =
+        List<Raja> insertedRajas =
                 this.allInAllRajaStore.insert().values(azaguRaja)
                         .returning();
         Assertions.assertEquals(azaguRaja.getReferenceCode(),
-                insertedRaja.getReferenceCode(),
+                insertedRajas.get(0).getReferenceCode(),
                 "Single Insert Returning");
     }
 
@@ -163,9 +161,7 @@ class RajaTest {
 
         List<Raja> insertedRajas =
                 this.allInAllRajaStore.insert()
-                        .values(azaguRajasToTest.get(0))
-                        .values(azaguRajasToTest.get(1))
-                        .values(azaguRajasToTest.get(2)).returning();
+                        .values(Arrays.asList(azaguRajasToTest.get(0), azaguRajasToTest.get(1), azaguRajasToTest.get(2))).returning();
         Assertions.assertEquals(3, insertedRajas.size(),
                 "Multi Sequence Insert Returning");
     }
@@ -174,9 +170,9 @@ class RajaTest {
     void testTableFilterMaps() throws SQLException, JsonProcessingException, UnknownHostException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
-        Raja insertedRaja = this.allInAllRajaStore.insert()
+        List<Raja> insertedRaja = this.allInAllRajaStore.insert()
                 .values(azaguRajasToTest.get(0)).returning();
-        Assertions.assertEquals(4, insertedRaja.getAInteger(),
+        Assertions.assertEquals(4, insertedRaja.get(0).getAInteger(),
                 "Insert Map with Table and Column");
         // this.allInAllRajaStore.update(insertedRaja);
         // insertedRaja = this.allInAllRajaStore.select
@@ -192,10 +188,10 @@ class RajaTest {
 
         azaguRajasToTest.set(0,azaguRajasToTest.get(0).withAEncryptedText("AEncryptedText"));
 
-        Raja insertedRaja = this.allInAllRajaStore.insert()
+        List<Raja> insertedRaja = this.allInAllRajaStore.insert()
                 .values(azaguRajasToTest.get(0)).returning();
         Assertions.assertEquals("AEncryptedText",
-                insertedRaja.getAEncryptedText(),
+                insertedRaja.get(0).getAEncryptedText(),
                 "Insert Map with Table and Column");
 
     }
@@ -206,9 +202,9 @@ class RajaTest {
 
         List<Raja> insertedRajas =
                 this.allInAllRajaStore.insert()
-                        .values(azaguRajasToTest.get(0))
-                        .values(azaguRajasToTest.get(1))
-                        .values(azaguRajasToTest.get(2)).returning();
+                        .values(Arrays.asList(azaguRajasToTest.get(0),
+                        azaguRajasToTest.get(1),
+                        azaguRajasToTest.get(2))).returning();
 
         RajaStore.WhereClause whereClause =
                 RajaStore.aBoolean().eq(true);
@@ -226,9 +222,9 @@ class RajaTest {
 
     @Test
     void testSingleUpdateAndGetNumberOfRows() throws SQLException {
-        Connection connection = this.connectionStore.insert()
+        List<Connection> connections = this.connectionStore.insert()
                 .values(this.connectionsToTest.get(0)).returning();
-        connection = connection.withName("Changed");
+        Connection connection = connections.get(0).withName("Changed");
         Integer noOfUpdatedRajaRefs = this.connectionStore.update()
                 .set(connection).execute();
         Assertions.assertEquals(1, noOfUpdatedRajaRefs,
@@ -237,9 +233,9 @@ class RajaTest {
 
     @Test
     void testSingleValueUpdateWithWhere() throws SQLException {
-        Connection connection = this.connectionStore.insert()
+        List<Connection> connections = this.connectionStore.insert()
                 .values(this.connectionsToTest.get(0)).returning();
-        final String originalName = connection.getName();
+        final String originalName = connections.get(0).getName();
 
         Assertions.assertEquals(1, this.connectionStore
                         .update()
@@ -252,12 +248,12 @@ class RajaTest {
 
     @Test
     void testSingleUpdateWithWhere() throws SQLException {
-        Connection connection = this.connectionStore.insert()
+        List<Connection> connections = this.connectionStore.insert()
                 .values(this.connectionsToTest.get(0)).returning();
 
-        final String originalName = connection.getName();
+        final String originalName = connections.get(0).getName();
 
-        connection = connection.withName("Changed");
+        Connection connection = connections.get(0).withName("Changed");
 
         Assertions.assertEquals(0, this.connectionStore
                         .update()
@@ -276,30 +272,30 @@ class RajaTest {
 
     @Test
     void testSelectOptional() throws SQLException {
-        Connection connection = this.connectionStore.insert()
+        List<Connection> connections = this.connectionStore.insert()
                 .values(this.connectionsToTest.get(0)).returning();
-        final String originalName = connection.getName();
+        final String originalName = connections.get(0).getName();
         Optional<Connection> optionalConnection = this.connectionStore
                 .select().sql("SELECT code,name FROM \"connection\" WHERE name = ?")
                 .param(ConnectionStore.name(originalName))
                 .optional();
 
-        Assertions.assertEquals(connection.getCode(),
+        Assertions.assertEquals(connections.get(0).getCode(),
                 optionalConnection.get().getCode(),
                 "Single Update Execution");
     }
 
     @Test
     void testSelectList() throws SQLException {
-        Connection connection = this.connectionStore.insert()
+        List<Connection> connections = this.connectionStore.insert()
                 .values(this.connectionsToTest.get(0)).returning();
-        final String originalName = connection.getName();
+        final String originalName = connections.get(0).getName();
         List<Connection> optionalConnection = this.connectionStore
                 .select().sql("SELECT code,name FROM \"connection\" WHERE name = ?")
                 .param(ConnectionStore.name(originalName))
                 .list();
 
-        Assertions.assertEquals(connection.getCode(),
+        Assertions.assertEquals(connections.get(0).getCode(),
                 optionalConnection.get(0).getCode(),
                 "Single Update Execution");
     }
@@ -311,9 +307,9 @@ class RajaTest {
 
         List<Raja> insertedRajas =
                 this.allInAllRajaStore.insert()
-                        .values(azaguRajasToTest.get(0))
-                        .values(azaguRajasToTest.get(1))
-                        .values(azaguRajasToTest.get(2)).returning();
+                        .values(Arrays.asList(azaguRajasToTest.get(0),
+                        azaguRajasToTest.get(1),
+                        azaguRajasToTest.get(2))).returning();
 
         UUID rajaCode = azaguRajasToTest.get(0).getReferenceCode();
 
@@ -333,9 +329,9 @@ class RajaTest {
 
         List<Raja> insertedRajas =
                 this.allInAllRajaStore.insert()
-                        .values(azaguRajasToTest.get(0))
-                        .values(azaguRajasToTest.get(1))
-                        .values(azaguRajasToTest.get(2)).returning();
+                        .values(Arrays.asList(azaguRajasToTest.get(0),
+                        azaguRajasToTest.get(1),
+                        azaguRajasToTest.get(2))).returning();
 
         UUID rajaCode = azaguRajasToTest.get(0).getReferenceCode();
 

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.example.store.MovieStore.directedBy;
@@ -42,17 +43,18 @@ class MovieStoreTest {
                     .values(new Movie(null, "Inception", "Christopher Nolan"))
                 .execute();
 
-        movieStore
+        List<Movie> movides = movieStore
                 .insert()
-                    .values(new Movie(null, "Pulp Fiction", "Quentin Tarantino"))
-                    .values(new Movie(null, "The Matrix", "Lana Wachowski"))
-                    .values(new Movie(null, "Dunkirk", "Christopher Nolan"))
-                    .values(new Movie(null, "Fight Club", "David Fincher"))
-                    .values(new Movie(null, "Interstellar", "Christopher Nolan"))
-                    .values(new Movie(null, "The Social Network", "David Fincher"))
-                .execute();
+                .values(Arrays.asList(new Movie(null, "Pulp Fiction", "Quentin Tarantino"),
+                        new Movie(null, "The Matrix", "Lana Wachowski"),
+                        new Movie(null, "Dunkirk", "Christopher Nolan"),
+                        new Movie(null, "Fight Club", "David Fincher"),
+                        new Movie(null, "Interstellar", "Christopher Nolan"),
+                        new Movie(null, "The Social Network", "David Fincher")))
+                .returning();
 
-        Movie movie = movieStore
+            Assertions.assertEquals(6, movides.size());
+        List<Movie> movie = movieStore
                 .insert()
                     .values(new Movie(null, "The Dark Knight", "Christopher Nolan"))
                 .returning();
