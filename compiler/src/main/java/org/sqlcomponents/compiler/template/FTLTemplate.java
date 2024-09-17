@@ -33,7 +33,7 @@ public final class FTLTemplate<T> {
                 CoreConsts.BACK_SLASH);
 
         lFreemarkerConfiguration
-                .setSharedVariable("columnselectionNew",
+                .setSharedVariable("columnSelection",
                         new ColumnSelectionDirective());
 
         template = lFreemarkerConfiguration.getTemplate(aFTLFile);

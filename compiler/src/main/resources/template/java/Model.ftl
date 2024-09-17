@@ -27,23 +27,14 @@ public final class ${name} {
 	<#assign a=addImportStatement(property.dataType)>
 </#list>
 
-public ${name}(
-<#assign index=1>
-<#list properties as property>
-<#if index != 1>
-    ,
-</#if>
-    
-	final ${getClassName(property.dataType)} ${property.name}
-    <#assign index = index + 1>
-</#list>
-
-) {
-
-<#list properties as property>
-this.${property.name} = ${property.name};
-</#list>
-}
+    public ${name}(<#list properties as property
+        >final ${getClassName(property.dataType)} ${property.name}<#if !property?is_last>,</#if>
+        </#list>
+    ) {
+        <#list properties as property>
+        this.${property.name} = ${property.name};
+        </#list>
+    }
 
 <#list properties as property>
     /**

@@ -1,12 +1,15 @@
 package org.sqlcomponents.compiler.template.directive;
 
 import freemarker.core.Environment;
+
 import freemarker.template.DefaultListAdapter;
-import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateDirectiveModel;
+import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateDirectiveBody;
+import freemarker.template.utility.StringUtil;
+import freemarker.template.TemplateDirectiveModel;
 import org.sqlcomponents.core.model.Property;
 
 import java.io.IOException;
@@ -15,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * FreeMarker user-defined directive for repeating a section of a template,
@@ -40,11 +44,23 @@ import java.util.Map;
  */
 public class ColumnSelectionDirective implements TemplateDirectiveModel {
 
+    /**
+    *  Parameter for Colum section properties.
+    */
     private static final String PARAM_NAME_PROPERTIES = "properties";
 
-    public void execute(Environment env, Map params,
-                        TemplateModel[] loopVars,
-                        TemplateDirectiveBody body)
+    /**
+     *
+     * @param env Environment
+     * @param params Map
+     * @param loopVars TemplateModel[]
+     * @param body TemplateDirectiveBody
+     * @throws TemplateException
+     */
+    public void execute(final Environment env,
+                        final Map params,
+                        final TemplateModel[] loopVars,
+                        final TemplateDirectiveBody body)
             throws TemplateException {
 
         List<Property> properties = new ArrayList<>();
@@ -59,37 +75,45 @@ public class ColumnSelectionDirective implements TemplateDirectiveModel {
 
             if (paramName.equals(PARAM_NAME_PROPERTIES)) {
                 if (!(paramValue instanceof DefaultListAdapter)) {
-                    throw new TemplateModelException("The \"" + PARAM_NAME_PROPERTIES + "\" parameter " + "must be a number.");
+                    throw new TemplateModelException("The \""
+                            + PARAM_NAME_PROPERTIES + "\"" + " parameter "
+                            + "must be a number.");
                 }
-                properties = (List<Property>) ((DefaultListAdapter) paramValue).getWrappedObject();
+                properties = (List<Property>) ((DefaultListAdapter) paramValue)
+                        .getWrappedObject();
                 countParamSet = true;
-                if (properties.size() < 0) {
-                    throw new TemplateModelException("The \"" + PARAM_NAME_PROPERTIES + "\" parameter " + "can't be negative.");
-                }
             } else {
-                throw new TemplateModelException("Unsupported parameter: " + paramName);
+                throw new TemplateModelException("Unsupported parameter: "
+                        + paramName);
             }
         }
         if (!countParamSet) {
-            throw new TemplateModelException("The required \"" + PARAM_NAME_PROPERTIES + "\" paramter" + "is missing.");
+            throw new TemplateModelException("The required \""
+                    + PARAM_NAME_PROPERTIES + "\""
+                    + " paramter" + "is missing.");
         }
 
         if (loopVars.length > 1) {
-            throw new TemplateModelException("At most one loop variable is allowed.");
+            throw new TemplateModelException("At most "
+                    + "one loop variable is allowed.");
         }
 
         Writer out = env.getOut();
 
-        properties.forEach(properties1 -> {
-            try {
-                properties1.getColumn().getEscapedName();
-                out.write("<hr>");  // TODO ${property.column.escapedName?j_string}
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        String escapedColumnNames = properties.stream()
+                .map(property -> {
+                    SimpleScalar scalar = new SimpleScalar(property
+                            .getColumn()
+                            .getEscapedName());
+                    return StringUtil.javaStringEnc(scalar.getAsString());
+                })
+                .collect(Collectors.joining(","));
 
-
+        try {
+            out.write(escapedColumnNames);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
