@@ -400,7 +400,7 @@ public final class Crawler {
 
         ResultSet lResultSet =
                 databaseMetaData.getTables(lCatalog, lSchemaNamePattern, null,
-                        new String[] {"TABLE"});
+                        new String[] {"TABLE", "VIEW"});
         while (lResultSet.next()) {
             final String tableName = lResultSet.getString("table_name");
             if (aTableFilter.test(tableName)) {
