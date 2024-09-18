@@ -82,6 +82,7 @@ public final class JavaCompiler implements Compiler {
         });
     }
 
+
     /**
      * Run Flyway Migrations if Flyway is in the classpath.
      * @param application
