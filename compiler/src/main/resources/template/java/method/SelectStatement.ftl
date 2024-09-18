@@ -2,6 +2,7 @@
 <#assign a=addImportStatement("java.util.List")>
 <#assign a=addImportStatement("java.util.ArrayList")>
 <#assign a=addImportStatement("java.util.Optional")>
+<#assign a=addImportStatement("java.sql.PreparedStatement")>
 
 public SelectStatementWithWhere select() {
         return new SelectStatementWithWhere(this);
