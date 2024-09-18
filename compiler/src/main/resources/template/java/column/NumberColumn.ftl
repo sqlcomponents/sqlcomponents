@@ -13,7 +13,7 @@
 
     @Override
     public ${type} get(final ResultSet resultSet, final int i) throws SQLException {
-        return resultSet.get${type}(i);
+        return resultSet.getObject(i, ${type}.class);
     }
 
     public final WhereClause eq(final ${type} value) {
