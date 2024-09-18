@@ -129,18 +129,18 @@ class RajaTest {
     @Test
     void testSingleInsertAndGetInsertedObject() throws SQLException, JsonProcessingException, UnknownHostException {
 
-        List<Connection> connections =
+        Connection connection =
                 this.connectionStore.insert().values(connectionsToTest.get(0))
                         .returning();
 
         Raja azaguRaja = azaguRajasToTest.get(0);
-        azaguRaja = azaguRaja.withReferenceCode(connections.get(0).getCode());
+        azaguRaja = azaguRaja.withReferenceCode(connection.getCode());
 
-        List<Raja> insertedRajas =
+        Raja raja =
                 this.allInAllRajaStore.insert().values(azaguRaja)
                         .returning();
         Assertions.assertEquals(azaguRaja.getReferenceCode(),
-                insertedRajas.get(0).getReferenceCode(),
+                raja.getReferenceCode(),
                 "Single Insert Returning");
     }
 
@@ -170,9 +170,9 @@ class RajaTest {
     void testTableFilterMaps() throws SQLException, JsonProcessingException, UnknownHostException {
         this.connectionStore.insert().values(connectionsToTest).execute();
 
-        List<Raja> insertedRaja = this.allInAllRajaStore.insert()
+        Raja insertedRaja = this.allInAllRajaStore.insert()
                 .values(azaguRajasToTest.get(0)).returning();
-        Assertions.assertEquals(4, insertedRaja.get(0).getAInteger(),
+        Assertions.assertEquals(4, insertedRaja.getAInteger(),
                 "Insert Map with Table and Column");
         // this.allInAllRajaStore.update(insertedRaja);
         // insertedRaja = this.allInAllRajaStore.select
@@ -188,10 +188,10 @@ class RajaTest {
 
         azaguRajasToTest.set(0,azaguRajasToTest.get(0).withAEncryptedText("AEncryptedText"));
 
-        List<Raja> insertedRaja = this.allInAllRajaStore.insert()
+        Raja insertedRaja = this.allInAllRajaStore.insert()
                 .values(azaguRajasToTest.get(0)).returning();
         Assertions.assertEquals("AEncryptedText",
-                insertedRaja.get(0).getAEncryptedText(),
+                insertedRaja.getAEncryptedText(),
                 "Insert Map with Table and Column");
 
     }
@@ -222,9 +222,9 @@ class RajaTest {
 
     @Test
     void testSingleUpdateAndGetNumberOfRows() throws SQLException {
-        List<Connection> connections = this.connectionStore.insert()
+        Connection connection = this.connectionStore.insert()
                 .values(this.connectionsToTest.get(0)).returning();
-        Connection connection = connections.get(0).withName("Changed");
+        connection = connection.withName("Changed");
         Integer noOfUpdatedRajaRefs = this.connectionStore.update()
                 .set(connection).execute();
         Assertions.assertEquals(1, noOfUpdatedRajaRefs,
@@ -233,9 +233,9 @@ class RajaTest {
 
     @Test
     void testSingleValueUpdateWithWhere() throws SQLException {
-        List<Connection> connections = this.connectionStore.insert()
+        Connection connection = this.connectionStore.insert()
                 .values(this.connectionsToTest.get(0)).returning();
-        final String originalName = connections.get(0).getName();
+        final String originalName = connection.getName();
 
         Assertions.assertEquals(1, this.connectionStore
                         .update()
@@ -248,12 +248,12 @@ class RajaTest {
 
     @Test
     void testSingleUpdateWithWhere() throws SQLException {
-        List<Connection> connections = this.connectionStore.insert()
+        Connection connection = this.connectionStore.insert()
                 .values(this.connectionsToTest.get(0)).returning();
 
-        final String originalName = connections.get(0).getName();
+        final String originalName = connection.getName();
 
-        Connection connection = connections.get(0).withName("Changed");
+        connection = connection.withName("Changed");
 
         Assertions.assertEquals(0, this.connectionStore
                         .update()
@@ -272,30 +272,30 @@ class RajaTest {
 
     @Test
     void testSelectOptional() throws SQLException {
-        List<Connection> connections = this.connectionStore.insert()
+        Connection connection = this.connectionStore.insert()
                 .values(this.connectionsToTest.get(0)).returning();
-        final String originalName = connections.get(0).getName();
+        final String originalName = connection.getName();
         Optional<Connection> optionalConnection = this.connectionStore
                 .select().sql("SELECT code,name FROM \"connection\" WHERE name = ?")
                 .param(ConnectionStore.name(originalName))
                 .optional();
 
-        Assertions.assertEquals(connections.get(0).getCode(),
+        Assertions.assertEquals(connection.getCode(),
                 optionalConnection.get().getCode(),
                 "Single Update Execution");
     }
 
     @Test
     void testSelectList() throws SQLException {
-        List<Connection> connections = this.connectionStore.insert()
+        Connection connection = this.connectionStore.insert()
                 .values(this.connectionsToTest.get(0)).returning();
-        final String originalName = connections.get(0).getName();
+        final String originalName = connection.getName();
         List<Connection> optionalConnection = this.connectionStore
                 .select().sql("SELECT code,name FROM \"connection\" WHERE name = ?")
                 .param(ConnectionStore.name(originalName))
                 .list();
 
-        Assertions.assertEquals(connections.get(0).getCode(),
+        Assertions.assertEquals(connection.getCode(),
                 optionalConnection.get(0).getCode(),
                 "Single Update Execution");
     }

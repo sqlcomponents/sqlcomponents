@@ -38,10 +38,10 @@ class MovieStoreTest {
     @Test
     void testBasic() throws SQLException {
 
-        movieStore
+        Movie movie = movieStore
                 .insert()
                     .values(new Movie(null, "Inception", "Christopher Nolan"))
-                .execute();
+                .returning();
 
         List<Movie> movides = movieStore
                 .insert()
@@ -53,8 +53,8 @@ class MovieStoreTest {
                         new Movie(null, "The Social Network", "David Fincher")))
                 .returning();
 
-            Assertions.assertEquals(6, movides.size());
-        List<Movie> movie = movieStore
+        Assertions.assertEquals(6, movides.size());
+        movie = movieStore
                 .insert()
                     .values(new Movie(null, "The Dark Knight", "Christopher Nolan"))
                 .returning();
