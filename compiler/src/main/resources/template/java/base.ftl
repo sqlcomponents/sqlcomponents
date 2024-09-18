@@ -4,30 +4,15 @@
 	<#return str?split(".")?last>
 </#function>
 
-<#function wrapSet wText property >
-<#switch property.dataType>
-  <#case "java.time.LocalDate">
-	 <#return "${wText} == null ? null : java.sql.Date.valueOf(${wText})">
-  <#case "java.time.LocalTime">
-  	 <#return "${wText} == null ? null : java.sql.Time.valueOf(${wText})">
-  <#case "java.time.LocalDateTime">
-  	 <#return "${wText} == null ? null : java.sql.Timestamp.valueOf(${wText})">
-  <#case "java.lang.Character">
-  	 <#return "${wText} == null ? null : String.valueOf(${wText})">
-<#case "java.nio.ByteBuffer">
-  	 <#return "${wText} == null ? null : ${wText}.array()">
-  <#case "com.fasterxml.jackson.databind.JsonNode">
-  	 <#return "convert${property.column.typeName?cap_first}(${wText})">
-    <#case "java.util.UUID">
-  	 <#return "convert${property.column.typeName?cap_first}(${wText})">
-	<#case "java.time.Duration">
-	<#return "convert${property.column.typeName?cap_first}(${wText})">
-  <#default>
-  <#return "${wText}">
-
-</#switch>
+<#function getColumnType str>
+	<#local columnTypePrefix="java.sql.Types.">
+	<#if str == "JSON">
+	    <#local columnType = columnTypePrefix + "VARCHAR">
+	<#else>
+		<#local columnType = columnTypePrefix + str>
+	</#if>
+	<#return columnType>
 </#function>
-
 
 <#function getProperty propertyName> 
 	<#list properties as property>
@@ -145,15 +130,7 @@
 </#function>
 
 
-<#function getColumnType str>
-	<#local columnTypePrefix="java.sql.Types.">
-	<#if str == "JSON">
-	    <#local columnType = columnTypePrefix + "VARCHAR">
-	<#else>
-		<#local columnType = columnTypePrefix + str>
-	</#if>
-	<#return columnType>
-</#function>
+
 
 
 <#macro importStatements>
