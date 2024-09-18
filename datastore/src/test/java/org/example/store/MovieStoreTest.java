@@ -43,23 +43,23 @@ class MovieStoreTest {
                     .values(new Movie(null, "Inception", "Christopher Nolan"))
                 .returning();
 
-        List<Movie> movides = movieStore
+        List<Movie> movies = movieStore
                 .insert()
-                .values(Arrays.asList(new Movie(null, "Pulp Fiction", "Quentin Tarantino"),
+                .values(new Movie(null, "Pulp Fiction", "Quentin Tarantino"),
                         new Movie(null, "The Matrix", "Lana Wachowski"),
                         new Movie(null, "Dunkirk", "Christopher Nolan"),
                         new Movie(null, "Fight Club", "David Fincher"),
                         new Movie(null, "Interstellar", "Christopher Nolan"),
-                        new Movie(null, "The Social Network", "David Fincher")))
+                        new Movie(null, "The Social Network", "David Fincher"))
                 .returning();
 
-        Assertions.assertEquals(6, movides.size());
+        Assertions.assertEquals(6, movies.size());
         movie = movieStore
                 .insert()
                     .values(new Movie(null, "The Dark Knight", "Christopher Nolan"))
                 .returning();
 
-        List<Movie> movies = movieStore
+        movies = movieStore
                 .select()
                 .execute();
 

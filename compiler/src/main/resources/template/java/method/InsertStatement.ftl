@@ -82,10 +82,7 @@
             </#if>
         }
 
-        private void prepare(final PreparedStatement preparedStatement,final List<${name}> ${name?uncap_first}s) throws SQLException {
-            int i = 1;
-            for ( ${name} ${name?uncap_first} : ${name?uncap_first}s) {
-
+        private int prepare(final PreparedStatement preparedStatement,final ${name} ${name?uncap_first}, int i) throws SQLException {
             <#assign index=0>
             <#assign column_index=1>
             <#list insertableProperties as property>
@@ -103,11 +100,23 @@
                 </#if>
             </#if>
             </#list>
+            return i;
+        }
+
+        private void prepare(final PreparedStatement preparedStatement,final List<${name}> ${name?uncap_first}s) throws SQLException {
+            int startIndex = 1;
+            for ( ${name} ${name?uncap_first} : ${name?uncap_first}s) {
+
+            startIndex = prepare(preparedStatement, ${name?uncap_first}, startIndex);
             }
         }
 
         public ValueClause values(final ${name} ${name?uncap_first}) {
             return new ValueClause(${name?uncap_first},this);
+        }
+
+        public ValuesClause values(final ${name}... ${name?uncap_first}s) {
+            return new ValuesClause(Arrays.asList(${name?uncap_first}s),this);
         }
 
         public ValuesClause values(final List<${name}> ${name?uncap_first}s) {
@@ -120,7 +129,7 @@
 
             private ${name} ${name?uncap_first};
 
-            ValueClause (final ${name} ${name?uncap_first},final InsertStatement insertStatement) {
+            ValueClause(final ${name} ${name?uncap_first},final InsertStatement insertStatement) {
                 this.${name?uncap_first} = ${name?uncap_first};
                 this.insertStatement = insertStatement;
             }
