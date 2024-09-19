@@ -52,6 +52,15 @@ public class Entity {
     private List<Property> properties;
 
     /**
+     * The Properties.
+     */
+    private List<String> values;
+
+    /**
+     * String type.
+     */
+    private String type;
+    /**
      * Instantiates a new Entity.
      *
      * @param paramOrm   the orm
@@ -60,6 +69,15 @@ public class Entity {
     public Entity(final ORM paramOrm, final Table paramTable) {
         setOrm(paramOrm);
         setTable(paramTable);
+    }
+
+    /**
+     * Instantiates a new Entity.
+     *
+     * @param paramOrm   the orm
+     */
+    public Entity(final ORM paramOrm) {
+        setOrm(paramOrm);
     }
 
     /**
@@ -75,12 +93,12 @@ public class Entity {
     /**
      * Has java type boolean.
      *
-     * @param type the class name
+     * @param aType the class name
      * @return the boolean
      */
-    public boolean hasJavaType(final String type) {
+    public boolean hasJavaType(final String aType) {
         return this.getProperties().stream()
-                .filter(property -> property.getDataType().equals(type))
+                .filter(property -> property.getDataType().equals(aType))
                 .findFirst().isPresent();
     }
 
@@ -328,5 +346,21 @@ public class Entity {
 
     public void setProperties(final List<Property> theProperties) {
         this.properties = theProperties;
+    }
+
+    public List<String> getValues() {
+        return values;
+    }
+
+    public void setValues(final List<String> aValues) {
+        this.values = aValues;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(final String aType) {
+        this.type = aType;
     }
 }

@@ -65,6 +65,4 @@ public class Type {
     public void setValues(final List<String> aValues) {
         this.values = aValues;
     }
-
-
 }

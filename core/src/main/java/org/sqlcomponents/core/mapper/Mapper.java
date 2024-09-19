@@ -7,11 +7,13 @@ import org.sqlcomponents.core.model.Method;
 import org.sqlcomponents.core.model.ORM;
 import org.sqlcomponents.core.model.Property;
 import org.sqlcomponents.core.model.Service;
-import org.sqlcomponents.core.model.relational.Column;
 import org.sqlcomponents.core.model.relational.Database;
-import org.sqlcomponents.core.model.relational.Package;
-import org.sqlcomponents.core.model.relational.Procedure;
 import org.sqlcomponents.core.model.relational.Table;
+import org.sqlcomponents.core.model.relational.Column;
+import org.sqlcomponents.core.model.relational.Procedure;
+import org.sqlcomponents.core.model.relational.Type;
+
+import org.sqlcomponents.core.model.relational.Package;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -164,7 +166,8 @@ public abstract class Mapper {
     private List<Entity> getEntities() {
         Database lDatabase = application.getOrm().getDatabase();
         ArrayList<Entity> lEntities =
-                new ArrayList<>(lDatabase.getTables().size());
+                new ArrayList<>(lDatabase.getTables().size()
+                        + lDatabase.getTypes().size());
 
         List<Property> lProperties;
         Entity lEntity;
@@ -183,6 +186,16 @@ public abstract class Mapper {
 
             lEntity.setProperties(lProperties);
             lEntities.add(lEntity);
+        }
+        for (Type type : lDatabase.getTypes()) {
+            Entity entity = new Entity(application.getOrm());
+            entity.setName(getEntityName(type.getTypeName()));
+            entity.setPluralName(getPluralName(entity.getName()));
+            entity.setDaoPackage(getDaoPackage(type.getTypeName()));
+            entity.setBeanPackage(getBeanPackage(type.getTypeName()));
+            entity.setValues(type.getValues());
+            entity.setType(type.getTypeType().name());
+            lEntities.add(entity);
         }
         return lEntities;
     }

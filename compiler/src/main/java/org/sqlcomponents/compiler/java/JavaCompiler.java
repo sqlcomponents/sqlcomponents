@@ -74,8 +74,10 @@ public final class JavaCompiler implements Compiler {
 
         orm.getEntities().parallelStream().forEach(entity -> {
             try {
-                writeDaoImplementation(entity, aApplication.getSrcFolder());
-                writeBeanSpecification(entity, aApplication.getSrcFolder());
+                if (!"e".equalsIgnoreCase(entity.getType())) {
+                    writeDaoImplementation(entity, aApplication.getSrcFolder());
+                    writeBeanSpecification(entity, aApplication.getSrcFolder());
+                }
             } catch (final IOException | TemplateException e) {
                 e.printStackTrace();
             }
