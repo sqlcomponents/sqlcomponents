@@ -25,6 +25,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -436,7 +437,19 @@ public final class Crawler {
             }
         }
 
+        if (database.getDbType() == DBType.POSTGRES) {
+            lTables.addAll(getMaterializedViews());
+        }
+
         return lTables;
+    }
+
+    /**
+     * Get Materialized Views from POSTGRES.
+     * @return MaterializedViews
+     */
+    private Collection<? extends Table> getMaterializedViews() {
+        return new ArrayList<>();
     }
 
     /**
