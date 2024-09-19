@@ -15,6 +15,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -426,7 +427,44 @@ public final class Crawler {
             }
         }
 
+        if (database.getDbType() == DBType.POSTGRES) {
+            lTables.addAll(getMaterializedViews(aSchemeName, aTableFilter));
+        }
+
         return lTables;
+    }
+
+    /**
+     * Get Materialized Views from POSTGRES.
+     * @return MaterializedViews
+     */
+    private Collection<? extends Table> getMaterializedViews(final String aSchemeName,
+                                                             final Predicate<String> aTableFilter) throws SQLException {
+
+        List<Table> lMViews = new ArrayList<>();
+
+        try (PreparedStatement preparedStatement =
+                     databaseMetaData.getConnection()
+                             .prepareStatement("select * from pg_matviews where matviewowner = ?")) {
+            preparedStatement.setString(1, aSchemeName);
+            ResultSet lResultSet = preparedStatement.executeQuery();
+
+            while (lResultSet.next()) {
+                Table table = new Table(database);
+
+                table.setTableType(TableType.MATERIALIZED_VIEW);
+
+                table.setTableName(lResultSet.getString("matviewname"));
+
+                table.setColumns(getColumns(table));
+            }
+        } catch (final SQLException aSQLException) {
+            aSQLException.printStackTrace();
+        }
+
+
+
+        return lMViews;
     }
 
     /**
