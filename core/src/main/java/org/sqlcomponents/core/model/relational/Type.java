@@ -28,10 +28,10 @@ public class Type {
 
     /**
      * Set type name.
-     * @param typeName type name
+     * @param aTypeName type name
      */
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
+    public void setTypeName(final String aTypeName) {
+        this.typeName = aTypeName;
     }
 
     /**
@@ -44,10 +44,10 @@ public class Type {
 
     /**
      * Set Type Type.
-     * @param typeType type type
+     * @param aTypeType type type
      */
-    public void setTypeType(TypeType typeType) {
-        this.typeType = typeType;
+    public void setTypeType(final TypeType aTypeType) {
+        this.typeType = aTypeType;
     }
 
     /**
@@ -60,10 +60,10 @@ public class Type {
 
     /**
      * Set List of values.
-     * @param values type values
+     * @param aValues type values
      */
-    public void setValues(List<String> values) {
-        this.values = values;
+    public void setValues(final List<String> aValues) {
+        this.values = aValues;
     }
 
 

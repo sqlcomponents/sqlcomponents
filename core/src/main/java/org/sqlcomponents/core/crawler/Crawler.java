@@ -2,8 +2,21 @@ package org.sqlcomponents.core.crawler;
 
 import org.sqlcomponents.core.crawler.util.DataSourceUtil;
 import org.sqlcomponents.core.model.Application;
-import org.sqlcomponents.core.model.relational.*;
-import org.sqlcomponents.core.model.relational.enums.*;
+import org.sqlcomponents.core.model.relational.Column;
+import org.sqlcomponents.core.model.relational.Database;
+import org.sqlcomponents.core.model.relational.Index;
+import org.sqlcomponents.core.model.relational.Table;
+import org.sqlcomponents.core.model.relational.Key;
+import org.sqlcomponents.core.model.relational.Procedure;
+import org.sqlcomponents.core.model.relational.Type;
+import org.sqlcomponents.core.model.relational.UniqueConstraint;
+
+import org.sqlcomponents.core.model.relational.enums.DBType;
+import org.sqlcomponents.core.model.relational.enums.Flag;
+import org.sqlcomponents.core.model.relational.enums.Order;
+import org.sqlcomponents.core.model.relational.enums.TableType;
+import org.sqlcomponents.core.model.relational.enums.ColumnType;
+import org.sqlcomponents.core.model.relational.enums.TypeType;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -437,15 +450,21 @@ public final class Crawler {
     /**
      * Get Materialized Views from POSTGRES.
      * @return MaterializedViews
+     * @param aSchemeName schema name
+     * @param aTableFilter tableFilter
      */
-    private Collection<? extends Table> getMaterializedViews(final String aSchemeName,
-                                                             final Predicate<String> aTableFilter) throws SQLException {
+    private Collection<? extends Table> getMaterializedViews(
+            final String aSchemeName,
+            final Predicate<String> aTableFilter) throws SQLException {
 
         List<Table> lMViews = new ArrayList<>();
 
         try (PreparedStatement preparedStatement =
                      databaseMetaData.getConnection()
-                             .prepareStatement("select * from pg_matviews where matviewowner = ?")) {
+                             .prepareStatement(
+                                     "select * from "
+                                        + "pg_matviews where"
+                                        + " matviewowner = ?")) {
             preparedStatement.setString(1, aSchemeName);
             ResultSet lResultSet = preparedStatement.executeQuery();
 
@@ -846,17 +865,19 @@ public final class Crawler {
      * load the type details from db.
      */
     public void loadTypes()  {
-        PreparedStatement preparedStatement =
-                null;
+        PreparedStatement preparedStatement = null;
         try {
             preparedStatement = databaseMetaData.getConnection()
-                    .prepareStatement(" select n.nspname as enum_schema,  \n" +
-                            "    t.typname as enum_name,\n" +
-                            "    string_agg(e.enumlabel, ', ') as enum_value\n" +
-                            "from pg_type t \n" +
-                            "    join pg_enum e on t.oid = e.enumtypid  \n" +
-                            "    join pg_catalog.pg_namespace n ON n.oid = t.typnamespace\n" +
-                            "group by enum_schema, enum_name;");
+                    .prepareStatement(
+                            " select n.nspname as enum_schema,  \n"
+                            + "    t.typname as enum_name,\n"
+                            + "    string_agg(e.enumlabel, ', ') "
+                            + "as enum_value\n"
+                            + "from pg_type t \n"
+                            + "    join pg_enum e on t.oid = e.enumtypid  \n"
+                            + "    join pg_catalog.pg_namespace n ON "
+                            + "n.oid = t.typnamespace\n"
+                            + "group by enum_schema, enum_name;");
             ResultSet lResultSet = preparedStatement.executeQuery();
             if (!lResultSet.wasNull()) {
                 List<Type> types = new ArrayList<>();
