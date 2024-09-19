@@ -9,3 +9,7 @@ CREATE TABLE movie (
 CREATE VIEW movie_view AS
     SELECT id, title, directed_by
         FROM movie;
+
+CREATE MATERIALIZED VIEW materialized_movie_view AS
+    SELECT id, title, directed_by
+        FROM movie;
