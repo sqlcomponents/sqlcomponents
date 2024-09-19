@@ -17,11 +17,11 @@ import static org.example.store.MovieViewStore.directedBy;
 import static org.example.store.MovieViewStore.id;
 import static org.example.store.MovieViewStore.title;
 
-public class MovieViewStoreTest {
+public class ViewStoreTest {
     private final MovieStore movieStore;
     private final MovieViewStore movieViewStore;
 
-    public MovieViewStoreTest() {
+    public ViewStoreTest() {
 
         DataManager dataManager =
                 DataManager.getManager(DataSourceProvider.dataSource(),
