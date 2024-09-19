@@ -8,12 +8,15 @@ import org.sqlcomponents.core.model.relational.Index;
 import org.sqlcomponents.core.model.relational.Table;
 import org.sqlcomponents.core.model.relational.Key;
 import org.sqlcomponents.core.model.relational.Procedure;
+import org.sqlcomponents.core.model.relational.Type;
 import org.sqlcomponents.core.model.relational.UniqueConstraint;
-import org.sqlcomponents.core.model.relational.enums.ColumnType;
+
 import org.sqlcomponents.core.model.relational.enums.DBType;
 import org.sqlcomponents.core.model.relational.enums.Flag;
 import org.sqlcomponents.core.model.relational.enums.Order;
 import org.sqlcomponents.core.model.relational.enums.TableType;
+import org.sqlcomponents.core.model.relational.enums.ColumnType;
+import org.sqlcomponents.core.model.relational.enums.TypeType;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -25,6 +28,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -436,7 +440,50 @@ public final class Crawler {
             }
         }
 
+        if (database.getDbType() == DBType.POSTGRES) {
+            lTables.addAll(getMaterializedViews(aSchemeName, aTableFilter));
+        }
+
         return lTables;
+    }
+
+    /**
+     * Get Materialized Views from POSTGRES.
+     * @return MaterializedViews
+     * @param aSchemeName schema name
+     * @param aTableFilter tableFilter
+     */
+    private Collection<? extends Table> getMaterializedViews(
+            final String aSchemeName,
+            final Predicate<String> aTableFilter) throws SQLException {
+
+        List<Table> lMViews = new ArrayList<>();
+
+        try (PreparedStatement preparedStatement =
+                     databaseMetaData.getConnection()
+                             .prepareStatement(
+                                     "select * from "
+                                        + "pg_matviews where"
+                                        + " matviewowner = ?")) {
+            preparedStatement.setString(1, aSchemeName);
+            ResultSet lResultSet = preparedStatement.executeQuery();
+
+            while (lResultSet.next()) {
+                Table table = new Table(database);
+
+                table.setTableType(TableType.MATERIALIZED_VIEW);
+
+                table.setTableName(lResultSet.getString("matviewname"));
+
+                table.setColumns(getColumns(table));
+            }
+        } catch (final SQLException aSQLException) {
+            aSQLException.printStackTrace();
+        }
+
+
+
+        return lMViews;
     }
 
     /**
@@ -711,6 +758,9 @@ public final class Crawler {
             case MYSQL:
                 repairMySQL();
                 break;
+            case POSTGRES:
+                loadTypes();
+                break;
             default:
                 break;
         }
@@ -810,5 +860,43 @@ public final class Crawler {
                 aSQLException.printStackTrace();
             }
         });
+    }
+    /**
+     * load the type details from db.
+     */
+    public void loadTypes()  {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = databaseMetaData.getConnection()
+                    .prepareStatement(
+                            " select n.nspname as enum_schema,  \n"
+                            + "    t.typname as enum_name,\n"
+                            + "    string_agg(e.enumlabel, ', ') "
+                            + "as enum_value\n"
+                            + "from pg_type t \n"
+                            + "    join pg_enum e on t.oid = e.enumtypid  \n"
+                            + "    join pg_catalog.pg_namespace n ON "
+                            + "n.oid = t.typnamespace\n"
+                            + "group by enum_schema, enum_name;");
+            ResultSet lResultSet = preparedStatement.executeQuery();
+            if (!lResultSet.wasNull()) {
+                List<Type> types = new ArrayList<>();
+                while (lResultSet.next()) {
+                    Type type = new Type();
+                    type.setTypeName(lResultSet.getString("ENUM_NAME"));
+                    type.setTypeType(TypeType.e);
+                    String value = lResultSet.getString("enum_value");
+                    if (value != null) {
+                        String[] values = value.split(",");
+                        type.setValues(Arrays.asList(values));
+                    }
+                    types.add(type);
+                }
+                database.setTypes(types);
+            }
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
     }
 }
