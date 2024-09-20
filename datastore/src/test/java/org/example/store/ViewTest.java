@@ -20,7 +20,7 @@ import static org.example.store.MovieViewStore.title;
 class ViewTest {
     private final MovieStore movieStore;
     private final MovieViewStore movieViewStore;
-//    private final MaterializedMovieViewStore materializedMovieViewStore;
+    private final MaterializedMovieViewStore materializedMovieViewStore;
 
     public ViewTest() {
         DataManager dataManager =
@@ -29,13 +29,14 @@ class ViewTest {
                         EncryptionUtil::enAnDecrypt);
         this.movieViewStore = dataManager.getMovieViewStore();
         this.movieStore = dataManager.getMovieStore();
-//        this.materializedMovieViewStore = dataManager
-//                .getMaterializedMovieViewStore();
+        this.materializedMovieViewStore = dataManager
+                .getMaterializedMovieViewStore();
     }
 
     @BeforeEach
     void init() throws SQLException {
         this.movieStore.delete().execute();
+        this.materializedMovieViewStore.refresh();
         this.movieStore
                 .insert()
                 .values(new Movie(null, "Pulp Fiction", "Quentin Tarantino"),
@@ -47,12 +48,12 @@ class ViewTest {
     void testViews() throws SQLException {
         Assertions.assertEquals(2, this.movieViewStore.select().execute().size());
 
-//        // No Data as View is not refreshed
-//        Assertions.assertEquals(0, this.materializedMovieViewStore.select().execute().size());
-//        // Refresh the Materialized View
-//        this.materializedMovieViewStore.refresh();
-//        // Data as View is now refreshed
-//        Assertions.assertEquals(0, this.materializedMovieViewStore.select().execute().size());
+        // No Data as View is not refreshed
+        Assertions.assertEquals(0, this.materializedMovieViewStore.select().execute().size());
+        // Refresh the Materialized View
+        this.materializedMovieViewStore.refresh();
+        // Data as View is now refreshed
+        Assertions.assertEquals(2, this.materializedMovieViewStore.select().execute().size());
 
     }
 

@@ -5,17 +5,16 @@ import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.Column;
 import org.sqlcomponents.core.model.relational.Database;
 import org.sqlcomponents.core.model.relational.Index;
-import org.sqlcomponents.core.model.relational.Table;
 import org.sqlcomponents.core.model.relational.Key;
 import org.sqlcomponents.core.model.relational.Procedure;
+import org.sqlcomponents.core.model.relational.Table;
 import org.sqlcomponents.core.model.relational.Type;
 import org.sqlcomponents.core.model.relational.UniqueConstraint;
-
+import org.sqlcomponents.core.model.relational.enums.ColumnType;
 import org.sqlcomponents.core.model.relational.enums.DBType;
 import org.sqlcomponents.core.model.relational.enums.Flag;
 import org.sqlcomponents.core.model.relational.enums.Order;
 import org.sqlcomponents.core.model.relational.enums.TableType;
-import org.sqlcomponents.core.model.relational.enums.ColumnType;
 import org.sqlcomponents.core.model.relational.enums.TypeType;
 
 import javax.sql.DataSource;
@@ -53,12 +52,42 @@ public final class Crawler {
      * Constant for inout parameter type.
      */
     public static final int INOUT = 2;
-
+    /**
+     * The constant MARIA_DB.
+     */
+    private static final String MARIA_DB = "mariadb";
+    /**
+     * The constant MYSQL_DB.
+     */
+    private static final String MYSQL_DB = "mysql";
+    /**
+     * The constant POSTGRES_DB.
+     */
+    private static final String POSTGRES_DB = "postgresql";
+    /**
+     * The constant H2_DB.
+     */
+    private static final String H2_DB = "h2";
+    /**
+     * The constant ORACLE_DB.
+     */
+    private static final String ORACLE_DB = "oracle";
+    /**
+     * The constant COMMA_STR.
+     */
+    private static final String COMMA_STR = ",";
+    /**
+     * The constant END_BR_REGX.
+     */
+    private static final String END_BR_REGX = "\\)";
+    /**
+     * The constant START_BR_REGX.
+     */
+    private static final String START_BR_REGX = "\\(";
     /**
      * The Database.
      */
     private final Database database = new Database();
-
     /**
      * The Application.
      */
@@ -293,39 +322,6 @@ public final class Crawler {
     }
 
     /**
-     * The constant MARIA_DB.
-     */
-    private static final String MARIA_DB = "mariadb";
-    /**
-     * The constant MYSQL_DB.
-     */
-    private static final String MYSQL_DB = "mysql";
-    /**
-     * The constant POSTGRES_DB.
-     */
-    private static final String POSTGRES_DB = "postgresql";
-    /**
-     * The constant H2_DB.
-     */
-    private static final String H2_DB = "h2";
-    /**
-     * The constant ORACLE_DB.
-     */
-    private static final String ORACLE_DB = "oracle";
-    /**
-     * The constant COMMA_STR.
-     */
-    private static final String COMMA_STR = ",";
-    /**
-     * The constant END_BR_REGX.
-     */
-    private static final String END_BR_REGX = "\\)";
-    /**
-     * The constant START_BR_REGX.
-     */
-    private static final String START_BR_REGX = "\\(";
-
-    /**
      * Matches boolean.
      *
      * @param aPatterns the a patterns
@@ -375,7 +371,7 @@ public final class Crawler {
     private List<String> getSequences() throws SQLException {
         List<String> sequences = new ArrayList<>();
         ResultSet resultset = databaseMetaData.getTables(null, null, null,
-                new String[] {"SEQUENCE"});
+                new String[]{"SEQUENCE"});
 
         while (resultset.next()) {
             sequences.add(resultset.getString("table_name"));
@@ -407,7 +403,7 @@ public final class Crawler {
 
         ResultSet lResultSet =
                 databaseMetaData.getTables(lCatalog, lSchemaNamePattern, null,
-                        new String[] {"TABLE", "VIEW"});
+                        new String[]{"TABLE", "VIEW"});
         while (lResultSet.next()) {
             final String tableName = lResultSet.getString("table_name");
             if (aTableFilter.test(tableName)) {
@@ -452,39 +448,35 @@ public final class Crawler {
 
     /**
      * Get Materialized Views from POSTGRES.
-     * @return MaterializedViews
-     * @param aSchemeName schema name
+     *
+     * @param aSchemeName  schema name
      * @param aTableFilter tableFilter
+     * @return MaterializedViews
      */
     private Collection<? extends Table> getMaterializedViews(
             final String aSchemeName,
             final Predicate<String> aTableFilter) throws SQLException {
 
         List<Table> lMViews = new ArrayList<>();
-
         try (PreparedStatement preparedStatement =
                      databaseMetaData.getConnection()
-                             .prepareStatement(
-                                     "select * from "
-                                        + "pg_matviews where"
-                                        + " matviewowner = ?")) {
+                     .prepareStatement("select matviewname from pg_matviews "
+                             + "where matviewowner = ?")) {
+
             preparedStatement.setString(1, aSchemeName);
+
             ResultSet lResultSet = preparedStatement.executeQuery();
 
             while (lResultSet.next()) {
                 Table table = new Table(database);
-
                 table.setTableType(TableType.MATERIALIZED_VIEW);
-
                 table.setTableName(lResultSet.getString("matviewname"));
-
                 table.setColumns(getColumns(table));
+                lMViews.add(table);
             }
         } catch (final SQLException aSQLException) {
             aSQLException.printStackTrace();
         }
-
-
 
         return lMViews;
     }
@@ -526,6 +518,44 @@ public final class Crawler {
         }
         return indices;
     }
+
+//
+//    private List<Column> getMaterializedColumn(
+//            final List<String> viewNames,
+//            final Connection connection)
+//            throws SQLException {
+//        List<Column> lColumns = new ArrayList<>();
+//        String sqlQuery = "SELECT c.relname AS view_name, "
+//                + "a.attname AS column_name "
+//                + "FROM pg_class c "
+//                + "JOIN pg_attribute a ON a.attrelid = c.oid "
+//                + "WHERE c.relkind = 'm' "
+//                + "AND c.relname IN (%s)"
+//                + "AND a.attnum > 0 "
+//                + "AND NOT a.attisdropped;";
+//        String placeholders = String.join(",",
+//                viewNames.stream().map(v -> "?")
+//                        .toArray(String[]::new));
+//        sqlQuery = String.format(sqlQuery, placeholders);
+//        try (PreparedStatement preparedStatement =
+//                     connection
+//                             .prepareStatement(sqlQuery)) {
+//            for (int i = 0; i < viewNames.size(); i++) {
+//                preparedStatement.setString(i + 1, viewNames.get(i));
+//            }
+//            try (ResultSet rs = preparedStatement.executeQuery()) {
+//                while (rs.next()) {
+//                    String viewName = rs.getString("view_name");
+//                    String columnName = rs.getString("column_name");
+//                    System.out.println(
+//                            "View: " + viewName + ", Column: " + columnName);
+//                }
+//            }
+//        } catch (final SQLException aSQLException) {
+//            aSQLException.printStackTrace();
+//        }
+//        return new ArrayList<>();
+//    }
 
     /**
      * Gets columns.
@@ -637,7 +667,6 @@ public final class Crawler {
 
         bColumn.setOrdinalPosition(
                 lColumnResultSet.getInt("ORDINAL_POSITION"));
-
 
 
     }
@@ -752,6 +781,7 @@ public final class Crawler {
         procedure.setInputParameters(inputParameters);
         procedure.setOutputParameters(outputParameters);
     }
+
     /**
      * Repair.
      */
@@ -818,11 +848,11 @@ public final class Crawler {
         database.getTables().forEach(table -> {
             try (PreparedStatement preparedStatement =
                          databaseMetaData.getConnection()
-                    .prepareStatement("SELECT "
-                            +
-                            "COLUMN_NAME,COLUMN_TYPE  from INFORMATION_SCHEMA"
-                            + ".COLUMNS where\n"
-                            + " table_name = ?")) {
+                                 .prepareStatement("SELECT "
+                                         + "COLUMN_NAME,COLUMN_TYPE  "
+                                         + "from INFORMATION_SCHEMA"
+                                         + ".COLUMNS where\n"
+                                         + " table_name = ?")) {
                 preparedStatement.setString(1, table.getTableName());
                 ResultSet lResultSet = preparedStatement.executeQuery();
 
@@ -864,23 +894,24 @@ public final class Crawler {
             }
         });
     }
+
     /**
      * load the type details from db.
      */
-    public void loadTypes()  {
-        PreparedStatement preparedStatement = null;
-        try {
-            preparedStatement = databaseMetaData.getConnection()
+    public void loadTypes() {
+
+        try (PreparedStatement preparedStatement
+                     = databaseMetaData.getConnection()
                     .prepareStatement(
-                            " select n.nspname as enum_schema,  \n"
-                            + "    t.typname as enum_name,\n"
-                            + "    string_agg(e.enumlabel, ', ') "
-                            + "as enum_value\n"
-                            + "from pg_type t \n"
-                            + "    join pg_enum e on t.oid = e.enumtypid  \n"
-                            + "    join pg_catalog.pg_namespace n ON "
-                            + "n.oid = t.typnamespace\n"
-                            + "group by enum_schema, enum_name;");
+                " select n.nspname as enum_schema,  \n"
+                        + "    t.typname as enum_name,\n"
+                        + "    string_agg(e.enumlabel, ', ') "
+                        + "  as enum_value\n"
+                        + "  from pg_type t \n"
+                        + "  join pg_enum e on t.oid = e.enumtypid "
+                        + "  join pg_catalog.pg_namespace n ON "
+                        + "n.oid = t.typnamespace\n"
+                        + "group by enum_schema, enum_name;")) {
             ResultSet lResultSet = preparedStatement.executeQuery();
             if (!lResultSet.wasNull()) {
                 List<Type> types = new ArrayList<>();
