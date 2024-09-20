@@ -54,6 +54,7 @@ abstract class DataTypeTest<T> {
 
             application.setTablePatterns(List.of("my_table"));
             DATA_SOURCE = DataSourceUtil.getDataSource(application);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
