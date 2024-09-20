@@ -74,6 +74,10 @@ import java.util.stream.Collectors;
         <#include "method/${method}.ftl">
     </#list>
 
+    <#if table.tableType == 'MATERIALIZED VIEW' >
+        <#include "method/MViewRefresh.ftl">
+    </#if>
+
     <#if (returningProperties?size > 0) >
 
     private ${name} rowMapperForReturning(final ResultSet rs,final ${name} inserting${name}) throws <@throwsblock/>{
