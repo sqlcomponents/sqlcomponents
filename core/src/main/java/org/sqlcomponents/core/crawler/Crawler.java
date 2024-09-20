@@ -260,6 +260,9 @@ public final class Crawler {
                         tableName)));
         database.setFunctions(getProcedures());
         repair();
+
+        databaseMetaData.getConnection().close();
+
         return database;
     }
 

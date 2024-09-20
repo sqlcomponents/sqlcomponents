@@ -43,6 +43,7 @@ public static class SelectStatement {
         }
 
         public final List<${name}> execute() throws <@throwsblock/> {
+            List<${name}> arrays = new ArrayList();
 		final String query = <@compress single_line=true>"
                 SELECT
 		<@columnSelection properties=properties/> 
@@ -55,12 +56,13 @@ public static class SelectStatement {
                 PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
                 
                 ResultSet resultSet = preparedStatement.executeQuery();
-                                List<${name}> arrays = new ArrayList();
+                                
                 while (resultSet.next()) {
                                         arrays.add(this.${name?uncap_first}Store.rowMapper(resultSet));
                                 }
-                                return arrays;
+                                
                 } 
+                return arrays;
 	}
 
         public final int count() throws SQLException {
@@ -79,8 +81,9 @@ public static class SelectStatement {
                 while (resultSet.next()) {
                                         count = resultSet.getInt(1);
                                 }
-                                return count;
+                                
                 } 
+                return count;
 	}
 public final SelectQuery sql(final String sql) {
             return new SelectQuery(this, sql);

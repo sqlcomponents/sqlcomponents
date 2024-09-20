@@ -43,12 +43,14 @@ public static final class DeleteStatement {
         }
 
     public int execute() throws SQLException  {
+        int deletedRows = 0;
     	final String query = "DELETE FROM ${table.escapedName?j_string}" 
         + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
         try (java.sql.Connection dbConnection = this.${name?uncap_first}Store.dbDataSource.getConnection();
 			Statement statement = dbConnection.createStatement()) {
-            return statement.executeUpdate(query);
+            deletedRows = statement.executeUpdate(query);
         }
+        return deletedRows;
 	}
 
     public DeleteQuery sql(final String sql) {
@@ -74,6 +76,7 @@ public static final class DeleteStatement {
         }
 
         public int execute() throws SQLException {
+            int deletedRows = 0 ;
             try (java.sql.Connection dbConnection = this.deleteStatement.${name?uncap_first}Store.dbDataSource.getConnection();
                 PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
 
@@ -83,8 +86,9 @@ public static final class DeleteStatement {
                     value.set(preparedStatement, index++);
                 }
 
-                return preparedStatement.executeUpdate();
+                deletedRows = preparedStatement.executeUpdate();
             }
+            return deletedRows;
         }
 
 
