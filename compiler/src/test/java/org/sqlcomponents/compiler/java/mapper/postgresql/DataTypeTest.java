@@ -1,7 +1,5 @@
 package org.sqlcomponents.compiler.java.mapper.postgresql;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,9 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.postgresql.ds.PGPoolingDataSource;
+import org.postgresql.ds.PGSimpleDataSource;
 import org.sqlcomponents.compiler.java.JavaCompiler;
 import org.sqlcomponents.compiler.java.util.CompilerTestUtil;
+import org.sqlcomponents.core.crawler.util.DataSourceUtil;
 import org.sqlcomponents.core.model.Application;
 
 import javax.sql.DataSource;
@@ -30,6 +29,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -46,12 +46,14 @@ abstract class DataTypeTest<T> {
 
     static {
         try {
+            PGSimpleDataSource pgSimpleDataSource = new PGSimpleDataSource();
+
             application = CompilerTestUtil.getApplication();
 
             application.setSrcFolder(System.getProperty("java.io.tmpdir") + File.separator + System.currentTimeMillis());
 
             application.setTablePatterns(List.of("my_table"));
-            DATA_SOURCE = DATA_SOURCE(CompilerTestUtil.getApplication());
+            DATA_SOURCE = DataSourceUtil.getDataSource(application);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -79,6 +81,8 @@ abstract class DataTypeTest<T> {
                 URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(application.getSrcFolder()).toURI().toURL()});
                 // Load the class from the classloader by name....
                 Class<?> loadedClass = classLoader.loadClass("org.example.DataManager");
+
+
 
                 myTableClass = classLoader.loadClass("org.example.model.MyTable");
 
@@ -175,21 +179,6 @@ abstract class DataTypeTest<T> {
         preparedStatement.executeUpdate();
         preparedStatement.close();
         connection.close();
-    }
-
-    private static DataSource DATA_SOURCE(Application application) {
-
-        PGPoolingDataSource source = new PGPoolingDataSource();
-        source.setDataSourceName("A Data Source");
-        source.setServerNames(new String[] {
-                "localhost"
-        });
-        source.setDatabaseName("moviedb");
-        source.setUser("moviedb");
-        source.setPassword("moviedb");
-        source.setMaxConnections(1000);
-
-        return source;
     }
 
 }

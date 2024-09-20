@@ -21,7 +21,7 @@ public final class DataSourceUtil {
         config.setJdbcUrl(application.getUrl());
         config.setUsername(application.getUserName());
         config.setPassword(application.getPassword());
-        config.setSchema(application.getSchemaName());
+//        config.setSchema(application.getSchemaName());
         if (application.getUrl().contains(":postgresql:")) {
             config.setDriverClassName("org.postgresql.Driver");
         } else if (application.getUrl().contains(":h2:")) {
