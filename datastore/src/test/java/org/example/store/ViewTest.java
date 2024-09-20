@@ -36,6 +36,7 @@ class ViewTest {
     @BeforeEach
     void init() throws SQLException {
         this.movieStore.delete().execute();
+        this.materializedMovieViewStore.refresh();
         this.movieStore
                 .insert()
                 .values(new Movie(null, "Pulp Fiction", "Quentin Tarantino"),
@@ -52,7 +53,7 @@ class ViewTest {
         // Refresh the Materialized View
         this.materializedMovieViewStore.refresh();
         // Data as View is now refreshed
-        Assertions.assertEquals(0, this.materializedMovieViewStore.select().execute().size());
+        Assertions.assertEquals(2, this.materializedMovieViewStore.select().execute().size());
 
     }
 
