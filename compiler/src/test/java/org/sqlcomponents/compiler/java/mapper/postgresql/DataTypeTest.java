@@ -40,11 +40,17 @@ abstract class DataTypeTest<T> {
     private final Class<?> myTableClass;
 
     private final Object myTableStore;
-    
+
+    final static Application application;
     private static final DataSource DATA_SOURCE;
 
     static {
         try {
+            application = CompilerTestUtil.getApplication();
+
+            application.setSrcFolder(System.getProperty("java.io.tmpdir") + File.separator + System.currentTimeMillis());
+
+            application.setTablePatterns(List.of("my_table"));
             DATA_SOURCE = DATA_SOURCE(CompilerTestUtil.getApplication());
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -54,11 +60,7 @@ abstract class DataTypeTest<T> {
 
     DataTypeTest() {
         try {
-            final Application application = CompilerTestUtil.getApplication();
 
-            application.setSrcFolder(System.getProperty("java.io.tmpdir") + File.separator + System.currentTimeMillis());
-            
-            application.setTablePatterns(List.of("my_table"));
 
             dropTable(DATA_SOURCE);
             createTable(DATA_SOURCE);
@@ -185,7 +187,7 @@ abstract class DataTypeTest<T> {
         source.setDatabaseName("moviedb");
         source.setUser("moviedb");
         source.setPassword("moviedb");
-        source.setMaxConnections(10);
+        source.setMaxConnections(1000);
 
         return source;
     }
