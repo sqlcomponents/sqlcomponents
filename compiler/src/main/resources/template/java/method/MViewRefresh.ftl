@@ -1,5 +1,5 @@
-
-    public void refresh() throws SQLException {
+<#if table.tableType == 'MATERIALIZED_VIEW' >
+    public void refresh${pluralName}() throws SQLException {
 
 	}
-
+</#if>

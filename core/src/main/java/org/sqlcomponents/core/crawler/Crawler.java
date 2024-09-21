@@ -460,19 +460,29 @@ public final class Crawler {
         List<Table> lMViews = new ArrayList<>();
         try (PreparedStatement preparedStatement =
                      databaseMetaData.getConnection()
-                     .prepareStatement("select matviewname from pg_matviews "
-                             + "where matviewowner = ?")) {
-
-            preparedStatement.setString(1, aSchemeName);
-
+                             .prepareStatement("SELECT c.relname AS view_name,"
+                                     + " a.attname AS column_name"
+                                     + " FROM pg_class c\n"
+                                     + " JOIN pg_attribute a ON "
+                                     + "a.attrelid = c.oid\n"
+                                     + " WHERE c.relkind = 'm'\n"
+                                     + " AND c.relname IN (\n"
+                                     + "    SELECT relname\n"
+                                     + "    FROM pg_class\n"
+                                     + "    WHERE relkind = 'm'\n"
+                                     + ")\n"
+                                     + " AND a.attnum > 0\n"
+                                     + " AND NOT a.attisdropped;")) {
             ResultSet lResultSet = preparedStatement.executeQuery();
 
             while (lResultSet.next()) {
-                Table table = new Table(database);
-                table.setTableType(TableType.MATERIALIZED_VIEW);
-                table.setTableName(lResultSet.getString("matviewname"));
-                table.setColumns(getColumns(table));
-                lMViews.add(table);
+                System.out.println(lResultSet.getString("view_name"));
+                System.out.println(lResultSet.getArray("column_name"));
+//                Table table = new Table(database);
+//                table.setTableType(TableType.MATERIALIZED_VIEW);
+//                table.setTableName(lResultSet.getString("view_name"));
+//                table.setColumns(getMaterializedColumn(
+//                        List.of(table.getTableName()), connection));
             }
         } catch (final SQLException aSQLException) {
             aSQLException.printStackTrace();
