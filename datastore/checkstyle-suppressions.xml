@@ -4,8 +4,8 @@
         "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 <suppressions>
     <suppress files="[\\/]org[\\/]example[\\/]store" checks="JavadocPackage|UnusedImports|RedundantImport|LineLength|MissingJavadocMethod|NoWhitespaceBefore|WhitespaceAfter|JavadocVariable|JavadocStyle|WhitespaceAround|FinalParameters|HiddenField|RegexpSingleline|LeftCurly|FileTabCharacter|JavadocMethod|ParenPad|NeedBraces|MethodParamPad|RedundantModifier|"/>
-    <suppress files="[\\/]org[\\/]example[\\/]model" checks="JavadocPackage|MissingJavadocMethod|RegexpSingleline|HiddenField|FileTabCharacter|NoWhitespaceBefore|FileLength|ParameterNumber"/>
+    <suppress files="[\\/]org[\\/]example[\\/]model" checks="FileTabCharacter|FileLength|ParameterNumber"/>
 
-    <suppress checks="ParenPad|FinalClass|DesignForExtension|JavadocPackage|RegexpSingleline|RedundantModifier|JavadocVariable|NoWhitespaceBefore|WhitespaceAfter|LineLength|MissingJavadocMethod|HiddenField|WhitespaceAround|LeftCurly|FinalParameters|MagicNumber|ParameterNumber"
+    <suppress checks="ParenPad|FinalClass|MagicNumber"
               files="DataManager"/>
 </suppressions>
