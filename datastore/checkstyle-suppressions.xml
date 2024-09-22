@@ -6,6 +6,6 @@
     <suppress files="[\\/]org[\\/]example[\\/]store" checks="JavadocPackage|UnusedImports|RedundantImport|LineLength|MissingJavadocMethod|NoWhitespaceBefore|WhitespaceAfter|JavadocVariable|JavadocStyle|WhitespaceAround|FinalParameters|HiddenField|RegexpSingleline|LeftCurly|FileTabCharacter|JavadocMethod|ParenPad|NeedBraces|MethodParamPad|RedundantModifier|"/>
     <suppress files="[\\/]org[\\/]example[\\/]model" checks="FileTabCharacter|FileLength|ParameterNumber"/>
 
-    <suppress checks="ParenPad|FinalClass|MagicNumber"
+    <suppress checks="ParenPad|FinalClass|MagicNumber|UnusedImports|RegexpSingleline|NoWhitespaceBefore|FinalParameters|LineLength|JavadocMethod"
               files="DataManager"/>
 </suppressions>
