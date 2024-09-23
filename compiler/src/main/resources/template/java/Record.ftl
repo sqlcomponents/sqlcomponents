@@ -1,5 +1,5 @@
 <#include "base.ftl">
-<#if beanPackage?? && beanPackage?length != 0 >package ${beanPackage};</#if>
+<#if beanPackage?? && beanPackage?length != 0 > package ${beanPackage};</#if>
 
 <#assign capturedOutput>
 <#if table.remarks?exists>
@@ -21,10 +21,10 @@ public record ${name}(<#list properties as property>
         <#list properties as property>
 
     /**
-     * gets value of column - the${property.name?cap_first}.
-	 * @param the${property.name?cap_first}
-     * @return the${property.name?cap_first}
-     */
+    * gets value of column - the${property.name?cap_first}.
+    * @param the${property.name?cap_first}
+    * @return the${property.name?cap_first}
+    */
     public ${name} with${property.name?cap_first}(final ${getClassName(property.dataType)} the${property.name?cap_first}) {
         return new ${name}(
             <#assign index=1>
