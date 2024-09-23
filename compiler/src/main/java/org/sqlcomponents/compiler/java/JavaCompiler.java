@@ -46,7 +46,7 @@ public final class JavaCompiler implements Compiler {
     public JavaCompiler() throws IOException {
         managerFTLTemplate = new FTLTemplate<>("template/java/Manager.ftl");
         storeFTLTemplate = new FTLTemplate<>("template/java/Store.ftl");
-        modelFTLTemplate = new FTLTemplate<>("template/java/Model.ftl");
+        modelFTLTemplate = new FTLTemplate<>("template/java/Record.ftl");
     }
 
     @Override

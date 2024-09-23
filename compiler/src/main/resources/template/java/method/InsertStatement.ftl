@@ -90,12 +90,12 @@
                 <#if index == 0>
                 <#if sequenceName?? && property.column.primaryKeyIndex == 1>
                 <#else>
-                ${property.name?uncap_first}(${name?uncap_first+".get"+property.name?cap_first + "()"}).set(preparedStatement,i++);
+                ${property.name?uncap_first}(${name?uncap_first+"."+property.name + "()"}).set(preparedStatement,i++);
                 <#assign column_index = column_index + 1>
                 </#if>
                 <#assign index=1>
                 <#else>
-                ${property.name?uncap_first}(${name?uncap_first+".get"+property.name?cap_first + "()"}).set(preparedStatement,i++);
+                ${property.name?uncap_first}(${name?uncap_first+"."+property.name + "()"}).set(preparedStatement,i++);
                 <#assign column_index = column_index + 1>
                 </#if>
             </#if>
