@@ -2,7 +2,6 @@ package org.example.store;
 
 import org.example.DataManager;
 import org.example.model.Movie;
-import org.example.model.MovieView;
 import org.example.util.DataSourceProvider;
 import org.example.util.EncryptionUtil;
 import org.junit.jupiter.api.Assertions;
@@ -10,12 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
-
-import static org.example.store.MovieViewStore.directedBy;
-import static org.example.store.MovieViewStore.id;
-import static org.example.store.MovieViewStore.title;
 
 class ViewTest {
     private final MovieStore movieStore;
@@ -30,7 +23,7 @@ class ViewTest {
         this.movieViewStore = dataManager.getMovieViewStore();
         this.movieStore = dataManager.getMovieStore();
         this.materializedMovieViewStore = dataManager
-                .getMaterializedMovieViewStore();
+               .getMaterializedMovieViewStore();
     }
 
     @BeforeEach

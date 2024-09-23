@@ -62,6 +62,7 @@ public final class JavaCompiler implements Compiler {
                 aApplication.getRootPackage());
         new File(packageFolder).mkdirs();
         try {
+            createPackageInfoFile(aApplication.getRootPackage(), packageFolder);
             Files.write(
                     new File(packageFolder + File.separator
                             + "DataManager"
@@ -131,6 +132,7 @@ public final class JavaCompiler implements Compiler {
         String packageFolder =
                 getPackageAsFolder(srcFolder, entity.getDaoPackage());
         new File(packageFolder).mkdirs();
+        createPackageInfoFile(entity.getDaoPackage(), packageFolder);
         Files.write(new File(
                         packageFolder + File.separator + entity.getName()
                                 + "Store"
@@ -141,9 +143,9 @@ public final class JavaCompiler implements Compiler {
     /**
      * Write bean specification.
      *
-     * @param aEntity    the a entity
+     * @param aEntity the a entity
      * @param aSrcFolder the a src folder
-     * @throws IOException       the io exception
+     * @throws IOException the io exception
      * @throws TemplateException the template exception
      */
     private void writeBeanSpecification(final Entity aEntity,
@@ -153,11 +155,14 @@ public final class JavaCompiler implements Compiler {
                 getPackageAsFolder(aSrcFolder, aEntity.getBeanPackage());
         new File(packageFolder).mkdirs();
 
+        createPackageInfoFile(aEntity.getBeanPackage(), packageFolder);
+
         Files.write(new File(
                         packageFolder + File.separator + aEntity.getName()
                                 + DOT_JAVA).toPath(),
                 getJavaContent(
                         modelFTLTemplate.getContent(aEntity)).getBytes());
+
     }
 
     /**
@@ -189,5 +194,16 @@ public final class JavaCompiler implements Compiler {
             }
         }
         return aRootDir + CoreConsts.BACK_SLASH + lFilePath;
+    }
+
+    private void createPackageInfoFile(final String packageName,
+                                      final String packageFolder)
+            throws IOException {
+        File packageInfoFile = new File(packageFolder
+                + File.separator + "package-info"
+                + DOT_JAVA);
+        Files.write(packageInfoFile.toPath(),
+                String.format("package %s;\n", packageName).getBytes());
+
     }
 }

@@ -8,6 +8,8 @@ import org.sqlcomponents.core.utils.CoreConsts;
 
 import java.io.File;
 import java.io.FileReader;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 class CrawlerTest {
@@ -42,6 +44,9 @@ class CrawlerTest {
                     props.getProperty(databaseType + ".datasource.password"));
             application.setSchemaName(
                     props.getProperty(databaseType + ".datasource.schema"));
+
+            application.setTablePatterns(List.of("^(?!pg_).*","^(?!_pg_).*"));
+
         } else {
             application = CoreConsts.buildApplication(
                     new File(System.getenv("SQLCOMPONENTS_CONFIG")));
