@@ -68,7 +68,7 @@
             <#list updatableProperties as property>
                 <#if containsProperty(property,orm.updateMap)>
                     <#if property.column.primaryKeyIndex == 0>
-                    <#if index == 0><#assign index=1><#else></#if>${property.name?uncap_first}(${name?uncap_first+".get"+property.name?cap_first + "()"}).set(preparedStatement,${column_index});
+                    <#if index == 0><#assign index=1><#else></#if>${property.name?uncap_first}(${name?uncap_first+"."+property.name + "()"}).set(preparedStatement,${column_index});
                                                                                 <#assign column_index = column_index + 1>
                     </#if>
                 </#if>
