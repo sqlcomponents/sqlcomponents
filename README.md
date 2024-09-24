@@ -39,6 +39,10 @@ Clean Code
 13. https://www.infoq.com/news/2022/04/red-hat-releases-hibernate-6/
 14. https://www.youtube.com/watch?v=ykoUBctblno
 15. https://www.youtube.com/watch?v=XaC1rQZ_LKs
+16. https://medium.com/@jerolba/persisting-fast-in-database-1af4a281e3a
+17. https://medium.com/@jerolba/persisting-fast-in-database-jdbc-76912ec2ef42
+18. https://medium.com/@jerolba/persisting-fast-in-database-load-data-and-copy-caf645a62909
+19. 
 
 ## Related
 
