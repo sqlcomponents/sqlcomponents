@@ -65,7 +65,9 @@ public final class DataManager {
 </#if>
 
     <#assign a=addImportStatement("javax.sql.DataSource")>
+
     <#list orm.entities as entity>
+    <#if !entity.type?? >
     public final ${entity.name}Store get${entity.name}Store() {
         return this.${entity.name?uncap_first}Store;
     }
