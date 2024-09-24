@@ -13,4 +13,5 @@ class JavaCompilerTest {
         System.out.println(
                 "Code is compiled into " + application.getSrcFolder());
     }
+
 }

@@ -96,7 +96,5 @@
             <version>${javax.json-api.version}</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
-
 </project>

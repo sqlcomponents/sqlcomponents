@@ -6,7 +6,6 @@
     <suppress files="[\\/]org[\\/]example[\\/]store" checks=""/>
     <suppress files="[\\/]org[\\/]example[\\/]model" checks="FileLength"/>
 
-    <suppress
-            checks="ParenPad|FinalClass|FinalParameters|MagicNumber|UnusedImports|RegexpSingleline|NoWhitespaceBefore|LineLength|JavadocMethod|ParameterNumber"
-            files="DataManager"/>
+    <suppress checks="ParenPad|FinalClass|FinalParameters|MagicNumber|UnusedImports|RegexpSingleline|NoWhitespaceBefore|LineLength|JavadocMethod|ParameterNumber"
+              files="DataManager"/>
 </suppressions>
