@@ -26,11 +26,8 @@ public record ${name}(<#list properties as property>
     * @return the${property.name?cap_first}
     */
     public ${name} with${property.name?cap_first}(final ${getClassName(property.dataType)} the${property.name?cap_first}) {
-        return new ${name}(
-            <#assign index=1>
-            <#list properties as iProperty
-                ><#if index != 1
-                >,
+        return new ${name}(<#assign index=1>
+                <#list properties as iProperty><#if index != 1>,
                 </#if><#if property.name == iProperty.name>the${property.name?cap_first}<#else>${iProperty.name}</#if
                 ><#assign index = index + 1
                 ></#list>);
