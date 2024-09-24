@@ -9,8 +9,9 @@ public final class DataManager {
     <#if !multipleManagers>
     private static DataManager dataManager;
     </#if>
-
-
+    /**
+    * observer variable.
+    */
     private final Observer observer;
     /**
     * procedure variable.
@@ -57,10 +58,10 @@ public final class DataManager {
      * @return dataManager
      */
     <#if !multipleManagers>
-    public static final DataManager getManager(final DataSource dbDataSource
+    public static DataManager getManager(final DataSource dbDataSource
     <#if encryption?has_content  >
     <#assign a=addImportStatement("javax.sql.DataSource")>
-     final Function<String, String> encryptionFunction,
+     , final Function<String, String> encryptionFunction,
      final Function<String, String> decryptionFunction
     </#if>
                                                             ) {
@@ -79,7 +80,7 @@ public final class DataManager {
     <#assign a=addImportStatement("javax.sql.DataSource")>
     <#list orm.entities as entity>
     <#if !entity.type?? >
-    public final ${entity.name}Store get${entity.name}Store() {
+    public ${entity.name}Store get${entity.name}Store() {
         return this.${entity.name?uncap_first}Store;
     }
     </#if>
