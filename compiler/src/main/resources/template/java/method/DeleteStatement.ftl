@@ -20,25 +20,25 @@ public int delete(${getPrimaryKeysAsParameterString()}) throws SQLException  {
     <#assign a=addImportStatement("java.sql.PreparedStatement")>
 
 public DeleteStatement delete(WhereClause whereClause) {
-    return new DeleteStatement(this,whereClause);
+    return new DeleteStatement(this.dbDataSource,whereClause);
 }
 
 public DeleteStatement delete() {
-    return new DeleteStatement(this,null);
+    return new DeleteStatement(this.dbDataSource,null);
 }
 
 public static final class DeleteStatement {
 
-    private final ${name}Store ${name?uncap_first}Store;
+    private final javax.sql.DataSource dbDataSource;
     private final WhereClause whereClause;
 
-    private DeleteStatement(final ${name}Store ${name?uncap_first}Store) {
-            this(${name?uncap_first}Store,null);
+    private DeleteStatement(final javax.sql.DataSource dbDataSource) {
+            this(dbDataSource,null);
         }
 
-        private DeleteStatement(final ${name}Store ${name?uncap_first}Store
+        private DeleteStatement(final javax.sql.DataSource dbDataSource
                 ,final WhereClause whereClause) {
-            this.${name?uncap_first}Store = ${name?uncap_first}Store;
+            this.dbDataSource = dbDataSource;
             this.whereClause = whereClause;
         }
 
@@ -46,7 +46,7 @@ public static final class DeleteStatement {
         int deletedRows = 0;
     	final String query = "DELETE FROM ${table.escapedName?j_string}" 
         + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
-        try (java.sql.Connection dbConnection = this.${name?uncap_first}Store.dbDataSource.getConnection();
+        try (java.sql.Connection dbConnection = this.dbDataSource.getConnection();
 			Statement statement = dbConnection.createStatement()) {
             deletedRows = statement.executeUpdate(query);
         }
@@ -77,7 +77,7 @@ public static final class DeleteStatement {
 
         public int execute() throws SQLException {
             int deletedRows = 0 ;
-            try (java.sql.Connection dbConnection = this.deleteStatement.${name?uncap_first}Store.dbDataSource.getConnection();
+            try (java.sql.Connection dbConnection = this.deleteStatement.dbDataSource.getConnection();
                 PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
 
                     int index = 1;
