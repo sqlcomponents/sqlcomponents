@@ -188,10 +188,11 @@ public abstract class Mapper {
             lEntities.add(lEntity);
         }
         for (Type type : lDatabase.getTypes()) {
-            Entity entity = new Entity(application.getOrm());
+            Table table = new Table(application.getOrm().getDatabase());
+            table.setTableName(type.getTypeName());
+            Entity entity = new Entity(application.getOrm(), table);
             entity.setName(getEntityName(type.getTypeName()));
             entity.setPluralName(getPluralName(entity.getName()));
-            entity.setDaoPackage(getDaoPackage(type.getTypeName()));
             entity.setBeanPackage(getBeanPackage(type.getTypeName()));
             entity.setValues(type.getValues());
             entity.setType(type.getTypeType().name());

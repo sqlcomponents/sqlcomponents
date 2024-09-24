@@ -10,6 +10,7 @@ import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.Entity;
 import org.sqlcomponents.core.model.ORM;
+import org.sqlcomponents.core.model.relational.enums.TypeType;
 import org.sqlcomponents.core.utils.CoreConsts;
 
 import java.io.File;
@@ -37,6 +38,10 @@ public final class JavaCompiler implements Compiler {
      * The Model ftl template.
      */
     private final FTLTemplate<Entity> modelFTLTemplate;
+    /**
+     * The Enum ftl template.
+     */
+    private final FTLTemplate<Entity> enumFTLTemplate;
 
     /**
      * Instantiates a new Java compiler.
@@ -47,6 +52,7 @@ public final class JavaCompiler implements Compiler {
         managerFTLTemplate = new FTLTemplate<>("template/java/Manager.ftl");
         storeFTLTemplate = new FTLTemplate<>("template/java/Store.ftl");
         modelFTLTemplate = new FTLTemplate<>("template/java/Record.ftl");
+        enumFTLTemplate = new FTLTemplate<>("template/java/Enum.ftl");
     }
 
     @Override
@@ -75,12 +81,29 @@ public final class JavaCompiler implements Compiler {
 
         orm.getEntities().parallelStream().forEach(entity -> {
             try {
-                writeDaoImplementation(entity, aApplication.getSrcFolder());
-                writeBeanSpecification(entity, aApplication.getSrcFolder());
+                if (TypeType.e.toString() == entity.getType()) {
+                    writeTypesBean(entity, aApplication.getSrcFolder());
+                } else {
+                    writeDaoImplementation(entity, aApplication.getSrcFolder());
+                    writeBeanSpecification(entity, aApplication.getSrcFolder());
+                }
             } catch (final IOException | TemplateException e) {
                 e.printStackTrace();
             }
         });
+    }
+
+    private void writeTypesBean(final Entity entity, final String srcFolder)
+            throws IOException, TemplateException {
+        String packageFolder =
+                getPackageAsFolder(srcFolder, entity.getBeanPackage());
+        new File(packageFolder).mkdirs();
+        createPackageInfoFile(entity.getBeanPackage(), packageFolder);
+        Files.write(new File(
+                        packageFolder + File.separator + entity.getName()
+                                + "Type"
+                                + DOT_JAVA).toPath(),
+                getJavaContent(enumFTLTemplate.getContent(entity)).getBytes());
     }
 
     /**
@@ -127,15 +150,18 @@ public final class JavaCompiler implements Compiler {
     private void writeDaoImplementation(final Entity entity,
                                         final String srcFolder)
             throws IOException, TemplateException {
-        String packageFolder =
-                getPackageAsFolder(srcFolder, entity.getDaoPackage());
-        new File(packageFolder).mkdirs();
-        createPackageInfoFile(entity.getDaoPackage(), packageFolder);
-        Files.write(new File(
-                        packageFolder + File.separator + entity.getName()
-                                + "Store"
-                                + DOT_JAVA).toPath(),
-                getJavaContent(storeFTLTemplate.getContent(entity)).getBytes());
+        if (TypeType.e.toString() != entity.getType()) {
+            String packageFolder =
+                    getPackageAsFolder(srcFolder, entity.getDaoPackage());
+            new File(packageFolder).mkdirs();
+            createPackageInfoFile(entity.getDaoPackage(), packageFolder);
+            Files.write(new File(
+                            packageFolder + File.separator + entity.getName()
+                                    + "Store"
+                                    + DOT_JAVA).toPath(),
+                    getJavaContent(
+                            storeFTLTemplate.getContent(entity)).getBytes());
+        }
     }
 
     /**
@@ -149,17 +175,20 @@ public final class JavaCompiler implements Compiler {
     private void writeBeanSpecification(final Entity aEntity,
                                         final String aSrcFolder)
             throws IOException, TemplateException {
-        String packageFolder =
-                getPackageAsFolder(aSrcFolder, aEntity.getBeanPackage());
-        new File(packageFolder).mkdirs();
+        if (TypeType.e.toString() != aEntity.getType()) {
 
-        createPackageInfoFile(aEntity.getBeanPackage(), packageFolder);
+            String packageFolder =
+                    getPackageAsFolder(aSrcFolder, aEntity.getBeanPackage());
+            new File(packageFolder).mkdirs();
 
-        Files.write(new File(
-                        packageFolder + File.separator + aEntity.getName()
-                                + DOT_JAVA).toPath(),
-                getJavaContent(
-                        modelFTLTemplate.getContent(aEntity)).getBytes());
+            createPackageInfoFile(aEntity.getBeanPackage(), packageFolder);
+
+            Files.write(new File(
+                            packageFolder + File.separator + aEntity.getName()
+                                    + DOT_JAVA).toPath(),
+                    getJavaContent(
+                            modelFTLTemplate.getContent(aEntity)).getBytes());
+        }
     }
 
     /**
