@@ -46,7 +46,7 @@ public final class JavaCompiler implements Compiler {
     public JavaCompiler() throws IOException {
         managerFTLTemplate = new FTLTemplate<>("template/java/Manager.ftl");
         storeFTLTemplate = new FTLTemplate<>("template/java/Store.ftl");
-        modelFTLTemplate = new FTLTemplate<>("template/java/Model.ftl");
+        modelFTLTemplate = new FTLTemplate<>("template/java/Record.ftl");
     }
 
     @Override
@@ -74,8 +74,10 @@ public final class JavaCompiler implements Compiler {
 
         orm.getEntities().parallelStream().forEach(entity -> {
             try {
-                writeDaoImplementation(entity, aApplication.getSrcFolder());
-                writeBeanSpecification(entity, aApplication.getSrcFolder());
+                if (!"e".equalsIgnoreCase(entity.getType())) {
+                    writeDaoImplementation(entity, aApplication.getSrcFolder());
+                    writeBeanSpecification(entity, aApplication.getSrcFolder());
+                }
             } catch (final IOException | TemplateException e) {
                 e.printStackTrace();
             }

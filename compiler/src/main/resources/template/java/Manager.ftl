@@ -8,14 +8,18 @@ public final class DataManager {
     private static DataManager dataManager;
     </#if>
 
-
+    /**
+    * observer variable.
+    */
     private final Observer observer;
 
     private final Procedure procedure;
 
     <#list orm.entities as entity>
+    <#if !entity.type?? >
     <#assign a=addImportStatement(entity.daoPackage + "." + entity.name + "Store")>
     private final ${entity.name}Store ${entity.name?uncap_first}Store;
+    </#if>
     </#list>
 
 <#if multipleManagers>public <#else>private</#if> DataManager(final javax.sql.DataSource dbDataSource
@@ -29,13 +33,14 @@ public final class DataManager {
         this.procedure = new Procedure(dbDataSource);
         
         <#list orm.entities as entity>
-        this.${entity.name?uncap_first}Store = ${entity.name}Store.get${entity.name}Store(dbDataSource,this.observer
-        
-        <#if entity.containsEncryptedProperty() >
-            ,encryptionFunction
-            , decryptionFunction
+        <#if !entity.type?? >
+        this.${entity.name?uncap_first}Store = ${entity.name}Store
+.get${entity.name}Store(dbDataSource, this.observer<#if entity.containsEncryptedProperty() >,
+             encryptionFunction,
+             decryptionFunction
         </#if>
         );
+        </#if>
         </#list>
     }
     <#if !multipleManagers>
@@ -64,6 +69,7 @@ public final class DataManager {
     public final ${entity.name}Store get${entity.name}Store() {
         return this.${entity.name?uncap_first}Store;
     }
+    </#if>
     </#list>
 
 <#list orm.database.distinctCustomColumnTypeNames as typeName>

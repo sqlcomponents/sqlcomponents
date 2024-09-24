@@ -161,7 +161,7 @@ abstract class DataTypeTest<T> {
     }
 
     private Object getValue(final Object myTable) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        return myTable.getClass().getMethod("getMyValue").invoke(myTable);
+        return myTable.getClass().getMethod("myValue").invoke(myTable);
     }
 
     private void createTable(final DataSource DATA_SOURCE) throws SQLException {

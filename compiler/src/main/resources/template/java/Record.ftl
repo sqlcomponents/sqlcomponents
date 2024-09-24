@@ -8,7 +8,7 @@
  <#else>
  /**
   * Data Holder for the table - ${table.tableName}.
-</#if>git
+</#if>
 <#list properties as property><#assign a=addImportStatement(property.dataType)>
     *@param ${property.name} ${getClassName(property.dataType)}.
 </#list>

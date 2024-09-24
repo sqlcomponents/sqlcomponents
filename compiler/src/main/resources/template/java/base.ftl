@@ -95,7 +95,7 @@
 				<#local pkAsParameterStr = pkAsParameterStr + "," >
 			</#if>
 
-			<#local pkAsParameterStr = pkAsParameterStr + nameOfObject + ".get"+ property.name?cap_first + "()" >
+			<#local pkAsParameterStr = pkAsParameterStr + nameOfObject + "."+ property.name + "()" >
             <#local a=addImportStatement(property.dataType)>
 		</#if>
 	</#list>

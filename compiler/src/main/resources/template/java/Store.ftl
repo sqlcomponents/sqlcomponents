@@ -91,7 +91,7 @@ import java.util.stream.Collectors;
         ${property.name}().get(rs,${index})
         <#assign index = index + 1>
         <#else>
-        inserting${name}.get${property.name?cap_first}()
+        inserting${name}.${property.name}()
         </#if>
         
         <#assign comma=1>

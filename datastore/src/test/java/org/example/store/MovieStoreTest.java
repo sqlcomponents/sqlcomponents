@@ -93,6 +93,6 @@ class MovieStoreTest {
                 .select()
                 .where(title().eq("Fight Club")).execute();
 
-        Assertions.assertEquals("Martyn Scorsese", movies.get(0).getDirectedBy());
+        Assertions.assertEquals("Martyn Scorsese", movies.get(0).directedBy());
     }
 }

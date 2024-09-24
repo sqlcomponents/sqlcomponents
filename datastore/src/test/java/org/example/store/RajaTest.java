@@ -65,20 +65,20 @@ class RajaTest {
 
         this.connectionStore.insert().values(connection).execute();
 
-        Assertions.assertFalse(this.connectionStore.select(connection.getCode(),
+        Assertions.assertFalse(this.connectionStore.select(connection.code(),
                         ConnectionStore.name().isNull()).isPresent(),
                 "Get Unique Value Execution");
 
-        Assertions.assertTrue(this.connectionStore.select(connection.getCode(),
+        Assertions.assertTrue(this.connectionStore.select(connection.code(),
                         ConnectionStore.name().isNotNull()).isPresent(),
                 "Get Unique Value Execution");
 
-        Assertions.assertFalse(this.connectionStore.select(connection.getCode(),
+        Assertions.assertFalse(this.connectionStore.select(connection.code(),
                         ConnectionStore.name().eq(new Date().toString())).isPresent(),
                 "Get Unique Value Execution");
 
-        Assertions.assertTrue(this.connectionStore.select(connection.getCode(),
-                        ConnectionStore.name().eq(connection.getName())).isPresent(),
+        Assertions.assertTrue(this.connectionStore.select(connection.code(),
+                        ConnectionStore.name().eq(connection.name())).isPresent(),
                 "Get Unique Value Execution");
     }
 
@@ -98,10 +98,10 @@ class RajaTest {
                 this.connectionStore.insert().values(connection).execute();
 
         Optional<Connection> connection2 =
-                this.connectionStore.selectByName(connection.getName());
+                this.connectionStore.selectByName(connection.name());
 
-        Assertions.assertEquals(connection.getCode(),
-                connection2.get().getCode(), "Get Unique Value Execution");
+        Assertions.assertEquals(connection.code(),
+                connection2.get().code(), "Get Unique Value Execution");
     }
 
     @Test
@@ -110,10 +110,10 @@ class RajaTest {
         Integer noOfInsertedRajaRefs =
                 this.connectionStore.insert().values(connection).execute();
 
-        Assertions.assertTrue(this.connectionStore.exists(connection.getCode()),
+        Assertions.assertTrue(this.connectionStore.exists(connection.code()),
                 "Exists by PK");
         Assertions.assertTrue(
-                this.connectionStore.existsByName(connection.getName()),
+                this.connectionStore.existsByName(connection.name()),
                 "Exists by Unique Key");
     }
 
@@ -134,13 +134,13 @@ class RajaTest {
                         .returning();
 
         Raja azaguRaja = azaguRajasToTest.get(0);
-        azaguRaja = azaguRaja.withReferenceCode(connection.getCode());
+        azaguRaja = azaguRaja.withReferenceCode(connection.code());
 
         Raja raja =
                 this.allInAllRajaStore.insert().values(azaguRaja)
                         .returning();
-        Assertions.assertEquals(azaguRaja.getReferenceCode(),
-                raja.getReferenceCode(),
+        Assertions.assertEquals(azaguRaja.referenceCode(),
+                raja.referenceCode(),
                 "Single Insert Returning");
     }
 
@@ -172,12 +172,12 @@ class RajaTest {
 
         Raja insertedRaja = this.allInAllRajaStore.insert()
                 .values(azaguRajasToTest.get(0)).returning();
-        Assertions.assertEquals(4, insertedRaja.getAInteger(),
+        Assertions.assertEquals(4, insertedRaja.aInteger(),
                 "Insert Map with Table and Column");
         // this.allInAllRajaStore.update(insertedRaja);
         // insertedRaja = this.allInAllRajaStore.select
         // (insertedRaja.getId()).get();
-        // Assertions.assertEquals(5, insertedRaja.getAInteger(),
+        // Assertions.assertEquals(5, insertedRaja.aInteger(),
         // "Insert Map with Table and Column");
 
     }
@@ -191,7 +191,7 @@ class RajaTest {
         Raja insertedRaja = this.allInAllRajaStore.insert()
                 .values(azaguRajasToTest.get(0)).returning();
         Assertions.assertEquals("AEncryptedText",
-                insertedRaja.getAEncryptedText(),
+                insertedRaja.aEncryptedText(),
                 "Insert Map with Table and Column");
 
     }
@@ -215,9 +215,15 @@ class RajaTest {
                 this.allInAllRajaStore.select().where(whereClause).count(),
                 "Multi Delete Where Clause");
 
+<<<<<<< HEAD
         Assertions.assertEquals(1,
                 this.connectionStore.delete(connectionsToTest.get(0).getCode()),
                 "Delete By Id");
+=======
+//        Assertions.assertEquals(1,
+//                this.connectionStore.delete(connectionsToTest.get(0).code()),
+//                "Delete By Id");
+>>>>>>> 52a6371c40a6d45c5e94e57bf459b00e3134f691
     }
 
     @Test
@@ -235,7 +241,7 @@ class RajaTest {
     void testSingleValueUpdateWithWhere() throws SQLException {
         Connection connection = this.connectionStore.insert()
                 .values(this.connectionsToTest.get(0)).returning();
-        final String originalName = connection.getName();
+        final String originalName = connection.name();
 
         Assertions.assertEquals(1, this.connectionStore
                         .update()
@@ -251,7 +257,7 @@ class RajaTest {
         Connection connection = this.connectionStore.insert()
                 .values(this.connectionsToTest.get(0)).returning();
 
-        final String originalName = connection.getName();
+        final String originalName = connection.name();
 
         connection = connection.withName("Changed");
 
@@ -274,14 +280,14 @@ class RajaTest {
     void testSelectOptional() throws SQLException {
         Connection connection = this.connectionStore.insert()
                 .values(this.connectionsToTest.get(0)).returning();
-        final String originalName = connection.getName();
+        final String originalName = connection.name();
         Optional<Connection> optionalConnection = this.connectionStore
                 .select().sql("SELECT code,name FROM \"connection\" WHERE name = ?")
                 .param(ConnectionStore.name(originalName))
                 .optional();
 
-        Assertions.assertEquals(connection.getCode(),
-                optionalConnection.get().getCode(),
+        Assertions.assertEquals(connection.code(),
+                optionalConnection.get().code(),
                 "Single Update Execution");
     }
 
@@ -289,14 +295,14 @@ class RajaTest {
     void testSelectList() throws SQLException {
         Connection connection = this.connectionStore.insert()
                 .values(this.connectionsToTest.get(0)).returning();
-        final String originalName = connection.getName();
+        final String originalName = connection.name();
         List<Connection> optionalConnection = this.connectionStore
                 .select().sql("SELECT code,name FROM \"connection\" WHERE name = ?")
                 .param(ConnectionStore.name(originalName))
                 .list();
 
-        Assertions.assertEquals(connection.getCode(),
-                optionalConnection.get(0).getCode(),
+        Assertions.assertEquals(connection.code(),
+                optionalConnection.get(0).code(),
                 "Single Update Execution");
     }
 
@@ -311,7 +317,7 @@ class RajaTest {
                         azaguRajasToTest.get(1),
                         azaguRajasToTest.get(2))).returning();
 
-        UUID rajaCode = azaguRajasToTest.get(0).getReferenceCode();
+        UUID rajaCode = azaguRajasToTest.get(0).referenceCode();
 
         Optional<Connection> optionalConnection = this.connectionStore
                 .select().sql("SELECT code,name FROM \"connection\" WHERE code = ?")
@@ -319,7 +325,7 @@ class RajaTest {
                 .optional();
 
         Assertions.assertEquals(rajaCode,
-                optionalConnection.get().getCode(),
+                optionalConnection.get().code(),
                 "Single Update Execution");
     }
 
@@ -333,7 +339,7 @@ class RajaTest {
                         azaguRajasToTest.get(1),
                         azaguRajasToTest.get(2))).returning();
 
-        UUID rajaCode = azaguRajasToTest.get(0).getReferenceCode();
+        UUID rajaCode = azaguRajasToTest.get(0).referenceCode();
 
         int updateRows = this.allInAllRajaStore.update()
                 .sql("UPDATE raja SET a_text=? WHERE reference_code = ?")

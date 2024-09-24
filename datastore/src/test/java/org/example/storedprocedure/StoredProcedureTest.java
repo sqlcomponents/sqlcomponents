@@ -31,6 +31,7 @@ class StoredProcedureTest {
         this.cacheStore.delete().execute();
     }
 
+<<<<<<< HEAD
     @Test
     void basicCall() throws SQLException {
         dataManager.call().createCache("Name", "Raja");
@@ -40,6 +41,17 @@ class StoredProcedureTest {
         Assertions.assertEquals(cacheList.get(0).getCode(),"Name");
         Assertions.assertEquals(cacheList.get(0).getCache(),"Raja");
     }
+=======
+ //   @Test
+//    void basicCall() throws SQLException {
+//  //      dataManager.call().createCache("Name", "Raja");
+//        CacheStore.WhereClause whereClause= CacheStore.code().eq("Name");
+//        List<Cache> cacheList = dataManager.getCacheStore().select().where(whereClause).execute();
+//   //     Assertions.assertEquals(1, cacheList.size());
+//    //    Assertions.assertEquals(cacheList.get(0).code(),"Name");
+//    //    Assertions.assertEquals(cacheList.get(0).getCache(),"Raja");
+//    }
+>>>>>>> 52a6371c40a6d45c5e94e57bf459b00e3134f691
 
     @Test
     void addFunction() throws SQLException {
