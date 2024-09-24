@@ -145,12 +145,12 @@ public class Property {
         Map<String, String> insertMap =
                 getEntity().getOrm().getApplication()
                         .getInsertMap();
-        String mapped = insertMap
-                .get(getColumn().getColumnName());
+        String mapped = insertMap != null ? insertMap
+                .get(getColumn().getColumnName()) : null;
         String specificTableMapped =
-                insertMap.get(String.format("%s#%s",
+                insertMap != null ? insertMap.get(String.format("%s#%s",
                         getEntity().getTable().getTableName(),
-                        getColumn().getColumnName()));
+                        getColumn().getColumnName())) : null;
         if (mapped != null || specificTableMapped != null) {
             isReturning = true;
         }

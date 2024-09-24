@@ -137,7 +137,8 @@ public class Entity {
                                     final Map<String, String> map) {
         String combinedKey = property.getColumn().getTableName() + "#"
                 + property.getColumn().getColumnName();
-        return !(map.containsKey(property.getColumn().getColumnName())
+        return !(map == null
+                || map.containsKey(property.getColumn().getColumnName())
                 || map.containsKey(combinedKey));
     }
 
@@ -157,14 +158,16 @@ public class Entity {
         String typeName = property.getColumn().getTypeName();
         DBType dbType =
                 property.getEntity().getTable().getDatabase().getDbType();
-
-        preparedValue = map.get(columnName);
+        if (map != null) {
+            preparedValue = map.get(columnName);
+        }
         if (Objects.nonNull(preparedValue)) {
             return preparedValue.replaceAll("\"",
                     Matcher.quoteReplacement("\\\""));
         }
-
-        preparedValue = map.get(tableNameColumnName);
+        if (map != null) {
+            preparedValue = map.get(tableNameColumnName);
+        }
         if (Objects.nonNull(preparedValue)) {
             return preparedValue.replaceAll("\"",
                     Matcher.quoteReplacement("\\\""));

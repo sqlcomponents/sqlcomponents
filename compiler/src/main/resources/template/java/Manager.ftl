@@ -29,11 +29,10 @@ public final class DataManager {
     </#if>
     </#list>
 
-<#if multipleManagers>public <#else>private</#if> DataManager(final javax.sql.DataSource dbDataSource,
-    <#if encryption?has_content  >
-    <#assign a=addImportStatement("java.util.function.Function")>
-     final Function<String, String> encryptionFunction,
+<#if multipleManagers>public <#else>private</#if> DataManager(
+final javax.sql.DataSource dbDataSource <#if encryption?has_content >, final Function<String, String> encryptionFunction,
      final Function<String, String> decryptionFunction
+      <#assign a=addImportStatement("java.util.function.Function")>
     </#if>
     ) {
         this.observer = new Observer();
