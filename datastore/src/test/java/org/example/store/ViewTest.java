@@ -23,7 +23,7 @@ class ViewTest {
         this.movieViewStore = dataManager.getMovieViewStore();
         this.movieStore = dataManager.getMovieStore();
         this.materializedMovieViewStore = dataManager
-                .getMaterializedMovieViewStore();
+               .getMaterializedMovieViewStore();
     }
 
     @BeforeEach
@@ -46,7 +46,8 @@ class ViewTest {
         // Refresh the Materialized View
         this.materializedMovieViewStore.refresh();
         // Data as View is now refreshed
-        Assertions.assertEquals(0, this.materializedMovieViewStore.select().execute().size());
+        Assertions.assertEquals(2, this.materializedMovieViewStore.select().execute().size());
+
     }
 
 }
