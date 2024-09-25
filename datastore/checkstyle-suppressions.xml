@@ -4,8 +4,8 @@
         "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 <suppressions>
     <suppress files="[\\/]org[\\/]example[\\/]store" checks=""/>
-    <suppress files="[\\/]org[\\/]example[\\/]model" checks="FileLength"/>
+    <suppress files="[\\/]org[\\/]example[\\/]model" checks=""/>
 
-    <suppress checks="ParenPad|FinalClass|FinalParameters|MagicNumber|UnusedImports|RegexpSingleline|NoWhitespaceBefore|LineLength|JavadocMethod|ParameterNumber"
+    <suppress checks="ParenPad|UnusedImports"
               files="DataManager"/>
 </suppressions>
