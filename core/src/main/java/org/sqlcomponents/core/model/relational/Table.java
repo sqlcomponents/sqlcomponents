@@ -5,6 +5,7 @@ import org.sqlcomponents.core.model.relational.enums.TableType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -33,6 +34,10 @@ public class Table {
      * The Schema name.
      */
     private String schemaName;
+
+    private Map<String, List<String>> enumType;
+
+
     /**
      * The Table type.
      */
@@ -183,6 +188,14 @@ public class Table {
                 .collect(Collectors.toList()));
 
         return distinctColumnTypeNames;
+    }
+
+    public Map<String, List<String>> getEnumType() {
+        return enumType;
+    }
+
+    public void setEnumType(Map<String, List<String>> enumType) {
+        this.enumType = enumType;
     }
 
     /**

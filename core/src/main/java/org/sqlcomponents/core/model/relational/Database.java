@@ -5,6 +5,7 @@ import org.sqlcomponents.core.model.relational.enums.DBType;
 import org.sqlcomponents.core.model.relational.enums.TableType;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -18,6 +19,8 @@ public class Database {
      * The Tables.
      */
     private List<Table> tables;
+
+    private Map<String, List<String>> enumType;
     /**
      * The Functions.
      */
@@ -671,6 +674,14 @@ public class Database {
         });
 
         return distinctColumnTypeNames;
+    }
+
+    public Map<String, List<String>> getEnumType() {
+        return enumType;
+    }
+
+    public void setEnumType(Map<String, List<String>> enumType) {
+        this.enumType = enumType;
     }
 
     public List<Table> getTables() {

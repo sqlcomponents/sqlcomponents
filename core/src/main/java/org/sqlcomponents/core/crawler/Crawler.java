@@ -27,8 +27,10 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -259,7 +261,6 @@ public final class Crawler {
                         tableName)));
         database.setFunctions(getProcedures());
         repair();
-
         databaseMetaData.getConnection().close();
 
         return database;
@@ -427,6 +428,7 @@ public final class Crawler {
                 // ("ref_generation"));
 
                 bTable.setColumns(getColumns(bTable));
+                bTable.setEnumType(getEnumTypeFromMetaDatabase(bTable.getColumns()));
                 bTable.setIndices(getIndices(bTable));
                 bTable.setUniqueColumns(getUniqueConstraints(bTable));
                 // Set Sequence
@@ -439,6 +441,37 @@ public final class Crawler {
         }
 
         return lTables;
+    }
+
+    private Map<String, List<String>> getEnumTypeFromMetaDatabase(List<Column> columns) {
+        Map<String, List<String>> map = new HashMap<>();
+        columns.forEach(col -> {
+            try {
+                map.put(col.getTypeName(), getEnumsFromTypeName(col.getTypeName()));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return map;
+    }
+
+    private List<String> getEnumsFromTypeName(String typename) throws SQLException {
+        List<String> enumType = new ArrayList<>();
+        String sql = "SELECT t.typname AS enum_name, e.enumlabel AS enum_value " +
+                "FROM pg_type t " +
+                "JOIN pg_enum e ON t.oid = e.enumtypid " +
+                "WHERE t.typname = ' " + typename + "'";
+        try (PreparedStatement preparedStatement
+                     = databaseMetaData.getConnection()
+                .prepareStatement(sql)) {
+            ResultSet rs = preparedStatement.executeQuery(sql);
+            while (rs.next()) {
+                String enumValue = rs.getString("enum_value");
+                enumType.add(enumValue);
+                System.out.println("Enum: Value: " + enumValue);
+            }
+        }
+        return enumType;
     }
 
     /**
@@ -478,44 +511,6 @@ public final class Crawler {
         }
         return indices;
     }
-
-//
-//    private List<Column> getMaterializedColumn(
-//            final List<String> viewNames,
-//            final Connection connection)
-//            throws SQLException {
-//        List<Column> lColumns = new ArrayList<>();
-//        String sqlQuery = "SELECT c.relname AS view_name, "
-//                + "a.attname AS column_name "
-//                + "FROM pg_class c "
-//                + "JOIN pg_attribute a ON a.attrelid = c.oid "
-//                + "WHERE c.relkind = 'm' "
-//                + "AND c.relname IN (%s)"
-//                + "AND a.attnum > 0 "
-//                + "AND NOT a.attisdropped;";
-//        String placeholders = String.join(",",
-//                viewNames.stream().map(v -> "?")
-//                        .toArray(String[]::new));
-//        sqlQuery = String.format(sqlQuery, placeholders);
-//        try (PreparedStatement preparedStatement =
-//                     connection
-//                             .prepareStatement(sqlQuery)) {
-//            for (int i = 0; i < viewNames.size(); i++) {
-//                preparedStatement.setString(i + 1, viewNames.get(i));
-//            }
-//            try (ResultSet rs = preparedStatement.executeQuery()) {
-//                while (rs.next()) {
-//                    String viewName = rs.getString("view_name");
-//                    String columnName = rs.getString("column_name");
-//                    System.out.println(
-//                            "View: " + viewName + ", Column: " + columnName);
-//                }
-//            }
-//        } catch (final SQLException aSQLException) {
-//            aSQLException.printStackTrace();
-//        }
-//        return new ArrayList<>();
-//    }
 
     /**
      * Gets columns.
@@ -618,7 +613,6 @@ public final class Crawler {
                 JDBCType.valueOf(lColumnResultSet.getInt("DATA_TYPE")));
         bColumn.setColumnType(lColumnType == ColumnType.OTHER
                 ? getColumnTypeForOthers(bColumn) : lColumnType);
-
 
         bColumn.setRemarks(lColumnResultSet.getString("REMARKS"));
         bColumn.setNullable(
@@ -862,16 +856,16 @@ public final class Crawler {
 
         try (PreparedStatement preparedStatement
                      = databaseMetaData.getConnection()
-                    .prepareStatement(
-                " select n.nspname as enum_schema,  \n"
-                        + "    t.typname as enum_name,\n"
-                        + "    string_agg(e.enumlabel, ', ') "
-                        + "  as enum_value\n"
-                        + "  from pg_type t \n"
-                        + "  join pg_enum e on t.oid = e.enumtypid "
-                        + "  join pg_catalog.pg_namespace n ON "
-                        + "n.oid = t.typnamespace\n"
-                        + "group by enum_schema, enum_name;")) {
+                .prepareStatement(
+                        " select n.nspname as enum_schema,  \n"
+                                + "    t.typname as enum_name,\n"
+                                + "    string_agg(e.enumlabel, ', ') "
+                                + "  as enum_value\n"
+                                + "  from pg_type t \n"
+                                + "  join pg_enum e on t.oid = e.enumtypid "
+                                + "  join pg_catalog.pg_namespace n ON "
+                                + "n.oid = t.typnamespace\n"
+                                + "group by enum_schema, enum_name;")) {
             ResultSet lResultSet = preparedStatement.executeQuery();
             if (!lResultSet.wasNull()) {
                 List<Type> types = new ArrayList<>();
