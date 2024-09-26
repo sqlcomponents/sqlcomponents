@@ -1,4 +1,8 @@
 <#include "base.ftl">
+
+<#assign a=addImportStatement("java.sql.Connection")>
+<#assign a=addImportStatement("java.util.ArrayList")>
+
 <#if rootPackage?? && rootPackage?length != 0 >package ${rootPackage};</#if>
 
 <#assign capturedOutput>
@@ -29,23 +33,21 @@ public final class DataManager {
     </#if>
     </#list>
 
-<#if multipleManagers>public <#else>private</#if> DataManager(
-final javax.sql.DataSource dbDataSource <#if encryption?has_content >, final Function<String, String> encryptionFunction,
+<#if multipleManagers>public <#else>private</#if> DataManager(final javax.sql.DataSource dbDataSource<#if encryption?has_content >,
+     final Function<String, String> encryptionFunction,
      final Function<String, String> decryptionFunction
       <#assign a=addImportStatement("java.util.function.Function")>
     </#if>
     ) {
         this.observer = new Observer();
         this.procedure = new Procedure(dbDataSource);
-        
         <#list orm.entities as entity>
         <#if !entity.type?? >
         this.${entity.name?uncap_first}Store = ${entity.name}Store
 .get${entity.name}Store(dbDataSource, this.observer<#if entity.containsEncryptedProperty() >,
              encryptionFunction,
              decryptionFunction
-        </#if>
-        );
+        </#if>);
         </#if>
         </#list>
     }
@@ -57,16 +59,14 @@ final javax.sql.DataSource dbDataSource <#if encryption?has_content >, final Fun
      * @return dataManager
      */
     <#if !multipleManagers>
-    public static DataManager getManager(final DataSource dbDataSource
-    <#if encryption?has_content  >,
+    public static DataManager getManager(final DataSource dbDataSource<#if encryption?has_content>,
     <#assign a=addImportStatement("javax.sql.DataSource")>
      final Function<String, String> encryptionFunction,
      final Function<String, String> decryptionFunction
     </#if>
                                                             ) {
         if (dataManager == null) {
-            dataManager = new DataManager(dbDataSource
-            <#if encryption?has_content  >,
+            dataManager = new DataManager(dbDataSource<#if encryption?has_content>,
              encryptionFunction,
              decryptionFunction
             </#if>
@@ -273,6 +273,8 @@ final int i) throws SQLException {
     </#if>
 
     <#include "Procedures.ftl">
+
+    <#include "SqlBuilder.ftl">
 
 }
 </#assign>
