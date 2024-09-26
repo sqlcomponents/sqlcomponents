@@ -323,12 +323,12 @@ import java.util.stream.Collectors;
                     <#break>
               
              <#case "org.locationtech.jts.geom.LineSegment" >
-             <#assign a=addImportStatement("org.locationtech.jts.geom.GeometryFactory")>
-    <#assign a=addImportStatement("org.locationtech.jts.geom.Coordinate")>
-    <#assign a=addImportStatement("org.locationtech.jts.geom.LineSegment")>
-    <#assign a=addImportStatement("org.postgresql.geometric.PGpoint")>
-    <#assign a=addImportStatement("org.postgresql.geometric.PGlseg")>
-                    <@columns.LineSegmentColumn property=property/>
+                     <#assign a=addImportStatement("org.locationtech.jts.geom.GeometryFactory")>
+                    <#assign a=addImportStatement("org.locationtech.jts.geom.Coordinate")>
+                    <#assign a=addImportStatement("org.locationtech.jts.geom.LineSegment")>
+                    <#assign a=addImportStatement("org.postgresql.geometric.PGpoint")>
+                    <#assign a=addImportStatement("org.postgresql.geometric.PGlseg")>
+                      <@columns.LineSegmentColumn property=property/>
                     <#break>
 
             
@@ -342,7 +342,11 @@ import java.util.stream.Collectors;
                     <@columns.LineColumn property=property/>
                     <#break>
 
-            
+              <#default>
+                    <#if property.column.columnType == "ENUM">
+                        <@columns.TypeColumn property=property/>
+                    </#if>
+
 
         </#switch>
     </#list>

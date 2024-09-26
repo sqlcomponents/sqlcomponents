@@ -2,6 +2,7 @@ package org.sqlcomponents.core.model;
 
 
 import org.sqlcomponents.core.model.relational.Table;
+import org.sqlcomponents.core.model.relational.enums.ColumnType;
 import org.sqlcomponents.core.model.relational.enums.DBType;
 import org.sqlcomponents.core.model.relational.enums.Flag;
 
@@ -173,8 +174,13 @@ public class Entity {
                     Matcher.quoteReplacement("\\\""));
         }
 
-        if (dbType == DBType.POSTGRES && typeName.equals("xml")) {
-            preparedValue = "XMLPARSE(document ?)";
+        if (dbType == DBType.POSTGRES) {
+                if (typeName.equals("xml")) {
+                    preparedValue = "XMLPARSE(document ?)";
+                }
+                if (property.getColumn().getColumnType() == ColumnType.ENUM) {
+                    preparedValue = "?::" + typeName;
+                }
         }
 
         return preparedValue == null ? "?" : preparedValue;

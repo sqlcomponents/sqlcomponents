@@ -84,6 +84,10 @@ public final class Crawler {
      */
     private static final String START_BR_REGX = "\\(";
     /**
+     * The constant for varchar data type.
+     */
+    public static final int VARCHAR_DATA_TYPE = 12;
+    /**
      * The Database.
      */
     private final Database database = new Database();
@@ -418,13 +422,7 @@ public final class Crawler {
                 bTable.setTableType(
                         TableType.value(tableType));
                 bTable.setRemarks(lResultSet.getString("remarks"));
-                // bTable.setCategoryType(lResultSet.getString("type_cat"));
-                // bTable.setSchemaType(lResultSet.getString("type_schem"));
-                // bTable.setNameType(lResultSet.getString("type_name"));
-                // bTable.setSelfReferencingColumnName(lResultSet.getString
-                // ("self_referencing_col_name"));
-                // bTable.setReferenceGeneration(lResultSet.getString
-                // ("ref_generation"));
+
 
                 bTable.setColumns(getColumns(bTable));
                 bTable.setIndices(getIndices(bTable));
@@ -479,43 +477,6 @@ public final class Crawler {
         return indices;
     }
 
-//
-//    private List<Column> getMaterializedColumn(
-//            final List<String> viewNames,
-//            final Connection connection)
-//            throws SQLException {
-//        List<Column> lColumns = new ArrayList<>();
-//        String sqlQuery = "SELECT c.relname AS view_name, "
-//                + "a.attname AS column_name "
-//                + "FROM pg_class c "
-//                + "JOIN pg_attribute a ON a.attrelid = c.oid "
-//                + "WHERE c.relkind = 'm' "
-//                + "AND c.relname IN (%s)"
-//                + "AND a.attnum > 0 "
-//                + "AND NOT a.attisdropped;";
-//        String placeholders = String.join(",",
-//                viewNames.stream().map(v -> "?")
-//                        .toArray(String[]::new));
-//        sqlQuery = String.format(sqlQuery, placeholders);
-//        try (PreparedStatement preparedStatement =
-//                     connection
-//                             .prepareStatement(sqlQuery)) {
-//            for (int i = 0; i < viewNames.size(); i++) {
-//                preparedStatement.setString(i + 1, viewNames.get(i));
-//            }
-//            try (ResultSet rs = preparedStatement.executeQuery()) {
-//                while (rs.next()) {
-//                    String viewName = rs.getString("view_name");
-//                    String columnName = rs.getString("column_name");
-//                    System.out.println(
-//                            "View: " + viewName + ", Column: " + columnName);
-//                }
-//            }
-//        } catch (final SQLException aSQLException) {
-//            aSQLException.printStackTrace();
-//        }
-//        return new ArrayList<>();
-//    }
 
     /**
      * Gets columns.
@@ -614,12 +575,16 @@ public final class Crawler {
         bColumn.setColumnName(lColumnResultSet.getString("COLUMN_NAME"));
         bColumn.setTypeName(lColumnResultSet.getString("TYPE_NAME"));
         bColumn.setDataType(lColumnResultSet.getInt("DATA_TYPE"));
-        lColumnType = ColumnType.value(
-                JDBCType.valueOf(lColumnResultSet.getInt("DATA_TYPE")));
-        bColumn.setColumnType(lColumnType == ColumnType.OTHER
-                ? getColumnTypeForOthers(bColumn) : lColumnType);
-
-
+        if (bColumn.getDataType() == VARCHAR_DATA_TYPE
+                && !("VARCHAR".equalsIgnoreCase(bColumn.getTypeName())
+                || "TEXT".equalsIgnoreCase(bColumn.getTypeName()))) {
+            bColumn.setColumnType(ColumnType.ENUM);
+        } else {
+            lColumnType = ColumnType.value(
+                    JDBCType.valueOf(lColumnResultSet.getInt("DATA_TYPE")));
+            bColumn.setColumnType(lColumnType == ColumnType.OTHER
+                    ? getColumnTypeForOthers(bColumn) : lColumnType);
+        }
         bColumn.setRemarks(lColumnResultSet.getString("REMARKS"));
         bColumn.setNullable(
                 Flag.value(lColumnResultSet.getString("IS_NULLABLE")));

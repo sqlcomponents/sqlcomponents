@@ -26,6 +26,14 @@ public class Property {
      */
     private String dataType;
     /**
+     * The type name.
+     */
+    private String typeName;
+    /**
+     * Type type.
+     */
+    private String typeType;
+    /**
      * The Unique constraint group.
      */
     private String uniqueConstraintGroup;
@@ -130,6 +138,38 @@ public class Property {
      */
     public void setDataType(final String paramDataType) {
         this.dataType = paramDataType;
+    }
+
+    /**
+     * get the type name.
+     * @return String
+     */
+    public String getTypeName() {
+        return typeName;
+    }
+
+    /**
+     * set the type name.
+     * @param aTypeName type name
+     */
+    public void setTypeName(final String aTypeName) {
+        this.typeName = aTypeName;
+    }
+
+    /**
+     * get type type.
+     * @return String
+     */
+    public String getTypeType() {
+        return typeType;
+    }
+
+    /**
+     * set type type.
+     * @param aTypeType String
+     */
+    public void setTypeType(final String aTypeType) {
+        this.typeType = aTypeType;
     }
 
     /**

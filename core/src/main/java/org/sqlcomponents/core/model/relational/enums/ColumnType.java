@@ -257,7 +257,11 @@ public enum ColumnType {
     /**
      * Text column type.
      */
-    TEXT("TEXT");
+    TEXT("TEXT"),
+    /**
+     * Enum column type.
+     */
+    ENUM("ENUM"),;
 
     /**
      * The Value.

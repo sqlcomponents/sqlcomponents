@@ -3,6 +3,7 @@ package org.sqlcomponents.compiler.mapper;
 import org.jetbrains.annotations.NotNull;
 import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.Application;
+import org.sqlcomponents.core.model.Entity;
 import org.sqlcomponents.core.model.relational.Column;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
@@ -65,7 +66,8 @@ public final class JavaMapper extends Mapper {
     }
 
     @Override
-    public String getDataType(final Column aColumn) {
+    public String getDataType(final Entity aEntity, final Column aColumn) {
+        //System.out.println("Column  :" + aColumn.getColumnName());
         switch (aColumn.getColumnType()) {
             case BOX:
                 return "org.locationtech.jts.geom.Envelope";
@@ -90,6 +92,9 @@ public final class JavaMapper extends Mapper {
             case JSON:
             case JSONB:
                 return "com.fasterxml.jackson.databind.JsonNode";
+            case ENUM:
+                return aEntity.getBeanPackage() + ".types."
+                        + getEntityName(aColumn.getTypeName()) + "Type";
             default:
                 return Objects.requireNonNull(getDataTypeClass(aColumn))
                         .getName();

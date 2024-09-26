@@ -20,7 +20,7 @@
 <#include "column/PolygonColumn.ftl">
 <#include "column/StringColumn.ftl">
 <#include "column/UUIDColumn.ftl">
-
+<#include "column/TypeColumn.ftl">
 
 <#macro columnheader property>
     public static class ${property.name?cap_first}Column extends Column<${getClassName(property.dataType)}> {

@@ -45,11 +45,11 @@ public abstract class Mapper {
 
     /**
      * Gets data type.
-     *
+     * @param aEntity the entity
      * @param aColumn the a column
      * @return the data type
      */
-    public abstract String getDataType(Column aColumn);
+    public abstract String getDataType(Entity aEntity, Column aColumn);
 
     /**
      * Gets orm.
@@ -152,7 +152,14 @@ public abstract class Mapper {
             }
             property.setUniqueConstraintGroup(getEntityName(
                     property.getColumn().getUniqueConstraintName()));
-            property.setDataType(getDataType(aColumn));
+            property.setTypeName(aColumn.getTypeName());
+            property.setTypeType(aColumn.getColumnType().name());
+//            if (aColumn.getColumnType().equals(ColumnType.ENUM)) {
+//                property.setDataType(
+//                        getEntityName(aColumn.getTypeName()) + "Type");
+//            } else {
+                property.setDataType(getDataType(aEntity, aColumn));
+//            }
             return property;
         }
         return null;
@@ -193,7 +200,7 @@ public abstract class Mapper {
             Entity entity = new Entity(application.getOrm(), table);
             entity.setName(getEntityName(type.getTypeName()));
             entity.setPluralName(getPluralName(entity.getName()));
-            entity.setBeanPackage(getBeanPackage(type.getTypeName()));
+            entity.setBeanPackage(getEnumPackage(type.getTypeName()));
             entity.setValues(type.getValues());
             entity.setType(type.getTypeType().name());
             lEntities.add(entity);
@@ -355,7 +362,15 @@ public abstract class Mapper {
     protected String getBeanPackage(final String aTableName) {
         return getPackage(aTableName, "model");
     }
-
+    /**
+     * Gets enum package.
+     *
+     * @param aTypeName the a type name
+     * @return the enum package
+     */
+    protected String getEnumPackage(final String aTypeName) {
+        return getPackage(aTypeName, "model.types");
+    }
     /**
      * Gets module name.
      *
