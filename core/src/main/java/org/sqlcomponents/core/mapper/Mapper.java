@@ -174,7 +174,8 @@ public abstract class Mapper {
         Database lDatabase = application.getOrm().getDatabase();
         ArrayList<Entity> lEntities =
                 new ArrayList<>(lDatabase.getTables().size()
-                        + lDatabase.getTypes().size());
+                        + (lDatabase.getTypes() != null
+                        ? lDatabase.getTypes().size() : 0));
 
         List<Property> lProperties;
         Entity lEntity;
@@ -194,16 +195,18 @@ public abstract class Mapper {
             lEntity.setProperties(lProperties);
             lEntities.add(lEntity);
         }
-        for (Type type : lDatabase.getTypes()) {
-            Table table = new Table(application.getOrm().getDatabase());
-            table.setTableName(type.getTypeName());
-            Entity entity = new Entity(application.getOrm(), table);
-            entity.setName(getEntityName(type.getTypeName()));
-            entity.setPluralName(getPluralName(entity.getName()));
-            entity.setBeanPackage(getEnumPackage(type.getTypeName()));
-            entity.setValues(type.getValues());
-            entity.setType(type.getTypeType().name());
-            lEntities.add(entity);
+        if (lDatabase.getTypes() != null) {
+            for (Type type : lDatabase.getTypes()) {
+                Table table = new Table(application.getOrm().getDatabase());
+                table.setTableName(type.getTypeName());
+                Entity entity = new Entity(application.getOrm(), table);
+                entity.setName(getEntityName(type.getTypeName()));
+                entity.setPluralName(getPluralName(entity.getName()));
+                entity.setBeanPackage(getEnumPackage(type.getTypeName()));
+                entity.setValues(type.getValues());
+                entity.setType(type.getTypeType().name());
+                lEntities.add(entity);
+            }
         }
         return lEntities;
     }
