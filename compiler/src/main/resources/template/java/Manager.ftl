@@ -1,4 +1,8 @@
 <#include "base.ftl">
+
+<#assign a=addImportStatement("java.sql.Connection")>
+<#assign a=addImportStatement("java.util.ArrayList")>
+
 <#if rootPackage?? && rootPackage?length != 0 >package ${rootPackage};</#if>
 
 <#assign capturedOutput>
@@ -269,6 +273,8 @@ final int i) throws SQLException {
     </#if>
 
     <#include "Procedures.ftl">
+
+    <#include "SqlBuilder.ftl">
 
 }
 </#assign>
