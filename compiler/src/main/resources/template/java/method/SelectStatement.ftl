@@ -8,7 +8,7 @@ public SelectStatementWithWhere select() {
         return new SelectStatementWithWhere(this);
 }
 
-public static final class SelectStatementWithWhere extends SelectStatement{
+public final class SelectStatementWithWhere extends SelectStatement{
 
         private SelectStatementWithWhere(final ${name}Store ${name?uncap_first}Store) {
             super(${name?uncap_first}Store,null);
@@ -89,7 +89,7 @@ public final SelectQuery sql(final String sql) {
             return new SelectQuery(this, sql);
     }
 
-    public static final class SelectQuery  {
+    public final class SelectQuery  {
 
         private final SelectStatement selectStatement;
         private final String sql;
@@ -145,7 +145,7 @@ public final SelectQuery sql(final String sql) {
     }
 
 
-        public static final class LimitClause  {
+        public final class LimitClause  {
                 private final SelectStatement selectStatement;
                 private final String asSql;
 
@@ -178,7 +178,7 @@ public final SelectQuery sql(final String sql) {
                 }
                 </#if>
 
-                public static final class OffsetClause  {
+                public final class OffsetClause  {
                         private final LimitClause limitClause;
                         private final String asSql;
 

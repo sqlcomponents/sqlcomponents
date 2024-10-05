@@ -37,7 +37,7 @@
         );
     }
 
-    public static final class UpdateStatement {
+    public final class UpdateStatement {
         private final ${name}Store ${name?uncap_first}Store;
 
 
@@ -86,7 +86,7 @@
             return new SetByPKClause(${name?uncap_first}Store.dbDataSource,${name?uncap_first},this);
         }
 
-        public static final class SetByPKClause  {
+        public final class SetByPKClause  {
                 private final javax.sql.DataSource dbDataSource;
                 private final UpdateStatement updateStatement;
                 private WhereClause whereClause;
@@ -148,7 +148,7 @@
             return new SetClause(values,this);
         }
 
-        public static final class SetClause  {
+        public final class SetClause  {
             
             private final UpdateStatement updateStatement;
 
@@ -166,7 +166,7 @@
                 return new SetWhereClause(this, whereClause);
             } 
 
-            public static final class SetWhereClause  {
+            public final class SetWhereClause  {
                 private final SetClause setClause;
                 private WhereClause whereClause;
 
@@ -220,7 +220,7 @@
         return new UpdateQuery(this, sql);
     }
 
-    public static final class UpdateQuery  {
+    public final class UpdateQuery  {
 
         private final UpdateStatement updateStatement;
         private final String sql;

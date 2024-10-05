@@ -59,7 +59,7 @@
         );
     }
     </#if>
-    public static final class InsertStatement {
+    public final class InsertStatement {
         private final ${name}Store ${name?uncap_first}Store;
 
 
@@ -123,7 +123,7 @@
             return new ValuesClause(${name?uncap_first}s,this);
         }
 
-        public static final class ValueClause  {
+        public final class ValueClause  {
             
             private final InsertStatement insertStatement;
 
@@ -194,7 +194,7 @@
              </#if>
         }
 
-        public static final class ValuesClause  {
+        public final class ValuesClause  {
             
             private final InsertStatement insertStatement;
 

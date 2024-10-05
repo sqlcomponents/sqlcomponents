@@ -20,25 +20,22 @@ public int delete(${getPrimaryKeysAsParameterString()}) throws SQLException  {
     <#assign a=addImportStatement("java.sql.PreparedStatement")>
 
 public DeleteStatement delete(WhereClause whereClause) {
-    return new DeleteStatement(this.dbDataSource,whereClause);
+    return new DeleteStatement(whereClause);
 }
 
 public DeleteStatement delete() {
-    return new DeleteStatement(this.dbDataSource,null);
+    return new DeleteStatement(null);
 }
 
-public static final class DeleteStatement {
+public final class DeleteStatement {
 
-    private final javax.sql.DataSource dbDataSource;
     private final WhereClause whereClause;
 
-    private DeleteStatement(final javax.sql.DataSource dbDataSource) {
-            this(dbDataSource,null);
+    private DeleteStatement() {
+            this(null);
         }
 
-        private DeleteStatement(final javax.sql.DataSource dbDataSource
-                ,final WhereClause whereClause) {
-            this.dbDataSource = dbDataSource;
+        private DeleteStatement(final WhereClause whereClause) {
             this.whereClause = whereClause;
         }
 
@@ -46,7 +43,7 @@ public static final class DeleteStatement {
         int deletedRows = 0;
     	final String query = "DELETE FROM ${table.escapedName?j_string}" 
         + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
-        try (java.sql.Connection dbConnection = this.dbDataSource.getConnection();
+        try (java.sql.Connection dbConnection = dbDataSource.getConnection();
 			Statement statement = dbConnection.createStatement()) {
             deletedRows = statement.executeUpdate(query);
         }
@@ -54,17 +51,15 @@ public static final class DeleteStatement {
 	}
 
     public DeleteQuery sql(final String sql) {
-            return new DeleteQuery(this, sql);
+            return new DeleteQuery(sql);
     }
 
-    public static final class DeleteQuery  {
+    public final class DeleteQuery  {
 
-        private final DeleteStatement deleteStatement;
         private final String sql;
         private final List<Value> values;
 
-        public DeleteQuery(final DeleteStatement deleteStatement, final String sql) {
-            this.deleteStatement = deleteStatement;
+        public DeleteQuery(final String sql) {
             this.sql = sql;
             this.values = new ArrayList<>();
         }
@@ -77,7 +72,7 @@ public static final class DeleteStatement {
 
         public int execute() throws SQLException {
             int deletedRows = 0 ;
-            try (java.sql.Connection dbConnection = this.deleteStatement.dbDataSource.getConnection();
+            try (java.sql.Connection dbConnection = dbDataSource.getConnection();
                 PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
 
                     int index = 1;
