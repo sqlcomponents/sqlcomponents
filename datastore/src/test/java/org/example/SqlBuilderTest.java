@@ -9,9 +9,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 class SqlBuilderTest {
+    private final DataManager dataManager ;
     private final DataSource dataSource;
     private final MovieStore movieStore;
 
@@ -19,7 +21,7 @@ class SqlBuilderTest {
 
         this.dataSource = DataSourceProvider.dataSource();
 
-        DataManager dataManager =
+        this.dataManager =
                 DataManager.getManager(dataSource,
                         EncryptionUtil::enAnDecrypt,
                         EncryptionUtil::enAnDecrypt);
@@ -36,19 +38,23 @@ class SqlBuilderTest {
     @Test
     void testSql() throws SQLException {
 
-        Movie movie = movieStore
-                .insert()
-                .values(new Movie(null, "Inception", "Christopher Nolan"))
-                .returning();
+        try(Connection connection = dataSource.getConnection()) {
+            dataManager.sql("INSERT INTO movie ( title ,directed_by ) VALUES ( ? ,? )")
+                    .param("Inception")
+                    .param("Christopher Nolan")
+                    .executeUpdate(connection);
 
-        movie = DataManager.SqlBuilder.sql("SELECT id,title,directed_by FROM MOVIE where id= ?")
-                .param(movie.id())
-                .query((rs, rowNum) -> new Movie(rs.getShort(1),
-                                                    rs.getString(2),
-                                                    rs.getString(3)
-                ))
-                .single(dataSource.getConnection());
+            Movie movie = dataManager.sql("SELECT id,title,directed_by FROM MOVIE where id= ?")
+                    .param(this.movieStore.select().execute().get(0).id())
+                    .query((rs) -> new Movie(rs.getShort(1),
+                            rs.getString(2),
+                            rs.getString(3)
+                    ))
+                    .single(dataSource.getConnection());
 
-        Assertions.assertEquals("Inception", movie.title());
+            Assertions.assertEquals("Inception", movie.title());
+        }
+
+
     }
 }

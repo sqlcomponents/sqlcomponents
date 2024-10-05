@@ -274,6 +274,16 @@ final int i) throws SQLException {
 
     <#include "Procedures.ftl">
 
+    /**
+    * Static factory method to create a new SqlBuilder instance.
+    *
+    * @param sql the SQL query to be prepared
+    * @return an instance of SqlBuilder
+    */
+    public SqlBuilder sql(final String sql) {
+        return new SqlBuilder(sql);
+    }
+
     <#include "SqlBuilder.ftl">
 
 }
