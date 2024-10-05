@@ -5,23 +5,23 @@
 <#assign a=addImportStatement("java.sql.PreparedStatement")>
 
 public SelectStatementWithWhere select() {
-        return new SelectStatementWithWhere(this);
+        return new SelectStatementWithWhere();
 }
 
 public final class SelectStatementWithWhere extends SelectStatement{
 
-        private SelectStatementWithWhere(final ${name}Store ${name?uncap_first}Store) {
-            super(${name?uncap_first}Store,null);
+        private SelectStatementWithWhere() {
+            super(null);
         }
 
         public SelectStatement where(WhereClause whereClause) throws SQLException {
-            return new SelectStatement(super.${name?uncap_first}Store, whereClause);
+            return new SelectStatement(whereClause);
         }
     }
 
-public static class SelectStatement {
+public sealed class SelectStatement permits SelectStatementWithWhere {
 
-        private final ${name}Store ${name?uncap_first}Store;
+
         private final WhereClause whereClause;
 
         private LimitClause limitClause;
@@ -32,13 +32,11 @@ public static class SelectStatement {
                 return new LimitClause(this,limit);
         }
 
-        private SelectStatement(final ${name}Store ${name?uncap_first}Store) {
-            this(${name?uncap_first}Store,null);
+        private SelectStatement() {
+            this(null);
         }
 
-        private SelectStatement(final ${name}Store ${name?uncap_first}Store
-                ,final WhereClause whereClause) {
-            this.${name?uncap_first}Store = ${name?uncap_first}Store;
+        private SelectStatement(final WhereClause whereClause) {
             this.whereClause = whereClause;
         }
 
@@ -52,13 +50,13 @@ public static class SelectStatement {
                 + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) )
                 + ( this.limitClause == null ? "" : this.limitClause.asSql() )
                 + ( this.offsetClause == null ? "" : this.offsetClause.asSql() );
-                try (java.sql.Connection dbConnection = this.${name?uncap_first}Store.dbDataSource.getConnection();
+                try (java.sql.Connection dbConnection = dbDataSource.getConnection();
                 PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
                 
                 ResultSet resultSet = preparedStatement.executeQuery();
                                 
                 while (resultSet.next()) {
-                                        arrays.add(this.${name?uncap_first}Store.rowMapper(resultSet));
+                                        arrays.add(rowMapper(resultSet));
                                 }
                                 
                 } 
@@ -73,7 +71,7 @@ public static class SelectStatement {
 		FROM ${table.escapedName?j_string}
                 </@compress>" 
                 + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
-                try (java.sql.Connection dbConnection = this.${name?uncap_first}Store.dbDataSource.getConnection();
+                try (java.sql.Connection dbConnection = dbDataSource.getConnection();
                 PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
                 
                 ResultSet resultSet = preparedStatement.executeQuery();
@@ -109,7 +107,7 @@ public final SelectQuery sql(final String sql) {
 
         public Optional<${name}> optional() throws <@throwsblock/> {
             ${name} ${name?uncap_first} = null;
-            try (java.sql.Connection dbConnection = this.selectStatement.${name?uncap_first}Store.dbDataSource.getConnection(); 
+            try (java.sql.Connection dbConnection = dbDataSource.getConnection(); 
                  PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
                 int index = 1;
                 for (Value value:values
@@ -119,14 +117,14 @@ public final SelectQuery sql(final String sql) {
 
                 ResultSet resultSet = preparedStatement.executeQuery();
 
-                if (resultSet.next()) ${name?uncap_first} = this.selectStatement.${name?uncap_first}Store.rowMapper(resultSet);
+                if (resultSet.next()) ${name?uncap_first} = rowMapper(resultSet);
             }
             return Optional.ofNullable(${name?uncap_first});
         }
 
         public List<${name}> list() throws <@throwsblock/>{
             List<${name}> arrays = new ArrayList();
-            try (java.sql.Connection dbConnection = this.selectStatement.${name?uncap_first}Store.dbDataSource.getConnection(); 
+            try (java.sql.Connection dbConnection = dbDataSource.getConnection(); 
                  PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
                 int index = 1;
                 for (Value value:values
@@ -137,7 +135,7 @@ public final SelectQuery sql(final String sql) {
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 while (resultSet.next()) {
-                    arrays.add(this.selectStatement.${name?uncap_first}Store.rowMapper(resultSet));
+                    arrays.add(rowMapper(resultSet));
                 }
             }
             return arrays;
