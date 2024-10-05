@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
     public final class ${name}Store  {
 
     public static ${name}Store get${name}Store(final javax.sql.DataSource theDataSource
+    ,final DataManager theDataManager
     ,final DataManager.Observer theObserver
 
     <#if containsEncryptedProperty() >
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
         ,final Function<String,String> decryptionFunction
     </#if>) {
     return new ${name}Store(theDataSource
+    ,theDataManager
     ,theObserver
 
 
@@ -35,6 +37,8 @@ import java.util.stream.Collectors;
     }
 
     private final javax.sql.DataSource dbDataSource;
+
+    private final DataManager dataManager;
 
     private final DataManager.Observer observer;
     <#assign a=addImportStatement(orm.application.rootPackage+ ".DataManager")>
@@ -50,6 +54,7 @@ import java.util.stream.Collectors;
     * Datastore
     */
     private ${name}Store(final javax.sql.DataSource theDataSource
+    ,final DataManager theDataManager
     ,final DataManager.Observer theObserver
 
 
@@ -60,6 +65,7 @@ import java.util.stream.Collectors;
     </#if>
     ) {
     this.dbDataSource = theDataSource;
+    this.dataManager = theDataManager;
     this.observer = theObserver;
 
     <#if containsEncryptedProperty() >

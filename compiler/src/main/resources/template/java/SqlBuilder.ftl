@@ -115,6 +115,26 @@ public class SqlBuilder {
             }
             return result;
         }
+        
+        /**
+         * Executes the SQL query and returns a list of mapped result from the ResultSet.
+         *
+         * @param connection the database connection used to execute the query
+         * @return the list of mapped result, or empty if no result is found
+         * @throws SQLException if a database access error occurs
+         */
+        public List<T> list(final Connection connection) throws SQLException {
+            List<T> result = new ArrayList<>();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                prepare(preparedStatement);
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                while (resultSet.next()) {
+                    result.add(rowMapper.mapRow(resultSet));
+                }
+            }
+            return result;
+        }
     }
 
     /**
