@@ -13,11 +13,4 @@
 
 <#macro throwsblock>
 SQLException 
-<#if hasJavaType("com.fasterxml.jackson.databind.JsonNode")>
-<#assign a=addImportStatement("com.fasterxml.jackson.core.JsonProcessingException")>,JsonProcessingException
-</#if>
-<#if hasJavaType("java.net.InetAddress")>
-    <#assign a=addImportStatement("java.net.UnknownHostException")>,UnknownHostException
-</#if>
-
 </#macro>

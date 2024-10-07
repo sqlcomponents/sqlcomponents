@@ -311,6 +311,8 @@ import java.util.stream.Collectors;
                 <#break>
             
             <#case "java.net.InetAddress" >
+            <#assign a=addImportStatement("java.net.InetAddress")>
+            <#assign a=addImportStatement("java.net.UnknownHostException")>
                 <@columns.InetAddressColumn property=property/>
                 <#break> 
                  

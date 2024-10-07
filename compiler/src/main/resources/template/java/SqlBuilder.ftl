@@ -130,6 +130,20 @@ public class SqlBuilder {
             }
             return result;
         }
+
+        /**
+         * Executes the SQL query and returns a list of mapped result from the ResultSet.
+         *
+         * @return the list of mapped result, or empty if no result is found
+         * @throws SQLException if a database access error occurs
+         */
+        public List<T> list() throws SQLException {
+            List<T> result;
+            try (Connection connection = DataManager.this.dbDataSource.getConnection()) {
+                result = list(connection);
+            }
+            return result;
+        }
         
         /**
          * Executes the SQL query and returns a list of mapped result from the ResultSet.

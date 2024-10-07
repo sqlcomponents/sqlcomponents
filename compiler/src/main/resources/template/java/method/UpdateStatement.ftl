@@ -26,7 +26,7 @@
 
 
 
-	public final UpdateStatement update() {
+	public UpdateStatement update() {
         return new UpdateStatement(       
         <#if containsEncryptedProperty() >
             this.encryptionFunction
@@ -73,19 +73,17 @@
 
 
         public SetByPKClause set(final ${name} ${name?uncap_first}) {
-            return new SetByPKClause(dbDataSource,${name?uncap_first},this);
+            return new SetByPKClause(dbDataSource,${name?uncap_first});
         }
 
         public final class SetByPKClause  {
                 private final javax.sql.DataSource dbDataSource;
-                private final UpdateStatement updateStatement;
                 private WhereClause whereClause;
                 private final ${name} ${name?uncap_first};
 
-                SetByPKClause(final javax.sql.DataSource dbDataSource,final ${name} ${name?uncap_first},final UpdateStatement updateStatement) {
+                SetByPKClause(final javax.sql.DataSource dbDataSource,final ${name} ${name?uncap_first}) {
                     this.dbDataSource = dbDataSource;
                     this.${name?uncap_first} = ${name?uncap_first};
-                    this.updateStatement = updateStatement;
                 }
 
                 public SetByPKClause where(final WhereClause whereClause) {
@@ -135,21 +133,16 @@
             }
 
         public SetClause set(final Value... values) {
-            return new SetClause(values,this);
+            return new SetClause(values);
         }
 
         public final class SetClause  {
             
-            private final UpdateStatement updateStatement;
-
-
-
             private Value[] values;
         
 
-            SetClause(final Value[] values,final UpdateStatement updateStatement) {
+            SetClause(final Value[] values) {
                 this.values = values;
-                this.updateStatement = updateStatement;
             }
 
             public SetWhereClause where(WhereClause whereClause) {
@@ -207,17 +200,15 @@
         }
         
     public UpdateQuery sql(final String sql) {
-        return new UpdateQuery(this, sql);
+        return new UpdateQuery(sql);
     }
 
     public final class UpdateQuery  {
 
-        private final UpdateStatement updateStatement;
         private final String sql;
         private final List<Value> values;
 
-        public UpdateQuery(final UpdateStatement updateStatement, final String sql) {
-            this.updateStatement = updateStatement;
+        public UpdateQuery(final String sql) {
             this.sql = sql;
             this.values = new ArrayList<>();
         }

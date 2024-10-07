@@ -41,7 +41,7 @@ public sealed class SelectStatement permits SelectStatementWithWhere {
         }
 
         public final List<${name}> execute() throws <@throwsblock/> {
-            List<${name}> arrays = new ArrayList();
+            
 		final String query = <@compress single_line=true>"
                 SELECT
 		<@columnSelection properties=properties/> 
@@ -50,17 +50,7 @@ public sealed class SelectStatement permits SelectStatementWithWhere {
                 + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) )
                 + ( this.limitClause == null ? "" : this.limitClause.asSql() )
                 + ( this.offsetClause == null ? "" : this.offsetClause.asSql() );
-                try (java.sql.Connection dbConnection = dbDataSource.getConnection();
-                PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
-                
-                ResultSet resultSet = preparedStatement.executeQuery();
-                                
-                while (resultSet.next()) {
-                                        arrays.add(rowMapper(resultSet));
-                                }
-                                
-                } 
-                return arrays;
+                return dataManager.sql(query).query(${name}Store.this::rowMapper).list();
 	}
 
         public final int count() throws SQLException {
