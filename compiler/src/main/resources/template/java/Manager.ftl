@@ -13,7 +13,10 @@ public final class DataManager {
     <#if !multipleManagers>
     private static DataManager dataManager;
     </#if>
-
+    /**
+     * Data Source for Database.
+     */
+    private final DataSource dbDataSource;
     /**
     * observer variable.
     */
@@ -33,14 +36,15 @@ public final class DataManager {
     </#if>
     </#list>
 
-<#if multipleManagers>public <#else>private</#if> DataManager(final javax.sql.DataSource dbDataSource<#if encryption?has_content >,
+<#if multipleManagers>public <#else>private</#if> DataManager(final javax.sql.DataSource theDbDataSource<#if encryption?has_content >,
      final Function<String, String> encryptionFunction,
      final Function<String, String> decryptionFunction
       <#assign a=addImportStatement("java.util.function.Function")>
     </#if>
     ) {
         this.observer = new Observer();
-        this.procedure = new Procedure(dbDataSource);
+        this.dbDataSource = theDbDataSource;
+        this.procedure = new Procedure(theDbDataSource);
         <#list orm.entities as entity>
         <#if !entity.type?? >
         this.${entity.name?uncap_first}Store = ${entity.name}Store

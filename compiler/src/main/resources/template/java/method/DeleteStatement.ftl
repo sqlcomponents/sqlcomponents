@@ -40,14 +40,9 @@ public final class DeleteStatement {
         }
 
     public int execute() throws SQLException  {
-        int deletedRows = 0;
     	final String query = "DELETE FROM ${table.escapedName?j_string}" 
         + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
-        try (java.sql.Connection dbConnection = dbDataSource.getConnection();
-			Statement statement = dbConnection.createStatement()) {
-            deletedRows = statement.executeUpdate(query);
-        }
-        return deletedRows;
+        return dataManager.sql(query).executeUpdate();
 	}
 
     public DeleteQuery sql(final String sql) {

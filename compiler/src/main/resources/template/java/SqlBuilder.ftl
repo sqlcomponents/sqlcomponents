@@ -35,6 +35,21 @@ public class SqlBuilder {
      * Executes an update (such as INSERT, UPDATE, DELETE) using the prepared SQL query
      * and the bound parameters.
      *
+     * @return the number of rows affected by the update
+     * @throws SQLException if a database access error occurs
+     */
+    public int executeUpdate() throws SQLException {
+        int updtedRows;
+        try (Connection connection = DataManager.this.dbDataSource.getConnection()){
+            updtedRows = executeUpdate(connection);
+        }
+        return updtedRows;
+    }
+
+    /**
+     * Executes an update (such as INSERT, UPDATE, DELETE) using the prepared SQL query
+     * and the bound parameters.
+     *
      * @param connection the database connection used to execute the query
      * @return the number of rows affected by the update
      * @throws SQLException if a database access error occurs
