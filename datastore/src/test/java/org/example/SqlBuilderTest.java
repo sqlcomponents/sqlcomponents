@@ -12,6 +12,8 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import static org.example.store.MovieStore.*;
+
 class SqlBuilderTest {
     private final DataManager dataManager ;
     private final DataSource dataSource;
@@ -40,12 +42,12 @@ class SqlBuilderTest {
 
         try(Connection connection = dataSource.getConnection()) {
             dataManager.sql("INSERT INTO movie ( title ,directed_by ) VALUES ( ? ,? )")
-                    .param("Inception")
-                    .param("Christopher Nolan")
+                    .param(title("Inception"))
+                    .param(directedBy("Christopher Nolan"))
                     .executeUpdate(connection);
 
             Movie movie = dataManager.sql("SELECT id,title,directed_by FROM MOVIE where id= ?")
-                    .param(this.movieStore.select().execute().get(0).id())
+                    .param(id(this.movieStore.select().execute().get(0).id()))
                     .query((rs) -> new Movie(rs.getShort(1),
                             rs.getString(2),
                             rs.getString(3)

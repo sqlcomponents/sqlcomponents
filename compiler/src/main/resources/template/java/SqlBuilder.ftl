@@ -7,7 +7,7 @@
 public class SqlBuilder {
 
     private final String sql;         // The SQL query to be executed.
-    private final List<Object> parameters;  // A list of parameters for the query.
+    private final List<Value> parameters;  // A list of parameters for the query.
 
     /**
      * Constructor that initializes the SqlBuilder with a given SQL query.
@@ -26,7 +26,7 @@ public class SqlBuilder {
      * @param value the value of the parameter to be added
      * @return the current SqlBuilder instance, for method chaining
      */
-    public SqlBuilder param(Object value) {
+    public SqlBuilder param(Value value) {
         this.parameters.add(value);
         return this;
     }
@@ -109,6 +109,20 @@ public class SqlBuilder {
          */
         private Query(final RowMapper<T> rowMapper) {
             this.rowMapper = rowMapper;
+        }
+
+        /**
+         * Executes the SQL query and returns a single mapped result from the ResultSet.
+         *
+         * @return the single mapped result, or null if no result is found
+         * @throws SQLException if a database access error occurs
+         */
+        public T single() throws SQLException {
+            T result = null;
+            try (Connection connection = DataManager.this.dbDataSource.getConnection()) {
+                result = single(connection);
+            }
+            return result;
         }
 
         /**
@@ -213,7 +227,7 @@ public class SqlBuilder {
      */
     private void prepare(final PreparedStatement preparedStatement) throws SQLException {
         for (int i = 0; i < parameters.size(); i++) {
-            preparedStatement.setObject(i + 1, parameters.get(i));
+            parameters.get(i).set(preparedStatement,i+1);
         }
     }
 }
