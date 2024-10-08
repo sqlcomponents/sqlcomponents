@@ -83,39 +83,23 @@ public final SelectQuery sql(final String sql) {
         }
 
         public Optional<${name}> optional() throws <@throwsblock/> {
-            ${name} ${name?uncap_first} = null;
-            try (java.sql.Connection dbConnection = dbDataSource.getConnection(); 
-                 PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
-                int index = 1;
-                for (Value value:values
-                     ) {
-                    value.set(preparedStatement, index++);
-                }
+            DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
 
-                ResultSet resultSet = preparedStatement.executeQuery();
-
-                if (resultSet.next()) ${name?uncap_first} = rowMapper(resultSet);
+            for (Value value:values) {
+                sqlBuilder.param(value);
             }
-            return Optional.ofNullable(${name?uncap_first});
+            
+            return Optional.ofNullable(sqlBuilder.query(${name}Store.this::rowMapper).single());
         }
 
         public List<${name}> list() throws <@throwsblock/>{
-            List<${name}> arrays = new ArrayList();
-            try (java.sql.Connection dbConnection = dbDataSource.getConnection(); 
-                 PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
-                int index = 1;
-                for (Value value:values
-                     ) {
-                    value.set(preparedStatement, index++);
-                }
+            DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
 
-                ResultSet resultSet = preparedStatement.executeQuery();
-
-                while (resultSet.next()) {
-                    arrays.add(rowMapper(resultSet));
-                }
+            for (Value value:values) {
+                sqlBuilder.param(value);
             }
-            return arrays;
+            
+            return sqlBuilder.query(${name}Store.this::rowMapper).list();
         }
     }
 
