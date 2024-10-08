@@ -164,6 +164,44 @@ public class SqlBuilder {
             }
             return result;
         }
+
+
+
+    }
+
+    /**
+    * Gets Integer from SQL.
+    *
+    * @return result
+    * @throws SQLException
+    */
+    public int getInt() throws SQLException {
+        int count = 0;
+        try (Connection connection = DataManager.this.dbDataSource.getConnection()) {
+            count = getInt(connection);
+        }
+        return count;
+    }
+
+    /**
+    * Gets Integer from SQL.
+    *
+    * @param connection the database connection used to execute the query
+    * @return result
+    * @throws SQLException
+    */
+    private int getInt(final Connection connection) throws SQLException {
+        int count = 0;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+
+        }
+        return count;
     }
 
     /**

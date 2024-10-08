@@ -29,7 +29,7 @@ public sealed class SelectStatement permits SelectStatementWithWhere {
 
 
         public LimitClause limit(final int limit) {
-                return new LimitClause(this,limit);
+                return new LimitClause(limit);
         }
 
         private SelectStatement() {
@@ -54,37 +54,24 @@ public sealed class SelectStatement permits SelectStatementWithWhere {
 	}
 
         public final int count() throws SQLException {
-                int count = 0;
 		final String query = <@compress single_line=true>"
                 SELECT
 		COUNT(*)
 		FROM ${table.escapedName?j_string}
                 </@compress>" 
                 + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
-                try (java.sql.Connection dbConnection = dbDataSource.getConnection();
-                PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
-                
-                ResultSet resultSet = preparedStatement.executeQuery();
-                                
-                while (resultSet.next()) {
-                                        count = resultSet.getInt(1);
-                                }
-                                
-                } 
-                return count;
+                return dataManager.sql(query).getInt();
 	}
 public final SelectQuery sql(final String sql) {
-            return new SelectQuery(this, sql);
+            return new SelectQuery(sql);
     }
 
     public final class SelectQuery  {
 
-        private final SelectStatement selectStatement;
         private final String sql;
         private final List<Value> values;
 
-        public SelectQuery(final SelectStatement selectStatement, final String sql) {
-            this.selectStatement = selectStatement;
+        public SelectQuery(final String sql) {
             this.sql = sql;
             this.values = new ArrayList<>();
         }
@@ -134,14 +121,13 @@ public final SelectQuery sql(final String sql) {
 
 
         public final class LimitClause  {
-                private final SelectStatement selectStatement;
+
                 private final String asSql;
 
-                private LimitClause(final SelectStatement selectStatement,final int limit) {
-                        this.selectStatement = selectStatement;
+                private LimitClause(final int limit) {
                         asSql = " LIMIT " + limit;
 
-                        this.selectStatement.limitClause = this;
+                        limitClause = this;
                 }
 
                 private String asSql() {
@@ -162,7 +148,7 @@ public final SelectQuery sql(final String sql) {
                 }
                 <#else>
                 public DataManager.Page<${name}> execute() throws <@throwsblock/> {
-                    return DataManager.page(this.selectStatement.execute(), selectStatement.count());
+                    return DataManager.page(SelectStatement.this.execute(), count());
                 }
                 </#if>
 
@@ -174,7 +160,7 @@ public final SelectQuery sql(final String sql) {
                                 this.limitClause = limitClause;
                                 asSql = " OFFSET " + offset;
 
-                                this.limitClause.selectStatement.offsetClause = this;
+                                offsetClause = this;
                         }
 
                         private String asSql() {
