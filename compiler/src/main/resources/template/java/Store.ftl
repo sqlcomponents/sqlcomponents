@@ -14,6 +14,13 @@ import java.util.stream.Collectors;
     */
     public final class ${name}Store  {
 
+    /**
+    * Retrieves an instance of ${name}Store.
+    *
+    * @param theDataManager  The DataManager instance.
+    * @param theObserver     The observer to notify for data changes.
+    * @return an instance of ${name}Store
+    */
     public static ${name}Store get${name}Store(
     final DataManager theDataManager
     ,final DataManager.Observer theObserver
@@ -26,7 +33,6 @@ import java.util.stream.Collectors;
     return new ${name}Store(
     theDataManager
     ,theObserver
-
 
     <#if containsEncryptedProperty() >
         <#assign a=addImportStatement("java.util.function.Function")>
@@ -49,7 +55,10 @@ import java.util.stream.Collectors;
     </#if>
 
     /**
-    * Datastore
+    * Constructor for ${name}Store.
+    *
+    * @param theDataManager   The DataManager instance.
+    * @param theObserver      The observer for data changes.
     */
     private ${name}Store(
     final DataManager theDataManager
@@ -79,7 +88,14 @@ import java.util.stream.Collectors;
     </#list>
 
     <#if (returningProperties?size > 0) >
-
+    /**
+    * Maps a row from ResultSet for returning properties.
+    *
+    * @param rs The ResultSet.
+    * @param inserting${name} The inserting ${name} instance.
+    * @return A new ${name} object.
+    * @throws SQLException if any SQL error occurs.
+    */
     private ${name} rowMapperForReturning(final ResultSet rs,final ${name} inserting${name}) throws <@throwsblock/>{
     return new ${name}(
 
@@ -105,7 +121,13 @@ import java.util.stream.Collectors;
     }
 
     </#if>
-
+    /**
+    * Maps a row from ResultSet.
+    *
+    * @param rs The ResultSet.
+    * @return A new ${name} object.
+    * @throws SQLException if any SQL error occurs.
+    */
     private ${name} rowMapper(ResultSet rs) throws <@throwsblock/> {
     return new ${name}(
     <#assign index=1>
@@ -124,69 +146,112 @@ import java.util.stream.Collectors;
 
     <#list properties as property>
         <#assign a=addImportStatement(property.dataType)>
-
+        /**
+        * Creates a Value for ${property.name}.
+        *
+        * @param value The value of type ${getClassName(property.dataType)}.
+        * @return A Value object.
+        */
         public static Value<Column.${property.name?cap_first}Column,${getClassName(property.dataType)}> ${property.name}(final ${getClassName(property.dataType)} value) {
         return new Value<>(${property.name}(),value);
         }
 
+        /**
+        * Retrieves the column for ${property.name}.
+        *
+        * @return The column for ${property.name}.
+        */
         public static Column.${property.name?cap_first}Column ${property.name}() {
         return new WhereClause().${property.name}();
         }
 
     </#list>
+    
+     /**
+     * Class for building the SQL WhereClause.
+     */
+    public static class WhereClause extends PartialWhereClause {
+        private WhereClause() {
+            super();
+        }
 
-    public static class WhereClause  extends PartialWhereClause  {
-    private WhereClause(){
-    super();
-    }
-    private String asSql() {
-    return nodes.isEmpty() ? null : nodes.stream().map(node -> {
-    String asSql;
-    if (node instanceof Column) {
-    asSql = ((Column) node).asSql();
-    } else if (node instanceof WhereClause) {
-    asSql = "(" + ((WhereClause) node).asSql() + ")";
-    } else {
-    asSql = (String) node;
-    }
-    return asSql;
-    }).collect(Collectors.joining(" "));
+        private String asSql() {
+            return nodes.isEmpty() ? null : nodes.stream().map(node -> {
+                if (node instanceof Column) {
+                    return ((Column) node).asSql();
+                } else if (node instanceof WhereClause) {
+                    return "(" + ((WhereClause) node).asSql() + ")";
+                } else {
+                    return (String) node;
+                }
+            }).collect(Collectors.joining(" "));
+        }
+
+        /**
+        * Adds "AND" to the clause.
+        *
+        * @return This PartialWhereClause instance.
+        */
+        public PartialWhereClause and() {
+            this.nodes.add("AND");
+            return this;
+        }
+
+        /**
+        * Adds "OR" to the clause.
+        *
+        * @return This PartialWhereClause instance.
+        */
+        public PartialWhereClause or() {
+            this.nodes.add("OR");
+            return this;
+        }
+
+        /**
+        * Adds "AND" followed by the given WhereClause.
+        *
+        * @param whereClause The WhereClause to add.
+        * @return This WhereClause instance.
+        */
+        public WhereClause and(final WhereClause whereClause) {
+            this.nodes.add("AND");
+            this.nodes.add(whereClause);
+            return this;
+        }
+
+        /**
+        * Adds "OR" followed by the given WhereClause.
+        *
+        * @param whereClause The WhereClause to add.
+        * @return This WhereClause instance.
+        */
+        public WhereClause or(final WhereClause whereClause) {
+            this.nodes.add("OR");
+            this.nodes.add(whereClause);
+            return this;
+        }
+
     }
 
-    public PartialWhereClause and() {
-    this.nodes.add("AND");
-    return this;
-    }
-
-    public PartialWhereClause  or() {
-    this.nodes.add("OR");
-    return this;
-    }
-
-    public WhereClause  and(final WhereClause  whereClause) {
-    this.nodes.add("AND");
-    this.nodes.add(whereClause);
-    return (WhereClause) this;
-    }
-
-    public WhereClause  or(final WhereClause  whereClause) {
-    this.nodes.add("OR");
-    this.nodes.add(whereClause);
-    return (WhereClause) this;
-    }
-    }
-
+    /**
+    * Partial SQL WhereClause.
+    */
     public static class PartialWhereClause  {
 
-    protected final List<Object> nodes;
+        protected final List<Object> nodes;
 
-    private PartialWhereClause() {
-    this.nodes = new ArrayList<>();
-    }
+        private PartialWhereClause() {
+            this.nodes = new ArrayList<>();
+        }
 
 
     <#list properties as property>
-
+        
+        /**
+        * Adds ${property.name} to the SQL clause.
+        *
+        * @return The column for ${property.name}.
+        */
         public Column.${property.name?cap_first}Column ${property.name}() {
         Column.${property.name?cap_first}Column query = new Column.${property.name?cap_first}Column(this);
         this.nodes.add(query);
@@ -195,17 +260,12 @@ import java.util.stream.Collectors;
 
     </#list>
 
-
-
-
-
     }
 
-
-
-
+    /**
+    * Abstract class for defining columns in the DataManager.
+    */
     public static abstract class Column<T> implements DataManager.Column<T> {
-
 
     private final PartialWhereClause  whereClause ;
 
