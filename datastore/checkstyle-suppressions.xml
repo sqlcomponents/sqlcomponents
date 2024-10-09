@@ -4,7 +4,7 @@
         "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 <suppressions>
     <suppress files="[\\/]org[\\/]example[\\/]store" checks="."/>
-    <suppress files="[\\/]org[\\/]example[\\/]model" checks="."/>
+    <suppress files="[\\/]org[\\/]example[\\/]model" checks="FileLength"/>
 
     <suppress checks="."
               files="DataManager"/>
