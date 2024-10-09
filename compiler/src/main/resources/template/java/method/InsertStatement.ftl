@@ -78,7 +78,7 @@
             </#if>
         }
 
-        private int prepare(final DataManager.SqlBuilder sqlBuilder,final ${name} ${name?uncap_first}, int i) throws SQLException {
+        private void prepare(final DataManager.SqlBuilder sqlBuilder,final ${name} ${name?uncap_first}) {
             <#assign index=0>
             <#assign column_index=1>
             <#list insertableProperties as property>
@@ -96,14 +96,11 @@
                 </#if>
             </#if>
             </#list>
-            return i;
         }
 
-        private void prepare(final DataManager.SqlBuilder sqlBuilder,final List<${name}> ${name?uncap_first}s) throws SQLException {
-            int startIndex = 1;
+        private void prepare(final DataManager.SqlBuilder sqlBuilder,final List<${name}> ${name?uncap_first}s) {
             for ( ${name} ${name?uncap_first} : ${name?uncap_first}s) {
-
-            startIndex = prepare(sqlBuilder, ${name?uncap_first}, startIndex);
+                prepare(sqlBuilder, ${name?uncap_first});
             }
         }
 
@@ -129,13 +126,11 @@
             
 
             public int execute() throws SQLException  {
-                int insertedRows = 0;
-
                 final String query = "<@insertquery/>";
 
                 DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
 
-                prepare(sqlBuilder,${name?uncap_first},1);
+                prepare(sqlBuilder,${name?uncap_first});
 
                 return sqlBuilder.executeUpdate();
             }
@@ -149,7 +144,7 @@
                 final String query =  <@compress single_line=true>"<@insertquery/><@returning/>"</@compress>;
                 
                 DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
-                prepare(sqlBuilder,${name?uncap_first},1);
+                prepare(sqlBuilder,${name?uncap_first});
                 
 
 
@@ -194,7 +189,6 @@
 
 
             public int execute() throws SQLException  {
-                int insertedRows = 0;
                 String query = "<@insertquery/>";
 
                 if (${name?uncap_first}s.size() > 1) {
