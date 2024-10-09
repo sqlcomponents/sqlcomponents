@@ -1,9 +1,7 @@
 <#macro insertquery>
 <@compress single_line=true>INSERT INTO ${table.escapedName?j_string} (
-  		<#assign index=0>
-  		<#list insertableProperties as property>
-  			<#if index == 0><#assign index=1><#else>,</#if>${property.column.escapedName?j_string}
-  		</#list>
+    <@columnSelection properties=insertableProperties/>
+
   		)
   	    VALUES <@insertqueryvalues/>
   		</@compress>
