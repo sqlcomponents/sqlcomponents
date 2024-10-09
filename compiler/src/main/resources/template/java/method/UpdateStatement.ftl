@@ -1,7 +1,6 @@
 
 <#macro updatetquery>
-  final String query = <@compress single_line=true>"
-		UPDATE ${table.escapedName?j_string} SET
+  final String query =<@compress single_line=true>"UPDATE ${table.escapedName?j_string} SET
         		<#assign index=0>
         		<#list updatableProperties as property>
         			<#if property.column.primaryKeyIndex == 0>
@@ -14,8 +13,7 @@
 </#macro>
 
 <#macro updatewithsetquery>
-  final String query = <@compress single_line=true>"
-		UPDATE ${table.escapedName?j_string} SET "+
+  final String query = <@compress single_line=true>"UPDATE ${table.escapedName?j_string} SET "+
                 getSetValues()
 		</@compress>
 + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
