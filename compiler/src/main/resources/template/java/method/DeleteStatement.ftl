@@ -66,19 +66,13 @@ public final class DeleteStatement {
         }
 
         public int execute() throws SQLException {
-            int deletedRows = 0 ;
-            try (java.sql.Connection dbConnection = dbDataSource.getConnection();
-                PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
+            DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
 
-                    int index = 1;
-                for (Value value:values
-                     ) {
-                    value.set(preparedStatement, index++);
-                }
-
-                deletedRows = preparedStatement.executeUpdate();
+            for (Value value:values) {
+                sqlBuilder.param(value);
             }
-            return deletedRows;
+            
+            return sqlBuilder.executeUpdate();
         }
 
 

@@ -58,13 +58,13 @@
             </#if>
         }
 
-        private void prepare(final PreparedStatement preparedStatement,final ${name} ${name?uncap_first}) throws SQLException {
+        private void prepare(final DataManager.SqlBuilder sqlBuilder,final ${name} ${name?uncap_first}) throws SQLException {
             <#assign index=0>
             <#assign column_index=1>
             <#list updatableProperties as property>
                 <#if containsProperty(property,orm.updateMap)>
                     <#if property.column.primaryKeyIndex == 0>
-                    <#if index == 0><#assign index=1><#else></#if>${property.name?uncap_first}(${name?uncap_first+"."+property.name + "()"}).set(preparedStatement,${column_index});
+                    <#if index == 0><#assign index=1><#else></#if>sqlBuilder.param(${property.name?uncap_first}(${name?uncap_first+"."+property.name + "()"}));
                                                                                 <#assign column_index = column_index + 1>
                     </#if>
                 </#if>
@@ -73,16 +73,15 @@
 
 
         public SetByPKClause set(final ${name} ${name?uncap_first}) {
-            return new SetByPKClause(dbDataSource,${name?uncap_first});
+            return new SetByPKClause(${name?uncap_first});
         }
 
         public final class SetByPKClause  {
-                private final javax.sql.DataSource dbDataSource;
+    
                 private WhereClause whereClause;
                 private final ${name} ${name?uncap_first};
 
-                SetByPKClause(final javax.sql.DataSource dbDataSource,final ${name} ${name?uncap_first}) {
-                    this.dbDataSource = dbDataSource;
+                SetByPKClause(final ${name} ${name?uncap_first}) {
                     this.${name?uncap_first} = ${name?uncap_first};
                 }
 
@@ -96,14 +95,9 @@
                     int updtedRows = 0;
                     <@updatetquery/>
 
-                    try (java.sql.Connection dbConnection = dbDataSource.getConnection();
-                        PreparedStatement preparedStatement = dbConnection.prepareStatement(query)){
-
-                        prepare(preparedStatement,${name?uncap_first});
-
-                        updtedRows = preparedStatement.executeUpdate();
-                    }
-                    return updtedRows;
+                    DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
+                    prepare(sqlBuilder,cache);
+                    return sqlBuilder.executeUpdate();
                 }
 
                 <#if table.hasPrimaryKey>
@@ -174,22 +168,16 @@
                 }
                 
                 public final int execute() throws SQLException  {
-                    int updtedRows = 0;
+                    
                     <@updatewithsetquery/>
 
-                    try (java.sql.Connection dbConnection = dbDataSource.getConnection();
-                        PreparedStatement preparedStatement = dbConnection.prepareStatement(query)){
+                    DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
 
-                        int index = 1;
-                        for (Value value:
-                                this.setClause.values) {
-                            value.set(preparedStatement,index++);
-                        }
-
-
-                        updtedRows = preparedStatement.executeUpdate();
+                    for (Value value:values) {
+                        sqlBuilder.param(value);
                     }
-                    return updtedRows;
+
+                    return sqlBuilder.executeUpdate();
                 }
 
                 public final List<${name}> returning() throws <@throwsblock/>  {
@@ -220,17 +208,13 @@
         }
 
         public int execute() throws SQLException {
-            try (java.sql.Connection dbConnection = dbDataSource.getConnection();
-                PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
+            DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
 
-                    int index = 1;
-                for (Value value:values
-                    ) {
-                    value.set(preparedStatement, index++);
-                }
-
-                return preparedStatement.executeUpdate();
+            for (Value value:values) {
+                sqlBuilder.param(value);
             }
+            
+            return sqlBuilder.executeUpdate();
         }
 
 

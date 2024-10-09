@@ -48,7 +48,7 @@ public final class DataManager {
         <#list orm.entities as entity>
         <#if !entity.type?? >
         this.${entity.name?uncap_first}Store = ${entity.name}Store
-.get${entity.name}Store(dbDataSource, this, this.observer<#if entity.containsEncryptedProperty() >,
+.get${entity.name}Store(this, this.observer<#if entity.containsEncryptedProperty() >,
              encryptionFunction,
              decryptionFunction
         </#if>);
