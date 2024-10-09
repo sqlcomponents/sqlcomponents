@@ -42,8 +42,7 @@ public sealed class SelectStatement permits SelectStatementWithWhere {
 
         public final List<${name}> execute() throws <@throwsblock/> {
             
-		final String query = <@compress single_line=true>"
-                SELECT
+		final String query = <@compress single_line=true>"SELECT
 		<@columnSelection properties=properties/> 
 		FROM ${table.escapedName?j_string}
                 </@compress>" 
@@ -54,8 +53,7 @@ public sealed class SelectStatement permits SelectStatementWithWhere {
 	}
 
         public final int count() throws SQLException {
-		final String query = <@compress single_line=true>"
-                SELECT
+		final String query = <@compress single_line=true>"SELECT
 		COUNT(*)
 		FROM ${table.escapedName?j_string}
                 </@compress>" 
@@ -179,8 +177,7 @@ public final SelectQuery sql(final String sql) {
     }
     public Optional<${name}> select(${getPrimaryKeysAsParameterString()}, WhereClause whereClause) throws <@throwsblock/>  {
         ${name} ${name?uncap_first} = null;
-		final String query = <@compress single_line=true>"
-                SELECT
+		final String query = <@compress single_line=true>"SELECT
 		<@columnSelection properties=properties/>
 		FROM ${table.escapedName?j_string}
 		WHERE
@@ -203,8 +200,7 @@ public final SelectQuery sql(final String sql) {
     }
         
     public boolean exists(${getPrimaryKeysAsParameterString()}) throws SQLException {
-        final String query = <@compress single_line=true>"
-                SELECT
+        final String query = <@compress single_line=true>"SELECT
 		1
 		FROM ${table.escapedName?j_string}
 		WHERE
@@ -231,8 +227,7 @@ public final SelectQuery sql(final String sql) {
     <#list table.uniqueColumns as uniqueColumn>
     public Optional<${name}> selectBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws <@throwsblock/> {
         
-            final String query = <@compress single_line=true>"
-                    SELECT
+            final String query = <@compress single_line=true>"SELECT
             <@columnSelection properties=properties/>
             FROM ${table.escapedName?j_string}
             WHERE
@@ -252,8 +247,7 @@ public final SelectQuery sql(final String sql) {
 
     public boolean existsBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws <@throwsblock/> {
 
-            final String query = <@compress single_line=true>"
-                    SELECT
+            final String query = <@compress single_line=true>"SELECT
             1
             FROM ${table.escapedName?j_string}
             WHERE
