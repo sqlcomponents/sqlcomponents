@@ -75,6 +75,31 @@ public class SqlBuilder {
         return this.new Query<>(rowMapper);
     }
 
+        /**
+     * Checks if result set exists.
+     * @return exits
+     */
+    public boolean exists() throws SQLException {
+        boolean isExists = false;
+        try (Connection connection = DataManager.this.dbDataSource.getConnection()){
+            isExists = exists(connection);
+        }
+        return isExists;
+    }
+
+    /**
+     * Checks if result set exists.
+     * @return exits
+     */
+    public boolean exists(final Connection connection) throws SQLException {
+        boolean isExists = false;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            prepare(preparedStatement);
+            isExists = preparedStatement.executeQuery().next();
+        }
+        return isExists;
+    }
+
     /**
      * RowMapper is an interface that defines how to map each row of a ResultSet
      * to a Java object.

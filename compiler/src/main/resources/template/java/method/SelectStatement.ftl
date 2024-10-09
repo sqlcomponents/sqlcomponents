@@ -193,16 +193,15 @@ public final SelectQuery sql(final String sql) {
                 </@compress>"
 
                 + ( whereClause == null ? "" : (" AND " + whereClause.asSql()) );
-        try (java.sql.Connection dbConnection = dbDataSource.getConnection();
-            PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
-            ${getPrimaryKeysAsPreparedStatements()}
-            ResultSet resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) ${name?uncap_first} = rowMapper(resultSet);
-        }
-        return Optional.ofNullable(${name?uncap_first});
-	}
+        DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
+    
+        ${getPrimaryKeysAsPreparedStatements()}
 
+        return Optional.ofNullable(sqlBuilder.query(this::rowMapper).single());
+            
+    }
+        
     public boolean exists(${getPrimaryKeysAsParameterString()}) throws SQLException {
         final String query = <@compress single_line=true>"
                 SELECT
@@ -216,15 +215,11 @@ public final SelectQuery sql(final String sql) {
 			</#if>
 		</#list>
                 </@compress>";
-        boolean isExists = false;
-        try (java.sql.Connection dbConnection = dbDataSource.getConnection();
-            PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
-            ${getPrimaryKeysAsPreparedStatements()}
-            ResultSet resultSet = preparedStatement.executeQuery();
+        DataManager.SqlBuilder sqlBuilder = dataManager.sql(query); // HEllo
 
-            isExists = resultSet.next();
-        }
-		return isExists;
+        ${getPrimaryKeysAsPreparedStatements()}
+
+		return sqlBuilder.exists();
 	}
 
 </#if>
@@ -235,7 +230,7 @@ public final SelectQuery sql(final String sql) {
 <#assign a=addImportStatement("java.util.Optional")>
     <#list table.uniqueColumns as uniqueColumn>
     public Optional<${name}> selectBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws <@throwsblock/> {
-        ${name} ${name?uncap_first} = null;
+        
             final String query = <@compress single_line=true>"
                     SELECT
             <@columnSelection properties=properties/>
@@ -245,14 +240,14 @@ public final SelectQuery sql(final String sql) {
             ${getUniqueKeysAsWhereClause(uniqueColumn.name)}
 
                     </@compress>";
-            try (java.sql.Connection dbConnection = dbDataSource.getConnection();
-                PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
-                ${getUniqueKeysAsPreparedStatements(uniqueColumn.name)}
-                ResultSet resultSet = preparedStatement.executeQuery();
 
-                if (resultSet.next()) ${name?uncap_first} = rowMapper(resultSet);
-            }
-            return Optional.ofNullable(${name?uncap_first});
+        DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
+    
+        ${getUniqueKeysAsPreparedStatements(uniqueColumn.name)}
+
+        return Optional.ofNullable(sqlBuilder.query(this::rowMapper).single());
+
+            
     }
 
     public boolean existsBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws <@throwsblock/> {
@@ -266,15 +261,11 @@ public final SelectQuery sql(final String sql) {
             ${getUniqueKeysAsWhereClause(uniqueColumn.name)}
 
                     </@compress>";
-            boolean isExists = false;
-            try (java.sql.Connection dbConnection = dbDataSource.getConnection();
-                PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
-                ${getUniqueKeysAsPreparedStatements(uniqueColumn.name)}
-                ResultSet resultSet = preparedStatement.executeQuery();
+            DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
+    
+        ${getUniqueKeysAsPreparedStatements(uniqueColumn.name)}
 
-                isExists = resultSet.next();
-            }
-            return isExists;
+        return sqlBuilder.exists();
     }
 
     </#list>
@@ -347,7 +338,7 @@ public final SelectQuery sql(final String sql) {
     	    <#if uniqueColumn.name == uniqueConstraintGroupName>
     	        <#list uniqueColumn.columns as column>
     	            <#local property=getPropertyByColumnName(column.columnName)>
-    	            <#local pkAsParameterStr = pkAsParameterStr + "${property.name?uncap_first}(${property.name}).set(preparedStatement,${index});\n\t"><#assign index=index+1>
+    	            <#local pkAsParameterStr = pkAsParameterStr + "sqlBuilder.param(${property.name?uncap_first}(${property.name}));\n\t"><#assign index=index+1>
     	        </#list>
     	    </#if>
     	</#list>
