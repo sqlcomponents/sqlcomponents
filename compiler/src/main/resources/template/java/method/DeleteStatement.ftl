@@ -10,11 +10,9 @@ public int delete(${getPrimaryKeysAsParameterString()}) throws SQLException  {
 						<#if index == 0><#assign index=1><#else>,</#if>${property.column.escapedName?j_string} = ?
 						</#if>
 					</#list></@compress>";
-        try (java.sql.Connection dbConnection = dbDataSource.getConnection();
-			PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
-			${getPrimaryKeysAsPreparedStatements()}
-            return preparedStatement.executeUpdate();
-        }
+        DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
+        ${getPrimaryKeysAsPreparedStatements()}
+        return sqlBuilder.executeUpdate();
 	}
     </#if>
     <#assign a=addImportStatement("java.sql.PreparedStatement")>
