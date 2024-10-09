@@ -54,7 +54,7 @@ public sealed class SelectStatement permits SelectStatementWithWhere {
 
         public final int count() throws SQLException {
 		final String query = <@compress single_line=true>"SELECT
-		COUNT(*)
+		COUNT(id)
 		FROM ${table.escapedName?j_string}
                 </@compress>" 
                 + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
