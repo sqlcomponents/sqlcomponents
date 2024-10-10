@@ -118,7 +118,7 @@
 
         public final class ValueClause  {
 
-            private ${name} ${name?uncap_first};
+            private final ${name} ${name?uncap_first};
 
             ValueClause(final ${name} ${name?uncap_first}) {
                 this.${name?uncap_first} = ${name?uncap_first};
@@ -138,17 +138,14 @@
             <#if table.hasPrimaryKey>
 
             public ${name} returning() throws <@throwsblock/>  {
-                ${name} inserted${name} = null ;
 
+                ${name} inserted${name};
                 
                 final String query =  <@compress single_line=true>"<@insertquery/><@returning/>"</@compress>;
                 
                 DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
                 prepare(sqlBuilder,${name?uncap_first});
-                
-
-
-
+  
                     <#if orm.database.dbType == 'POSTGRES' && orm.database.databaseMajorVersion gt 10 >
                       <#if ((returningProperties?size) > 0)>
                       inserted${name} = sqlBuilder.query(resultSet -> rowMapperForReturning(resultSet,${name?uncap_first})).single();
@@ -180,13 +177,11 @@
 
         public final class ValuesClause  {
 
-            private List<${name}> ${name?uncap_first}s;
+            private final List<${name}> ${name?uncap_first}s;
 
             ValuesClause (final List<${name}> ${name?uncap_first}s) {
                 this.${name?uncap_first}s = ${name?uncap_first}s;
             }
-
-
 
             public int execute() throws SQLException  {
                 String query = "<@insertquery/>";
@@ -198,7 +193,6 @@
                 }
 
                 DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
-
                 prepare(sqlBuilder,${name?uncap_first}s);
 
                 return sqlBuilder.executeUpdate();
@@ -208,7 +202,7 @@
             <#if table.hasPrimaryKey>
 
             public List<${name}> returning() throws <@throwsblock/>  {
-                List<${name}> inserted${name}s = new ArrayList<>() ;
+                List<${name}> inserted${name}s ;
                 String query = "<@insertquery/>";
 
                 if (${name?uncap_first}s.size() > 1) {

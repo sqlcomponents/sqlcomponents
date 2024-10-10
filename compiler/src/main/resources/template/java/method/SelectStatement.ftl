@@ -70,7 +70,7 @@ public final SelectQuery sql(final String sql) {
     public final class SelectQuery  {
 
         private final String sql;
-        private final List<Value> values;
+        private final List<Value<?,?>> values;
 
         public SelectQuery(final String sql) {
             this.sql = sql;
@@ -78,7 +78,7 @@ public final SelectQuery sql(final String sql) {
         }
 
 
-        public SelectQuery param(final Value value) {
+        public SelectQuery param(final Value<?,?> value) {
             this.values.add(value);
             return this;
         }
@@ -86,7 +86,7 @@ public final SelectQuery sql(final String sql) {
         public Optional<${name}> optional() throws <@throwsblock/> {
             DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
 
-            for (Value value:values) {
+            for (Value<?,?> value:values) {
                 sqlBuilder.param(value);
             }
             
@@ -96,7 +96,7 @@ public final SelectQuery sql(final String sql) {
         public List<${name}> list() throws <@throwsblock/>{
             DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
 
-            for (Value value:values) {
+            for (Value<?,?> value:values) {
                 sqlBuilder.param(value);
             }
             
@@ -179,7 +179,7 @@ public final SelectQuery sql(final String sql) {
             return select(${getPrimaryKeysAsParameters()}, null);
     }
     public Optional<${name}> select(${getPrimaryKeysAsParameterString()}, WhereClause whereClause) throws <@throwsblock/>  {
-        ${name} ${name?uncap_first} = null;
+        
 		final String query = <@compress single_line=true>"SELECT
 		<@columnSelection properties=properties/>
 		FROM ${table.escapedName?j_string}

@@ -21,9 +21,6 @@
 
 <#if table.tableType == 'TABLE' >
 
-
-
-
 	public UpdateStatement update() {
         return new UpdateStatement(       
         <#if containsEncryptedProperty() >
@@ -120,16 +117,16 @@
              </#if>
             }
 
-        public SetClause set(final Value... values) {
+        public SetClause set(final Value<?,?>... values) {
             return new SetClause(values);
         }
 
         public final class SetClause  {
             
-            private Value[] values;
+            private final Value<?,?>[] values;
         
 
-            SetClause(final Value[] values) {
+            SetClause(final Value<?,?>[] values) {
                 this.values = values;
             }
 
@@ -139,7 +136,7 @@
 
             public final class SetWhereClause  {
                 private final SetClause setClause;
-                private WhereClause whereClause;
+                private final WhereClause whereClause;
 
                 SetWhereClause(final SetClause setClause, WhereClause whereClause) {
                     this.setClause = setClause;
@@ -149,7 +146,7 @@
                 private String getSetValues() {
                     StringBuilder stringBuilder = new StringBuilder();
                     boolean isFirst = true;
-                    for (Value value:
+                    for (Value<?,?> value:
                             this.setClause.values) {
                         if(isFirst) {
                             isFirst = false;
@@ -161,20 +158,20 @@
                     return stringBuilder.toString();
                 }
                 
-                public final int execute() throws SQLException  {
+                public int execute() throws SQLException  {
                     
                     <@updatewithsetquery/>
 
                     DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
 
-                    for (Value value:values) {
+                    for (Value<?,?> value:values) {
                         sqlBuilder.param(value);
                     }
 
                     return sqlBuilder.executeUpdate();
                 }
 
-                public final List<${name}> returning() throws <@throwsblock/>  {
+                public List<${name}> returning() throws <@throwsblock/>  {
                     return null;
                 }
             }
@@ -188,7 +185,7 @@
     public final class UpdateQuery  {
 
         private final String sql;
-        private final List<Value> values;
+        private final List<Value<?,?>> values;
 
         public UpdateQuery(final String sql) {
             this.sql = sql;
@@ -196,7 +193,7 @@
         }
 
 
-        public UpdateQuery param(final Value value) {
+        public UpdateQuery param(final Value<?,?> value) {
             this.values.add(value);
             return this;
         }
@@ -204,7 +201,7 @@
         public int execute() throws SQLException {
             DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
 
-            for (Value value:values) {
+            for (Value<?,?> value:values) {
                 sqlBuilder.param(value);
             }
             

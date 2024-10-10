@@ -50,7 +50,7 @@ public final class DeleteStatement {
     public final class DeleteQuery  {
 
         private final String sql;
-        private final List<Value> values;
+        private final List<Value<?,?>> values;
 
         public DeleteQuery(final String sql) {
             this.sql = sql;
@@ -58,7 +58,7 @@ public final class DeleteStatement {
         }
 
 
-        public DeleteQuery param(final Value value) {
+        public DeleteQuery param(final Value<?,?> value) {
             this.values.add(value);
             return this;
         }
@@ -66,7 +66,7 @@ public final class DeleteStatement {
         public int execute() throws SQLException {
             DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
 
-            for (Value value:values) {
+            for (Value<?,?> value:values) {
                 sqlBuilder.param(value);
             }
             

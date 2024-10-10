@@ -7,7 +7,7 @@
 public class SqlBuilder {
 
     private final String sql;         // The SQL query to be executed.
-    private final List<Value> parameters;  // A list of parameters for the query.
+    private final List<Value<?,?>> parameters;  // A list of parameters for the query.
 
     /**
      * Constructor that initializes the SqlBuilder with a given SQL query.
@@ -26,7 +26,7 @@ public class SqlBuilder {
      * @param value the value of the parameter to be added
      * @return the current SqlBuilder instance, for method chaining
      */
-    public SqlBuilder param(Value value) {
+    public SqlBuilder param(Value<?,?> value) {
         this.parameters.add(value);
         return this;
     }
@@ -143,7 +143,7 @@ public class SqlBuilder {
          * @throws SQLException if a database access error occurs
          */
         public T single() throws SQLException {
-            T result = null;
+            T result;
             try (Connection connection = DataManager.this.dbDataSource.getConnection()) {
                 result = single(connection);
             }
