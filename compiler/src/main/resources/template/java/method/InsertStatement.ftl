@@ -139,7 +139,7 @@
 
             public ${name} returning() throws <@throwsblock/>  {
 
-                ${name} inserted${name};
+                ${name} inserted${name} = null;
                 
                 final String query =  <@compress single_line=true>"<@insertquery/><@returning/>"</@compress>;
                 
@@ -202,7 +202,7 @@
             <#if table.hasPrimaryKey>
 
             public List<${name}> returning() throws <@throwsblock/>  {
-                List<${name}> inserted${name}s ;
+                List<${name}> inserted${name}s = null;
                 String query = "<@insertquery/>";
 
                 if (${name?uncap_first}s.size() > 1) {
