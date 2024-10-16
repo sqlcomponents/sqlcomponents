@@ -15,6 +15,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 17
+          distribution: zulu
           server-id: github
           settings-path: ${{ github.workspace }}
       - name: Publish puglin to GitHub Maven Repository
