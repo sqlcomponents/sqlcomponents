@@ -14,65 +14,30 @@
     </parent>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
+        <commons-net.version>3.11.1</commons-net.version>
+        <postgresql.version>42.7.4</postgresql.version>
+        <jackson-databind.version>2.18.0-rc1</jackson-databind.version>
+        <jackson-datatype-jts.version>1.2.10</jackson-datatype-jts.version>
+        <javax.json-api.version>1.1.4</javax.json-api.version>
     </properties>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/commons-net/commons-net -->
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>${commons-net.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.5.4</version>
+            <version>${postgresql.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.13.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-parameter-names</artifactId>
-            <version>2.13.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jdk8</artifactId>
-            <version>2.13.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.13.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr353</artifactId>
-            <version>2.13.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-json-org</artifactId>
-            <version>2.13.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.json</groupId>
-            <artifactId>javax.json-api</artifactId>
-            <version>1.1.4</version>
-            <scope>test</scope>
-        </dependency>
 
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.json</artifactId>
-            <version>1.1.4</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 </project>

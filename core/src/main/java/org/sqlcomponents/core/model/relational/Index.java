@@ -1,14 +1,11 @@
 package org.sqlcomponents.core.model.relational;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.sqlcomponents.core.model.relational.enums.Order;
 
 /**
  * The type represents an index on a table.
  */
-@Getter
-@Setter
+
 public class Index {
 
     /**
@@ -66,4 +63,87 @@ public class Index {
         this.table = paramTable;
     }
 
+    public Table getTable() {
+        return table;
+    }
+
+    public boolean isNonUnique() {
+        return nonUnique;
+    }
+
+    public void setNonUnique(final boolean theNonUnique) {
+        this.nonUnique = theNonUnique;
+    }
+
+    public String getIndexQualifier() {
+        return indexQualifier;
+    }
+
+    public void setIndexQualifier(final String theIndexQualifier) {
+        this.indexQualifier = theIndexQualifier;
+    }
+
+    public String getIndexName() {
+        return indexName;
+    }
+
+    public void setIndexName(final String theIndexName) {
+        this.indexName = theIndexName;
+    }
+
+    public short getType() {
+        return type;
+    }
+
+    public void setType(final short theType) {
+        this.type = theType;
+    }
+
+    public short getOrdinalPosition() {
+        return ordinalPosition;
+    }
+
+    public void setOrdinalPosition(final short theOrdinalPosition) {
+        this.ordinalPosition = theOrdinalPosition;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(final String theColumnName) {
+        this.columnName = theColumnName;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(final Order theOrder) {
+        this.order = theOrder;
+    }
+
+    public int getCardinality() {
+        return cardinality;
+    }
+
+    public void setCardinality(final int theCardinality) {
+        this.cardinality = theCardinality;
+    }
+
+    public int getPages() {
+        return pages;
+    }
+
+    public void setPages(final int thePages) {
+        this.pages = thePages;
+    }
+
+    public String getFilterCondition() {
+        return filterCondition;
+    }
+
+    public void setFilterCondition(final String theFilterCondition) {
+        this.filterCondition = theFilterCondition;
+    }
 }

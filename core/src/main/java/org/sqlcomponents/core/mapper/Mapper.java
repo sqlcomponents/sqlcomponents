@@ -7,11 +7,13 @@ import org.sqlcomponents.core.model.Method;
 import org.sqlcomponents.core.model.ORM;
 import org.sqlcomponents.core.model.Property;
 import org.sqlcomponents.core.model.Service;
-import org.sqlcomponents.core.model.relational.Column;
 import org.sqlcomponents.core.model.relational.Database;
-import org.sqlcomponents.core.model.relational.Package;
-import org.sqlcomponents.core.model.relational.Procedure;
 import org.sqlcomponents.core.model.relational.Table;
+import org.sqlcomponents.core.model.relational.Column;
+import org.sqlcomponents.core.model.relational.Procedure;
+import org.sqlcomponents.core.model.relational.Type;
+
+import org.sqlcomponents.core.model.relational.Package;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -43,11 +45,11 @@ public abstract class Mapper {
 
     /**
      * Gets data type.
-     *
+     * @param aEntity the entity
      * @param aColumn the a column
      * @return the data type
      */
-    public abstract String getDataType(Column aColumn);
+    public abstract String getDataType(Entity aEntity, Column aColumn);
 
     /**
      * Gets orm.
@@ -76,16 +78,20 @@ public abstract class Mapper {
      */
     private Method getMethod(final Procedure aProcedure) {
         List<Property> lProperties =
-                new ArrayList<>(aProcedure.getParameters().size());
+                new ArrayList<>(aProcedure.getInputParameters().size());
+        List<Property> outputProperties =
+                new ArrayList<>(aProcedure.getOutputParameters().size());
         Method lMethod = new Method(aProcedure);
         lMethod.setName(getPropertyName(aProcedure.getFunctionName()));
 
-        for (Column column : aProcedure.getParameters()) {
+        for (Column column : aProcedure.getInputParameters()) {
             lProperties.add(getProperty(null, column));
         }
         lMethod.setInputParameters(lProperties);
-
-        lMethod.setOutputProperty(getProperty(null, aProcedure.getOutput()));
+        for (Column column : aProcedure.getOutputParameters()) {
+            outputProperties.add(getProperty(null, column));
+        }
+        lMethod.setOutputParameters(outputProperties);
         return lMethod;
     }
 
@@ -146,7 +152,14 @@ public abstract class Mapper {
             }
             property.setUniqueConstraintGroup(getEntityName(
                     property.getColumn().getUniqueConstraintName()));
-            property.setDataType(getDataType(aColumn));
+            property.setTypeName(aColumn.getTypeName());
+            property.setTypeType(aColumn.getColumnType().name());
+//            if (aColumn.getColumnType().equals(ColumnType.ENUM)) {
+//                property.setDataType(
+//                        getEntityName(aColumn.getTypeName()) + "Type");
+//            } else {
+                property.setDataType(getDataType(aEntity, aColumn));
+//            }
             return property;
         }
         return null;
@@ -160,7 +173,9 @@ public abstract class Mapper {
     private List<Entity> getEntities() {
         Database lDatabase = application.getOrm().getDatabase();
         ArrayList<Entity> lEntities =
-                new ArrayList<>(lDatabase.getTables().size());
+                new ArrayList<>(lDatabase.getTables().size()
+                        + (lDatabase.getTypes() != null
+                        ? lDatabase.getTypes().size() : 0));
 
         List<Property> lProperties;
         Entity lEntity;
@@ -179,6 +194,19 @@ public abstract class Mapper {
 
             lEntity.setProperties(lProperties);
             lEntities.add(lEntity);
+        }
+        if (lDatabase.getTypes() != null) {
+            for (Type type : lDatabase.getTypes()) {
+                Table table = new Table(application.getOrm().getDatabase());
+                table.setTableName(type.getTypeName());
+                Entity entity = new Entity(application.getOrm(), table);
+                entity.setName(getEntityName(type.getTypeName()));
+                entity.setPluralName(getPluralName(entity.getName()));
+                entity.setBeanPackage(getEnumPackage(type.getTypeName()));
+                entity.setValues(type.getValues());
+                entity.setType(type.getTypeType().name());
+                lEntities.add(entity);
+            }
         }
         return lEntities;
     }
@@ -337,7 +365,15 @@ public abstract class Mapper {
     protected String getBeanPackage(final String aTableName) {
         return getPackage(aTableName, "model");
     }
-
+    /**
+     * Gets enum package.
+     *
+     * @param aTypeName the a type name
+     * @return the enum package
+     */
+    protected String getEnumPackage(final String aTypeName) {
+        return getPackage(aTypeName, "model.types");
+    }
     /**
      * Gets module name.
      *

@@ -8,12 +8,14 @@ import org.sqlcomponents.core.model.relational.Index;
 import org.sqlcomponents.core.model.relational.Key;
 import org.sqlcomponents.core.model.relational.Procedure;
 import org.sqlcomponents.core.model.relational.Table;
+import org.sqlcomponents.core.model.relational.Type;
 import org.sqlcomponents.core.model.relational.UniqueConstraint;
 import org.sqlcomponents.core.model.relational.enums.ColumnType;
 import org.sqlcomponents.core.model.relational.enums.DBType;
 import org.sqlcomponents.core.model.relational.enums.Flag;
 import org.sqlcomponents.core.model.relational.enums.Order;
 import org.sqlcomponents.core.model.relational.enums.TableType;
+import org.sqlcomponents.core.model.relational.enums.TypeType;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -21,6 +23,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.JDBCType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,10 +40,57 @@ import java.util.regex.Pattern;
  */
 public final class Crawler {
     /**
+     * Constant for input parameter type.
+     */
+    public static final int INPUT = 1;
+    /**
+     * Constant for output parameter type.
+     */
+    public static final int OUTPUT = 4;
+    /**
+     * Constant for inout parameter type.
+     */
+    public static final int INOUT = 2;
+    /**
+     * The constant MARIA_DB.
+     */
+    private static final String MARIA_DB = "mariadb";
+    /**
+     * The constant MYSQL_DB.
+     */
+    private static final String MYSQL_DB = "mysql";
+    /**
+     * The constant POSTGRES_DB.
+     */
+    private static final String POSTGRES_DB = "postgresql";
+    /**
+     * The constant H2_DB.
+     */
+    private static final String H2_DB = "h2";
+    /**
+     * The constant ORACLE_DB.
+     */
+    private static final String ORACLE_DB = "oracle";
+    /**
+     * The constant COMMA_STR.
+     */
+    private static final String COMMA_STR = ",";
+    /**
+     * The constant END_BR_REGX.
+     */
+    private static final String END_BR_REGX = "\\)";
+    /**
+     * The constant START_BR_REGX.
+     */
+    private static final String START_BR_REGX = "\\(";
+    /**
+     * The constant for varchar data type.
+     */
+    public static final int VARCHAR_DATA_TYPE = 12;
+    /**
      * The Database.
      */
     private final Database database = new Database();
-
     /**
      * The Application.
      */
@@ -211,7 +261,11 @@ public final class Crawler {
         database.setTables(getTables(application.getSchemaName(),
                 tableName -> matches(application.getTablePatterns(),
                         tableName)));
+        database.setFunctions(getProcedures());
         repair();
+
+        databaseMetaData.getConnection().close();
+
         return database;
     }
 
@@ -253,6 +307,12 @@ public final class Crawler {
             case POSTGRES_DB:
                 database.setDbType(DBType.POSTGRES);
                 break;
+            case H2_DB:
+                database.setDbType(DBType.H2);
+                break;
+            case ORACLE_DB:
+                database.setDbType(DBType.ORACLE);
+                break;
             case MYSQL_DB:
                 database.setDbType(DBType.MYSQL);
                 break;
@@ -263,31 +323,6 @@ public final class Crawler {
                 break;
         }
     }
-
-    /**
-     * The constant MARIA_DB.
-     */
-    private static final String MARIA_DB = "mariadb";
-    /**
-     * The constant MYSQL_DB.
-     */
-    private static final String MYSQL_DB = "mysql";
-    /**
-     * The constant POSTGRES_DB.
-     */
-    private static final String POSTGRES_DB = "postgresql";
-    /**
-     * The constant COMMA_STR.
-     */
-    private static final String COMMA_STR = ",";
-    /**
-     * The constant END_BR_REGX.
-     */
-    private static final String END_BR_REGX = "\\)";
-    /**
-     * The constant START_BR_REGX.
-     */
-    private static final String START_BR_REGX = "\\(";
 
     /**
      * Matches boolean.
@@ -301,8 +336,8 @@ public final class Crawler {
         if (!matches) {
             for (String pattern : aPatterns) {
                 matches = Pattern.matches(pattern, aValue);
-                if (matches) {
-                    break;
+                if (!matches) {
+                    return false;
                 }
             }
         }
@@ -339,7 +374,7 @@ public final class Crawler {
     private List<String> getSequences() throws SQLException {
         List<String> sequences = new ArrayList<>();
         ResultSet resultset = databaseMetaData.getTables(null, null, null,
-                new String[] {"SEQUENCE"});
+                new String[]{"SEQUENCE"});
 
         while (resultset.next()) {
             sequences.add(resultset.getString("table_name"));
@@ -362,13 +397,16 @@ public final class Crawler {
         List<Table> lTables = new ArrayList<>();
 
         String lSchemaNamePattern =
-                (database.getDbType() == DBType.MYSQL) ? aSchemeName : null;
+                (database.getDbType() == DBType.MYSQL
+                        || database.getDbType() == DBType.H2
+                        || database.getDbType() == DBType.ORACLE)
+                        ? aSchemeName : null;
         String lCatalog =
                 database.getDbType() == DBType.MYSQL ? aSchemeName : null;
 
         ResultSet lResultSet =
                 databaseMetaData.getTables(lCatalog, lSchemaNamePattern, null,
-                        new String[] {"TABLE"});
+                        new String[]{"TABLE", "VIEW", "MATERIALIZED VIEW" });
         while (lResultSet.next()) {
             final String tableName = lResultSet.getString("table_name");
             if (aTableFilter.test(tableName)) {
@@ -376,16 +414,15 @@ public final class Crawler {
                 bTable.setTableName(tableName);
                 bTable.setCategoryName(lResultSet.getString("table_cat"));
                 bTable.setSchemaName(lResultSet.getString("table_schem"));
+                String tableType = lResultSet.getString("table_type");
+                if (database.getDbType() == DBType.H2
+                        && tableType.equals("BASE TABLE")) {
+                    tableType = "TABLE";
+                }
                 bTable.setTableType(
-                        TableType.value(lResultSet.getString("table_type")));
+                        TableType.value(tableType));
                 bTable.setRemarks(lResultSet.getString("remarks"));
-                // bTable.setCategoryType(lResultSet.getString("type_cat"));
-                // bTable.setSchemaType(lResultSet.getString("type_schem"));
-                // bTable.setNameType(lResultSet.getString("type_name"));
-                // bTable.setSelfReferencingColumnName(lResultSet.getString
-                // ("self_referencing_col_name"));
-                // bTable.setReferenceGeneration(lResultSet.getString
-                // ("ref_generation"));
+
 
                 bTable.setColumns(getColumns(bTable));
                 bTable.setIndices(getIndices(bTable));
@@ -440,6 +477,7 @@ public final class Crawler {
         return indices;
     }
 
+
     /**
      * Gets columns.
      *
@@ -452,40 +490,33 @@ public final class Crawler {
         ResultSet lColumnResultSet =
                 databaseMetaData.getColumns(null, null, aTable.getTableName(),
                         null);
-        ColumnType lColumnType;
+
         while (lColumnResultSet.next()) {
             Column bColumn = new Column(aTable);
-            bColumn.setColumnName(lColumnResultSet.getString("COLUMN_NAME"));
             bColumn.setTableName(lColumnResultSet.getString("TABLE_NAME"));
-            bColumn.setTypeName(lColumnResultSet.getString("TYPE_NAME"));
-            lColumnType = ColumnType.value(
-                    JDBCType.valueOf(lColumnResultSet.getInt("DATA_TYPE")));
-            bColumn.setColumnType(lColumnType == ColumnType.OTHER
-                    ? getColumnTypeForOthers(bColumn) : lColumnType);
-            bColumn.setSize(lColumnResultSet.getInt("COLUMN_SIZE"));
-            bColumn.setDecimalDigits(lColumnResultSet.getInt("DECIMAL_DIGITS"));
-            bColumn.setRemarks(lColumnResultSet.getString("REMARKS"));
-            bColumn.setNullable(
-                    Flag.value(lColumnResultSet.getString("IS_NULLABLE")));
-            bColumn.setAutoIncrement(
-                    Flag.value(lColumnResultSet.getString("IS_AUTOINCREMENT")));
             bColumn.setTableCategory(lColumnResultSet.getString("TABLE_CAT"));
             bColumn.setTableSchema(lColumnResultSet.getString("TABLE_SCHEM"));
+
+            bColumn.setSize(lColumnResultSet.getInt("COLUMN_SIZE"));
+            bColumn.setDecimalDigits(lColumnResultSet.getInt("DECIMAL_DIGITS"));
+            bColumn.setAutoIncrement(
+                    Flag.value(lColumnResultSet.getString("IS_AUTOINCREMENT")));
             bColumn.setBufferLength(lColumnResultSet.getInt("BUFFER_LENGTH"));
             bColumn.setNumberPrecisionRadix(
                     lColumnResultSet.getInt("NUM_PREC_RADIX"));
-            bColumn.setColumnDefinition(
-                    lColumnResultSet.getString("COLUMN_DEF"));
-            bColumn.setOrdinalPosition(
-                    lColumnResultSet.getInt("ORDINAL_POSITION"));
             bColumn.setScopeCatalog(
                     lColumnResultSet.getString("SCOPE_CATALOG"));
             bColumn.setScopeSchema(lColumnResultSet.getString("SCOPE_SCHEMA"));
             bColumn.setScopeTable(lColumnResultSet.getString("SCOPE_TABLE"));
+
             bColumn.setSourceDataType(
                     lColumnResultSet.getString("SOURCE_DATA_TYPE"));
+
             bColumn.setGeneratedColumn(Flag.value(
                     lColumnResultSet.getString("IS_GENERATEDCOLUMN")));
+
+            extractColumnValues(bColumn, lColumnResultSet);
+
             bColumn.setExportedKeys(new TreeSet<>());
             lColumns.add(bColumn);
         }
@@ -537,6 +568,34 @@ public final class Crawler {
         return lColumns;
     }
 
+    private void extractColumnValues(final Column bColumn,
+                                     final ResultSet lColumnResultSet)
+            throws SQLException {
+        ColumnType lColumnType;
+        bColumn.setColumnName(lColumnResultSet.getString("COLUMN_NAME"));
+        bColumn.setTypeName(lColumnResultSet.getString("TYPE_NAME"));
+        bColumn.setDataType(lColumnResultSet.getInt("DATA_TYPE"));
+        if (bColumn.getDataType() == VARCHAR_DATA_TYPE
+                && !("VARCHAR".equalsIgnoreCase(bColumn.getTypeName())
+                || "TEXT".equalsIgnoreCase(bColumn.getTypeName()))) {
+            bColumn.setColumnType(ColumnType.ENUM);
+        } else {
+            lColumnType = ColumnType.value(
+                    JDBCType.valueOf(lColumnResultSet.getInt("DATA_TYPE")));
+            bColumn.setColumnType(lColumnType == ColumnType.OTHER
+                    ? getColumnTypeForOthers(bColumn) : lColumnType);
+        }
+        bColumn.setRemarks(lColumnResultSet.getString("REMARKS"));
+        bColumn.setNullable(
+                Flag.value(lColumnResultSet.getString("IS_NULLABLE")));
+
+
+        bColumn.setOrdinalPosition(
+                lColumnResultSet.getInt("ORDINAL_POSITION"));
+
+
+    }
+
     /**
      * Gets column type for others.
      *
@@ -544,11 +603,7 @@ public final class Crawler {
      * @return the column type for others
      */
     private ColumnType getColumnTypeForOthers(final Column aColumn) {
-        if (aColumn.getTable().getDatabase().getDbType() == DBType.POSTGRES) {
-            return ColumnType.findEnum(aColumn.getTypeName());
-        }
-
-        return null;
+        return ColumnType.findEnum(aColumn.getTypeName());
     }
 
     /**
@@ -568,9 +623,88 @@ public final class Crawler {
             function.setFunctionType(lResultSet.getShort("PROCEDURE_TYPE"));
             function.setRemarks(lResultSet.getString("REMARKS"));
             function.setSpecificName(lResultSet.getString("SPECIFIC_NAME"));
+            setProcedureParameters(function);
+            lProcedures.add(function);
+        }
+        lResultSet = databaseMetaData.getFunctions(null, "public", null);
+        while (lResultSet.next()) {
+            Procedure function = new Procedure();
+            function.setFunctionName(lResultSet.getString("FUNCTION_NAME"));
+            function.setFunctionCategory(lResultSet.getString("FUNCTION_CAT"));
+            function.setFunctionSchema(lResultSet.getString("FUNCTION_SCHEM"));
+            function.setFunctionType(lResultSet.getShort("FUNCTION_TYPE"));
+            function.setRemarks(lResultSet.getString("REMARKS"));
+            function.setSpecificName(lResultSet.getString("SPECIFIC_NAME"));
+            setFunctionParameters(function);
             lProcedures.add(function);
         }
         return lProcedures;
+    }
+
+    private void setProcedureParameters(final Procedure procedure)
+            throws SQLException {
+
+        List<Column> inputParameters = new ArrayList<>();
+        List<Column> outputParameters = new ArrayList<>();
+
+        ResultSet res = databaseMetaData.getProcedureColumns(null, null,
+                procedure.getFunctionName(), "%");
+
+        ResultSetMetaData rsmd = res.getMetaData();
+        int columnsCount = rsmd.getColumnCount();
+
+        while (res.next()) {
+            Column bColumn = new Column(procedure);
+
+            bColumn.setColumnName(res.getString("COLUMN_NAME"));
+            extractColumnValues(bColumn, res);
+            short parameterType = res.getShort("COLUMN_TYPE");
+            if (parameterType == (short) INPUT) {
+                inputParameters.add(bColumn);
+            } else if (parameterType == (short) OUTPUT) {
+                outputParameters.add(bColumn);
+            } else if (parameterType == (short) INOUT) {
+                inputParameters.add(bColumn);
+                outputParameters.add(bColumn);
+            }
+        }
+
+        res.close();
+        procedure.setInputParameters(inputParameters);
+        procedure.setOutputParameters(outputParameters);
+    }
+
+    private void setFunctionParameters(final Procedure procedure)
+            throws SQLException {
+
+        List<Column> inputParameters = new ArrayList<>();
+        List<Column> outputParameters = new ArrayList<>();
+
+        ResultSet res = databaseMetaData.getFunctionColumns(null, null,
+                procedure.getFunctionName(), "%");
+
+        ResultSetMetaData rsmd = res.getMetaData();
+        int columnsCount = rsmd.getColumnCount();
+
+        while (res.next()) {
+            Column bColumn = new Column(procedure);
+
+            bColumn.setColumnName(res.getString("COLUMN_NAME"));
+            extractColumnValues(bColumn, res);
+            short parameterType = res.getShort("COLUMN_TYPE");
+            if (parameterType == (short) INPUT) {
+                inputParameters.add(bColumn);
+            } else if (parameterType == (short) OUTPUT) {
+                outputParameters.add(bColumn);
+            } else if (parameterType == (short) INOUT) {
+                inputParameters.add(bColumn);
+                outputParameters.add(bColumn);
+            }
+        }
+
+        res.close();
+        procedure.setInputParameters(inputParameters);
+        procedure.setOutputParameters(outputParameters);
     }
 
     /**
@@ -581,6 +715,9 @@ public final class Crawler {
             case MARIADB:
             case MYSQL:
                 repairMySQL();
+                break;
+            case POSTGRES:
+                loadTypes();
                 break;
             default:
                 break;
@@ -613,7 +750,7 @@ public final class Crawler {
                                 .filter(column -> column.getColumnName()
                                         .equals(columnName)).findFirst().get());
 
-            } else {
+            } else if (columnName != null) {
                 UniqueConstraint bUniqueConstraint = new UniqueConstraint();
                 bUniqueConstraint.setName(indexName);
                 List<Column> bColumns = new ArrayList<>();
@@ -636,11 +773,11 @@ public final class Crawler {
         database.getTables().forEach(table -> {
             try (PreparedStatement preparedStatement =
                          databaseMetaData.getConnection()
-                    .prepareStatement("SELECT "
-                            +
-                            "COLUMN_NAME,COLUMN_TYPE  from INFORMATION_SCHEMA"
-                            + ".COLUMNS where\n"
-                            + " table_name = ?")) {
+                                 .prepareStatement("SELECT "
+                                         + "COLUMN_NAME,COLUMN_TYPE  "
+                                         + "from INFORMATION_SCHEMA"
+                                         + ".COLUMNS where\n"
+                                         + " table_name = ?")) {
                 preparedStatement.setString(1, table.getTableName());
                 ResultSet lResultSet = preparedStatement.executeQuery();
 
@@ -681,5 +818,44 @@ public final class Crawler {
                 aSQLException.printStackTrace();
             }
         });
+    }
+
+    /**
+     * load the type details from db.
+     */
+    public void loadTypes() {
+
+        try (PreparedStatement preparedStatement
+                     = databaseMetaData.getConnection()
+                    .prepareStatement(
+                " select n.nspname as enum_schema,  \n"
+                        + "    t.typname as enum_name,\n"
+                        + "    string_agg(e.enumlabel, ', ') "
+                        + "  as enum_value\n"
+                        + "  from pg_type t \n"
+                        + "  join pg_enum e on t.oid = e.enumtypid "
+                        + "  join pg_catalog.pg_namespace n ON "
+                        + "n.oid = t.typnamespace\n"
+                        + "group by enum_schema, enum_name;")) {
+            ResultSet lResultSet = preparedStatement.executeQuery();
+            if (!lResultSet.wasNull()) {
+                List<Type> types = new ArrayList<>();
+                while (lResultSet.next()) {
+                    Type type = new Type();
+                    type.setTypeName(lResultSet.getString("ENUM_NAME"));
+                    type.setTypeType(TypeType.e);
+                    String value = lResultSet.getString("enum_value");
+                    if (value != null) {
+                        String[] values = value.split(",");
+                        type.setValues(Arrays.asList(values));
+                    }
+                    types.add(type);
+                }
+                database.setTypes(types);
+            }
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
     }
 }

@@ -1,5 +1,5 @@
-<#include "/template/java/jdbcbase.ftl">
-<#import "/template/java/columns.ftl" as columns>
+<#include "jdbcbase.ftl">
+<#import "Column.ftl" as columns>
 package <#if daoPackage?? && daoPackage?length != 0 >${daoPackage}</#if>;
 
 import java.sql.ResultSet;
@@ -8,45 +8,45 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-<#list sampleDistinctCustomColumnTypeProperties as property>
-import static ${orm.application.rootPackage}.${orm.application.name}Manager.get${property.column.typeName?cap_first};
-import static ${orm.application.rootPackage}.${orm.application.name}Manager.convert${property.column.typeName?cap_first};
-</#list>
-
 <#assign capturedOutput>
-/**
- * Datastore for the table - ${table.tableName}.
- */
-public final class ${name}Store  {
+    /**
+    * Datastore for the table - ${table.tableName}.
+    */
+    public final class ${name}Store  {
 
+    /**
+    * Retrieves an instance of ${name}Store.
+    *
+    * @param theDataManager  The DataManager instance.
+    * @param theObserver     The observer to notify for data changes.
+    * @return an instance of ${name}Store
+    */
+    public static ${name}Store get${name}Store(
+    final DataManager theDataManager
+    ,final DataManager.Observer theObserver
 
+    <#if containsEncryptedProperty() >
+        <#assign a=addImportStatement("java.util.function.Function")>
+        ,final Function<String,String> encryptionFunction
+        ,final Function<String,String> decryptionFunction
+    </#if>) {
+    return new ${name}Store(
+    theDataManager
+    ,theObserver
 
-    public static ${name}Store get${name}Store(final javax.sql.DataSource theDataSource
-                ,final ${orm.application.name}Manager.Observer theObserver
-                    
-
-                    <#if containsEncryptedProperty() >
-                        <#assign a=addImportStatement("java.util.function.Function")>
-                        ,final Function<String,String> encryptionFunction
-                        ,final Function<String,String> decryptionFunction
-                    </#if>) {
-        return new ${name}Store(theDataSource
-                ,theObserver
-                    
-
-                    <#if containsEncryptedProperty() >
-                        <#assign a=addImportStatement("java.util.function.Function")>
-                        ,encryptionFunction
-                        ,decryptionFunction
-                    </#if>);
+    <#if containsEncryptedProperty() >
+        <#assign a=addImportStatement("java.util.function.Function")>
+        ,encryptionFunction
+        ,decryptionFunction
+    </#if>);
 
     }
 
-    private final javax.sql.DataSource dbDataSource;
+    private final DataManager dataManager;
 
-    private final ${orm.application.name}Manager.Observer observer;
-    <#assign a=addImportStatement(orm.application.rootPackage+ "." + orm.application.name + "Manager")>
-    <#assign a=addImportStatement(orm.application.rootPackage+ "." + orm.application.name + "Manager.Value")>
+    private final DataManager.Observer observer;
+    <#assign a=addImportStatement(orm.application.rootPackage+ ".DataManager")>
+    <#assign a=addImportStatement(orm.application.rootPackage+ ".DataManager.Value")>
 
 
     <#if containsEncryptedProperty() >
@@ -55,184 +55,187 @@ public final class ${name}Store  {
     </#if>
 
     /**
-     * Datastore
-     */
-    private ${name}Store(final javax.sql.DataSource theDataSource
-                ,final ${orm.application.name}Manager.Observer theObserver
+    * Constructor for ${name}Store.
+    *
+    * @param theDataManager   The DataManager instance.
+    * @param theObserver      The observer for data changes.
+    */
+    private ${name}Store(
+    final DataManager theDataManager
+    ,final DataManager.Observer theObserver
 
 
-                    <#if containsEncryptedProperty() >
-                        <#assign a=addImportStatement("java.util.function.Function")>
-                        ,final Function<String,String> encryptionFunction
-                        ,final Function<String,String> decryptionFunction
-                    </#if>
-                ) {
-        this.dbDataSource = theDataSource;
-        this.observer = theObserver;
+    <#if containsEncryptedProperty() >
+        <#assign a=addImportStatement("java.util.function.Function")>
+        ,final Function<String,String> encryptionFunction
+        ,final Function<String,String> decryptionFunction
+    </#if>
+    ) {
 
-        <#if containsEncryptedProperty() >
-            this.encryptionFunction = encryptionFunction;
-            this.decryptionFunction = decryptionFunction;
-        </#if>
+    this.dataManager = theDataManager;
+    this.observer = theObserver;
+
+    <#if containsEncryptedProperty() >
+        this.encryptionFunction = encryptionFunction;
+        this.decryptionFunction = decryptionFunction;
+    </#if>
 
 
     }
 
-	<#list orm.methodSpecification as method>
-		<#include "/template/java/method/${method}.ftl">
-	</#list>
-
-
-
-	<#--
-	<#if exportedKeys?size != 0>
-	public List<${name}> get${name}s(Search${name} search${name}) throws SQLException;
-		<#assign a=addImportStatement(javaPackageName+ ".search.Search" + name)>
-	</#if>	
-	-->	
-
-  private ${name} rowMapperForReturning(final ResultSet rs,final ${name} inserting${name}) throws <@throwsblock/>{
-    final ${name} ${name?uncap_first} = new ${name}();
-        <#assign index=1>
-		<#list returningProperties as property>
-		<#switch property.dataType>
-          <#case "java.time.LocalDate">
-            ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalDate());
-        	 <#break>
-          <#case "java.time.LocalTime">
-        	 ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalTime());
-              <#break>
-           <#case "java.time.LocalDateTime">
-             ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalDateTime());
-          <#break>
-          <#case "java.nio.ByteBuffer">
-             ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : ByteBuffer.wrap(rs.get${getJDBCClassName(property.dataType)}(${index})));
-          <#break>
-          <#case "java.lang.Character">
-          	 ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).charAt(0));
-           <#break>
-        	   <#case "com.fasterxml.jackson.databind.JsonNode">
-        	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                 <#break>
-           <#case "java.util.UUID">
-        	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                 <#break>
-                        <#case "java.time.Duration">
-        	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                 <#break>
-          <#default>
-          <#if containsEncryption(property)>
-            ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
-          <#else>
-          ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}));
-          </#if>
-          <#break>
-        </#switch>
-		<#assign index = index + 1>
-		</#list>
-    <#list nonReturningProperties as property>
-        ${name?uncap_first}.set${property.name?cap_first}(inserting${name}.get${property.name?cap_first}());
+    <#list orm.methodSpecification as method>
+        <#include "method/${method}.ftl">
     </#list>
-        return ${name?uncap_first};
-    }
 
-	private ${name} rowMapper(ResultSet rs) throws <@throwsblock/> {
-        final ${name} ${name?uncap_first} = new ${name}();<#assign index=1>
-		<#list properties as property>
-		<#switch property.dataType>
-          <#case "java.time.LocalDate">
-            ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalDate());
-        	 <#break>
-          <#case "java.time.LocalTime">
-        	 ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalTime());
-              <#break>
-           <#case "java.time.LocalDateTime">
-             ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).toLocalDateTime());
-          <#break>
-          <#case "java.nio.ByteBuffer">
-             ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : ByteBuffer.wrap(rs.get${getJDBCClassName(property.dataType)}(${index})));
-          <#break>
-          <#case "java.lang.Character">
-          	 ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}) == null ? null : rs.get${getJDBCClassName(property.dataType)}(${index}).charAt(0));
-           <#break>
-        	   <#case "com.fasterxml.jackson.databind.JsonNode">
-        	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                 <#break>
-           <#case "java.util.UUID">
-        	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                 <#break>
-                        <#case "java.time.Duration">
-        	    ${name?uncap_first}.set${property.name?cap_first}(get${property.column.typeName?cap_first}(rs,${index}));
-                 <#break>
-          <#default>
-          <#if containsEncryption(property)>
-            ${name?uncap_first}.set${property.name?cap_first}(this.decryptionFunction.apply(rs.get${getJDBCClassName(property.dataType)}(${index})));
-          <#else>
-          ${name?uncap_first}.set${property.name?cap_first}(rs.get${getJDBCClassName(property.dataType)}(${index}));
-          </#if>
-          <#break>
-        </#switch>
-		<#assign index = index + 1>
-		</#list>
-        return ${name?uncap_first};
-    }
+    <#if (returningProperties?size > 0) >
+    /**
+    * Maps a row from ResultSet for returning properties.
+    *
+    * @param rs The ResultSet.
+    * @param inserting${name} The inserting ${name} instance.
+    * @return A new ${name} object.
+    * @throws SQLException if any SQL error occurs.
+    */
+    private ${name} rowMapperForReturning(final ResultSet rs,final ${name} inserting${name}) throws <@throwsblock/>{
+    return new ${name}(
 
+<#assign comma=0>
 
+    <#assign index=1>
+    <#list properties as property>
+    <#if comma != 0>
+    ,
+</#if>
 
-<#list properties as property>
-<#assign a=addImportStatement(property.dataType)>
-
-    public static Value<Column.${property.name?cap_first}Column,${getClassName(property.dataType)}> ${property.name}(final ${getClassName(property.dataType)} value) {
-        return new Value<>(${property.name}(),value);
-    }
+        <#if property.returning>
+        ${property.name}().get(rs,${index})
+        <#assign index = index + 1>
+        <#else>
+        inserting${name}.${property.name}()
+        </#if>
+        
+        <#assign comma=1>
+    </#list>
+    );
     
-    public static Column.${property.name?cap_first}Column ${property.name}() {
-        return new WhereClause().${property.name}();
     }
 
-</#list>
+    </#if>
+    /**
+    * Maps a row from ResultSet.
+    *
+    * @param rs The ResultSet.
+    * @return A new ${name} object.
+    * @throws SQLException if any SQL error occurs.
+    */
+    private ${name} rowMapper(ResultSet rs) throws <@throwsblock/> {
+    return new ${name}(
+    <#assign index=1>
+    <#list properties as property>
+    <#if index != 1>
+    ,
+</#if>
+        ${property.name}().get(rs,${index})
+        <#assign index = index + 1>
+    </#list>
+    );
+    
+    }
 
-    public static class WhereClause  extends PartialWhereClause  {
-        private WhereClause(){
+
+
+    <#list properties as property>
+        <#assign a=addImportStatement(property.dataType)>
+        /**
+        * Creates a Value for ${property.name}.
+        *
+        * @param value The value of type ${getClassName(property.dataType)}.
+        * @return A Value object.
+        */
+        public static Value<Column.${property.name?cap_first}Column,${getClassName(property.dataType)}> ${property.name}(final ${getClassName(property.dataType)} value) {
+        return new Value<>(${property.name}(),value);
+        }
+
+        /**
+        * Retrieves the column for ${property.name}.
+        *
+        * @return The column for ${property.name}.
+        */
+        public static Column.${property.name?cap_first}Column ${property.name}() {
+        return new WhereClause().${property.name}();
+        }
+
+    </#list>
+    
+     /**
+     * Class for building the SQL WhereClause.
+     */
+    public static class WhereClause extends PartialWhereClause {
+        private WhereClause() {
             super();
         }
+
         private String asSql() {
             return nodes.isEmpty() ? null : nodes.stream().map(node -> {
-                String asSql;
                 if (node instanceof Column) {
-                    asSql = ((Column) node).asSql();
+                    return ((Column) node).asSql();
                 } else if (node instanceof WhereClause) {
-                    asSql = "(" + ((WhereClause) node).asSql() + ")";
+                    return "(" + ((WhereClause) node).asSql() + ")";
                 } else {
-                    asSql = (String) node;
+                    return (String) node;
                 }
-                return asSql;
             }).collect(Collectors.joining(" "));
         }
 
+        /**
+        * Adds "AND" to the clause.
+        *
+        * @return This PartialWhereClause instance.
+        */
         public PartialWhereClause and() {
             this.nodes.add("AND");
             return this;
         }
 
-        public PartialWhereClause  or() {
+        /**
+        * Adds "OR" to the clause.
+        *
+        * @return This PartialWhereClause instance.
+        */
+        public PartialWhereClause or() {
             this.nodes.add("OR");
             return this;
         }
 
-        public WhereClause  and(final WhereClause  whereClause) {
+        /**
+        * Adds "AND" followed by the given WhereClause.
+        *
+        * @param whereClause The WhereClause to add.
+        * @return This WhereClause instance.
+        */
+        public WhereClause and(final WhereClause whereClause) {
             this.nodes.add("AND");
             this.nodes.add(whereClause);
-            return (WhereClause) this;
+            return this;
         }
 
-        public WhereClause  or(final WhereClause  whereClause) {
+        /**
+        * Adds "OR" followed by the given WhereClause.
+        *
+        * @param whereClause The WhereClause to add.
+        * @return This WhereClause instance.
+        */
+        public WhereClause or(final WhereClause whereClause) {
             this.nodes.add("OR");
             this.nodes.add(whereClause);
-            return (WhereClause) this;
+            return this;
         }
+
     }
 
+    /**
+    * Partial SQL WhereClause.
+    */
     public static class PartialWhereClause  {
 
         protected final List<Object> nodes;
@@ -242,96 +245,182 @@ public final class ${name}Store  {
         }
 
 
-<#list properties as property>
-
+    <#list properties as property>
+        
+        /**
+        * Adds ${property.name} to the SQL clause.
+        *
+        * @return The column for ${property.name}.
+        */
         public Column.${property.name?cap_first}Column ${property.name}() {
-            Column.${property.name?cap_first}Column query = new Column.${property.name?cap_first}Column(this);
-            this.nodes.add(query);
-            return query;
+        Column.${property.name?cap_first}Column query = new Column.${property.name?cap_first}Column(this);
+        this.nodes.add(query);
+        return query;
         }
 
-		</#list>
+    </#list>
 
-       
+    }
 
-        
+    /**
+    * Abstract class for defining columns in the DataManager.
+    */
+    public static abstract class Column<T> implements DataManager.Column<T> {
+
+    private final PartialWhereClause  whereClause ;
+
+    protected Column(final PartialWhereClause  whereClause) {
+    this.whereClause  = whereClause ;
+    }
+
+    protected WhereClause  getWhereClause() {
+    return (WhereClause) whereClause ;
+    }
+
+
+    <#list properties as property>
+        <#switch property.dataType>
+            <#case "java.lang.String">
+                <#if property.column.typeName == "macaddr8" >
+                    <#assign a=addImportStatement("org.postgresql.util.PGobject")>
+                <#elseif property.column.typeName == "macaddr" >
+                    <#assign a=addImportStatement("org.postgresql.util.PGobject")>
+                <#elseif property.column.typeName == "path">
+                    <#assign a=addImportStatement("org.postgresql.util.PGobject")>
+                </#if>
+                <@columns.StringColumn property=property/>
+                <#break>           
+            <#case "java.lang.Character">
+                <@columns.CharacterColumn property=property/>
+                <#break>
+            <#case "java.lang.Integer">
+                <@columns.IntegerColumn property=property/>
+                <#break>
+            <#case "java.lang.Short">
+                <@columns.ShortColumn property=property/>
+                <#break>
+            <#case "java.lang.Byte">
+                <@columns.ByteColumn property=property/>
+                <#break>
+            <#case "java.lang.Long">
+                <@columns.LongColumn property=property/>
+                <#break>
+            <#case "java.lang.Float">
+                <@columns.FloatColumn property=property/>
+                <#break>
+            <#case "java.lang.Double">
+                <@columns.DoubleColumn property=property/>
+                <#break>
+            <#case "java.math.BigDecimal">
+                <@columns.BigDecimalColumn property=property/>
+                <#break>
+            <#case "java.lang.Boolean">
+                <@columns.BooleanColumn property=property/>
+                <#break>
+            <#case "java.util.BitSet">
+                <@columns.BitSetColumn property=property/>
+                <#break>
+            <#case "java.time.LocalDate">
+                <@columns.LocalDateColumn property=property/>
+                <#break>
+            <#case "java.time.LocalTime">
+                <@columns.LocalTimeColumn property=property/>
+                <#break>
+            <#case "java.time.LocalDateTime">
+                <@columns.LocalDateTimeColumn property=property/>
+                <#break>
+            <#case "java.util.UUID">
+                <@columns.UUIDColumn property=property/>
+                <#break>
+            <#case "com.fasterxml.jackson.databind.JsonNode" >
+                <#assign a=addImportStatement("com.fasterxml.jackson.databind.ObjectMapper")>
+                <#assign a=addImportStatement("com.fasterxml.jackson.databind.JsonNode")>
+                <#assign a=addImportStatement("com.fasterxml.jackson.core.JsonProcessingException")>
+                <@columns.JsonNodeColumn property=property/>
+                <#break>
+            <#case "java.nio.ByteBuffer" >
+                <@columns.ByteBuffer property=property/>
+                <#break>
+            <#case "java.time.Duration" >
+                <#assign a=addImportStatement("org.postgresql.util.PGobject")>
+                <#assign a=addImportStatement("org.postgresql.util.PGInterval")>
+                <#assign a=addImportStatement("java.time.temporal.ChronoUnit")>
+                <@columns.DurationColumn property=property/>
+                <#break>
+            <#case "org.locationtech.spatial4j.shape.Circle">
+                <#assign a=addImportStatement("org.locationtech.spatial4j.shape.Circle")>
+                <#assign a=addImportStatement("org.locationtech.spatial4j.context.SpatialContext")>
+                <#assign a=addImportStatement("org.postgresql.geometric.PGpoint")>
+                <#assign a=addImportStatement("org.postgresql.geometric.PGcircle")>
+                <@columns.CircleColumn property=property/>
+                <#break>
+            <#case "org.locationtech.jts.geom.Point">
+                <#assign a=addImportStatement("org.locationtech.jts.geom.GeometryFactory")>
+                <#assign a=addImportStatement("org.locationtech.jts.geom.Coordinate")>
+                <#assign a=addImportStatement("org.postgresql.geometric.PGpoint")>
+                <@columns.PointColumn property=property/>
+                <#break>
+            
+
+            <#case "org.locationtech.jts.geom.Envelope" >
+                <#assign a=addImportStatement("org.locationtech.jts.geom.Envelope")>
+    <#assign a=addImportStatement("org.postgresql.geometric.PGbox")>
+                <@columns.BoxColumn property=property/>
+                <#break>
+            
+            <#case "java.net.InetAddress" >
+            <#assign a=addImportStatement("java.net.InetAddress")>
+            <#assign a=addImportStatement("java.net.UnknownHostException")>
+                <@columns.InetAddressColumn property=property/>
+                <#break> 
+                 
+            <#case "org.apache.commons.net.util.SubnetUtils" >
+                <@columns.CidrColumn property=property/>
+                <#break>
+           
+            <#case "org.locationtech.jts.geom.Polygon" >
+                    <#assign a=addImportStatement("org.postgresql.geometric.PGpolygon")>
+                    <#assign a=addImportStatement("org.locationtech.jts.geom.Coordinate")>
+                    <#assign a=addImportStatement("org.locationtech.jts.geom.GeometryFactory")>
+                    <#assign a=addImportStatement("org.locationtech.jts.geom.LinearRing")>
+                    <#assign a=addImportStatement("org.locationtech.jts.geom.Polygon")>
+                    <#assign a=addImportStatement("org.locationtech.jts.io.ParseException")>
+                    <@columns.PolygonColumn property=property/>
+                    <#break>
+              
+             <#case "org.locationtech.jts.geom.LineSegment" >
+                     <#assign a=addImportStatement("org.locationtech.jts.geom.GeometryFactory")>
+                    <#assign a=addImportStatement("org.locationtech.jts.geom.Coordinate")>
+                    <#assign a=addImportStatement("org.locationtech.jts.geom.LineSegment")>
+                    <#assign a=addImportStatement("org.postgresql.geometric.PGpoint")>
+                    <#assign a=addImportStatement("org.postgresql.geometric.PGlseg")>
+                      <@columns.LineSegmentColumn property=property/>
+                    <#break>
+
+            
+
+            <#case "org.locationtech.jts.geom.LineString" >
+                    <#assign a=addImportStatement("org.locationtech.jts.geom.GeometryFactory")>
+                    <#assign a=addImportStatement("org.locationtech.jts.geom.Coordinate")>
+                    <#assign a=addImportStatement("org.locationtech.jts.geom.LineString")>
+                    <#assign a=addImportStatement("org.postgresql.geometric.PGpoint")>
+                    <#assign a=addImportStatement("org.postgresql.geometric.PGline")>
+                    <@columns.LineColumn property=property/>
+                    <#break>
+
+              <#default>
+                    <#if property.column.columnType == "ENUM">
+                        <@columns.TypeColumn property=property/>
+                    </#if>
+
+
+        </#switch>
+    </#list>
 
     }
 
 
-
-
-    public static abstract class Column<T> implements ${orm.application.name}Manager.Column<T> {
-
-  
-            private final PartialWhereClause  whereClause ;
-
-            protected Column(final PartialWhereClause  whereClause) {
-                this.whereClause  = whereClause ;
-            }
-
-            protected WhereClause  getWhereClause() {
-                return (WhereClause) whereClause ;
-            }
-
-            
-            <#list properties as property>
-    <#switch property.dataType>
-    <#case "java.lang.String">
-        <@columns.StringColumn property=property/>
-        <#break>
-    <#case "java.lang.Character">
-        <@columns.CharacterColumn property=property/>
-        <#break>
-    <#case "java.lang.Integer">
-        <@columns.IntegerColumn property=property/>
-        <#break>
-    <#case "java.lang.Short">
-        <@columns.ShortColumn property=property/>
-        <#break>
-    <#case "java.lang.Byte">
-        <@columns.ByteColumn property=property/>
-        <#break>
-    <#case "java.lang.Long">
-        <@columns.LongColumn property=property/>
-        <#break>
-    <#case "java.lang.Float">
-        <@columns.FloatColumn property=property/>
-        <#break>
-    <#case "java.lang.Double">
-        <@columns.DoubleColumn property=property/>
-        <#break>
-    <#case "java.lang.Boolean">
-        <@columns.BooleanColumn property=property/>
-        <#break>
-    <#case "java.time.LocalDate">
-        <@columns.LocalDateColumn property=property/>
-        <#break>
-    <#case "java.time.LocalTime">
-        <@columns.LocalTimeColumn property=property/>
-        <#break>
-    <#case "java.time.LocalDateTime">
-        <@columns.LocalDateTimeColumn property=property/>
-        <#break>
-    <#case "java.util.UUID">
-        <@columns.UUIDColumn property=property/>
-        <#break>
-    <#case "com.fasterxml.jackson.databind.JsonNode" >
-        <@columns.JsonNodeColumn property=property/>
-        <#break>
-    <#case "java.nio.ByteBuffer" >
-        <@columns.ByteBuffer property=property/>
-        <#break>
-    <#case "java.time.Duration" >
-        <@columns.DurationColumn property=property/>
-        <#break>    
-    </#switch>
-		</#list>
-
-        }
-    
-
-}<#assign a=addImportStatement("java.util.ArrayList")><#assign a=addImportStatement("java.time.LocalDate")>
+    }<#assign a=addImportStatement("java.util.ArrayList")><#assign a=addImportStatement("java.time.LocalDate")>
 </#assign>
 <@importStatements/>
 

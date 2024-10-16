@@ -10,81 +10,67 @@ public int delete(${getPrimaryKeysAsParameterString()}) throws SQLException  {
 						<#if index == 0><#assign index=1><#else>,</#if>${property.column.escapedName?j_string} = ?
 						</#if>
 					</#list></@compress>";
-        try (java.sql.Connection dbConnection = dbDataSource.getConnection();
-			PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
-			${getPrimaryKeysAsPreparedStatements()}
-            return preparedStatement.executeUpdate();
-        }
+        DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
+        ${getPrimaryKeysAsPreparedStatements()}
+        return sqlBuilder.executeUpdate();
 	}
     </#if>
     <#assign a=addImportStatement("java.sql.PreparedStatement")>
 
 public DeleteStatement delete(WhereClause whereClause) {
-    return new DeleteStatement(this,whereClause);
+    return new DeleteStatement(whereClause);
 }
 
 public DeleteStatement delete() {
-    return new DeleteStatement(this,null);
+    return new DeleteStatement(null);
 }
 
-public static final class DeleteStatement {
+public final class DeleteStatement {
 
-    private final ${name}Store ${name?uncap_first}Store;
     private final WhereClause whereClause;
 
-    private DeleteStatement(final ${name}Store ${name?uncap_first}Store) {
-            this(${name?uncap_first}Store,null);
+    private DeleteStatement() {
+            this(null);
         }
 
-        private DeleteStatement(final ${name}Store ${name?uncap_first}Store
-                ,final WhereClause whereClause) {
-            this.${name?uncap_first}Store = ${name?uncap_first}Store;
+        private DeleteStatement(final WhereClause whereClause) {
             this.whereClause = whereClause;
         }
 
     public int execute() throws SQLException  {
     	final String query = "DELETE FROM ${table.escapedName?j_string}" 
         + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
-        try (java.sql.Connection dbConnection = this.${name?uncap_first}Store.dbDataSource.getConnection();
-			Statement statement = dbConnection.createStatement()) {
-            return statement.executeUpdate(query);
-        }
+        return dataManager.sql(query).executeUpdate();
 	}
 
     public DeleteQuery sql(final String sql) {
-            return new DeleteQuery(this, sql);
+            return new DeleteQuery(sql);
     }
 
-    public static final class DeleteQuery  {
+    public final class DeleteQuery  {
 
-        private final DeleteStatement deleteStatement;
         private final String sql;
-        private final List<Value> values;
+        private final List<Value<?,?>> values;
 
-        public DeleteQuery(final DeleteStatement deleteStatement, final String sql) {
-            this.deleteStatement = deleteStatement;
+        public DeleteQuery(final String sql) {
             this.sql = sql;
             this.values = new ArrayList<>();
         }
 
 
-        public DeleteQuery param(final Value value) {
+        public DeleteQuery param(final Value<?,?> value) {
             this.values.add(value);
             return this;
         }
 
         public int execute() throws SQLException {
-            try (java.sql.Connection dbConnection = this.deleteStatement.${name?uncap_first}Store.dbDataSource.getConnection();
-                PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
+            DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
 
-                    int index = 1;
-                for (Value value:values
-                     ) {
-                    value.set(preparedStatement, index++);
-                }
-
-                return preparedStatement.executeUpdate();
+            for (Value<?,?> value:values) {
+                sqlBuilder.param(value);
             }
+            
+            return sqlBuilder.executeUpdate();
         }
 
 

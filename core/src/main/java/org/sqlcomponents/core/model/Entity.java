@@ -1,8 +1,8 @@
 package org.sqlcomponents.core.model;
 
-import lombok.Getter;
-import lombok.Setter;
+
 import org.sqlcomponents.core.model.relational.Table;
+import org.sqlcomponents.core.model.relational.enums.ColumnType;
 import org.sqlcomponents.core.model.relational.enums.DBType;
 import org.sqlcomponents.core.model.relational.enums.Flag;
 
@@ -17,8 +17,7 @@ import java.util.stream.Collectors;
 /**
  * The type Entity.
  */
-@Getter
-@Setter
+
 public class Entity {
 
     /**
@@ -54,6 +53,15 @@ public class Entity {
     private List<Property> properties;
 
     /**
+     * The Properties.
+     */
+    private List<String> values;
+
+    /**
+     * String type.
+     */
+    private String type;
+    /**
      * Instantiates a new Entity.
      *
      * @param paramOrm   the orm
@@ -62,6 +70,15 @@ public class Entity {
     public Entity(final ORM paramOrm, final Table paramTable) {
         setOrm(paramOrm);
         setTable(paramTable);
+    }
+
+    /**
+     * Instantiates a new Entity.
+     *
+     * @param paramOrm   the orm
+     */
+    public Entity(final ORM paramOrm) {
+        setOrm(paramOrm);
     }
 
     /**
@@ -77,12 +94,12 @@ public class Entity {
     /**
      * Has java type boolean.
      *
-     * @param type the class name
+     * @param aType the class name
      * @return the boolean
      */
-    public boolean hasJavaType(final String type) {
+    public boolean hasJavaType(final String aType) {
         return this.getProperties().stream()
-                .filter(property -> property.getDataType().equals(type))
+                .filter(property -> property.getDataType().equals(aType))
                 .findFirst().isPresent();
     }
 
@@ -121,7 +138,8 @@ public class Entity {
                                     final Map<String, String> map) {
         String combinedKey = property.getColumn().getTableName() + "#"
                 + property.getColumn().getColumnName();
-        return !(map.containsKey(property.getColumn().getColumnName())
+        return !(map == null
+                || map.containsKey(property.getColumn().getColumnName())
                 || map.containsKey(combinedKey));
     }
 
@@ -141,21 +159,28 @@ public class Entity {
         String typeName = property.getColumn().getTypeName();
         DBType dbType =
                 property.getEntity().getTable().getDatabase().getDbType();
-
-        preparedValue = map.get(columnName);
+        if (map != null) {
+            preparedValue = map.get(columnName);
+        }
+        if (Objects.nonNull(preparedValue)) {
+            return preparedValue.replaceAll("\"",
+                    Matcher.quoteReplacement("\\\""));
+        }
+        if (map != null) {
+            preparedValue = map.get(tableNameColumnName);
+        }
         if (Objects.nonNull(preparedValue)) {
             return preparedValue.replaceAll("\"",
                     Matcher.quoteReplacement("\\\""));
         }
 
-        preparedValue = map.get(tableNameColumnName);
-        if (Objects.nonNull(preparedValue)) {
-            return preparedValue.replaceAll("\"",
-                    Matcher.quoteReplacement("\\\""));
-        }
-
-        if (dbType == DBType.POSTGRES && typeName.equals("xml")) {
-            preparedValue = "XMLPARSE(document ?)";
+        if (dbType == DBType.POSTGRES) {
+                if (typeName.equals("xml")) {
+                    preparedValue = "XMLPARSE(document ?)";
+                }
+                if (property.getColumn().getColumnType() == ColumnType.ENUM) {
+                    preparedValue = "?::" + typeName;
+                }
         }
 
         return preparedValue == null ? "?" : preparedValue;
@@ -167,46 +192,8 @@ public class Entity {
      * @return the returning properties
      */
     public List<Property> getReturningProperties() {
-        return this.getProperties().stream().filter(Entity::isReturning)
+        return this.getProperties().stream().filter(Property::isReturning)
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * Gets non returning properties.
-     *
-     * @return the non returning properties
-     */
-    public List<Property> getNonReturningProperties() {
-        return this.getProperties().stream()
-                .filter(property -> !isReturning(property))
-                .collect(Collectors.toList());
-    }
-
-
-    /**
-     * Is returning boolean.
-     *
-     * @param property the property
-     * @return the boolean
-     */
-    private static boolean isReturning(final Property property) {
-        boolean isReturning =
-                property.getColumn().getAutoIncrement() == Flag.YES
-                        || property.getColumn().getGeneratedColumn()
-                        == Flag.YES;
-        Map<String, String> insertMap =
-                property.getEntity().getOrm().getApplication()
-                        .getInsertMap();
-        String mapped = insertMap
-                .get(property.getColumn().getColumnName());
-        String specificTableMapped =
-                insertMap.get(String.format("%s#%s",
-                        property.getEntity().getTable().getTableName(),
-                        property.getColumn().getColumnName()));
-        if (mapped != null || specificTableMapped != null) {
-            isReturning = true;
-        }
-        return isReturning;
     }
 
 
@@ -312,5 +299,77 @@ public class Entity {
         });
 
         return sampleDistinctCustomColumnTypeProperties;
+    }
+
+    public Table getTable() {
+        return table;
+    }
+
+    public void setTable(final Table theTable) {
+        this.table = theTable;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String theName) {
+        this.name = theName;
+    }
+
+    public String getPluralName() {
+        return pluralName;
+    }
+
+    public void setPluralName(final String thePluralName) {
+        this.pluralName = thePluralName;
+    }
+
+    public String getBeanPackage() {
+        return beanPackage;
+    }
+
+    public void setBeanPackage(final String theBeanPackage) {
+        this.beanPackage = theBeanPackage;
+    }
+
+    public String getDaoPackage() {
+        return daoPackage;
+    }
+
+    public void setDaoPackage(final String theDaoPackage) {
+        this.daoPackage = theDaoPackage;
+    }
+
+    public ORM getOrm() {
+        return orm;
+    }
+
+    public void setOrm(final ORM theOrm) {
+        this.orm = theOrm;
+    }
+
+    public List<Property> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(final List<Property> theProperties) {
+        this.properties = theProperties;
+    }
+
+    public List<String> getValues() {
+        return values;
+    }
+
+    public void setValues(final List<String> aValues) {
+        this.values = aValues;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(final String aType) {
+        this.type = aType;
     }
 }

@@ -1,7 +1,6 @@
 package org.sqlcomponents.core.model.relational;
 
-import lombok.Getter;
-import lombok.Setter;
+
 import org.sqlcomponents.core.model.relational.enums.DBType;
 import org.sqlcomponents.core.model.relational.enums.TableType;
 
@@ -13,8 +12,7 @@ import java.util.TreeSet;
 /**
  * The type representing a database.
  */
-@Getter
-@Setter
+
 public class Database {
     /**
      * The Tables.
@@ -221,6 +219,10 @@ public class Database {
      * The Time date functions.
      */
     private SortedSet<String> timeDateFunctions;
+    /**
+     * The Types from the DB.
+     */
+    private List<Type> types;
     /**
      * The Supports transactions.
      */
@@ -669,5 +671,1358 @@ public class Database {
         });
 
         return distinctColumnTypeNames;
+    }
+
+    public List<Table> getTables() {
+        return tables;
+    }
+
+    public void setTables(final List<Table> theTables) {
+        this.tables = theTables;
+    }
+
+    public List<Procedure> getFunctions() {
+        return functions;
+    }
+
+    public void setFunctions(final List<Procedure> theFunctions) {
+        this.functions = theFunctions;
+    }
+
+    public List<Package> getPackages() {
+        return packages;
+    }
+
+    public void setPackages(final List<Package> thePackages) {
+        this.packages = thePackages;
+    }
+
+    public List<String> getSequences() {
+        return sequences;
+    }
+
+    public void setSequences(final List<String> theSequences) {
+        this.sequences = theSequences;
+    }
+
+    public Set<TableType> getTableTypes() {
+        return tableTypes;
+    }
+
+    public void setTableTypes(final Set<TableType> theTableTypes) {
+        this.tableTypes = theTableTypes;
+    }
+
+    public String getCatalogTerm() {
+        return catalogTerm;
+    }
+
+    public void setCatalogTerm(final String theCatalogTerm) {
+        this.catalogTerm = theCatalogTerm;
+    }
+
+    public String getCatalogSeperator() {
+        return catalogSeperator;
+    }
+
+    public void setCatalogSeperator(final String theCatalogSeperator) {
+        this.catalogSeperator = theCatalogSeperator;
+    }
+
+    public DBType getDbType() {
+        return dbType;
+    }
+
+    public void setDbType(final DBType theDbType) {
+        this.dbType = theDbType;
+    }
+
+    public int getDatabaseMajorVersion() {
+        return databaseMajorVersion;
+    }
+
+    public void setDatabaseMajorVersion(final int theDatabaseMajorVersion) {
+        this.databaseMajorVersion = theDatabaseMajorVersion;
+    }
+
+    public int getDatabaseMinorVersion() {
+        return databaseMinorVersion;
+    }
+
+    public void setDatabaseMinorVersion(final int theDatabaseMinorVersion) {
+        this.databaseMinorVersion = theDatabaseMinorVersion;
+    }
+
+    public String getDatabaseProductVersion() {
+        return databaseProductVersion;
+    }
+
+    public void setDatabaseProductVersion(
+            final String theDatabaseProductVersion) {
+        this.databaseProductVersion = theDatabaseProductVersion;
+    }
+
+    public int getDefaultTransactionIsolation() {
+        return defaultTransactionIsolation;
+    }
+
+    public void setDefaultTransactionIsolation(
+            final int theDefaultTransactionIsolation) {
+        this.defaultTransactionIsolation = theDefaultTransactionIsolation;
+    }
+
+    public int getDriverMajorVersion() {
+        return driverMajorVersion;
+    }
+
+    public void setDriverMajorVersion(
+            final int theDriverMajorVersion) {
+        this.driverMajorVersion = theDriverMajorVersion;
+    }
+
+    public int getDriverMinorVersion() {
+        return driverMinorVersion;
+    }
+
+    public void setDriverMinorVersion(
+            final int theDriverMinorVersion) {
+        this.driverMinorVersion = theDriverMinorVersion;
+    }
+
+    public String getDriverName() {
+        return driverName;
+    }
+
+    public void setDriverName(
+            final String theDriverName) {
+        this.driverName = theDriverName;
+    }
+
+    public String getDriverVersion() {
+        return driverVersion;
+    }
+
+    public void setDriverVersion(
+            final String theDriverVersion) {
+        this.driverVersion = theDriverVersion;
+    }
+
+    public String getExtraNameCharacters() {
+        return extraNameCharacters;
+    }
+
+    public void setExtraNameCharacters(
+            final String theExtraNameCharacters) {
+        this.extraNameCharacters = theExtraNameCharacters;
+    }
+
+    public String getIdentifierQuoteString() {
+        return identifierQuoteString;
+    }
+
+    public void setIdentifierQuoteString(
+            final String theIdentifierQuoteString) {
+        this.identifierQuoteString = theIdentifierQuoteString;
+    }
+
+    public int getJdbcMajorVersion() {
+        return jdbcMajorVersion;
+    }
+
+    public void setJdbcMajorVersion(final int theJdbcMajorVersion) {
+        this.jdbcMajorVersion = theJdbcMajorVersion;
+    }
+
+    public int getJdbcMinorVersion() {
+        return jdbcMinorVersion;
+    }
+
+    public void setJdbcMinorVersion(final int theJdbcMinorVersion) {
+        this.jdbcMinorVersion = theJdbcMinorVersion;
+    }
+
+    public int getMaxBinaryLiteralLength() {
+        return maxBinaryLiteralLength;
+    }
+
+    public void setMaxBinaryLiteralLength(final int theMaxBinaryLiteralLength) {
+        this.maxBinaryLiteralLength = theMaxBinaryLiteralLength;
+    }
+
+    public int getMaxCatalogNameLength() {
+        return maxCatalogNameLength;
+    }
+
+    public void setMaxCatalogNameLength(final int theMaxCatalogNameLength) {
+        this.maxCatalogNameLength = theMaxCatalogNameLength;
+    }
+
+    public int getMaxCharLiteralLength() {
+        return maxCharLiteralLength;
+    }
+
+    public void setMaxCharLiteralLength(final int theMaxCharLiteralLength) {
+        this.maxCharLiteralLength = theMaxCharLiteralLength;
+    }
+
+    public int getMaxColumnNameLength() {
+        return maxColumnNameLength;
+    }
+
+    public void setMaxColumnNameLength(final int theMaxColumnNameLength) {
+        this.maxColumnNameLength = theMaxColumnNameLength;
+    }
+
+    public int getMaxColumnsInGroupBy() {
+        return maxColumnsInGroupBy;
+    }
+
+    public void setMaxColumnsInGroupBy(final int theMaxColumnsInGroupBy) {
+        this.maxColumnsInGroupBy = theMaxColumnsInGroupBy;
+    }
+
+    public int getMaxColumnsInIndex() {
+        return maxColumnsInIndex;
+    }
+
+    public void setMaxColumnsInIndex(final int theMaxColumnsInIndex) {
+        this.maxColumnsInIndex = theMaxColumnsInIndex;
+    }
+
+    public int getMaxColumnsInOrderBy() {
+        return maxColumnsInOrderBy;
+    }
+
+    public void setMaxColumnsInOrderBy(final int theMaxColumnsInOrderBy) {
+        this.maxColumnsInOrderBy = theMaxColumnsInOrderBy;
+    }
+
+    public int getMaxColumnsInSelect() {
+        return maxColumnsInSelect;
+    }
+
+    public void setMaxColumnsInSelect(final int theMaxColumnsInSelect) {
+        this.maxColumnsInSelect = theMaxColumnsInSelect;
+    }
+
+    public int getMaxColumnsInTable() {
+        return maxColumnsInTable;
+    }
+
+    public void setMaxColumnsInTable(final int theMaxColumnsInTable) {
+        this.maxColumnsInTable = theMaxColumnsInTable;
+    }
+
+    public int getMaxConnections() {
+        return maxConnections;
+    }
+
+    public void setMaxConnections(final int theMaxConnections) {
+        this.maxConnections = theMaxConnections;
+    }
+
+    public int getMaxCursorNameLength() {
+        return maxCursorNameLength;
+    }
+
+    public void setMaxCursorNameLength(final int theMaxCursorNameLength) {
+        this.maxCursorNameLength = theMaxCursorNameLength;
+    }
+
+    public int getMaxIndexLength() {
+        return maxIndexLength;
+    }
+
+    public void setMaxIndexLength(final int theMaxIndexLength) {
+        this.maxIndexLength = theMaxIndexLength;
+    }
+
+    public int getMaxSchemaNameLength() {
+        return maxSchemaNameLength;
+    }
+
+    public void setMaxSchemaNameLength(final int theMaxSchemaNameLength) {
+        this.maxSchemaNameLength = theMaxSchemaNameLength;
+    }
+
+    public int getMaxProcedureNameLength() {
+        return maxProcedureNameLength;
+    }
+
+    public void setMaxProcedureNameLength(final int theMaxProcedureNameLength) {
+        this.maxProcedureNameLength = theMaxProcedureNameLength;
+    }
+
+    public int getMaxRowSize() {
+        return maxRowSize;
+    }
+
+    public void setMaxRowSize(final int theMaxRowSize) {
+        this.maxRowSize = theMaxRowSize;
+    }
+
+    public boolean isDoesMaxRowSizeIncludeBlobs() {
+        return doesMaxRowSizeIncludeBlobs;
+    }
+
+    public void setDoesMaxRowSizeIncludeBlobs(
+            final boolean theDoesMaxRowSizeIncludeBlobs) {
+        this.doesMaxRowSizeIncludeBlobs = theDoesMaxRowSizeIncludeBlobs;
+    }
+
+    public int getMaxStatementLength() {
+        return maxStatementLength;
+    }
+
+    public void setMaxStatementLength(final int theMaxStatementLength) {
+        this.maxStatementLength = theMaxStatementLength;
+    }
+
+    public int getMaxStatements() {
+        return maxStatements;
+    }
+
+    public void setMaxStatements(final int theMaxStatements) {
+        this.maxStatements = theMaxStatements;
+    }
+
+    public int getMaxTableNameLength() {
+        return maxTableNameLength;
+    }
+
+    public void setMaxTableNameLength(final int theMaxTableNameLength) {
+        this.maxTableNameLength = theMaxTableNameLength;
+    }
+
+    public int getMaxTablesInSelect() {
+        return maxTablesInSelect;
+    }
+
+    public void setMaxTablesInSelect(final int theMaxTablesInSelect) {
+        this.maxTablesInSelect = theMaxTablesInSelect;
+    }
+
+    public int getMaxUserNameLength() {
+        return maxUserNameLength;
+    }
+
+    public void setMaxUserNameLength(final int theMaxUserNameLength) {
+        this.maxUserNameLength = theMaxUserNameLength;
+    }
+
+    public Set<String> getNumericFunctions() {
+        return numericFunctions;
+    }
+
+    public void setNumericFunctions(final Set<String> theNumericFunctions) {
+        this.numericFunctions = theNumericFunctions;
+    }
+
+    public String getProcedureTerm() {
+        return procedureTerm;
+    }
+
+    public void setProcedureTerm(final String theProcedureTerm) {
+        this.procedureTerm = theProcedureTerm;
+    }
+
+    public int getResultSetHoldability() {
+        return resultSetHoldability;
+    }
+
+    public void setResultSetHoldability(final int theResultSetHoldability) {
+        this.resultSetHoldability = theResultSetHoldability;
+    }
+
+    public String getSchemaTerm() {
+        return schemaTerm;
+    }
+
+    public void setSchemaTerm(final String theSchemaTerm) {
+        this.schemaTerm = theSchemaTerm;
+    }
+
+    public String getSearchStringEscape() {
+        return searchStringEscape;
+    }
+
+    public void setSearchStringEscape(final String theSearchStringEscape) {
+        this.searchStringEscape = theSearchStringEscape;
+    }
+
+    public SortedSet<String> getSqlKeywords() {
+        return sqlKeywords;
+    }
+
+    public void setSqlKeywords(final SortedSet<String> theSqlKeywords) {
+        this.sqlKeywords = theSqlKeywords;
+    }
+
+    public SortedSet<String> getStringFunctions() {
+        return stringFunctions;
+    }
+
+    public void setStringFunctions(final SortedSet<String> theStringFunctions) {
+        this.stringFunctions = theStringFunctions;
+    }
+
+    public SortedSet<String> getSystemFunctions() {
+        return systemFunctions;
+    }
+
+    public void setSystemFunctions(final SortedSet<String> theSystemFunctions) {
+        this.systemFunctions = theSystemFunctions;
+    }
+
+    public SortedSet<String> getTimeDateFunctions() {
+        return timeDateFunctions;
+    }
+
+    public void setTimeDateFunctions(
+            final SortedSet<String> theTimeDateFunctions) {
+        this.timeDateFunctions = theTimeDateFunctions;
+    }
+
+    public List<Type> getTypes() {
+        return types;
+    }
+
+    public void setTypes(final List<Type> theTypes) {
+        this.types = theTypes;
+    }
+    public boolean isSupportsTransactions() {
+        return supportsTransactions;
+    }
+
+    public void setSupportsTransactions(final boolean theSupportsTransactions) {
+        this.supportsTransactions = theSupportsTransactions;
+    }
+
+    public boolean isSupportsTransactionIsolationLevel() {
+        return supportsTransactionIsolationLevel;
+    }
+
+    public void setSupportsTransactionIsolationLevel(
+            final boolean theSupportsTransactionIsolationLevel) {
+        this.supportsTransactionIsolationLevel =
+                theSupportsTransactionIsolationLevel;
+    }
+
+    public boolean isSupportsDataDefinitionAndDataManipulationTransactions() {
+        return supportsDataDefinitionAndDataManipulationTransactions;
+    }
+
+    public void setSupportsDataDefinitionAndDataManipulationTransactions(
+            final boolean
+                    theSupportsDataDefinitionAndDataManipulationTransactions) {
+        this.supportsDataDefinitionAndDataManipulationTransactions =
+                theSupportsDataDefinitionAndDataManipulationTransactions;
+    }
+
+    public boolean isDataDefinitionCausesTransactionCommit() {
+        return dataDefinitionCausesTransactionCommit;
+    }
+
+    public void setDataDefinitionCausesTransactionCommit(
+            final boolean theDataDefinitionCausesTransactionCommit) {
+        this.dataDefinitionCausesTransactionCommit =
+                theDataDefinitionCausesTransactionCommit;
+    }
+
+    public boolean isDataDefinitionIgnoredInTransactions() {
+        return dataDefinitionIgnoredInTransactions;
+    }
+
+    public void setDataDefinitionIgnoredInTransactions(
+            final boolean theDataDefinitionIgnoredInTransactions) {
+        this.dataDefinitionIgnoredInTransactions =
+                theDataDefinitionIgnoredInTransactions;
+    }
+
+    public boolean isSupportsResultSetType() {
+        return supportsResultSetType;
+    }
+
+    public void setSupportsResultSetType(
+            final boolean theSupportsResultSetType) {
+        this.supportsResultSetType = theSupportsResultSetType;
+    }
+
+    public boolean isSupportsResultSetConcurrency() {
+        return supportsResultSetConcurrency;
+    }
+
+    public void setSupportsResultSetConcurrency(
+            final boolean theSupportsResultSetConcurrency) {
+        this.supportsResultSetConcurrency = theSupportsResultSetConcurrency;
+    }
+
+    public boolean isOwnUpdatesAreVisible() {
+        return ownUpdatesAreVisible;
+    }
+
+    public void setOwnUpdatesAreVisible(
+            final boolean theOwnUpdatesAreVisible) {
+        this.ownUpdatesAreVisible = theOwnUpdatesAreVisible;
+    }
+
+    public boolean isOwnDeletesAreVisible() {
+        return ownDeletesAreVisible;
+    }
+
+    public void setOwnDeletesAreVisible(final boolean theOwnDeletesAreVisible) {
+        this.ownDeletesAreVisible = theOwnDeletesAreVisible;
+    }
+
+    public boolean isOwnInsertsAreVisible() {
+        return ownInsertsAreVisible;
+    }
+
+    public void setOwnInsertsAreVisible(final boolean theOwnInsertsAreVisible) {
+        this.ownInsertsAreVisible = theOwnInsertsAreVisible;
+    }
+
+    public boolean isOthersUpdatesAreVisible() {
+        return othersUpdatesAreVisible;
+    }
+
+    public void setOthersUpdatesAreVisible(
+            final boolean theOthersUpdatesAreVisible) {
+        this.othersUpdatesAreVisible = theOthersUpdatesAreVisible;
+    }
+
+    public boolean isOthersDeletesAreVisible() {
+        return othersDeletesAreVisible;
+    }
+
+    public void setOthersDeletesAreVisible(
+            final boolean theOthersDeletesAreVisible) {
+        this.othersDeletesAreVisible = theOthersDeletesAreVisible;
+    }
+
+    public boolean isOthersInsertsAreVisible() {
+        return othersInsertsAreVisible;
+    }
+
+    public void setOthersInsertsAreVisible(
+            final boolean theOthersInsertsAreVisible) {
+        this.othersInsertsAreVisible = theOthersInsertsAreVisible;
+    }
+
+    public boolean isUpdatesAreDetected() {
+        return updatesAreDetected;
+    }
+
+    public void setUpdatesAreDetected(final boolean theUpdatesAreDetected) {
+        this.updatesAreDetected = theUpdatesAreDetected;
+    }
+
+    public boolean isDeletesAreDetected() {
+        return deletesAreDetected;
+    }
+
+    public void setDeletesAreDetected(final boolean theDeletesAreDetected) {
+        this.deletesAreDetected = theDeletesAreDetected;
+    }
+
+    public boolean isInsertsAreDetected() {
+        return insertsAreDetected;
+    }
+
+    public void setInsertsAreDetected(final boolean theInsertsAreDetected) {
+        this.insertsAreDetected = theInsertsAreDetected;
+    }
+
+    public boolean isCatalogAtStart() {
+        return isCatalogAtStart;
+    }
+
+    public void setCatalogAtStart(final boolean theCatalogAtStart) {
+        isCatalogAtStart = theCatalogAtStart;
+    }
+
+    public boolean isReadOnly() {
+        return isReadOnly;
+    }
+
+    public void setReadOnly(final boolean readOnly) {
+        isReadOnly = readOnly;
+    }
+
+    public boolean isLocatorsUpdateCopy() {
+        return locatorsUpdateCopy;
+    }
+
+    public void setLocatorsUpdateCopy(final boolean finalLocatorsUpdateCopy) {
+        this.locatorsUpdateCopy = finalLocatorsUpdateCopy;
+    }
+
+    public boolean isSupportsBatchUpdates() {
+        return supportsBatchUpdates;
+    }
+
+    public void setSupportsBatchUpdates(
+            final boolean theSupportsBatchUpdates) {
+        this.supportsBatchUpdates = theSupportsBatchUpdates;
+    }
+
+    public boolean isSupportsSavepoints() {
+        return supportsSavepoints;
+    }
+
+    public void setSupportsSavepoints(
+            final boolean theSupportsSavepoints) {
+        this.supportsSavepoints = theSupportsSavepoints;
+    }
+
+    public boolean isSupportsNamedParameters() {
+        return supportsNamedParameters;
+    }
+
+    public void setSupportsNamedParameters(
+            final boolean theSupportsNamedParameters) {
+        this.supportsNamedParameters = theSupportsNamedParameters;
+    }
+
+    public boolean isSupportsMultipleOpenResults() {
+        return supportsMultipleOpenResults;
+    }
+
+    public void setSupportsMultipleOpenResults(
+            final boolean theSupportsMultipleOpenResults) {
+        this.supportsMultipleOpenResults =
+                theSupportsMultipleOpenResults;
+    }
+
+    public boolean isSupportsGetGeneratedKeys() {
+        return supportsGetGeneratedKeys;
+    }
+
+    public void setSupportsGetGeneratedKeys(
+            final boolean theSupportsGetGeneratedKeys) {
+        this.supportsGetGeneratedKeys =
+                theSupportsGetGeneratedKeys;
+    }
+
+    public boolean isSupportsResultSetHoldability() {
+        return supportsResultSetHoldability;
+    }
+
+    public void setSupportsResultSetHoldability(
+            final boolean theSupportsResultSetHoldability) {
+        this.supportsResultSetHoldability =
+                theSupportsResultSetHoldability;
+    }
+
+    public int getSqlStateType() {
+        return sqlStateType;
+    }
+
+    public void setSqlStateType(final int theSqlStateType) {
+        this.sqlStateType = theSqlStateType;
+    }
+
+    public boolean isSupportsStatementPooling() {
+        return supportsStatementPooling;
+    }
+
+    public void setSupportsStatementPooling(
+            final boolean theSupportsStatementPooling) {
+        this.supportsStatementPooling = theSupportsStatementPooling;
+    }
+
+    public boolean isAllProceduresAreCallable() {
+        return allProceduresAreCallable;
+    }
+
+    public void setAllProceduresAreCallable(
+            final boolean theAllProceduresAreCallable) {
+        this.allProceduresAreCallable = theAllProceduresAreCallable;
+    }
+
+    public boolean isAllTablesAreSelectable() {
+        return allTablesAreSelectable;
+    }
+
+    public void setAllTablesAreSelectable(
+            final boolean theAllTablesAreSelectable) {
+        this.allTablesAreSelectable = theAllTablesAreSelectable;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(final String theUrl) {
+        this.url = theUrl;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(final String theUserName) {
+        this.userName = theUserName;
+    }
+
+    public boolean isNullPlusNonNullIsNull() {
+        return nullPlusNonNullIsNull;
+    }
+
+    public void setNullPlusNonNullIsNull(
+            final boolean theNullPlusNonNullIsNull) {
+        this.nullPlusNonNullIsNull = theNullPlusNonNullIsNull;
+    }
+
+    public boolean isNullsAreSortedHigh() {
+        return nullsAreSortedHigh;
+    }
+
+    public void setNullsAreSortedHigh(final boolean theNullsAreSortedHigh) {
+        this.nullsAreSortedHigh = theNullsAreSortedHigh;
+    }
+
+    public boolean isNullsAreSortedLow() {
+        return nullsAreSortedLow;
+    }
+
+    public void setNullsAreSortedLow(
+            final boolean theNullsAreSortedLow) {
+        this.nullsAreSortedLow = theNullsAreSortedLow;
+    }
+
+    public boolean isNullsAreSortedAtStart() {
+        return nullsAreSortedAtStart;
+    }
+
+    public void setNullsAreSortedAtStart(
+            final boolean theNullsAreSortedAtStart) {
+        this.nullsAreSortedAtStart = theNullsAreSortedAtStart;
+    }
+
+    public boolean isNullsAreSortedAtEnd() {
+        return nullsAreSortedAtEnd;
+    }
+
+    public void setNullsAreSortedAtEnd(
+            final boolean theNullsAreSortedAtEnd) {
+        this.nullsAreSortedAtEnd = theNullsAreSortedAtEnd;
+    }
+
+    public boolean isAutoCommitFailureClosesAllResultSets() {
+        return autoCommitFailureClosesAllResultSets;
+    }
+
+    public void setAutoCommitFailureClosesAllResultSets(
+            final boolean
+                    theAutoCommitFailureClosesAllResultSets) {
+        this.autoCommitFailureClosesAllResultSets =
+                theAutoCommitFailureClosesAllResultSets;
+    }
+
+    public boolean isGeneratedKeyAlwaysReturned() {
+        return generatedKeyAlwaysReturned;
+    }
+
+    public void setGeneratedKeyAlwaysReturned(
+            final boolean theGeneratedKeyAlwaysReturned) {
+        this.generatedKeyAlwaysReturned =
+                theGeneratedKeyAlwaysReturned;
+    }
+
+    public boolean isStoresLowerCaseIdentifiers() {
+        return storesLowerCaseIdentifiers;
+    }
+
+    public void setStoresLowerCaseIdentifiers(
+            final boolean theStoresLowerCaseIdentifiers) {
+        this.storesLowerCaseIdentifiers =
+                theStoresLowerCaseIdentifiers;
+    }
+
+    public boolean isStoresLowerCaseQuotedIdentifiers() {
+        return storesLowerCaseQuotedIdentifiers;
+    }
+
+    public void setStoresLowerCaseQuotedIdentifiers(
+            final boolean theStoresLowerCaseQuotedIdentifiers) {
+        this.storesLowerCaseQuotedIdentifiers =
+                theStoresLowerCaseQuotedIdentifiers;
+    }
+
+    public boolean isStoresMixedCaseIdentifiers() {
+        return storesMixedCaseIdentifiers;
+    }
+
+    public void setStoresMixedCaseIdentifiers(
+            final boolean theStoresMixedCaseIdentifiers) {
+        this.storesMixedCaseIdentifiers = theStoresMixedCaseIdentifiers;
+    }
+
+    public boolean isStoresMixedCaseQuotedIdentifiers() {
+        return storesMixedCaseQuotedIdentifiers;
+    }
+
+    public void setStoresMixedCaseQuotedIdentifiers(
+            final boolean theStoresMixedCaseQuotedIdentifiers) {
+        this.storesMixedCaseQuotedIdentifiers =
+                theStoresMixedCaseQuotedIdentifiers;
+    }
+
+    public boolean isStoresUpperCaseIdentifiers() {
+        return storesUpperCaseIdentifiers;
+    }
+
+    public void setStoresUpperCaseIdentifiers(
+            final boolean theStoresUpperCaseIdentifiers) {
+        this.storesUpperCaseIdentifiers = theStoresUpperCaseIdentifiers;
+    }
+
+    public boolean isStoresUpperCaseQuotedIdentifiers() {
+        return storesUpperCaseQuotedIdentifiers;
+    }
+
+    public void setStoresUpperCaseQuotedIdentifiers(
+            final boolean theStoresUpperCaseQuotedIdentifiers) {
+        this.storesUpperCaseQuotedIdentifiers =
+                theStoresUpperCaseQuotedIdentifiers;
+    }
+
+    public boolean isSupportsAlterTableWithAddColumn() {
+        return supportsAlterTableWithAddColumn;
+    }
+
+    public void setSupportsAlterTableWithAddColumn(
+            final boolean theSupportsAlterTableWithAddColumn) {
+        this.supportsAlterTableWithAddColumn =
+                theSupportsAlterTableWithAddColumn;
+    }
+
+    public boolean isSupportsAlterTableWithDropColumn() {
+        return supportsAlterTableWithDropColumn;
+    }
+
+    public void setSupportsAlterTableWithDropColumn(
+            final boolean theSupportsAlterTableWithDropColumn) {
+        this.supportsAlterTableWithDropColumn =
+                theSupportsAlterTableWithDropColumn;
+    }
+
+    public boolean isSupportsANSI92EntryLevelSQL() {
+        return supportsANSI92EntryLevelSQL;
+    }
+
+    public void setSupportsANSI92EntryLevelSQL(
+            final boolean theSupportsANSI92EntryLevelSQL) {
+        this.supportsANSI92EntryLevelSQL =
+                theSupportsANSI92EntryLevelSQL;
+    }
+
+    public boolean isSupportsANSI92FullSQL() {
+        return supportsANSI92FullSQL;
+    }
+
+    public void setSupportsANSI92FullSQL(
+            final boolean theSupportsANSI92FullSQL) {
+        this.supportsANSI92FullSQL = theSupportsANSI92FullSQL;
+    }
+
+    public boolean isSupportsANSI92IntermediateSQL() {
+        return supportsANSI92IntermediateSQL;
+    }
+
+    public void setSupportsANSI92IntermediateSQL(
+            final boolean theSupportsANSI92IntermediateSQL) {
+        this.supportsANSI92IntermediateSQL = theSupportsANSI92IntermediateSQL;
+    }
+
+    public boolean isSupportsCatalogsInDataManipulation() {
+        return supportsCatalogsInDataManipulation;
+    }
+
+    public void setSupportsCatalogsInDataManipulation(
+            final boolean theSupportsCatalogsInDataManipulation) {
+        this.supportsCatalogsInDataManipulation =
+                theSupportsCatalogsInDataManipulation;
+    }
+
+    public boolean isSupportsCatalogsInIndexDefinitions() {
+        return supportsCatalogsInIndexDefinitions;
+    }
+
+    public void setSupportsCatalogsInIndexDefinitions(
+            final boolean theSupportsCatalogsInIndexDefinitions) {
+        this.supportsCatalogsInIndexDefinitions =
+                theSupportsCatalogsInIndexDefinitions;
+    }
+
+    public boolean isSupportsCatalogsInPrivilegeDefinitions() {
+        return supportsCatalogsInPrivilegeDefinitions;
+    }
+
+    public void setSupportsCatalogsInPrivilegeDefinitions(
+            final boolean theSupportsCatalogsInPrivilegeDefinitions) {
+        this.supportsCatalogsInPrivilegeDefinitions =
+                theSupportsCatalogsInPrivilegeDefinitions;
+    }
+
+    public boolean isSupportsCatalogsInProcedureCalls() {
+        return supportsCatalogsInProcedureCalls;
+    }
+
+    public void setSupportsCatalogsInProcedureCalls(
+            final boolean theSupportsCatalogsInProcedureCalls) {
+        this.supportsCatalogsInProcedureCalls =
+                theSupportsCatalogsInProcedureCalls;
+    }
+
+    public boolean isSupportsCatalogsInTableDefinitions() {
+        return supportsCatalogsInTableDefinitions;
+    }
+
+    public void setSupportsCatalogsInTableDefinitions(
+            final boolean theSupportsCatalogsInTableDefinitions) {
+        this.supportsCatalogsInTableDefinitions =
+                theSupportsCatalogsInTableDefinitions;
+    }
+
+    public boolean isSupportsColumnAliasing() {
+        return supportsColumnAliasing;
+    }
+
+    public void setSupportsColumnAliasing(
+            final boolean theSupportsColumnAliasing) {
+        this.supportsColumnAliasing = theSupportsColumnAliasing;
+    }
+
+    public boolean isSupportsConvert() {
+        return supportsConvert;
+    }
+
+    public void setSupportsConvert(final boolean theSupportsConvert) {
+        this.supportsConvert = theSupportsConvert;
+    }
+
+    public boolean isSupportsCoreSQLGrammar() {
+        return supportsCoreSQLGrammar;
+    }
+
+    public void setSupportsCoreSQLGrammar(
+            final boolean theSupportsCoreSQLGrammar) {
+        this.supportsCoreSQLGrammar = theSupportsCoreSQLGrammar;
+    }
+
+    public boolean isSupportsCorrelatedSubqueries() {
+        return supportsCorrelatedSubqueries;
+    }
+
+    public void setSupportsCorrelatedSubqueries(
+            final boolean theSupportsCorrelatedSubqueries) {
+        this.supportsCorrelatedSubqueries = theSupportsCorrelatedSubqueries;
+    }
+
+    public boolean isSupportsDataManipulationTransactionsOnly() {
+        return supportsDataManipulationTransactionsOnly;
+    }
+
+    public void setSupportsDataManipulationTransactionsOnly(
+            final boolean theSupportsDataManipulationTransactionsOnly) {
+        this.supportsDataManipulationTransactionsOnly =
+                theSupportsDataManipulationTransactionsOnly;
+    }
+
+    public boolean isSupportsDifferentTableCorrelationNames() {
+        return supportsDifferentTableCorrelationNames;
+    }
+
+    public void setSupportsDifferentTableCorrelationNames(
+            final boolean theSupportsDifferentTableCorrelationNames) {
+        this.supportsDifferentTableCorrelationNames =
+                theSupportsDifferentTableCorrelationNames;
+    }
+
+    public boolean isSupportsExpressionsInOrderBy() {
+        return supportsExpressionsInOrderBy;
+    }
+
+    public void setSupportsExpressionsInOrderBy(
+            final boolean theSupportsExpressionsInOrderBy) {
+        this.supportsExpressionsInOrderBy =
+                theSupportsExpressionsInOrderBy;
+    }
+
+    public boolean isSupportsExtendedSQLGrammar() {
+        return supportsExtendedSQLGrammar;
+    }
+
+    public void setSupportsExtendedSQLGrammar(
+            final boolean theSupportsExtendedSQLGrammar) {
+        this.supportsExtendedSQLGrammar = theSupportsExtendedSQLGrammar;
+    }
+
+    public boolean isSupportsFullOuterJoins() {
+        return supportsFullOuterJoins;
+    }
+
+    public void setSupportsFullOuterJoins(
+            final boolean theSupportsFullOuterJoins) {
+        this.supportsFullOuterJoins = theSupportsFullOuterJoins;
+    }
+
+    public boolean isSupportsGroupBy() {
+        return supportsGroupBy;
+    }
+
+    public void setSupportsGroupBy(
+            final boolean theSupportsGroupBy) {
+        this.supportsGroupBy = theSupportsGroupBy;
+    }
+
+    public boolean isSupportsGroupByBeyondSelect() {
+        return supportsGroupByBeyondSelect;
+    }
+
+    public void setSupportsGroupByBeyondSelect(
+            final boolean theSupportsGroupByBeyondSelect) {
+        this.supportsGroupByBeyondSelect = theSupportsGroupByBeyondSelect;
+    }
+
+    public boolean isSupportsGroupByUnrelated() {
+        return supportsGroupByUnrelated;
+    }
+
+    public void setSupportsGroupByUnrelated(
+            final boolean theSupportsGroupByUnrelated) {
+        this.supportsGroupByUnrelated = theSupportsGroupByUnrelated;
+    }
+
+    public boolean isSupportsIntegrityEnhancementFacility() {
+        return supportsIntegrityEnhancementFacility;
+    }
+
+    public void setSupportsIntegrityEnhancementFacility(
+            final boolean theSupportsIntegrityEnhancementFacility) {
+        this.supportsIntegrityEnhancementFacility =
+                theSupportsIntegrityEnhancementFacility;
+    }
+
+    public boolean isSupportsLikeEscapeClause() {
+        return supportsLikeEscapeClause;
+    }
+
+    public void setSupportsLikeEscapeClause(
+            final boolean theSupportsLikeEscapeClause) {
+        this.supportsLikeEscapeClause = theSupportsLikeEscapeClause;
+    }
+
+    public boolean isSupportsLimitedOuterJoins() {
+        return supportsLimitedOuterJoins;
+    }
+
+    public void setSupportsLimitedOuterJoins(
+            final boolean theSupportsLimitedOuterJoins) {
+        this.supportsLimitedOuterJoins = theSupportsLimitedOuterJoins;
+    }
+
+    public boolean isSupportsMinimumSQLGrammar() {
+        return supportsMinimumSQLGrammar;
+    }
+
+    public void setSupportsMinimumSQLGrammar(
+            final boolean theSupportsMinimumSQLGrammar) {
+        this.supportsMinimumSQLGrammar = theSupportsMinimumSQLGrammar;
+    }
+
+    public boolean isSupportsMixedCaseIdentifiers() {
+        return supportsMixedCaseIdentifiers;
+    }
+
+    public void setSupportsMixedCaseIdentifiers(
+            final boolean theSupportsMixedCaseIdentifiers) {
+        this.supportsMixedCaseIdentifiers =
+                theSupportsMixedCaseIdentifiers;
+    }
+
+    public boolean isSupportsMixedCaseQuoteIdentifiers() {
+        return supportsMixedCaseQuoteIdentifiers;
+    }
+
+    public void setSupportsMixedCaseQuoteIdentifiers(
+            final boolean theSupportsMixedCaseQuoteIdentifiers) {
+        this.supportsMixedCaseQuoteIdentifiers =
+                theSupportsMixedCaseQuoteIdentifiers;
+    }
+
+    public boolean isSupportsMultipleResultSets() {
+        return supportsMultipleResultSets;
+    }
+
+    public void setSupportsMultipleResultSets(
+            final boolean theSupportsMultipleResultSets) {
+        this.supportsMultipleResultSets = theSupportsMultipleResultSets;
+    }
+
+    public boolean isSupportsMultipleTransactions() {
+        return supportsMultipleTransactions;
+    }
+
+    public void setSupportsMultipleTransactions(
+            final boolean theSupportsMultipleTransactions) {
+        this.supportsMultipleTransactions = theSupportsMultipleTransactions;
+    }
+
+    public boolean isSupportsNonNullableColumns() {
+        return supportsNonNullableColumns;
+    }
+
+    public void setSupportsNonNullableColumns(
+            final boolean theSupportsNonNullableColumns) {
+        this.supportsNonNullableColumns =
+                theSupportsNonNullableColumns;
+    }
+
+    public boolean isSupportsOpenCursorsAcrossCommit() {
+        return supportsOpenCursorsAcrossCommit;
+    }
+
+    public void setSupportsOpenCursorsAcrossCommit(
+            final boolean theSupportsOpenCursorsAcrossCommit) {
+        this.supportsOpenCursorsAcrossCommit =
+                theSupportsOpenCursorsAcrossCommit;
+    }
+
+    public boolean isSupportsOpenCursorsAcrossRollback() {
+        return supportsOpenCursorsAcrossRollback;
+    }
+
+    public void setSupportsOpenCursorsAcrossRollback(
+            final boolean theSupportsOpenCursorsAcrossRollback) {
+        this.supportsOpenCursorsAcrossRollback =
+                theSupportsOpenCursorsAcrossRollback;
+    }
+
+    public boolean isSupportsOrderByUnrelated() {
+        return supportsOrderByUnrelated;
+    }
+
+    public void setSupportsOrderByUnrelated(
+            final boolean theSupportsOrderByUnrelated) {
+        this.supportsOrderByUnrelated = theSupportsOrderByUnrelated;
+    }
+
+    public boolean isSupportsOuterJoins() {
+        return supportsOuterJoins;
+    }
+
+    public void setSupportsOuterJoins(
+            final boolean theSupportsOuterJoins) {
+        this.supportsOuterJoins = theSupportsOuterJoins;
+    }
+
+    public boolean isSupportsPositionedDelete() {
+        return supportsPositionedDelete;
+    }
+
+    public void setSupportsPositionedDelete(
+            final boolean theSupportsPositionedDelete) {
+        this.supportsPositionedDelete = theSupportsPositionedDelete;
+    }
+
+    public boolean isSupportsPositionedUpdate() {
+        return supportsPositionedUpdate;
+    }
+
+    public void setSupportsPositionedUpdate(
+            final boolean theSupportsPositionedUpdate) {
+        this.supportsPositionedUpdate = theSupportsPositionedUpdate;
+    }
+
+    public boolean isSupportsRefCursors() {
+        return supportsRefCursors;
+    }
+
+    public void setSupportsRefCursors(
+            final boolean theSupportsRefCursors) {
+        this.supportsRefCursors = theSupportsRefCursors;
+    }
+
+    public boolean isSupportsSavePoint() {
+        return supportsSavePoint;
+    }
+
+    public void setSupportsSavePoint(
+            final boolean theSupportsSavePoint) {
+        this.supportsSavePoint = theSupportsSavePoint;
+    }
+
+    public boolean isSupportsSchemaInDataManipulation() {
+        return supportsSchemaInDataManipulation;
+    }
+
+    public void setSupportsSchemaInDataManipulation(
+            final boolean theSupportsSchemaInDataManipulation) {
+        this.supportsSchemaInDataManipulation =
+                theSupportsSchemaInDataManipulation;
+    }
+
+    public boolean isSupportsSchemaInIndexDefinition() {
+        return supportsSchemaInIndexDefinition;
+    }
+
+    public void setSupportsSchemaInIndexDefinition(
+            final boolean theSupportsSchemaInIndexDefinition) {
+        this.supportsSchemaInIndexDefinition =
+                theSupportsSchemaInIndexDefinition;
+    }
+
+    public boolean isSupportsSchemasInPrivilegeDefinitions() {
+        return supportsSchemasInPrivilegeDefinitions;
+    }
+
+    public void setSupportsSchemasInPrivilegeDefinitions(
+            final boolean theSupportsSchemasInPrivilegeDefinitions) {
+        this.supportsSchemasInPrivilegeDefinitions =
+                theSupportsSchemasInPrivilegeDefinitions;
+    }
+
+    public boolean isSupportsSchemasInProcedureCalls() {
+        return supportsSchemasInProcedureCalls;
+    }
+
+    public void setSupportsSchemasInProcedureCalls(
+            final boolean theSupportsSchemasInProcedureCalls) {
+        this.supportsSchemasInProcedureCalls =
+                theSupportsSchemasInProcedureCalls;
+    }
+
+    public boolean isSupportsSchemasInTableDefinitions() {
+        return supportsSchemasInTableDefinitions;
+    }
+
+    public void setSupportsSchemasInTableDefinitions(
+            final boolean theSupportsSchemasInTableDefinitions) {
+        this.supportsSchemasInTableDefinitions =
+                theSupportsSchemasInTableDefinitions;
+    }
+
+    public boolean isSupportsSelectForUpdate() {
+        return supportsSelectForUpdate;
+    }
+
+    public void setSupportsSelectForUpdate(
+            final boolean theSupportsSelectForUpdate) {
+        this.supportsSelectForUpdate = theSupportsSelectForUpdate;
+    }
+
+    public boolean isSupportsSharding() {
+        return supportsSharding;
+    }
+
+    public void setSupportsSharding(
+            final boolean theSupportsSharding) {
+        this.supportsSharding = theSupportsSharding;
+    }
+
+    public boolean isSupportsStoredFunctionsUsingCallSyntax() {
+        return supportsStoredFunctionsUsingCallSyntax;
+    }
+
+    public void setSupportsStoredFunctionsUsingCallSyntax(
+            final boolean theSupportsStoredFunctionsUsingCallSyntax) {
+        this.supportsStoredFunctionsUsingCallSyntax =
+                theSupportsStoredFunctionsUsingCallSyntax;
+    }
+
+    public boolean isSupportsStoredProcedures() {
+        return supportsStoredProcedures;
+    }
+
+    public void setSupportsStoredProcedures(
+            final boolean theSupportsStoredProcedures) {
+        this.supportsStoredProcedures =
+                theSupportsStoredProcedures;
+    }
+
+    public boolean isSupportsSubqueriesInComparisons() {
+        return supportsSubqueriesInComparisons;
+    }
+
+    public void setSupportsSubqueriesInComparisons(
+            final boolean theSupportsSubqueriesInComparisons) {
+        this.supportsSubqueriesInComparisons =
+                theSupportsSubqueriesInComparisons;
+    }
+
+    public boolean isSupportsSubqueriesInExists() {
+        return supportsSubqueriesInExists;
+    }
+
+    public void setSupportsSubqueriesInExists(
+            final boolean theSupportsSubqueriesInExists) {
+        this.supportsSubqueriesInExists = theSupportsSubqueriesInExists;
+    }
+
+    public boolean isSupportsSubqueriesInIns() {
+        return supportsSubqueriesInIns;
+    }
+
+    public void setSupportsSubqueriesInIns(
+            final boolean theSupportsSubqueriesInIns) {
+        this.supportsSubqueriesInIns = theSupportsSubqueriesInIns;
+    }
+
+    public boolean isSupportsSubqueriesInQuantifieds() {
+        return supportsSubqueriesInQuantifieds;
+    }
+
+    public void setSupportsSubqueriesInQuantifieds(
+            final boolean theSupportsSubqueriesInQuantifieds) {
+        this.supportsSubqueriesInQuantifieds =
+                theSupportsSubqueriesInQuantifieds;
+    }
+
+    public boolean isSupportsTableCorrelationNames() {
+        return supportsTableCorrelationNames;
+    }
+
+    public void setSupportsTableCorrelationNames(
+            final boolean theSupportsTableCorrelationNames) {
+        this.supportsTableCorrelationNames =
+                theSupportsTableCorrelationNames;
+    }
+
+    public boolean isSupportsUnion() {
+        return supportsUnion;
+    }
+
+    public void setSupportsUnion(final boolean theSupportsUnion) {
+        this.supportsUnion = theSupportsUnion;
+    }
+
+    public boolean isSupportsUnionAll() {
+        return supportsUnionAll;
+    }
+
+    public void setSupportsUnionAll(
+            final boolean theSupportsUnionAll) {
+        this.supportsUnionAll = theSupportsUnionAll;
+    }
+
+    public boolean isUsersLocalFilePerTable() {
+        return usersLocalFilePerTable;
+    }
+
+    public void setUsersLocalFilePerTable(
+            final boolean theUsersLocalFilePerTable) {
+        this.usersLocalFilePerTable = theUsersLocalFilePerTable;
+    }
+
+    public boolean isUsersLocalFiles() {
+        return usersLocalFiles;
+    }
+
+    public void setUsersLocalFiles(
+            final boolean theUsersLocalFiles) {
+        this.usersLocalFiles = theUsersLocalFiles;
     }
 }

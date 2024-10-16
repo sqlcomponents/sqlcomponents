@@ -3,7 +3,7 @@
     "commands": [
       {
         "match": "\\.ftl$",
-        "cmd": "cd ../../../../ && ./../mvnw test -Dtest=JavaCompilerTest"
+        "cmd": "cd ../../../../../ && ./../mvnw test -Dsurefire.failIfNoSpecifiedTests=false -Dtest=JavaCompilerTest -pl compiler -am"
       }
     ]
   }

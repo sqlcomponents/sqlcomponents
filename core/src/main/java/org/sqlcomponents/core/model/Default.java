@@ -1,13 +1,11 @@
 package org.sqlcomponents.core.model;
 
-import lombok.Getter;
-import lombok.Setter;
+
 
 /**
  * The type Default.
  */
-@Getter
-@Setter
+
 public class Default {
     /**
      * The On insert.
@@ -25,4 +23,36 @@ public class Default {
      * The Default value.
      */
     private String defaultValue;
+
+    public boolean isOnInsert() {
+        return onInsert;
+    }
+
+    public void setOnInsert(final boolean theOnInsert) {
+        this.onInsert = theOnInsert;
+    }
+
+    public boolean isOnUpdate() {
+        return onUpdate;
+    }
+
+    public void setOnUpdate(final boolean theOnUpdate) {
+        this.onUpdate = theOnUpdate;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(final String theColumnName) {
+        this.columnName = theColumnName;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(final String theDefaultValue) {
+        this.defaultValue = theDefaultValue;
+    }
 }

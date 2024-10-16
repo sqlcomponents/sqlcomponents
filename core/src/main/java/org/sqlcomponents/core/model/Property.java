@@ -1,9 +1,12 @@
 package org.sqlcomponents.core.model;
 
 import org.sqlcomponents.core.model.relational.Column;
+import org.sqlcomponents.core.model.relational.enums.Flag;
+
+import java.util.Map;
 
 /**
- * The type Property.
+ * The type.
  */
 public class Property {
     /**
@@ -23,12 +26,20 @@ public class Property {
      */
     private String dataType;
     /**
+     * The type name.
+     */
+    private String typeName;
+    /**
+     * Type type.
+     */
+    private String typeType;
+    /**
      * The Unique constraint group.
      */
     private String uniqueConstraintGroup;
 
     /**
-     * Instantiates a new Property.
+     * Instantiates a new.
      *
      * @param paramEntity the entity
      * @param paramColumn the column
@@ -128,4 +139,62 @@ public class Property {
     public void setDataType(final String paramDataType) {
         this.dataType = paramDataType;
     }
+
+    /**
+     * get the type name.
+     * @return String
+     */
+    public String getTypeName() {
+        return typeName;
+    }
+
+    /**
+     * set the type name.
+     * @param aTypeName type name
+     */
+    public void setTypeName(final String aTypeName) {
+        this.typeName = aTypeName;
+    }
+
+    /**
+     * get type type.
+     * @return String
+     */
+    public String getTypeType() {
+        return typeType;
+    }
+
+    /**
+     * set type type.
+     * @param aTypeType String
+     */
+    public void setTypeType(final String aTypeType) {
+        this.typeType = aTypeType;
+    }
+
+    /**
+     * Is returning boolean.
+     *
+     * @return the boolean
+     */
+    public boolean isReturning() {
+        boolean isReturning =
+                getColumn().getAutoIncrement() == Flag.YES
+                        || getColumn().getGeneratedColumn()
+                        == Flag.YES;
+        Map<String, String> insertMap =
+                getEntity().getOrm().getApplication()
+                        .getInsertMap();
+        String mapped = insertMap != null ? insertMap
+                .get(getColumn().getColumnName()) : null;
+        String specificTableMapped =
+                insertMap != null ? insertMap.get(String.format("%s#%s",
+                        getEntity().getTable().getTableName(),
+                        getColumn().getColumnName())) : null;
+        if (mapped != null || specificTableMapped != null) {
+            isReturning = true;
+        }
+        return isReturning;
+    }
+
 }

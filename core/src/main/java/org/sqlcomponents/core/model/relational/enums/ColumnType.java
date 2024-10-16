@@ -7,9 +7,71 @@ import java.sql.JDBCType;
  */
 public enum ColumnType {
     /**
+     * Box column type.
+     */
+    VOID("void"),
+    /**
+     * Box column type.
+     */
+    BOX("BOX"),
+
+
+    /**
+     * Cidr column type.
+     */
+    CIDR("CIDR"),
+    /**
+     * Line column type.
+     */
+    LINE("LINE"),
+
+    /**
+     * Circle column type.
+     */
+    CIRCLE("CIRCLE"),
+    /**
+     * POLYGON column type.
+     */
+    POLYGON("POLYGON"),
+
+
+    /**
+     * Point column type.
+     */
+
+    POINT("POINT"),
+
+
+    /**
+     * Inetaddress column type.
+     */
+
+    INET("INET"),
+
+    /**
+     * LSEG column type.
+     */
+    LSEG("LSEG"),
+    /**
+     * MACADDR8 column type.
+     */
+    MACADDR8("MACADDR8"),
+    /**
+     * MACADDR column type.
+     */
+    MACADDR("MACADDR"),
+    /**
      * Bit column type.
      */
     BIT("BIT"),
+    /**
+     * Bit column with varying length.
+     */
+    VARBIT("VARBIT"),
+    /**
+     * Path column type.
+     */
+    PATH("PATH"),
     /**
      * Identifies the generic SQL type {@code TINYINT}.
      */
@@ -195,7 +257,11 @@ public enum ColumnType {
     /**
      * Text column type.
      */
-    TEXT("TEXT");
+    TEXT("TEXT"),
+    /**
+     * Enum column type.
+     */
+    ENUM("ENUM"),;
 
     /**
      * The Value.

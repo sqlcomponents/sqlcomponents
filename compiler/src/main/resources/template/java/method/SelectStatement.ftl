@@ -2,145 +2,117 @@
 <#assign a=addImportStatement("java.util.List")>
 <#assign a=addImportStatement("java.util.ArrayList")>
 <#assign a=addImportStatement("java.util.Optional")>
+<#assign a=addImportStatement("java.sql.PreparedStatement")>
 
-public SelectStatement select() {
-        return new SelectStatement(this);
-}
-public SelectStatement select(WhereClause whereClause) throws <@throwsblock/>  {
-        return new SelectStatement(this,whereClause);
+public SelectStatementWithWhere select() {
+        return new SelectStatementWithWhere();
 }
 
-public static final class SelectStatement {
+public final class SelectStatementWithWhere extends SelectStatement{
 
-        private final ${name}Store ${name?uncap_first}Store;
+        private SelectStatementWithWhere() {
+            super(null);
+        }
+
+        public SelectStatement where(WhereClause whereClause) throws SQLException {
+            return new SelectStatement(whereClause);
+        }
+    }
+
+public sealed class SelectStatement permits SelectStatementWithWhere {
+
+
         private final WhereClause whereClause;
 
         private LimitClause limitClause;
         private LimitClause.OffsetClause offsetClause;
 
+
         public LimitClause limit(final int limit) {
-                return new LimitClause(this,limit);
+                return new LimitClause(limit);
         }
 
-        private SelectStatement(final ${name}Store ${name?uncap_first}Store) {
-            this(${name?uncap_first}Store,null);
+        private SelectStatement() {
+            this(null);
         }
 
-        private SelectStatement(final ${name}Store ${name?uncap_first}Store
-                ,final WhereClause whereClause) {
-            this.${name?uncap_first}Store = ${name?uncap_first}Store;
+        private SelectStatement(final WhereClause whereClause) {
             this.whereClause = whereClause;
         }
 
-        public List<${name}> execute() throws <@throwsblock/> {
-		final String query = <@compress single_line=true>"
-                SELECT
-		<@columnSelection/> 
+        public final List<${name}> execute() throws <@throwsblock/> {
+            
+		final String query = <@compress single_line=true>"SELECT
+		<@columnSelection properties=properties/> 
 		FROM ${table.escapedName?j_string}
                 </@compress>" 
                 + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) )
                 + ( this.limitClause == null ? "" : this.limitClause.asSql() )
                 + ( this.offsetClause == null ? "" : this.offsetClause.asSql() );
-                try (java.sql.Connection dbConnection = this.${name?uncap_first}Store.dbDataSource.getConnection();
-                PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
-                
-                ResultSet resultSet = preparedStatement.executeQuery();
-                                List<${name}> arrays = new ArrayList();
-                while (resultSet.next()) {
-                                        arrays.add(this.${name?uncap_first}Store.rowMapper(resultSet));
-                                }
-                                return arrays;
-                } 
+                return dataManager.sql(query).query(${name}Store.this::rowMapper).list();
 	}
 
-        public int count() throws SQLException {
-                int count = 0;
-		final String query = <@compress single_line=true>"
-                SELECT
-		COUNT(*)
+        public final int count() throws SQLException {
+		final String query = <@compress single_line=true>"SELECT
+		COUNT(<#if primaryKeyProperties?size == 0
+                >*<#else
+                    ><@columnSelection properties=primaryKeyProperties
+                /></#if>)
 		FROM ${table.escapedName?j_string}
                 </@compress>" 
                 + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
-                try (java.sql.Connection dbConnection = this.${name?uncap_first}Store.dbDataSource.getConnection();
-                PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
-                
-                ResultSet resultSet = preparedStatement.executeQuery();
-                                List<${name}> arrays = new ArrayList();
-                while (resultSet.next()) {
-                                        count = resultSet.getInt(1);
-                                }
-                                return count;
-                } 
+                return dataManager.sql(query).getInt();
 	}
-public SelectQuery sql(final String sql) {
-            return new SelectQuery(this, sql);
+public final SelectQuery sql(final String sql) {
+            return new SelectQuery(sql);
     }
 
-    public static final class SelectQuery  {
+    public final class SelectQuery  {
 
-        private final SelectStatement selectStatement;
         private final String sql;
-        private final List<Value> values;
+        private final List<Value<?,?>> values;
 
-        public SelectQuery(final SelectStatement selectStatement, final String sql) {
-            this.selectStatement = selectStatement;
+        public SelectQuery(final String sql) {
             this.sql = sql;
             this.values = new ArrayList<>();
         }
 
 
-        public SelectQuery param(final Value value) {
+        public SelectQuery param(final Value<?,?> value) {
             this.values.add(value);
             return this;
         }
 
         public Optional<${name}> optional() throws <@throwsblock/> {
-            ${name} ${name?uncap_first} = null;
-            try (java.sql.Connection dbConnection = this.selectStatement.${name?uncap_first}Store.dbDataSource.getConnection(); 
-                 PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
-                int index = 1;
-                for (Value value:values
-                     ) {
-                    value.set(preparedStatement, index++);
-                }
+            DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
 
-                ResultSet resultSet = preparedStatement.executeQuery();
-
-                if (resultSet.next()) ${name?uncap_first} = this.selectStatement.${name?uncap_first}Store.rowMapper(resultSet);
+            for (Value<?,?> value:values) {
+                sqlBuilder.param(value);
             }
-            return Optional.ofNullable(${name?uncap_first});
+            
+            return Optional.ofNullable(sqlBuilder.query(${name}Store.this::rowMapper).single());
         }
 
         public List<${name}> list() throws <@throwsblock/>{
-            List<${name}> arrays = new ArrayList();
-            try (java.sql.Connection dbConnection = this.selectStatement.${name?uncap_first}Store.dbDataSource.getConnection(); 
-                 PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)) {
-                int index = 1;
-                for (Value value:values
-                     ) {
-                    value.set(preparedStatement, index++);
-                }
+            DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
 
-                ResultSet resultSet = preparedStatement.executeQuery();
-
-                while (resultSet.next()) {
-                    arrays.add(this.selectStatement.${name?uncap_first}Store.rowMapper(resultSet));
-                }
+            for (Value<?,?> value:values) {
+                sqlBuilder.param(value);
             }
-            return arrays;
+            
+            return sqlBuilder.query(${name}Store.this::rowMapper).list();
         }
     }
 
 
-        public static final class LimitClause  {
-                private final SelectStatement selectStatement;
+        public final class LimitClause  {
+
                 private final String asSql;
 
-                private LimitClause(final SelectStatement selectStatement,final int limit) {
-                        this.selectStatement = selectStatement;
+                private LimitClause(final int limit) {
                         asSql = " LIMIT " + limit;
 
-                        this.selectStatement.limitClause = this;
+                        limitClause = this;
                 }
 
                 private String asSql() {
@@ -160,12 +132,12 @@ public SelectQuery sql(final String sql) {
                                 selectStatement.count());
                 }
                 <#else>
-                public ${orm.application.name}Manager.Page<${name}> execute() throws <@throwsblock/> {
-                    return ${orm.application.name}Manager.page(this.selectStatement.execute(), selectStatement.count());
+                public DataManager.Page<${name}> execute() throws <@throwsblock/> {
+                    return DataManager.page(SelectStatement.this.execute(), count());
                 }
                 </#if>
 
-                public static final class OffsetClause  {
+                public final class OffsetClause  {
                         private final LimitClause limitClause;
                         private final String asSql;
 
@@ -173,7 +145,7 @@ public SelectQuery sql(final String sql) {
                                 this.limitClause = limitClause;
                                 asSql = " OFFSET " + offset;
 
-                                this.limitClause.selectStatement.offsetClause = this;
+                                offsetClause = this;
                         }
 
                         private String asSql() {
@@ -185,7 +157,7 @@ public SelectQuery sql(final String sql) {
                                 return this.limitClause.execute(pageable);
                         }
                         <#else>
-                        public ${orm.application.name}Manager.Page<${name}> execute() throws <@throwsblock/> {
+                        public DataManager.Page<${name}> execute() throws <@throwsblock/> {
                                 return this.limitClause.execute();
                         }
                         </#if>
@@ -207,10 +179,9 @@ public SelectQuery sql(final String sql) {
             return select(${getPrimaryKeysAsParameters()}, null);
     }
     public Optional<${name}> select(${getPrimaryKeysAsParameterString()}, WhereClause whereClause) throws <@throwsblock/>  {
-        ${name} ${name?uncap_first} = null;
-		final String query = <@compress single_line=true>"
-                SELECT
-		<@columnSelection/>
+        
+		final String query = <@compress single_line=true>"SELECT
+		<@columnSelection properties=properties/>
 		FROM ${table.escapedName?j_string}
 		WHERE
 	    <#assign index=0>
@@ -222,19 +193,17 @@ public SelectQuery sql(final String sql) {
                 </@compress>"
 
                 + ( whereClause == null ? "" : (" AND " + whereClause.asSql()) );
-        try (java.sql.Connection dbConnection = dbDataSource.getConnection();
-            PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
-            ${getPrimaryKeysAsPreparedStatements()}
-            ResultSet resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) ${name?uncap_first} = rowMapper(resultSet);
-        }
-        return Optional.ofNullable(${name?uncap_first});
-	}
+        DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
+    
+        ${getPrimaryKeysAsPreparedStatements()}
 
+        return Optional.ofNullable(sqlBuilder.query(this::rowMapper).single());
+            
+    }
+        
     public boolean exists(${getPrimaryKeysAsParameterString()}) throws SQLException {
-        final String query = <@compress single_line=true>"
-                SELECT
+        final String query = <@compress single_line=true>"SELECT
 		1
 		FROM ${table.escapedName?j_string}
 		WHERE
@@ -245,15 +214,11 @@ public SelectQuery sql(final String sql) {
 			</#if>
 		</#list>
                 </@compress>";
-        boolean isExists = false;
-        try (java.sql.Connection dbConnection = dbDataSource.getConnection();
-            PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
-            ${getPrimaryKeysAsPreparedStatements()}
-            ResultSet resultSet = preparedStatement.executeQuery();
+        DataManager.SqlBuilder sqlBuilder = dataManager.sql(query); // HEllo
 
-            isExists = resultSet.next();
-        }
-		return isExists;
+        ${getPrimaryKeysAsPreparedStatements()}
+
+		return sqlBuilder.exists();
 	}
 
 </#if>
@@ -264,30 +229,28 @@ public SelectQuery sql(final String sql) {
 <#assign a=addImportStatement("java.util.Optional")>
     <#list table.uniqueColumns as uniqueColumn>
     public Optional<${name}> selectBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws <@throwsblock/> {
-        ${name} ${name?uncap_first} = null;
-            final String query = <@compress single_line=true>"
-                    SELECT
-            <@columnSelection/>
+        
+            final String query = <@compress single_line=true>"SELECT
+            <@columnSelection properties=properties/>
             FROM ${table.escapedName?j_string}
             WHERE
 
             ${getUniqueKeysAsWhereClause(uniqueColumn.name)}
 
                     </@compress>";
-            try (java.sql.Connection dbConnection = dbDataSource.getConnection();
-                PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
-                ${getUniqueKeysAsPreparedStatements(uniqueColumn.name)}
-                ResultSet resultSet = preparedStatement.executeQuery();
 
-                if (resultSet.next()) ${name?uncap_first} = rowMapper(resultSet);
-            }
-            return Optional.ofNullable(${name?uncap_first});
+        DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
+    
+        ${getUniqueKeysAsPreparedStatements(uniqueColumn.name)}
+
+        return Optional.ofNullable(sqlBuilder.query(this::rowMapper).single());
+
+            
     }
 
     public boolean existsBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws <@throwsblock/> {
 
-            final String query = <@compress single_line=true>"
-                    SELECT
+            final String query = <@compress single_line=true>"SELECT
             1
             FROM ${table.escapedName?j_string}
             WHERE
@@ -295,15 +258,11 @@ public SelectQuery sql(final String sql) {
             ${getUniqueKeysAsWhereClause(uniqueColumn.name)}
 
                     </@compress>";
-            boolean isExists = false;
-            try (java.sql.Connection dbConnection = dbDataSource.getConnection();
-                PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
-                ${getUniqueKeysAsPreparedStatements(uniqueColumn.name)}
-                ResultSet resultSet = preparedStatement.executeQuery();
+            DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
+    
+        ${getUniqueKeysAsPreparedStatements(uniqueColumn.name)}
 
-                isExists = resultSet.next();
-            }
-            return isExists;
+        return sqlBuilder.exists();
     }
 
     </#list>
@@ -376,7 +335,7 @@ public SelectQuery sql(final String sql) {
     	    <#if uniqueColumn.name == uniqueConstraintGroupName>
     	        <#list uniqueColumn.columns as column>
     	            <#local property=getPropertyByColumnName(column.columnName)>
-    	            <#local pkAsParameterStr = pkAsParameterStr + "${property.name?uncap_first}(${property.name}).set(preparedStatement,${index});\n\t"><#assign index=index+1>
+    	            <#local pkAsParameterStr = pkAsParameterStr + "sqlBuilder.param(${property.name?uncap_first}(${property.name}));\n\t"><#assign index=index+1>
     	        </#list>
     	    </#if>
     	</#list>

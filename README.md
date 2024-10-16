@@ -39,6 +39,10 @@ Clean Code
 13. https://www.infoq.com/news/2022/04/red-hat-releases-hibernate-6/
 14. https://www.youtube.com/watch?v=ykoUBctblno
 15. https://www.youtube.com/watch?v=XaC1rQZ_LKs
+16. https://medium.com/@jerolba/persisting-fast-in-database-1af4a281e3a
+17. https://medium.com/@jerolba/persisting-fast-in-database-jdbc-76912ec2ef42
+18. https://medium.com/@jerolba/persisting-fast-in-database-load-data-and-copy-caf645a62909
+19. 
 
 ## Related
 
@@ -59,8 +63,8 @@ On JDK 8 it will not work
 Min JDK needed is : 11
 Max JDK Tested is : 18
 
-docker-compose up -d [launch in docker postgres on port  5432]
-docker-compose down --volumes  [optional only when sql error is seen to recreate the default tables]
+docker compose up -d [launch in docker postgres on port  5432]
+docker compose down --volumes  [optional only when sql error is seen to recreate the default tables]
 mvn clean package  
 mvn clean package -Dmaven.surefire.debug -Dmaven.failsafe.debug verify  
 mvn clean package -Dmaven.test.skip=true  
