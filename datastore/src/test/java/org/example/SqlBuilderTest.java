@@ -44,6 +44,7 @@ class SqlBuilderTest {
             dataManager.sql("INSERT INTO movie ( title ,directed_by ) VALUES ( ? ,? )")
                     .param(title("Inception"))
                     .param(directedBy("Christopher Nolan"))
+                    .prepare()
                     .executeUpdate(connection);
 
             Movie movie = dataManager.sql("SELECT id,title,directed_by FROM MOVIE where id= ?")
@@ -57,6 +58,27 @@ class SqlBuilderTest {
             Assertions.assertEquals("Inception", movie.title());
         }
 
+
+    }
+
+    @Test
+    void testTransaction() throws SQLException {
+
+        Assertions.assertThrows(SQLException.class, () -> {
+            dataManager
+                    .begin()
+                    .perform(dataManager.sql("INSERT INTO movie ( title ,directed_by ) VALUES ( ? ,? )")
+                            .param(title("Inception"))
+                            .param(directedBy("Christopher Nolan"))
+                            .prepare())
+                    // Invalid Insert. Should Fail.
+                    .perform(dataManager.sql("INSERT INTO movie ( title ,directed_by ) VALUES ( NULL ,? )")
+                            .param(directedBy("Christopher Nolan"))
+                            .prepare())
+                    .commit();
+        });
+
+        Assertions.assertEquals(0, this.movieStore.select().count());
 
     }
 }

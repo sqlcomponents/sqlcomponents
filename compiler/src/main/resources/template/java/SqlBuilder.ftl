@@ -32,35 +32,48 @@ public class SqlBuilder {
     }
 
     /**
-     * Executes an update (such as INSERT, UPDATE, DELETE) using the prepared SQL query
-     * and the bound parameters.
-     *
-     * @return the number of rows affected by the update
-     * @throws SQLException if a database access error occurs
+     * Creates new Statement.
+     * @return statement
      */
-    public int executeUpdate() throws SQLException {
-        int updtedRows;
-        try (Connection connection = DataManager.this.dbDataSource.getConnection()){
-            updtedRows = executeUpdate(connection);
-        }
-        return updtedRows;
+    public Statement prepare() {
+        return new Statement();
     }
 
     /**
-     * Executes an update (such as INSERT, UPDATE, DELETE) using the prepared SQL query
-     * and the bound parameters.
-     *
-     * @param connection the database connection used to execute the query
-     * @return the number of rows affected by the update
-     * @throws SQLException if a database access error occurs
+     * Creates SQL Statement for Database.
      */
-    public int executeUpdate(final Connection connection) throws SQLException {
-        int updatedRows;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            prepare(preparedStatement);
-            updatedRows = preparedStatement.executeUpdate();
+    public final class Statement {
+        /**
+         * Executes an update (such as INSERT, UPDATE, DELETE) using the prepared SQL query
+         * and the bound parameters.
+         *
+         * @return the number of rows affected by the update
+         * @throws SQLException if a database access error occurs
+         */
+        public int executeUpdate() throws SQLException {
+            int updtedRows;
+            try (Connection connection = DataManager.this.dbDataSource.getConnection()){
+                updtedRows = executeUpdate(connection);
+            }
+            return updtedRows;
         }
-        return updatedRows;
+
+        /**
+         * Executes an update (such as INSERT, UPDATE, DELETE) using the prepared SQL query
+         * and the bound parameters.
+         *
+         * @param connection the database connection used to execute the query
+         * @return the number of rows affected by the update
+         * @throws SQLException if a database access error occurs
+         */
+        public int executeUpdate(final Connection connection) throws SQLException {
+            int updatedRows;
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                prepare(preparedStatement);
+                updatedRows = preparedStatement.executeUpdate();
+            }
+            return updatedRows;
+        }
     }
 
     /**

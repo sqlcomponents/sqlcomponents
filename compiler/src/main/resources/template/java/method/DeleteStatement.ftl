@@ -12,7 +12,7 @@ public int delete(${getPrimaryKeysAsParameterString()}) throws SQLException  {
 					</#list></@compress>";
         DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
         ${getPrimaryKeysAsPreparedStatements()}
-        return sqlBuilder.executeUpdate();
+        return sqlBuilder.prepare().executeUpdate();
 	}
     </#if>
     <#assign a=addImportStatement("java.sql.PreparedStatement")>
@@ -40,7 +40,7 @@ public final class DeleteStatement {
     public int execute() throws SQLException  {
     	final String query = "DELETE FROM ${table.escapedName?j_string}" 
         + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
-        return dataManager.sql(query).executeUpdate();
+        return dataManager.sql(query).prepare().executeUpdate();
 	}
 
     public DeleteQuery sql(final String sql) {
@@ -70,7 +70,7 @@ public final class DeleteStatement {
                 sqlBuilder.param(value);
             }
             
-            return sqlBuilder.executeUpdate();
+            return sqlBuilder.prepare().executeUpdate();
         }
 
 

@@ -290,6 +290,17 @@ final int i) throws SQLException {
 
     <#include "SqlBuilder.ftl">
 
+    /**
+     * Begins new Transaction.
+     * @return transaction
+     */
+    public Transaction begin() {
+        return new Transaction();
+    }
+
+    <#include "Transaction.ftl">
+
+
 }
 </#assign>
 <@importStatements/>

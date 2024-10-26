@@ -214,7 +214,7 @@ public final SelectQuery sql(final String sql) {
 			</#if>
 		</#list>
                 </@compress>";
-        DataManager.SqlBuilder sqlBuilder = dataManager.sql(query); // HEllo
+        DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
 
         ${getPrimaryKeysAsPreparedStatements()}
 
