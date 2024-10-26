@@ -1,10 +1,10 @@
 <#macro numbercolumn type property>
 
-    public void set(final PreparedStatement preparedStatement, final int i, final ${type} value) throws SQLException {
+    public void set(final DataManager.SqlBuilder preparedStatement, final ${type} value) {
     if(value == null) {
-        preparedStatement.setNull(i,${property.column.dataType},"${property.column.typeName}" );
+        preparedStatement.paramNull(${property.column.dataType},"${property.column.typeName}" );
     } else {
-        preparedStatement.set${type}(i,value);
+        preparedStatement.param(value);
     }
         
 

@@ -1,25 +1,37 @@
 <#macro StringColumn property>
     <@columnheader property=property/>
 
-    public void set(final PreparedStatement preparedStatement, final int i, final String value) throws SQLException {
+    public void set(final DataManager.SqlBuilder preparedStatement, final String value) {
     <#if property.column.typeName == "macaddr8" >
     PGobject pgObject = new PGobject();
      pgObject.setType("macaddr8");
-    pgObject.setValue(value);
-    preparedStatement.setObject(i, pgObject);
+    try {
+            pgObject.setValue(value);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    preparedStatement.param( pgObject);
      <#elseif property.column.typeName == "macaddr" >
     PGobject pgObject = new PGobject();
      pgObject.setType("macaddr");
-    pgObject.setValue(value);
-    preparedStatement.setObject(i, pgObject);
+    try {
+            pgObject.setValue(value);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    preparedStatement.param( pgObject);
    
     <#elseif property.column.typeName == "path" >
     PGobject pgObject = new PGobject();
      pgObject.setType("path");
-    pgObject.setValue(value);
-    preparedStatement.setObject(i, pgObject);
+    try {
+            pgObject.setValue(value);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    preparedStatement.param( pgObject);
     <#else>
-    preparedStatement.setString(i,value);
+    preparedStatement.param(value);
     </#if>
     }
 

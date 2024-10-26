@@ -49,7 +49,7 @@ public sealed class SelectStatement permits SelectStatementWithWhere {
                 + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) )
                 + ( this.limitClause == null ? "" : this.limitClause.asSql() )
                 + ( this.offsetClause == null ? "" : this.offsetClause.asSql() );
-                return dataManager.sql(query).query(${name}Store.this::rowMapper).list();
+                return dataManager.sql(query).queryForList(${name}Store.this::rowMapper).execute(dataSource);
 	}
 
         public final int count() throws SQLException {
@@ -61,7 +61,7 @@ public sealed class SelectStatement permits SelectStatementWithWhere {
 		FROM ${table.escapedName?j_string}
                 </@compress>" 
                 + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
-                return dataManager.sql(query).getInt();
+                return dataManager.sql(query).queryForInt().execute(dataSource);
 	}
 public final SelectQuery sql(final String sql) {
             return new SelectQuery(sql);
@@ -87,20 +87,20 @@ public final SelectQuery sql(final String sql) {
             DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
 
             for (Value<?,?> value:values) {
-                sqlBuilder.param(value);
+                value.set(sqlBuilder);
             }
             
-            return Optional.ofNullable(sqlBuilder.query(${name}Store.this::rowMapper).single());
+            return Optional.ofNullable(sqlBuilder.queryForOne(${name}Store.this::rowMapper).execute(dataSource));
         }
 
         public List<${name}> list() throws <@throwsblock/>{
             DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
 
             for (Value<?,?> value:values) {
-                sqlBuilder.param(value);
+                value.set(sqlBuilder);
             }
             
-            return sqlBuilder.query(${name}Store.this::rowMapper).list();
+            return sqlBuilder.queryForList(${name}Store.this::rowMapper).execute(dataSource);
         }
     }
 
@@ -128,7 +128,7 @@ public final SelectQuery sql(final String sql) {
                 <#assign a=addImportStatement("org.springframework.data.domain.PageImpl")>
                 <#assign a=addImportStatement("org.springframework.data.domain.Pageable")>
                 public Page<${name}> execute(final Pageable pageable) throws <@throwsblock/> {
-                    return new PageImpl(this.selectStatement.execute(), pageable,
+                    return new PageImpl(this.selectStatement.execute(dataSource), pageable,
                                 selectStatement.count());
                 }
                 <#else>
@@ -198,7 +198,7 @@ public final SelectQuery sql(final String sql) {
     
         ${getPrimaryKeysAsPreparedStatements()}
 
-        return Optional.ofNullable(sqlBuilder.query(this::rowMapper).single());
+        return Optional.ofNullable(sqlBuilder.queryForOne(this::rowMapper).execute(dataSource));
             
     }
         
@@ -218,7 +218,7 @@ public final SelectQuery sql(final String sql) {
 
         ${getPrimaryKeysAsPreparedStatements()}
 
-		return sqlBuilder.exists();
+		return sqlBuilder.queryForExists().execute(dataSource);
 	}
 
 </#if>
@@ -243,7 +243,7 @@ public final SelectQuery sql(final String sql) {
     
         ${getUniqueKeysAsPreparedStatements(uniqueColumn.name)}
 
-        return Optional.ofNullable(sqlBuilder.query(this::rowMapper).single());
+        return Optional.ofNullable(sqlBuilder.queryForOne(this::rowMapper).execute(dataSource));
 
             
     }
@@ -262,7 +262,7 @@ public final SelectQuery sql(final String sql) {
     
         ${getUniqueKeysAsPreparedStatements(uniqueColumn.name)}
 
-        return sqlBuilder.exists();
+        return sqlBuilder.queryForExists().execute(dataSource);
     }
 
     </#list>
@@ -335,7 +335,7 @@ public final SelectQuery sql(final String sql) {
     	    <#if uniqueColumn.name == uniqueConstraintGroupName>
     	        <#list uniqueColumn.columns as column>
     	            <#local property=getPropertyByColumnName(column.columnName)>
-    	            <#local pkAsParameterStr = pkAsParameterStr + "sqlBuilder.param(${property.name?uncap_first}(${property.name}));\n\t"><#assign index=index+1>
+    	            <#local pkAsParameterStr = pkAsParameterStr + "${property.name?uncap_first}(${property.name}).set(sqlBuilder);\n\t"><#assign index=index+1>
     	        </#list>
     	    </#if>
     	</#list>

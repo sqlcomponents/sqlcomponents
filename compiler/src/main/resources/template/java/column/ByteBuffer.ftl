@@ -1,7 +1,7 @@
 <#macro ByteBuffer property>
     <@columnheader property=property/>
-    public void set(final PreparedStatement preparedStatement, final int i, final ByteBuffer value) throws SQLException {
-    preparedStatement.setBytes(i,value == null ? null : value.array());
+    public void set(final DataManager.SqlBuilder preparedStatement, final ByteBuffer value) {
+    preparedStatement.param(value == null ? null : value.array());
     }
     @Override
     public ByteBuffer get(final ResultSet resultSet, final int i) throws SQLException {

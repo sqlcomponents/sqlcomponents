@@ -1,13 +1,17 @@
 <#macro InetAddressColumn property>
     <@columnheader property=property/>
-     public void set(final PreparedStatement preparedStatement, final int i, final  InetAddress inetAddress) throws SQLException {
+     public void set(final DataManager.SqlBuilder preparedStatement, final  InetAddress inetAddress) {
     if(inetAddress == null) {
-    preparedStatement.setObject(i,null);
+    preparedStatement.paramNull();
     } else {
 PGobject pgObject = new PGobject();
     pgObject.setType("inet");
-    pgObject.setValue(inetAddress.getHostAddress());
-     preparedStatement.setObject(i,pgObject);
+    try {
+            pgObject.setValue(inetAddress.getHostAddress());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+     preparedStatement.param(pgObject);
     }
     
     }

@@ -1,10 +1,10 @@
 <#macro BoxColumn property>
 <@columnheader property=property/>
  
-    public void set(final PreparedStatement preparedStatement, final int i, final Envelope box) throws SQLException {
+    public void set(final DataManager.SqlBuilder preparedStatement, final Envelope box) throws SQLException {
     PGbox pgbox = (box == null) ? null : new PGbox(box.getMinX(), box.getMinY(),
                                                                              box.getMaxX(), box.getMaxY());
-    preparedStatement.setObject(i,pgbox,java.sql.Types.OTHER);
+    preparedStatement.param(pgbox,java.sql.Types.OTHER);
     }
 
     public Envelope get(final ResultSet rs,final int index) throws SQLException {

@@ -1,8 +1,8 @@
 <#macro LocalDateColumn property>
     <@columnheader property=property/>
 
-    public void set(final PreparedStatement preparedStatement, final int i, final LocalDate value) throws SQLException {
-    preparedStatement.setDate(i,value == null ? null : java.sql.Date.valueOf(value));
+    public void set(final DataManager.SqlBuilder preparedStatement, final LocalDate value) {
+    preparedStatement.param(value == null ? null : java.sql.Date.valueOf(value));
     }
 
     @Override

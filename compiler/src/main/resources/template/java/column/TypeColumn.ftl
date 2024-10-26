@@ -1,9 +1,9 @@
 <#macro TypeColumn property>
 <@columnheader property=property/>
 
-    public void set(final PreparedStatement preparedStatement, final int i, final ${getClassName(property.dataType)} value) throws SQLException {
+    public void set(final DataManager.SqlBuilder preparedStatement, final ${getClassName(property.dataType)} value) {
 
-preparedStatement.setObject(i, value.name(), java.sql.Types.VARCHAR);
+preparedStatement.param( value.name(), java.sql.Types.VARCHAR);
 }
 
     public ${getClassName(property.dataType)} get(final ResultSet rs,final int index) throws SQLException {

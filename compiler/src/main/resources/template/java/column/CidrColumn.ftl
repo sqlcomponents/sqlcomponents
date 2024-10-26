@@ -1,13 +1,17 @@
 <#macro CidrColumn property>
     <@columnheader property=property/>
-     public void set(final PreparedStatement preparedStatement, final int i, final SubnetUtils cidrAddress) throws SQLException {
+     public void set(final DataManager.SqlBuilder preparedStatement, final SubnetUtils cidrAddress) {
     PGobject pgObject = null ;
         if(cidrAddress != null) {
             pgObject = new PGobject();
             pgObject.setType("cidr");
+            try {
             pgObject.setValue(cidrAddress.getInfo().getCidrSignature());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
-     preparedStatement.setObject(i,pgObject);
+     preparedStatement.param(pgObject);
     }
 
     public SubnetUtils get(final ResultSet rs,final int index) throws SQLException {

@@ -1,6 +1,6 @@
     public final class Transaction {
 
-        private final List<SqlBuilder.Statement> statements;
+        private final List<Sql<Integer>> statements;
 
         public Transaction() {
             statements = new ArrayList<>();
@@ -10,8 +10,8 @@
             final Connection connection = DataManager.this.dbDataSource.getConnection();
             try {
                 connection.setAutoCommit(false);
-                for(SqlBuilder.Statement statement:statements) {
-                    statement.executeUpdate(connection);
+                for(Sql<Integer> statement:statements) {
+                    statement.execute(connection);
                 }
                 connection.commit();
             } catch (SQLException sqlException) {
@@ -24,7 +24,7 @@
             }
         }
 
-        public Transaction perform(SqlBuilder.Statement statement) {
+        public Transaction perform(Sql<Integer> statement) {
             statements.add(statement);
             return this;
         }

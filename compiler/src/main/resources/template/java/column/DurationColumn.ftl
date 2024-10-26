@@ -1,16 +1,16 @@
 <#macro DurationColumn property>
     <@columnheader property=property/>
-    public void set(final PreparedStatement preparedStatement, final int i, final Duration duration) throws SQLException {
+    public void set(final DataManager.SqlBuilder preparedStatement, final Duration duration) {
     
     if(duration == null) {
-        preparedStatement.setObject(i,null);
+        preparedStatement.paramNull();
             
         } else {
             final int days = (int) duration.toDays();
             final int hours = (int) (duration.toHours() % 24);
             final int minutes = (int) (duration.toMinutes() % 60);
             final double seconds = duration.getSeconds() % 60;
-            preparedStatement.setObject(i,new PGInterval(0, 0, days, hours, minutes, seconds));
+            preparedStatement.param(new PGInterval(0, 0, days, hours, minutes, seconds));
         }
     
     

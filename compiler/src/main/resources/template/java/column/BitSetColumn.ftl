@@ -1,11 +1,11 @@
 <#macro BitSetColumn property>
     <@columnheader property=property/>
-    public void set(final PreparedStatement preparedStatement, final int i, final BitSet value) throws SQLException {
+    public void set(final DataManager.SqlBuilder preparedStatement, final BitSet value) {
 
 
         if(value == null) {
 
-            preparedStatement.setNull(i,${property.column.dataType?replace(",", "")},"${property.column.typeName}" );
+            preparedStatement.paramNull(${property.column.dataType?replace(",", "")},"${property.column.typeName}" );
         } else {
             PGobject bitObject = new PGobject();
             bitObject.setType("bit");
@@ -13,8 +13,12 @@
             for (int j=0;j< value.length();j++) {
                 valueBuffer.append(value.get(j)==true?"1":"0");
             }
+            try {
             bitObject.setValue(valueBuffer.toString());
-            preparedStatement.setObject(i, bitObject);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+            preparedStatement.param( bitObject);
         }
     
     

@@ -1,20 +1,20 @@
 <#macro BooleanColumn property>
     <@columnheader property=property/>
-    public void set(final PreparedStatement preparedStatement, final int i, final Boolean value) throws SQLException {
+    public void set(final DataManager.SqlBuilder preparedStatement, final Boolean value) {
     <#if property.column.typeName == "bit" >
         if(value == null) {
-            preparedStatement.setNull(i,${property.column.dataType},"${property.column.typeName}" );
+            preparedStatement.paramNull(${property.column.dataType},"${property.column.typeName}" );
         } else {
         PGobject bitObject = new PGobject();
         bitObject.setType("bit");
         bitObject.setValue(!value ? "0" : "1" );
-        preparedStatement.setObject(i, bitObject);
+        preparedStatement.param( bitObject);
         }
     <#else>
         if(value == null) {
-            preparedStatement.setNull(i,${property.column.dataType},"${property.column.typeName}" );
+            preparedStatement.paramNull(${property.column.dataType},"${property.column.typeName}" );
         } else {
-            preparedStatement.setBoolean(i,value);
+            preparedStatement.param(value);
         }
     </#if>
     

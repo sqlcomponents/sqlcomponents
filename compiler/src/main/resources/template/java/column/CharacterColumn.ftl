@@ -2,8 +2,8 @@
     <@columnheader property=property/>
     
     @Override
-    public void set(final PreparedStatement preparedStatement, final int i, final Character value) throws SQLException {
-    preparedStatement.setString(i,value == null ? null : String.valueOf(value));
+    public void set(final DataManager.SqlBuilder preparedStatement, final Character value) {
+    preparedStatement.param(value == null ? null : String.valueOf(value));
     }
 
     @Override

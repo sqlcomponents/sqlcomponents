@@ -1,8 +1,8 @@
 <#macro LocalDateTimeColumn property>
     <@columnheader property=property/>
 
-    public void set(final PreparedStatement preparedStatement, final int i, final LocalDateTime value) throws SQLException {
-    preparedStatement.setTimestamp(i,value == null ? null : java.sql.Timestamp.valueOf(value));
+    public void set(final DataManager.SqlBuilder preparedStatement, final LocalDateTime value) {
+    preparedStatement.param(value == null ? null : java.sql.Timestamp.valueOf(value));
     }
 
     @Override
