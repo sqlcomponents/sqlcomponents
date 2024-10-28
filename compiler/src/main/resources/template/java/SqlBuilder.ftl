@@ -280,20 +280,32 @@ public SqlBuilder param(final Object value) {
         }
         return updatedRows;
     }
-    
-    /**
-     * Provides if record exists.
-     *
-     * @return a new Query instance for execution
-     */
-    public SingleValueQuery<Boolean> queryForExists() {
-        return new SingleValueQuery<>() {
-            @Override
-            Boolean getValue(final ResultSet resultSet) throws SQLException {
-                return resultSet.next();
+
+/**
+* Provides if record exists.
+*
+* @return a new Query instance for execution
+*/
+public SingleValueQuery<Boolean> queryForExists() {
+    return new SingleValueQuery<>() {
+        @Override
+        public Boolean execute(final Connection connection) throws SQLException {
+            boolean exists;
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                prepare(preparedStatement);
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                exists = resultSet.next();
             }
-        };
-    }
+            return exists;
+        }
+
+        @Override
+        Boolean getValue(final ResultSet resultSet) throws SQLException {
+            return resultSet.next();
+        }
+    };
+}
 
     /**
      * Creates a new Query object that can be used to execute

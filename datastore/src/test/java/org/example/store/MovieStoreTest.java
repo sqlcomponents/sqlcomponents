@@ -43,6 +43,8 @@ class MovieStoreTest {
                     .values(new Movie(null, "Inception", "Christopher Nolan"))
                 .returning();
 
+        Assertions.assertTrue(movieStore.exists(movie.id()));
+
         List<Movie> movies = movieStore
                 .insert()
                 .values(new Movie(null, "Pulp Fiction", "Quentin Tarantino"),
