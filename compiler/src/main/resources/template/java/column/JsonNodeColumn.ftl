@@ -1,7 +1,7 @@
 <#macro JsonNodeColumn property>
     <@columnheader property=property/>
 
-    public void set(final DataManager.SqlBuilder preparedStatement, final  JsonNode jsonNode) throws SQLException {
+    public void set(final DataManager.SqlBuilder preparedStatement, final  JsonNode jsonNode) {
     final String jsonText  = (jsonNode == null) ? null : jsonNode.toString() ;
     preparedStatement.param(jsonText, java.sql.Types.OTHER);
     }
@@ -13,7 +13,11 @@
         }
 
         try {
-            return new ObjectMapper().readTree(jsonText);
+            <#if orm.database.dbType == 'H2'>
+                return new ObjectMapper().readTree(jsonText.substring(1,jsonText.length() - 1).replace("\\", ""));
+            <#else>
+                return new ObjectMapper().readTree(jsonText);
+            </#if>
         } catch (JsonProcessingException e) {
             throw new SQLException(e);
         }
