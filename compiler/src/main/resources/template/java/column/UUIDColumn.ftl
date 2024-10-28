@@ -1,7 +1,7 @@
 <#macro UUIDColumn property>
     <@columnheader property=property/>
-    public void set(final PreparedStatement preparedStatement, final int i, final UUID uuid) throws SQLException {
-    preparedStatement.setObject(i,(uuid == null) ? null : uuid.toString(), java.sql.Types.OTHER);
+    public void set(final DataManager.SqlBuilder preparedStatement, final UUID uuid) {
+    preparedStatement.param((uuid == null) ? null : uuid.toString(), java.sql.Types.OTHER);
     }
 
     public UUID get(final ResultSet rs,final int index) throws SQLException {

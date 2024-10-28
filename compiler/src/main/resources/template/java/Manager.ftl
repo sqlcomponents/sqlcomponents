@@ -48,7 +48,7 @@ public final class DataManager {
         <#list orm.entities as entity>
         <#if !entity.type?? >
         this.${entity.name?uncap_first}Store = ${entity.name}Store
-.get${entity.name}Store(this, this.observer<#if entity.containsEncryptedProperty() >,
+.get${entity.name}Store(this, theDbDataSource, this.observer<#if entity.containsEncryptedProperty() >,
              encryptionFunction,
              decryptionFunction
         </#if>);
@@ -130,12 +130,11 @@ public final class DataManager {
        /**
         *  set method.
         * @param preparedStatement
-        * @param i
         * @param value
         * @throws SQLException
         */
-        void set(PreparedStatement preparedStatement,
-         int i, T value) throws SQLException;
+        void set(SqlBuilder preparedStatement,
+        T value) ;
         /**
          *  T get method.
          * @param resultSet
@@ -180,12 +179,10 @@ public final class DataManager {
           /**
           * set method.
           * @param preparedStatement
-          * @param i
           * @throws SQLException
           */
-        public void set(final PreparedStatement preparedStatement,
-final int i) throws SQLException {
-            column.set(preparedStatement, i, value);
+        public void set(final DataManager.SqlBuilder preparedStatement) {
+            column.set(preparedStatement, value);
         }
     }
 

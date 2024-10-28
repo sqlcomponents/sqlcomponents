@@ -3,6 +3,7 @@
 package <#if daoPackage?? && daoPackage?length != 0 >${daoPackage}</#if>;
 
 import java.sql.ResultSet;
+import javax.sql.DataSource;
 import java.sql.SQLException;
 
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
     */
     public static ${name}Store get${name}Store(
     final DataManager theDataManager
+    ,final DataSource theDataSource
     ,final DataManager.Observer theObserver
 
     <#if containsEncryptedProperty() >
@@ -32,6 +34,7 @@ import java.util.stream.Collectors;
     </#if>) {
     return new ${name}Store(
     theDataManager
+    ,theDataSource
     ,theObserver
 
     <#if containsEncryptedProperty() >
@@ -41,6 +44,8 @@ import java.util.stream.Collectors;
     </#if>);
 
     }
+
+    private final DataSource dataSource;
 
     private final DataManager dataManager;
 
@@ -58,10 +63,12 @@ import java.util.stream.Collectors;
     * Constructor for ${name}Store.
     *
     * @param theDataManager   The DataManager instance.
+    * @param theDataSource    The Datasource Instance.
     * @param theObserver      The observer for data changes.
     */
     private ${name}Store(
     final DataManager theDataManager
+    ,final DataSource theDataSource
     ,final DataManager.Observer theObserver
 
 
@@ -73,6 +80,7 @@ import java.util.stream.Collectors;
     ) {
 
     this.dataManager = theDataManager;
+    this.dataSource = theDataSource;
     this.observer = theObserver;
 
     <#if containsEncryptedProperty() >

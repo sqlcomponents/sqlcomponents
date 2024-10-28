@@ -1,8 +1,8 @@
 <#macro PolygonColumn property>
     <@columnheader property=property/>
-     public void set(final PreparedStatement preparedStatement, final int i, final Polygon polygon) throws SQLException {
+     public void set(final DataManager.SqlBuilder preparedStatement, final Polygon polygon) throws SQLException {
     if(polygon == null) {
-            preparedStatement.setObject(i,null);
+            preparedStatement.paramNull();
         } else {
 // Extract the coordinates from the exterior ring of the polygon
         Coordinate[] exteriorRingCoordinates = polygon.getExteriorRing().getCoordinates();
@@ -11,7 +11,7 @@
         for (int j = 0; j < exteriorRingCoordinates.length; j++) {
             pgPoints[j] = new PGpoint(exteriorRingCoordinates[j].x, exteriorRingCoordinates[j].y);
         }
-     preparedStatement.setObject(i,new PGpolygon(pgPoints));
+     preparedStatement.param(new PGpolygon(pgPoints));
         }
         
     }

@@ -1,14 +1,14 @@
 <#macro LineColumn property>
     <@columnheader property=property/>
-     public void set(final PreparedStatement preparedStatement, final int i, final LineString line) throws SQLException {
+     public void set(final DataManager.SqlBuilder preparedStatement, final LineString line) throws SQLException {
     if(line == null) {
-            preparedStatement.setObject(i,null);
+            preparedStatement.paramNull();
         } else {
 PGpoint startPoint = new PGpoint(line.getCoordinateN(0).getX(),
                     line.getCoordinateN(0).getY());
         PGpoint endPoint = new PGpoint(line.getCoordinateN(1).getX(),
                     line.getCoordinateN(1).getY());
-     preparedStatement.setObject(i,new PGline(startPoint,endPoint));
+     preparedStatement.param(new PGline(startPoint,endPoint));
         }
         
     }

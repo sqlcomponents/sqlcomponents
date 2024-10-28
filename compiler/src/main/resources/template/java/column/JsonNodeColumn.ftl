@@ -1,9 +1,9 @@
 <#macro JsonNodeColumn property>
     <@columnheader property=property/>
 
-    public void set(final PreparedStatement preparedStatement, final int i, final  JsonNode jsonNode) throws SQLException {
+    public void set(final DataManager.SqlBuilder preparedStatement, final  JsonNode jsonNode) throws SQLException {
     final String jsonText  = (jsonNode == null) ? null : jsonNode.toString() ;
-    preparedStatement.setObject(i,jsonText, java.sql.Types.OTHER);
+    preparedStatement.param(jsonText, java.sql.Types.OTHER);
     }
 
     public JsonNode get(final ResultSet rs,final int index) throws SQLException {

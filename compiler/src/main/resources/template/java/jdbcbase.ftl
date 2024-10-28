@@ -5,7 +5,7 @@
     <#assign index=1>
 	<#list properties as property>
 		<#if property.column.primaryKeyIndex != 0>
-        	<#local pkAsParameterStr = pkAsParameterStr + "sqlBuilder.param(${property.name?uncap_first}(${property.name}));\n\t"><#assign index=index+1>
+        	<#local pkAsParameterStr = pkAsParameterStr + "${property.name?uncap_first}(${property.name}).set(sqlBuilder);\n\t"><#assign index=index+1>
         </#if>
 	</#list>
 	<#return pkAsParameterStr> 

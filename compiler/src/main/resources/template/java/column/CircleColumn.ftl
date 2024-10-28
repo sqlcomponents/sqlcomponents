@@ -1,11 +1,11 @@
 <#macro CircleColumn property>
     <@columnheader property=property/>
-     public void set(final PreparedStatement preparedStatement, final int i, final Circle circle) throws SQLException {
+     public void set(final DataManager.SqlBuilder preparedStatement, final Circle circle) throws SQLException {
    if(circle == null) {
-            preparedStatement.setObject(i,null);
+            preparedStatement.paramNull();
         } else {
 PGpoint pGpoint = new PGpoint(circle.getCenter().getX(), circle.getCenter().getY());
-     preparedStatement.setObject(i,new PGcircle(pGpoint, circle.getRadius()));
+     preparedStatement.param(new PGcircle(pGpoint, circle.getRadius()));
         }
 
         

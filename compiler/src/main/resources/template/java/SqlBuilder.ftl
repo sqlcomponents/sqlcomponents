@@ -1,22 +1,203 @@
 /**
+ * The Sql interface represents a generic SQL operation that can be executed
+ * using a JDBC Connection.
+ *
+ * @param <R> the type of the result returned by the SQL operation
+ */
+public interface Sql<R> {
+    /**
+     * Executes the SQL operation using the provided JDBC connection.
+     *
+     * @param connection the JDBC connection to use for executing the operation
+     * @return the result of the SQL operation
+     * @throws SQLException if an SQL error occurs during the execution
+     */
+    R execute(Connection connection) throws SQLException;
+
+    /**
+     * Executes the SQL operation using the provided JDBC dataSource.
+     *
+     * @param dataSource the JDBC dataSource to use for executing the operation
+     * @return the result of the SQL operation
+     * @throws SQLException if an SQL error occurs during the execution
+     */
+    default R execute(final DataSource dataSource) throws SQLException {
+        try (Connection conn = dataSource.getConnection()) {
+            return execute(conn);
+        }
+    }
+}
+
+/**
  * SqlBuilder is a utility class that simplifies the process of constructing
  * SQL queries with dynamic parameters and executing them. It helps developers
  * manage SQL queries more efficiently with less boilerplate code, supporting
  * both query execution and parameterized updates.
  */
-public class SqlBuilder {
+public class SqlBuilder implements Sql<Integer> {
 
-    private final String sql;         // The SQL query to be executed.
-    private final List<Value<?,?>> parameters;  // A list of parameters for the query.
+    /**
+     * The SQL query to be executed.
+     */
+    private final String sql;
+    /**
+     * A list of parameters for the query.
+     */
+    private final List<ParamMapper<?>> paramMappers;
 
     /**
      * Constructor that initializes the SqlBuilder with a given SQL query.
      *
-     * @param sql the SQL query to be prepared and executed
+     * @param theSql the SQL query to be prepared and executed
      */
-    public SqlBuilder(final String sql) {
-        this.sql = sql;
-        this.parameters = new ArrayList<>();
+    public SqlBuilder(final String theSql) {
+        this.sql = theSql;
+        this.paramMappers = new ArrayList<>();
+    }
+
+     /**
+     * Adds a parameter with a null
+     *
+     * @return the current SqlBuilder instance, for method chaining
+     */
+    public SqlBuilder paramNull() {
+        final int index = this.paramMappers.size() + 1;
+        this.paramMappers
+                .add((preparedStatement)
+                        -> preparedStatement.setObject(index, null));
+        return this;
+    }
+
+    /**
+    * Adds a parameter with a specific SQL type and type name as `NULL` to the SQL query.
+    * This method is used when the SQL parameter should be set to `NULL` for types
+    * that require a type name in addition to the SQL type, such as SQL `STRUCT` or `ARRAY`.
+    *
+    * @param sqlType  the SQL type of the parameter, as defined in {@link java.sql.Types}
+    * @param typeName the type name of the parameter, used for SQL types that require specific type information
+    * @return the current SqlBuilder instance, for method chaining
+    */
+    public SqlBuilder paramNull(final int sqlType, final String typeName) {
+        final int index = this.paramMappers.size() + 1;
+        this.paramMappers
+                .add((preparedStatement)
+                        -> preparedStatement.setNull(index, sqlType, typeName));
+        return this;
+    }
+
+
+    /**
+ * Adds a Float parameter to the SQL query.
+ *
+ * @param value the Float value to be added
+ * @return the current SqlBuilder instance, for method chaining
+ */
+public SqlBuilder param(final Float value) {
+    final int index = this.paramMappers.size() + 1;
+    this.paramMappers.add(preparedStatement -> preparedStatement.setFloat(index, value));
+    return this;
+}
+
+/**
+ * Adds a byte array parameter to the SQL query.
+ *
+ * @param value the byte array to be added
+ * @return the current SqlBuilder instance, for method chaining
+ */
+public SqlBuilder param(final byte[] value) {
+    final int index = this.paramMappers.size() + 1;
+    this.paramMappers.add(preparedStatement -> preparedStatement.setBytes(index, value));
+    return this;
+}
+
+/**
+ * Adds a BigDecimal parameter to the SQL query.
+ *
+ * @param value the BigDecimal value to be added
+ * @return the current SqlBuilder instance, for method chaining
+ */
+public SqlBuilder param(final java.math.BigDecimal value) {
+    final int index = this.paramMappers.size() + 1;
+    this.paramMappers.add(preparedStatement -> preparedStatement.setBigDecimal(index, value));
+    return this;
+}
+
+/**
+ * Adds a Time parameter to the SQL query.
+ *
+ * @param value the Time value to be added
+ * @return the current SqlBuilder instance, for method chaining
+ */
+public SqlBuilder param(final java.sql.Time value) {
+    final int index = this.paramMappers.size() + 1;
+    this.paramMappers.add(preparedStatement -> preparedStatement.setTime(index, value));
+    return this;
+}
+
+/**
+ * Adds a Timestamp parameter to the SQL query.
+ *
+ * @param value the Timestamp value to be added
+ * @return the current SqlBuilder instance, for method chaining
+ */
+public SqlBuilder param(final java.sql.Timestamp value) {
+    final int index = this.paramMappers.size() + 1;
+    this.paramMappers.add(preparedStatement -> preparedStatement.setTimestamp(index, value));
+    return this;
+}
+
+    /**
+     * Adds an Object parameter to the SQL query with targetSqlType.
+     *
+     * @param value the Object value to be added
+     * @param targetSqlType the targeted SqlType.          
+     * @return the current SqlBuilder instance, for method chaining
+     */
+    public SqlBuilder param(final Object value, final int targetSqlType) {
+        final int index = this.paramMappers.size() + 1;
+        this.paramMappers.add(preparedStatement
+                -> preparedStatement.setObject(index, value, targetSqlType));
+        return this;
+    }
+
+/**
+ * Adds an Object parameter to the SQL query.
+ *
+ * @param value the Object value to be added
+ * @return the current SqlBuilder instance, for method chaining
+ */
+public SqlBuilder param(final Object value) {
+    final int index = this.paramMappers.size() + 1;
+    this.paramMappers.add(preparedStatement -> preparedStatement.setObject(index, value));
+    return this;
+}
+
+
+    /**
+     * Adds a parameter to the SQL query. The method allows chaining and is used
+     * to bind values to placeholders in the SQL query.
+     *
+     * @param value the value of the parameter to be added
+     * @return the current SqlBuilder instance, for method chaining
+     */
+    public SqlBuilder param(final Integer value) {
+        final int index = this.paramMappers.size() + 1;
+        this.paramMappers
+                .add((preparedStatement)
+                        -> preparedStatement.setInt(index, value));
+        return this;
+    }
+
+    /**
+     * Adds a Short parameter to the SQL query.
+     *
+     * @param value the Short value to be added
+     * @return the current SqlBuilder instance, for method chaining
+     */
+    public SqlBuilder param(final Short value) {
+        final int index = this.paramMappers.size() + 1;
+        this.paramMappers.add(preparedStatement -> preparedStatement.setShort(index, value));
+        return this;
     }
 
     /**
@@ -26,91 +207,239 @@ public class SqlBuilder {
      * @param value the value of the parameter to be added
      * @return the current SqlBuilder instance, for method chaining
      */
-    public SqlBuilder param(Value<?,?> value) {
-        this.parameters.add(value);
+    public SqlBuilder param(final String value) {
+        final int index = this.paramMappers.size() + 1;
+        this.paramMappers
+                .add((preparedStatement)
+                        -> preparedStatement.setString(index, value));
+        return this;
+    }
+    /**
+     * Adds a Double parameter to the SQL query.
+     *
+     * @param value the Double value to be added
+     * @return the current SqlBuilder instance, for method chaining
+     */
+    public SqlBuilder param(final Double value) {
+        final int index = this.paramMappers.size() + 1;
+        this.paramMappers.add(preparedStatement -> preparedStatement.setDouble(index, value));
         return this;
     }
 
     /**
-     * Creates new Statement.
-     * @return statement
+     * Adds a Boolean parameter to the SQL query.
+     *
+     * @param value the Boolean value to be added
+     * @return the current SqlBuilder instance, for method chaining
      */
-    public Statement prepare() {
-        return new Statement();
+    public SqlBuilder param(final Boolean value) {
+        final int index = this.paramMappers.size() + 1;
+        this.paramMappers.add(preparedStatement -> preparedStatement.setBoolean(index, value));
+        return this;
     }
 
     /**
-     * Creates SQL Statement for Database.
+     * Adds a Long parameter to the SQL query.
+     *
+     * @param value the Long value to be added
+     * @return the current SqlBuilder instance, for method chaining
      */
-    public final class Statement {
-        /**
-         * Executes an update (such as INSERT, UPDATE, DELETE) using the prepared SQL query
-         * and the bound parameters.
-         *
-         * @return the number of rows affected by the update
-         * @throws SQLException if a database access error occurs
-         */
-        public int executeUpdate() throws SQLException {
-            int updtedRows;
-            try (Connection connection = DataManager.this.dbDataSource.getConnection()){
-                updtedRows = executeUpdate(connection);
-            }
-            return updtedRows;
-        }
+    public SqlBuilder param(final Long value) {
+        final int index = this.paramMappers.size() + 1;
+        this.paramMappers.add(preparedStatement -> preparedStatement.setLong(index, value));
+        return this;
+    }
 
-        /**
-         * Executes an update (such as INSERT, UPDATE, DELETE) using the prepared SQL query
-         * and the bound parameters.
-         *
-         * @param connection the database connection used to execute the query
-         * @return the number of rows affected by the update
-         * @throws SQLException if a database access error occurs
-         */
-        public int executeUpdate(final Connection connection) throws SQLException {
-            int updatedRows;
+    /**
+     * Adds a Date parameter to the SQL query.
+     *
+     * @param value the Date value to be added
+     * @return the current SqlBuilder instance, for method chaining
+     */
+    public SqlBuilder param(final java.sql.Date value) {
+        final int index = this.paramMappers.size() + 1;
+        this.paramMappers.add(preparedStatement -> preparedStatement.setDate(index, value));
+        return this;
+    }
+    /**
+     * Executes an update (such as INSERT, UPDATE, DELETE) using the prepared
+     * SQL query
+     * and the bound parameters.
+     *
+     * @param connection the database connection used to execute the query
+     * @return the number of rows affected by the update
+     * @throws SQLException if a database access error occurs
+     */
+    @Override
+    public Integer execute(final Connection connection) throws SQLException {
+        int updatedRows;
+        try (PreparedStatement preparedStatement
+                     = connection.prepareStatement(sql)) {
+            prepare(preparedStatement);
+            updatedRows = preparedStatement.executeUpdate();
+        }
+        return updatedRows;
+    }
+
+/**
+* Provides if record exists.
+*
+* @return a new Query instance for execution
+*/
+public SingleValueQuery<Boolean> queryForExists() {
+    return new SingleValueQuery<>() {
+        @Override
+        public Boolean execute(final Connection connection) throws SQLException {
+            boolean exists;
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 prepare(preparedStatement);
-                updatedRows = preparedStatement.executeUpdate();
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                exists = resultSet.next();
             }
-            return updatedRows;
+            return exists;
         }
-    }
+
+        @Override
+        Boolean getValue(final ResultSet resultSet) throws SQLException {
+            return resultSet.next();
+        }
+    };
+}
 
     /**
-     * Creates a new Query object that can be used to execute a SELECT query and map
-     * the result set to a specific object type using the provided RowMapper.
+     * Creates a new Query object that can be used to execute
+     * a SELECT query and map the result set to an Integer.
      *
-     * @param <T> the type of object to map the result set to
-     * @param rowMapper an implementation of RowMapper to map each row of the result set
      * @return a new Query instance for execution
      */
-    public <T> SqlBuilder.Query<T> query(RowMapper<T> rowMapper) {
-        return this.new Query<>(rowMapper);
-    }
-
-        /**
-     * Checks if result set exists.
-     * @return exits
-     */
-    public boolean exists() throws SQLException {
-        boolean isExists = false;
-        try (Connection connection = DataManager.this.dbDataSource.getConnection()){
-            isExists = exists(connection);
-        }
-        return isExists;
+    public SingleValueQuery<Integer> queryForInt() {
+        return new SingleValueQuery<>() {
+            @Override
+            Integer getValue(final ResultSet resultSet) throws SQLException {
+                return resultSet.getInt(1);
+            }
+        };
     }
 
     /**
-     * Checks if result set exists.
-     * @return exits
+     * Creates a new Query object that can be used to execute
+     * a SELECT query and map the result set to a String.
+     *
+     * @return a new Query instance for execution
      */
-    public boolean exists(final Connection connection) throws SQLException {
-        boolean isExists = false;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-            prepare(preparedStatement);
-            isExists = preparedStatement.executeQuery().next();
-        }
-        return isExists;
+    public SingleValueQuery<String> queryForString() {
+        return new SingleValueQuery<>() {
+            @Override
+            String getValue(final ResultSet resultSet) throws SQLException {
+                return resultSet.getString(1);
+            }
+        };
+    }
+
+    /**
+     * Creates a new Query object that can be used to execute
+     * a SELECT query and map the result set to a Double.
+     *
+     * @return a new Query instance for execution
+     */
+    public SingleValueQuery<Double> queryForDouble() {
+        return new SingleValueQuery<>() {
+            @Override
+            Double getValue(final ResultSet resultSet) throws SQLException {
+                return resultSet.getDouble(1);
+            }
+        };
+    }
+
+    /**
+     * Creates a new Query object that can be used to execute
+     * a SELECT query and map the result set to a Boolean.
+     *
+     * @return a new Query instance for execution
+     */
+    public SingleValueQuery<Boolean> queryForBoolean() {
+        return new SingleValueQuery<>() {
+            @Override
+            Boolean getValue(final ResultSet resultSet) throws SQLException {
+                return resultSet.getBoolean(1);
+            }
+        };
+    }
+
+    /**
+     * Creates a new Query object that can be used to execute
+     * a SELECT query and map the result set to a Long.
+     *
+     * @return a new Query instance for execution
+     */
+    public SingleValueQuery<Long> queryForLong() {
+        return new SingleValueQuery<>() {
+            @Override
+            Long getValue(final ResultSet resultSet) throws SQLException {
+                return resultSet.getLong(1);
+            }
+        };
+    }
+
+    /**
+     * Creates a new Query object that can be used to execute
+     * a SELECT query and map the result set to a Date.
+     *
+     * @return a new Query instance for execution
+     */
+    public SingleValueQuery<java.sql.Date> queryForDate() {
+        return new SingleValueQuery<>() {
+            @Override
+            java.sql.Date getValue(final ResultSet resultSet) throws SQLException {
+                return resultSet.getDate(1);
+            }
+        };
+    }
+
+    /**
+     * Creates a new Query object that can be used to execute
+     * a SELECT query and map the result set to an Object.
+     *
+     * @return a new Query instance for execution
+     */
+    public SingleValueQuery<Object> queryForObject() {
+        return new SingleValueQuery<>() {
+            @Override
+            Object getValue(final ResultSet resultSet) throws SQLException {
+                return resultSet.getObject(1);
+            }
+        };
+    }
+
+    /**
+     * Creates a new Query object that can be used to execute
+     * a SELECT query and map the result set to a specific object type
+     * using the provided RowMapper.
+     *
+     * @param <T> the type of object to map the result set to
+     * @param rowMapper an implementation of
+     *                  RowMapper to map each row of the result set
+     * @return a new Query instance for execution
+     */
+    public <T> SqlBuilder.SingleRecordQuery<T> queryForOne(
+            final RowMapper<T> rowMapper) {
+        return this.new SingleRecordQuery<>(rowMapper);
+    }
+
+    /**
+     * Creates a new Query object that can be used to execute
+     * a SELECT query and map the result set to list of a specific object type
+     * using the provided RowMapper.
+     *
+     * @param <T> the type of object to map the result set to
+     * @param rowMapper an implementation of
+     *                  RowMapper to map each row of the result set
+     * @return a new Query instance for execution
+     */
+    public <T> SqlBuilder.MultipleRecordQuery<T> queryForList(
+            final RowMapper<T> rowMapper) {
+        return this.new MultipleRecordQuery<>(rowMapper);
     }
 
     /**
@@ -131,141 +460,173 @@ public class SqlBuilder {
     }
 
     /**
-     * The Query class encapsulates the logic for executing SELECT queries and mapping
+     * Functional interface representing a parameter mapper
+     * that binds parameters
+     * to a {@link PreparedStatement}. Implementations of this interface are
+     * responsible for mapping a specific parameter
+     * to the appropriate placeholder
+     * in the SQL query.
+     *
+     * @param <T> the type of the parameter to be mapped
+     */
+    public interface ParamMapper<T> {
+
+        /**
+         * Binds the provided parameters to the placeholders in the given
+         * {@link PreparedStatement}. This method is called to map and set
+         * parameter values for the SQL query.
+         *
+         * @param preparedStatement the {@link PreparedStatement}
+         *                          to bind parameters to
+         * @throws SQLException if a database access error occurs or if
+         *                      parameter binding fails
+         */
+        void mapParam(PreparedStatement preparedStatement) throws SQLException;
+    }
+
+    /**
+     * The Query class encapsulates the logic for executing
+     * SELECT queries and mapping
      * the results to Java objects using a RowMapper.
      *
      * @param <T> the type of object to map the result set to
      */
-    public class Query<T> {
+    public static class Query<T> {
 
+        /**
+         * Mapper for Result set.
+         */
         private final RowMapper<T> rowMapper;
 
         /**
-         * Private constructor for creating a Query instance with the specified RowMapper.
+         * Private constructor for creating a Query instance with
+         * the specified RowMapper.
          *
-         * @param rowMapper the RowMapper used to map the ResultSet rows
+         * @param theRowMapper the RowMapper used to map the ResultSet rows
          */
-        private Query(final RowMapper<T> rowMapper) {
-            this.rowMapper = rowMapper;
+        private Query(final RowMapper<T> theRowMapper) {
+            this.rowMapper = theRowMapper;
+        }
+
+        T mapRow(final ResultSet resultSet) throws SQLException {
+            return rowMapper.mapRow(resultSet);
+        }
+    }
+
+    /**
+     * Query to get Single Value.
+     * @param <T> type of value
+     */
+    public abstract class SingleValueQuery<T> extends SingleRecordQuery<T> {
+
+        /**
+         * Private constructor for creating a Query instance.
+         */
+        private SingleValueQuery() {
+            super(null);
+        }
+
+        @Override
+        T mapRow(final ResultSet resultSet) throws SQLException {
+            return getValue(resultSet);
         }
 
         /**
-         * Executes the SQL query and returns a single mapped result from the ResultSet.
-         *
-         * @return the single mapped result, or null if no result is found
-         * @throws SQLException if a database access error occurs
+         * Gets Value from Result set.
+         * @param resultSet
+         * @return value
+         * @throws SQLException
          */
-        public T single() throws SQLException {
-            T result;
-            try (Connection connection = DataManager.this.dbDataSource.getConnection()) {
-                result = single(connection);
-            }
-            return result;
+        abstract T getValue(ResultSet resultSet) throws SQLException;
+    }
+
+    public class SingleRecordQuery<T> extends Query<T> implements Sql<T> {
+
+        /**
+         * Private constructor for creating a Query instance with
+         * the specified RowMapper.
+         *
+         * @param theRowMapper the RowMapper used to map the ResultSet rows
+         */
+        private SingleRecordQuery(final RowMapper<T> theRowMapper) {
+            super(theRowMapper);
         }
 
         /**
-         * Executes the SQL query and returns a single mapped result from the ResultSet.
+         * Executes the SQL query and returns a single mapped result
+         * from the ResultSet.
          *
          * @param connection the database connection used to execute the query
          * @return the single mapped result, or null if no result is found
          * @throws SQLException if a database access error occurs
          */
-        public T single(final Connection connection) throws SQLException {
+        @Override
+        public T execute(final Connection connection) throws SQLException {
             T result = null;
-            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            try (PreparedStatement preparedStatement
+                         = connection.prepareStatement(sql)) {
                 prepare(preparedStatement);
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 if (resultSet.next()) {
-                    result = rowMapper.mapRow(resultSet);
+                    result = mapRow(resultSet);
                 }
             }
             return result;
         }
+    }
+
+    public final class MultipleRecordQuery<T>
+            extends Query<T> implements Sql<List<T>> {
 
         /**
-         * Executes the SQL query and returns a list of mapped result from the ResultSet.
+         * Private constructor for creating a Query instance with
+         * the specified RowMapper.
          *
-         * @return the list of mapped result, or empty if no result is found
-         * @throws SQLException if a database access error occurs
+         * @param theRowMapper the RowMapper used to map the ResultSet rows
          */
-        public List<T> list() throws SQLException {
-            List<T> result;
-            try (Connection connection = DataManager.this.dbDataSource.getConnection()) {
-                result = list(connection);
-            }
-            return result;
+        private MultipleRecordQuery(final RowMapper<T> theRowMapper) {
+            super(theRowMapper);
         }
-        
+
         /**
-         * Executes the SQL query and returns a list of mapped result from the ResultSet.
+         * Executes the SQL query and returns a list of mapped result
+         * from the ResultSet.
          *
          * @param connection the database connection used to execute the query
          * @return the list of mapped result, or empty if no result is found
          * @throws SQLException if a database access error occurs
          */
-        public List<T> list(final Connection connection) throws SQLException {
+        @Override
+        public List<T> execute(final Connection connection)
+                throws SQLException {
             List<T> result = new ArrayList<>();
-            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            try (PreparedStatement preparedStatement
+                         = connection.prepareStatement(sql)) {
                 prepare(preparedStatement);
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 while (resultSet.next()) {
-                    result.add(rowMapper.mapRow(resultSet));
+                    result.add(mapRow(resultSet));
                 }
             }
             return result;
         }
-
-
-
     }
 
     /**
-    * Gets Integer from SQL.
-    *
-    * @return result
-    * @throws SQLException
-    */
-    public int getInt() throws SQLException {
-        int count = 0;
-        try (Connection connection = DataManager.this.dbDataSource.getConnection()) {
-            count = getInt(connection);
-        }
-        return count;
-    }
-
-    /**
-    * Gets Integer from SQL.
-    *
-    * @param connection the database connection used to execute the query
-    * @return result
-    * @throws SQLException
-    */
-    private int getInt(final Connection connection) throws SQLException {
-        int count = 0;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                count = resultSet.getInt(1);
-            }
-
-        }
-        return count;
-    }
-
-    /**
-     * Prepares the PreparedStatement by binding all the parameters to their respective
+     * Prepares the PreparedStatement by binding all the parameters
+     * to their respective
      * positions in the SQL query.
      *
      * @param preparedStatement the PreparedStatement to bind parameters to
-     * @throws SQLException if a database access error occurs during parameter binding
+     * @throws SQLException if a database access error occurs during parameter
+     * binding
      */
-    private void prepare(final PreparedStatement preparedStatement) throws SQLException {
-        for (int i = 0; i < parameters.size(); i++) {
-            parameters.get(i).set(preparedStatement,i+1);
+    private void prepare(final PreparedStatement preparedStatement)
+            throws SQLException {
+        for (ParamMapper<?> paramMapper: paramMappers) {
+            paramMapper.mapParam(preparedStatement);
         }
     }
 }
