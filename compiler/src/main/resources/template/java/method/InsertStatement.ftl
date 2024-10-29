@@ -125,7 +125,7 @@
             }
             
 
-            public int execute() throws SQLException  {
+            public int execute(final DataSource dataSource) throws SQLException  {
                 final String query = "<@insertquery/>";
 
                 DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
@@ -137,7 +137,7 @@
 
             <#if table.hasPrimaryKey>
 
-            public ${name} returning() throws <@throwsblock/>  {
+            public ${name} returning(final DataSource dataSource) throws <@throwsblock/>  {
 
                 ${name} inserted${name} = null;
                 
@@ -183,7 +183,7 @@
                 this.${name?uncap_first}s = ${name?uncap_first}s;
             }
 
-            public int execute() throws SQLException  {
+            public int execute(final DataSource dataSource) throws SQLException  {
                 String query = "<@insertquery/>";
 
                 if (${name?uncap_first}s.size() > 1) {
@@ -201,7 +201,7 @@
 
             <#if table.hasPrimaryKey>
 
-            public List<${name}> returning() throws <@throwsblock/>  {
+            public List<${name}> returning(final DataSource dataSource) throws <@throwsblock/>  {
                 List<${name}> inserted${name}s = null;
                 String query = "<@insertquery/>";
 

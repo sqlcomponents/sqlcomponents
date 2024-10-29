@@ -9,17 +9,21 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.List;
 
 import static org.example.store.ColorsStore.color;
 
 public class ColorsStoreTest {
+    private final DataSource dataSource;
+
     private final ColorsStore colorsStore;
 
     public ColorsStoreTest () {
+        this.dataSource = DataSourceProvider.dataSource();
         DataManager dataManager =
-                DataManager.getManager(DataSourceProvider.dataSource(),
+                DataManager.getManager(
                         EncryptionUtil::enAnDecrypt,
                         EncryptionUtil::enAnDecrypt);
         this.colorsStore = dataManager.getColorsStore();
@@ -27,14 +31,14 @@ public class ColorsStoreTest {
 
     @BeforeEach
     void init() throws SQLException {
-        this.colorsStore.delete().execute();
+        this.colorsStore.delete().execute(dataSource);
     }
 
     @Test
     public void testInsertColors() throws SQLException {
         Colors colors = new Colors(ValidColorsType.blue);
-        this.colorsStore.insert().values(colors).execute();
-        List<Colors> colorsList = this.colorsStore.select().execute();
+        this.colorsStore.insert().values(colors).execute(dataSource);
+        List<Colors> colorsList = this.colorsStore.select().execute(dataSource);
         Assertions.assertNotNull(colorsList);
         Assertions.assertEquals(1, colorsList.size());
     }
@@ -42,15 +46,15 @@ public class ColorsStoreTest {
     @Test
     public void testUpdateColors() throws SQLException {
         Colors colors = new Colors(ValidColorsType.blue);
-        this.colorsStore.insert().values(colors).execute();
-        List<Colors> colorsList = this.colorsStore.select().execute();
+        this.colorsStore.insert().values(colors).execute(dataSource);
+        List<Colors> colorsList = this.colorsStore.select().execute(dataSource);
         Assertions.assertNotNull(colorsList);
         Assertions.assertEquals(1, colorsList.size());
         Colors color = colorsList.get(0);
         color = color.withColor(ValidColorsType.red);
-        int updatedRows = this.colorsStore.update().set(color).execute();
+        int updatedRows = this.colorsStore.update().set(color).execute(dataSource);
         Assertions.assertEquals(1, updatedRows);
-        colorsList = this.colorsStore.select().execute();
+        colorsList = this.colorsStore.select().execute(dataSource);
         Assertions.assertNotNull(colorsList);
         Assertions.assertEquals(1, colorsList.size());
         Assertions.assertEquals(ValidColorsType.red, colorsList.get(0).color());
@@ -59,8 +63,8 @@ public class ColorsStoreTest {
     @Test
     public void testDeleteColors() throws SQLException {
         Colors colors = new Colors(ValidColorsType.blue);
-        this.colorsStore.insert().values(colors).execute();
-        List<Colors> colorsList = this.colorsStore.select().where(color().isNotNull()).execute();
+        this.colorsStore.insert().values(colors).execute(dataSource);
+        List<Colors> colorsList = this.colorsStore.select().where(color().isNotNull()).execute(dataSource);
         Assertions.assertNotNull(colorsList);
         Assertions.assertEquals(1, colorsList.size());
     }

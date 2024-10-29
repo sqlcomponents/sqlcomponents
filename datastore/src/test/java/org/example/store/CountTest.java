@@ -17,13 +17,17 @@ import static org.example.store.MovieStore.*;
 
 class CountTest {
 
+    private final DataSource dataSource;
+
     private final MovieStore movieStore;
     private final CacheStore cacheStore;
 
     CountTest() {
 
+        this.dataSource = DataSourceProvider.dataSource();
+
         DataManager dataManager =
-                DataManager.getManager(DataSourceProvider.dataSource(),
+                DataManager.getManager(
                         EncryptionUtil::enAnDecrypt,
                         EncryptionUtil::enAnDecrypt);
 
@@ -34,20 +38,20 @@ class CountTest {
 
     @BeforeEach
     void init() throws SQLException {
-        this.movieStore.delete().execute();
-        this.cacheStore.delete().execute();
+        this.movieStore.delete().execute(dataSource);
+        this.cacheStore.delete().execute(dataSource);
     }
 
     @Test
     void testSql() throws SQLException {
 
         // No Primary Key (Code Table)
-        this.cacheStore.insert().values(new Cache("a","b")).execute();
-        Assertions.assertEquals(1, this.cacheStore.select().count());
+        this.cacheStore.insert().values(new Cache("a","b")).execute(dataSource);
+        Assertions.assertEquals(1, this.cacheStore.select().count(dataSource));
 
         // Single Primary Key
-        this.movieStore.insert().values(new Movie(null,"Vettayan","Gyanavel")).execute();
-        Assertions.assertEquals(1, this.movieStore.select().count());
+        this.movieStore.insert().values(new Movie(null,"Vettayan","Gyanavel")).execute(dataSource);
+        Assertions.assertEquals(1, this.movieStore.select().count(dataSource));
 
         // Multiple Primary Keys
 

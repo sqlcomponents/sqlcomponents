@@ -6,8 +6,8 @@
             statements = new ArrayList<>();
         }
 
-        public void commit() throws SQLException {
-            final Connection connection = DataManager.this.dbDataSource.getConnection();
+        public void commit(final DataSource dbDataSource) throws SQLException {
+            final Connection connection = dbDataSource.getConnection();
             try {
                 connection.setAutoCommit(false);
                 for(Sql<Integer> statement:statements) {

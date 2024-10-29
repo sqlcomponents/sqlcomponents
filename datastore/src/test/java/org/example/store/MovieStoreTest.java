@@ -6,11 +6,10 @@ import org.example.util.DataSourceProvider;
 import org.example.util.EncryptionUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.example.store.MovieStore.directedBy;
@@ -19,11 +18,16 @@ import static org.example.store.MovieStore.title;
 
 class MovieStoreTest {
 
+    private final DataSource dataSource;
+
     private final MovieStore movieStore;
 
     public MovieStoreTest() {
+
+        this.dataSource = DataSourceProvider.dataSource();
+
         DataManager dataManager =
-                DataManager.getManager(DataSourceProvider.dataSource(),
+                DataManager.getManager(
                         EncryptionUtil::enAnDecrypt,
                         EncryptionUtil::enAnDecrypt);
 
@@ -32,7 +36,7 @@ class MovieStoreTest {
 
     @BeforeEach
     void init() throws SQLException {
-        this.movieStore.delete().execute();
+        this.movieStore.delete().execute(dataSource);
     }
 
     @Test
@@ -41,9 +45,9 @@ class MovieStoreTest {
         Movie movie = movieStore
                 .insert()
                     .values(new Movie(null, "Inception", "Christopher Nolan"))
-                .returning();
+                .returning(dataSource);
 
-        Assertions.assertTrue(movieStore.exists(movie.id()));
+        Assertions.assertTrue(movieStore.exists(dataSource,movie.id()));
 
         List<Movie> movies = movieStore
                 .insert()
@@ -53,33 +57,33 @@ class MovieStoreTest {
                         new Movie(null, "Fight Club", "David Fincher"),
                         new Movie(null, "Interstellar", "Christopher Nolan"),
                         new Movie(null, "The Social Network", "David Fincher"))
-                .returning();
+                .returning(dataSource);
 
         Assertions.assertEquals(6, movies.size());
         movie = movieStore
                 .insert()
                     .values(new Movie(null, "The Dark Knight", "Christopher Nolan"))
-                .returning();
+                .returning(dataSource);
 
         movies = movieStore
                 .select()
-                .execute();
+                .execute(dataSource);
 
         movies = movieStore
                 .select()
                     .where(directedBy().eq("Christopher Nolan"))
-                .execute();
+                .execute(dataSource);
 
         movies = movieStore
                 .select()
-                .where(title().eq("Fight Club")).execute();
+                .where(title().eq("Fight Club")).execute(dataSource);
 
 
         int updatedRecords = movieStore
                 .update()
                         .set(new Movie(null, "Fight Club", "Martyn Scorsese"))
                 .where(title().eq("Fight Club"))
-                .execute();
+                .execute(dataSource);
 
         Assertions.assertEquals(1, updatedRecords, "Update Failed");
 
@@ -87,13 +91,13 @@ class MovieStoreTest {
                 .update()
                     .set(directedBy("Martyn Scorsese"))
                     .where(title().eq("Fight Club"))
-                .execute();
+                .execute(dataSource);
 
         Assertions.assertEquals(1, updatedRecords, "Update Failed");
 
         movies = movieStore
                 .select()
-                .where(title().eq("Fight Club")).execute();
+                .where(title().eq("Fight Club")).execute(dataSource);
 
         Assertions.assertEquals("Martyn Scorsese", movies.get(0).directedBy());
     }
