@@ -40,7 +40,7 @@ public sealed class SelectStatement permits SelectStatementWithWhere {
             this.whereClause = whereClause;
         }
 
-        public final List<${name}> execute() throws <@throwsblock/> {
+        public final List<${name}> execute(final DataSource dataSource) throws <@throwsblock/> {
             
 		final String query = <@compress single_line=true>"SELECT
 		<@columnSelection properties=properties/> 
@@ -52,7 +52,7 @@ public sealed class SelectStatement permits SelectStatementWithWhere {
                 return dataManager.sql(query).queryForList(${name}Store.this::rowMapper).execute(dataSource);
 	}
 
-        public final int count() throws SQLException {
+        public final int count(final DataSource dataSource) throws SQLException {
 		final String query = <@compress single_line=true>"SELECT
 		COUNT(<#if primaryKeyProperties?size == 0
                 >*<#else
@@ -83,7 +83,7 @@ public final SelectQuery sql(final String sql) {
             return this;
         }
 
-        public Optional<${name}> optional() throws <@throwsblock/> {
+        public Optional<${name}> optional(final DataSource dataSource) throws <@throwsblock/> {
             DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
 
             for (Value<?,?> value:values) {
@@ -93,7 +93,7 @@ public final SelectQuery sql(final String sql) {
             return Optional.ofNullable(sqlBuilder.queryForOne(${name}Store.this::rowMapper).execute(dataSource));
         }
 
-        public List<${name}> list() throws <@throwsblock/>{
+        public List<${name}> list(final DataSource dataSource) throws <@throwsblock/>{
             DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
 
             for (Value<?,?> value:values) {
@@ -132,8 +132,8 @@ public final SelectQuery sql(final String sql) {
                                 selectStatement.count());
                 }
                 <#else>
-                public DataManager.Page<${name}> execute() throws <@throwsblock/> {
-                    return DataManager.page(SelectStatement.this.execute(), count());
+                public DataManager.Page<${name}> execute(final DataSource dataSource) throws <@throwsblock/> {
+                    return DataManager.page(SelectStatement.this.execute(dataSource), count(dataSource));
                 }
                 </#if>
 
@@ -157,8 +157,8 @@ public final SelectQuery sql(final String sql) {
                                 return this.limitClause.execute(pageable);
                         }
                         <#else>
-                        public DataManager.Page<${name}> execute() throws <@throwsblock/> {
-                                return this.limitClause.execute();
+                        public DataManager.Page<${name}> execute(final DataSource dataSource) throws <@throwsblock/> {
+                                return this.limitClause.execute(dataSource);
                         }
                         </#if>
 
@@ -175,10 +175,10 @@ public final SelectQuery sql(final String sql) {
 
 <#if table.hasPrimaryKey>
 <#assign a=addImportStatement("java.util.Optional")>
-    public Optional<${name}> select(${getPrimaryKeysAsParameterString()}) throws <@throwsblock/>  {
-            return select(${getPrimaryKeysAsParameters()}, null);
+    public Optional<${name}> select(final DataSource dataSource,${getPrimaryKeysAsParameterString()}) throws <@throwsblock/>  {
+            return select(dataSource,${getPrimaryKeysAsParameters()}, null);
     }
-    public Optional<${name}> select(${getPrimaryKeysAsParameterString()}, WhereClause whereClause) throws <@throwsblock/>  {
+    public Optional<${name}> select(final DataSource dataSource,${getPrimaryKeysAsParameterString()}, WhereClause whereClause) throws <@throwsblock/>  {
         
 		final String query = <@compress single_line=true>"SELECT
 		<@columnSelection properties=properties/>
@@ -202,7 +202,7 @@ public final SelectQuery sql(final String sql) {
             
     }
         
-    public boolean exists(${getPrimaryKeysAsParameterString()}) throws SQLException {
+    public boolean exists(final DataSource dataSource,${getPrimaryKeysAsParameterString()}) throws SQLException {
         final String query = <@compress single_line=true>"SELECT
 		1
 		FROM ${table.escapedName?j_string}
@@ -228,7 +228,7 @@ public final SelectQuery sql(final String sql) {
 <#assign a=addImportStatement(beanPackage+"."+name)>
 <#assign a=addImportStatement("java.util.Optional")>
     <#list table.uniqueColumns as uniqueColumn>
-    public Optional<${name}> selectBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws <@throwsblock/> {
+    public Optional<${name}> selectBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(final DataSource dataSource,${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws <@throwsblock/> {
         
             final String query = <@compress single_line=true>"SELECT
             <@columnSelection properties=properties/>
@@ -248,7 +248,7 @@ public final SelectQuery sql(final String sql) {
             
     }
 
-    public boolean existsBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws <@throwsblock/> {
+    public boolean existsBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(final DataSource dataSource,${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws <@throwsblock/> {
 
             final String query = <@compress single_line=true>"SELECT
             1

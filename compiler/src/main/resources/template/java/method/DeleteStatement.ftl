@@ -1,7 +1,7 @@
 <#if table.tableType == 'TABLE' >
 
 <#if table.hasPrimaryKey>
-public int delete(${getPrimaryKeysAsParameterString()}) throws SQLException  {
+public int delete(final DataSource dataSource,${getPrimaryKeysAsParameterString()}) throws SQLException  {
 		final String query = <@compress single_line=true>"DELETE FROM ${table.escapedName?j_string}
 					WHERE
 					<#assign index=0>
@@ -37,7 +37,7 @@ public final class DeleteStatement {
             this.whereClause = whereClause;
         }
 
-    public int execute() throws SQLException  {
+    public int execute(final DataSource dataSource) throws SQLException  {
     	final String query = "DELETE FROM ${table.escapedName?j_string}" 
         + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
         return dataManager.sql(query).execute(dataSource);
@@ -63,7 +63,7 @@ public final class DeleteStatement {
             return this;
         }
 
-        public int execute() throws SQLException {
+        public int execute(final DataSource dataSource) throws SQLException {
             DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
 
             for (Value<?,?> value:values) {

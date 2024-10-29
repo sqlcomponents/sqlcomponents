@@ -10,13 +10,9 @@ public Procedure call() {
 }
 
 public static final class Procedure {
-    /**
-    * Data Source for Procedures.
-    */
-    private final javax.sql.DataSource dbDataSource;
 
-    private Procedure(final DataSource theDbDataSource) {
-        this.dbDataSource = theDbDataSource;
+
+    private Procedure() {
     }
 
     <#list orm.methods as method>
@@ -32,6 +28,7 @@ public static final class Procedure {
     </#if>
     */
     public void ${method.name}(
+        final DataSource dbDataSource,
     <#list method.inputParameters as parameter>
     <#if getClassName(parameter.dataType) != "Void"> final ${getClassName(parameter.dataType)} ${parameter.name}<#if parameter?index < method.inputParameters?size-1>,</#if> </#if>
     </#list>

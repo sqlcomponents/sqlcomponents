@@ -87,8 +87,8 @@ abstract class DataTypeTest<T> {
 
                 myTableClass = classLoader.loadClass("org.example.model.MyTable");
 
-                Method method = loadedClass.getMethod("getManager", DataSource.class, Function.class, Function.class);
-                Object dataManager = method.invoke(null, DATA_SOURCE, null, null);
+                Method method = loadedClass.getMethod("getManager", Function.class, Function.class);
+                Object dataManager = method.invoke(null, null, null);
 
                 this.myTableStoreClass = classLoader.loadClass("org.example.store.MyTableStore");
 
@@ -121,7 +121,7 @@ abstract class DataTypeTest<T> {
         Method deleteMethod = myTableStoreClass.getMethod("delete");
         Class<?> deleteStatementClass = deleteMethod.getReturnType();
         Object deleteStmtObj = deleteMethod.invoke(myTableStore);
-        deleteStatementClass.getMethod("execute").invoke(deleteStmtObj);
+        deleteStatementClass.getMethod("execute",DataSource.class).invoke(deleteStmtObj, DATA_SOURCE);
     }
 
     @Test
@@ -141,7 +141,7 @@ abstract class DataTypeTest<T> {
         Method selecttMethod = myTableStoreClass.getMethod("select");
         Object selectStmtObj = selecttMethod.invoke(myTableStore);
 
-        return ((List<Object>) selecttMethod.getReturnType().getMethod("execute").invoke(selectStmtObj)).get(0);
+        return ((List<Object>) selecttMethod.getReturnType().getMethod("execute",DataSource.class).invoke(selectStmtObj,DATA_SOURCE)).get(0);
     }
 
     private void insert(final T value) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
@@ -153,7 +153,7 @@ abstract class DataTypeTest<T> {
         Method valuesMethod = insertMethod.getReturnType().getMethod("values", myTableClass);
         Object valuesStmtObj = valuesMethod.invoke(insertStmtObj, myTableObj);
 
-        valuesMethod.getReturnType().getMethod("execute").invoke(valuesStmtObj);
+        valuesMethod.getReturnType().getMethod("execute",DataSource.class).invoke(valuesStmtObj,DATA_SOURCE);
     }
 
     private Object getMyTableObject(final T value) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {

@@ -13,10 +13,7 @@ public final class DataManager {
     <#if !multipleManagers>
     private static DataManager dataManager;
     </#if>
-    /**
-     * Data Source for Database.
-     */
-    private final DataSource dbDataSource;
+
     /**
     * observer variable.
     */
@@ -36,19 +33,18 @@ public final class DataManager {
     </#if>
     </#list>
 
-<#if multipleManagers>public <#else>private</#if> DataManager(final javax.sql.DataSource theDbDataSource<#if encryption?has_content >,
+<#if multipleManagers>public <#else>private</#if> DataManager(<#if encryption?has_content >
      final Function<String, String> encryptionFunction,
      final Function<String, String> decryptionFunction
       <#assign a=addImportStatement("java.util.function.Function")>
     </#if>
     ) {
         this.observer = new Observer();
-        this.dbDataSource = theDbDataSource;
-        this.procedure = new Procedure(theDbDataSource);
+        this.procedure = new Procedure();
         <#list orm.entities as entity>
         <#if !entity.type?? >
         this.${entity.name?uncap_first}Store = ${entity.name}Store
-.get${entity.name}Store(this, theDbDataSource, this.observer<#if entity.containsEncryptedProperty() >,
+.get${entity.name}Store(this, this.observer<#if entity.containsEncryptedProperty() >,
              encryptionFunction,
              decryptionFunction
         </#if>);
@@ -57,20 +53,19 @@ public final class DataManager {
     }
      /**
      * getManager method.
-     * @param dbDataSource
      * @param encryptionFunction
      * @param decryptionFunction
      * @return dataManager
      */
     <#if !multipleManagers>
-    public static DataManager getManager(final DataSource dbDataSource<#if encryption?has_content>,
+    public static DataManager getManager(<#if encryption?has_content>
     <#assign a=addImportStatement("javax.sql.DataSource")>
      final Function<String, String> encryptionFunction,
      final Function<String, String> decryptionFunction
     </#if>
                                                             ) {
         if (dataManager == null) {
-            dataManager = new DataManager(dbDataSource<#if encryption?has_content>,
+            dataManager = new DataManager(<#if encryption?has_content>
              encryptionFunction,
              decryptionFunction
             </#if>

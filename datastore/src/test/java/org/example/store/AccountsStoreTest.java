@@ -6,16 +6,19 @@ import org.example.util.DataSourceProvider;
 import org.example.util.EncryptionUtil;
 import org.junit.jupiter.api.Test;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 
 class AccountsStoreTest {
 
+    private final DataSource dataSource;
     private final AccountsStore accountsStore;
 //    private final List<Accounts> accountsToTest;
 
     public AccountsStoreTest() {
+        this.dataSource = DataSourceProvider.dataSource();
         DataManager dataManager =
-                DataManager.getManager(DataSourceProvider.dataSource(),
+                DataManager.getManager(
                         EncryptionUtil::enAnDecrypt,
                         EncryptionUtil::enAnDecrypt);
         // Stores used for testing
@@ -26,6 +29,6 @@ class AccountsStoreTest {
     @Test
     void getAccountsStore() throws SQLException {
         Accounts accounts = new Accounts(null, "TEST-1", 234.3);
-        this.accountsStore.insert().values(accounts).execute();
+        this.accountsStore.insert().values(accounts).execute(dataSource);
     }
 }

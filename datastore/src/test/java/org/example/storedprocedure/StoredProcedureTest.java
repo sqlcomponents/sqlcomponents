@@ -9,17 +9,19 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.List;
 
 class StoredProcedureTest {
-
+    private final DataSource dataSource;
     private final DataManager dataManager;
     private final CacheStore cacheStore;
 
     StoredProcedureTest() {
+        this.dataSource = DataSourceProvider.dataSource();
         dataManager =
-                DataManager.getManager(DataSourceProvider.dataSource(),
+                DataManager.getManager(
                         EncryptionUtil::enAnDecrypt,
                         EncryptionUtil::enAnDecrypt);
         this.cacheStore = dataManager.getCacheStore();
@@ -28,14 +30,14 @@ class StoredProcedureTest {
     @BeforeEach
     void init() throws SQLException {
         // Clean Up
-        this.cacheStore.delete().execute();
+        this.cacheStore.delete().execute(dataSource);
     }
 
  //   @Test
 //    void basicCall() throws SQLException {
 //  //      dataManager.call().createCache("Name", "Raja");
 //        CacheStore.WhereClause whereClause= CacheStore.code().eq("Name");
-//        List<Cache> cacheList = dataManager.getCacheStore().select().where(whereClause).execute();
+//        List<Cache> cacheList = dataManager.getCacheStore().select().where(whereClause).execute(dataSource);
 //   //     Assertions.assertEquals(1, cacheList.size());
 //    //    Assertions.assertEquals(cacheList.get(0).code(),"Name");
 //    //    Assertions.assertEquals(cacheList.get(0).getCache(),"Raja");
