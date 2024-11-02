@@ -420,6 +420,8 @@ import java.util.stream.Collectors;
 
     }
 
+    <#include "ConvenienceMethods.ftl">
+
 
     }<#assign a=addImportStatement("java.util.ArrayList")><#assign a=addImportStatement("java.time.LocalDate")>
 </#assign>
