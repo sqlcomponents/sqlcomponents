@@ -3,6 +3,7 @@
 <#assign a=addImportStatement("java.util.ArrayList")>
 <#assign a=addImportStatement("java.util.Optional")>
 <#assign a=addImportStatement("java.sql.PreparedStatement")>
+<#assign a=addImportStatement("java.sql.Connection")>
 
 public SelectStatementWithWhere select() {
         return new SelectStatementWithWhere();
@@ -19,7 +20,7 @@ public final class SelectStatementWithWhere extends SelectStatement{
         }
     }
 
-public sealed class SelectStatement permits SelectStatementWithWhere {
+public sealed class SelectStatement implements DataManager.Sql<List<${name}>> permits SelectStatementWithWhere {
 
 
         private final WhereClause whereClause;
@@ -40,7 +41,8 @@ public sealed class SelectStatement permits SelectStatementWithWhere {
             this.whereClause = whereClause;
         }
 
-        public final List<${name}> execute(final DataSource dataSource) throws <@throwsblock/> {
+        @Override
+        public final List<${name}> execute(final Connection connection) throws <@throwsblock/> {
             
 		final String query = <@compress single_line=true>"SELECT
 		<@columnSelection properties=properties/> 
@@ -49,7 +51,7 @@ public sealed class SelectStatement permits SelectStatementWithWhere {
                 + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) )
                 + ( this.limitClause == null ? "" : this.limitClause.asSql() )
                 + ( this.offsetClause == null ? "" : this.offsetClause.asSql() );
-                return dataManager.sql(query).queryForList(${name}Store.this::rowMapper).execute(dataSource);
+                return dataManager.sql(query).queryForList(${name}Store.this::rowMapper).execute(connection);
 	}
 
         public final int count(final DataSource dataSource) throws SQLException {
