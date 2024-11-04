@@ -49,6 +49,17 @@ class MovieStoreTest {
 
         Assertions.assertTrue(movieStore.exists(dataSource,movie.id()));
 
+        movie = movieStore
+                .select(movie.id())
+                .execute(dataSource);
+
+        movie = movieStore
+                .select(movie.id())
+                    .where(directedBy().eq("Christopher Nolan"))
+                .execute(dataSource);
+
+        Assertions.assertNotNull(movie);
+
         List<Movie> movies = movieStore
                 .insert()
                 .values(new Movie(null, "Pulp Fiction", "Quentin Tarantino"),

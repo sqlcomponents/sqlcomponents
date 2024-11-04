@@ -5,6 +5,72 @@
 <#assign a=addImportStatement("java.sql.PreparedStatement")>
 <#assign a=addImportStatement("java.sql.Connection")>
 
+<#if table.hasPrimaryKey>
+public SingleSelectStatementWithWhere select(${getPrimaryKeysAsParameterString()}) {
+        return new SingleSelectStatementWithWhere(${getPrimaryKeysAsParameters()});
+}
+
+public final class SingleSelectStatementWithWhere extends SingleSelectStatement{
+
+        ${getPrimaryKeysAsObjectInstances()}
+
+        private SingleSelectStatementWithWhere(${getPrimaryKeysAsParameterString()}) {
+            super(${getPrimaryKeysAsParameters()});
+            ${getPrimaryKeysAsSetters()}
+        }
+
+        public SingleSelectStatement where(WhereClause whereClause) {
+            return new SingleSelectStatement(whereClause,${getPrimaryKeysAsParameters()});
+        }
+}
+
+public sealed class SingleSelectStatement implements DataManager.Sql<${name}> permits SingleSelectStatementWithWhere {
+
+
+        ${getPrimaryKeysAsObjectInstances()}
+
+        private final WhereClause whereClause;
+
+        private SingleSelectStatement(${getPrimaryKeysAsParameterString()}) {
+            this(null,${getPrimaryKeysAsParameters()});
+        }
+
+        private SingleSelectStatement(final WhereClause whereClause, ${getPrimaryKeysAsParameterString()}) {
+            this.whereClause = whereClause;
+            ${getPrimaryKeysAsSetters()}
+        }
+
+        @Override
+        public final ${name} execute(final Connection connection) throws <@throwsblock/> {
+            
+		final String query = <@compress single_line=true>"SELECT
+		<@columnSelection properties=properties/>
+		FROM ${table.escapedName?j_string}
+		WHERE
+	    <#assign index=0>
+		<#list properties as property>
+			<#if property.column.primaryKeyIndex != 0>
+			<#if index == 0><#assign index=1><#else>AND </#if>${property.column.escapedName?j_string} = ?
+			</#if>
+		</#list>
+                </@compress>"
+
+                + ( whereClause == null ? "" : (" AND " + whereClause.asSql()) );
+                DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
+    
+        ${getPrimaryKeysAsPreparedStatements()}
+
+        return sqlBuilder.queryForOne(${name}Store.this::rowMapper).execute(connection);
+	}
+
+        
+
+
+        
+}
+
+</#if>
+
 public SelectStatementWithWhere select() {
         return new SelectStatementWithWhere();
 }
@@ -15,13 +81,12 @@ public final class SelectStatementWithWhere extends SelectStatement{
             super(null);
         }
 
-        public SelectStatement where(WhereClause whereClause) throws SQLException {
+        public SelectStatement where(WhereClause whereClause) {
             return new SelectStatement(whereClause);
         }
-    }
+}
 
 public sealed class SelectStatement implements DataManager.Sql<List<${name}>> permits SelectStatementWithWhere {
-
 
         private final WhereClause whereClause;
 
@@ -65,46 +130,9 @@ public sealed class SelectStatement implements DataManager.Sql<List<${name}>> pe
                 + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
                 return dataManager.sql(query).queryForInt().execute(dataSource);
 	}
-public final SelectQuery sql(final String sql) {
-            return new SelectQuery(sql);
-    }
-
-    public final class SelectQuery  {
-
-        private final String sql;
-        private final List<Value<?,?>> values;
-
-        public SelectQuery(final String sql) {
-            this.sql = sql;
-            this.values = new ArrayList<>();
-        }
 
 
-        public SelectQuery param(final Value<?,?> value) {
-            this.values.add(value);
-            return this;
-        }
-
-        public Optional<${name}> optional(final DataSource dataSource) throws <@throwsblock/> {
-            DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
-
-            for (Value<?,?> value:values) {
-                value.set(sqlBuilder);
-            }
-            
-            return Optional.ofNullable(sqlBuilder.queryForOne(${name}Store.this::rowMapper).execute(dataSource));
-        }
-
-        public List<${name}> list(final DataSource dataSource) throws <@throwsblock/>{
-            DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
-
-            for (Value<?,?> value:values) {
-                value.set(sqlBuilder);
-            }
-            
-            return sqlBuilder.queryForList(${name}Store.this::rowMapper).execute(dataSource);
-        }
-    }
+    
 
 
         public final class LimitClause  {
@@ -168,12 +196,55 @@ public final SelectQuery sql(final String sql) {
         }
 
         }
+
+
+public final SelectQuery sql(final String sql) {
+            return new SelectQuery(sql);
+    }
+
+    public final class SelectQuery  {
+
+        private final String sql;
+        private final List<Value<?,?>> values;
+
+        public SelectQuery(final String sql) {
+            this.sql = sql;
+            this.values = new ArrayList<>();
+        }
+
+
+        public SelectQuery param(final Value<?,?> value) {
+            this.values.add(value);
+            return this;
+        }
+
+        public Optional<${name}> optional(final DataSource dataSource) throws <@throwsblock/> {
+            DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
+
+            for (Value<?,?> value:values) {
+                value.set(sqlBuilder);
+            }
+            
+            return Optional.ofNullable(sqlBuilder.queryForOne(${name}Store.this::rowMapper).execute(dataSource));
+        }
+
+        public List<${name}> list(final DataSource dataSource) throws <@throwsblock/>{
+            DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
+
+            for (Value<?,?> value:values) {
+                value.set(sqlBuilder);
+            }
+            
+            return sqlBuilder.queryForList(${name}Store.this::rowMapper).execute(dataSource);
+        }
+    }
+
+
 }
 
 
 
     
-
 
 
 
