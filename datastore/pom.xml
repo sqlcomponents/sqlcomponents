@@ -17,20 +17,12 @@
         <java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <commons-net.version>3.11.1</commons-net.version>
+
         <postgresql.version>42.7.4</postgresql.version>
-        <jackson-databind.version>2.18.0-rc1</jackson-databind.version>
-        <jackson-datatype-jts.version>1.2.10</jackson-datatype-jts.version>
-        <javax.json-api.version>1.1.4</javax.json-api.version>
+        <spring-data-commons.version>3.3.2</spring-data-commons.version>
     </properties>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/commons-net/commons-net -->
-        <dependency>
-            <groupId>commons-net</groupId>
-            <artifactId>commons-net</artifactId>
-            <version>${commons-net.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -38,6 +30,11 @@
             <version>${postgresql.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+            <version>${spring-data-commons.version}</version>
+        </dependency>
 
     </dependencies>
 </project>
