@@ -198,46 +198,11 @@ public sealed class SelectStatement implements DataManager.Sql<List<${name}>> pe
         }
 
 
-public final SelectQuery sql(final String sql) {
-            return new SelectQuery(sql);
+public final DataManager.SelectQuery<Value<?,?>,${name}> sql(final String sql) {
+            return new DataManager.SelectQuery<>(sql, ${name}Store.this::rowMapper);
     }
 
-    public final class SelectQuery  {
 
-        private final String sql;
-        private final List<Value<?,?>> values;
-
-        public SelectQuery(final String sql) {
-            this.sql = sql;
-            this.values = new ArrayList<>();
-        }
-
-
-        public SelectQuery param(final Value<?,?> value) {
-            this.values.add(value);
-            return this;
-        }
-
-        public Optional<${name}> optional(final DataSource dataSource) throws <@throwsblock/> {
-            DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
-
-            for (Value<?,?> value:values) {
-                value.set(sqlBuilder);
-            }
-            
-            return Optional.ofNullable(sqlBuilder.queryForOne(${name}Store.this::rowMapper).execute(dataSource));
-        }
-
-        public List<${name}> list(final DataSource dataSource) throws <@throwsblock/>{
-            DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
-
-            for (Value<?,?> value:values) {
-                value.set(sqlBuilder);
-            }
-            
-            return sqlBuilder.queryForList(${name}Store.this::rowMapper).execute(dataSource);
-        }
-    }
 
 
 }
