@@ -111,5 +111,15 @@ class MovieStoreTest {
                 .where(title().eq("Fight Club")).execute(dataSource);
 
         Assertions.assertEquals("Martyn Scorsese", movies.get(0).directedBy());
+
+        // Delete directed By "Martyn Scorsese"
+
+        int updatedRows = this.movieStore
+                .delete()
+                    .where(directedBy().eq("Martyn Scorsese"))
+                .execute(dataSource);
+
+        Assertions.assertEquals(1, updatedRows);
+
     }
 }
