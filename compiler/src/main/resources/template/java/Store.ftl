@@ -86,9 +86,20 @@ import java.util.stream.Collectors;
 
     }
 
-    <#list orm.methodSpecification as method>
-        <#include "method/${method}.ftl">
-    </#list>
+ 
+    <#include "method/InsertStatement.ftl">
+    <#include "method/UpdateStatement.ftl">
+    <#include "method/SelectStatement.ftl">
+    <#include "method/MViewRefresh.ftl">
+
+    <#if table.tableType == 'TABLE' >
+
+    public DataManager.DeleteStatement delete() {
+        return new DataManager.DeleteStatement("DELETE FROM ${table.escapedName?j_string}");
+    }
+
+    </#if>
+ 
 
     <#if (returningProperties?size > 0) >
     /**

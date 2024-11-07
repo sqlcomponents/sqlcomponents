@@ -294,6 +294,7 @@ public final class DataManager {
 
     <#include "clause/WhereClause.ftl">
 
+    <#include "method/DeleteStatement.ftl">
 
 }
 </#assign>
