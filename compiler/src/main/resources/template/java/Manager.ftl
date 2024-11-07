@@ -293,7 +293,7 @@ public final class DataManager {
     <#include "Transaction.ftl">
 
     <#include "query/SelectQuery.ftl">
-    <#include "query/DeleteQuery.ftl">
+    <#include "query/Statement.ftl">
 
 
 }

@@ -1,7 +1,5 @@
     public static final class SelectQuery<T extends Value<?, ?>, V>  {
 
-        
-
         private final String sql;
         private final SqlBuilder.RowMapper<V> rowMapper;
 
@@ -14,7 +12,7 @@
         }
 
 
-        public SelectQuery param(final T value) {
+        public SelectQuery<T, V> param(final T value) {
             this.values.add(value);
             return this;
         }

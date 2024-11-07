@@ -18,8 +18,8 @@ public final class DeleteStatement implements DataManager.Sql<Integer> {
         return dataManager.sql(query);
     }
 
-    public DataManager.DeleteQuery<Value<?,?>> sql(final String sql) {
-        return new DataManager.DeleteQuery<>(sql);
+    public DataManager.Statement<Value<?,?>> sql(final String sql) {
+        return new DataManager.Statement<>(sql);
     }
 
 }
