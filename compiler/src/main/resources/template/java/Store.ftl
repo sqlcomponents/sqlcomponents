@@ -48,6 +48,8 @@ import java.util.stream.Collectors;
     private final DataManager.Observer observer;
     <#assign a=addImportStatement(orm.application.rootPackage+ ".DataManager")>
     <#assign a=addImportStatement(orm.application.rootPackage+ ".DataManager.Value")>
+    <#assign a=addImportStatement(orm.application.rootPackage+ ".DataManager.PartialWhereClause")>
+    <#assign a=addImportStatement(orm.application.rootPackage+ ".DataManager.WhereClause")>
 
 
     <#if containsEncryptedProperty() >
@@ -163,105 +165,16 @@ import java.util.stream.Collectors;
         * @return The column for ${property.name}.
         */
         public static Column.${property.name?cap_first}Column ${property.name}() {
-        return new WhereClause().${property.name}();
+            final WhereClause<Column.${property.name?cap_first}Column> whereClause = new WhereClause<>();
+
+            Column.${property.name?cap_first}Column column = new Column.${property.name?cap_first}Column(whereClause);
+
+            whereClause.add(column);
+
+            return column;
         }
 
     </#list>
-    
-     /**
-     * Class for building the SQL WhereClause.
-     */
-    public static class WhereClause extends PartialWhereClause {
-        private WhereClause() {
-            super();
-        }
-
-        private String asSql() {
-            return nodes.isEmpty() ? null : nodes.stream().map(node -> {
-                if (node instanceof Column) {
-                    return ((Column) node).asSql();
-                } else if (node instanceof WhereClause) {
-                    return "(" + ((WhereClause) node).asSql() + ")";
-                } else {
-                    return (String) node;
-                }
-            }).collect(Collectors.joining(" "));
-        }
-
-        /**
-        * Adds "AND" to the clause.
-        *
-        * @return This PartialWhereClause instance.
-        */
-        public PartialWhereClause and() {
-            this.nodes.add("AND");
-            return this;
-        }
-
-        /**
-        * Adds "OR" to the clause.
-        *
-        * @return This PartialWhereClause instance.
-        */
-        public PartialWhereClause or() {
-            this.nodes.add("OR");
-            return this;
-        }
-
-        /**
-        * Adds "AND" followed by the given WhereClause.
-        *
-        * @param whereClause The WhereClause to add.
-        * @return This WhereClause instance.
-        */
-        public WhereClause and(final WhereClause whereClause) {
-            this.nodes.add("AND");
-            this.nodes.add(whereClause);
-            return this;
-        }
-
-        /**
-        * Adds "OR" followed by the given WhereClause.
-        *
-        * @param whereClause The WhereClause to add.
-        * @return This WhereClause instance.
-        */
-        public WhereClause or(final WhereClause whereClause) {
-            this.nodes.add("OR");
-            this.nodes.add(whereClause);
-            return this;
-        }
-
-    }
-
-    /**
-    * Partial SQL WhereClause.
-    */
-    public static class PartialWhereClause  {
-
-        protected final List<Object> nodes;
-
-        private PartialWhereClause() {
-            this.nodes = new ArrayList<>();
-        }
-
-
-    <#list properties as property>
-        
-        /**
-        * Adds ${property.name} to the SQL clause.
-        *
-        * @return The column for ${property.name}.
-        */
-        public Column.${property.name?cap_first}Column ${property.name}() {
-        Column.${property.name?cap_first}Column query = new Column.${property.name?cap_first}Column(this);
-        this.nodes.add(query);
-        return query;
-        }
-
-    </#list>
-
-    }
 
     /**
     * Abstract class for defining columns in the DataManager.

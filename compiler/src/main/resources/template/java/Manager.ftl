@@ -295,6 +295,8 @@ public final class DataManager {
     <#include "query/SelectQuery.ftl">
     <#include "query/Statement.ftl">
 
+    <#include "clause/WhereClause.ftl">
+
 
 }
 </#assign>
