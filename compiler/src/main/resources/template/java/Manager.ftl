@@ -10,9 +10,7 @@ public final class DataManager {
     /**
     * dataManager variable.
     */
-    <#if !multipleManagers>
     private static DataManager dataManager;
-    </#if>
 
     /**
     * observer variable.
@@ -33,7 +31,7 @@ public final class DataManager {
     </#if>
     </#list>
 
-<#if multipleManagers>public <#else>private</#if> DataManager(<#if encryption?has_content >
+    private DataManager(<#if encryption?has_content >
      final Function<String, String> encryptionFunction,
      final Function<String, String> decryptionFunction
       <#assign a=addImportStatement("java.util.function.Function")>
@@ -57,7 +55,6 @@ public final class DataManager {
      * @param decryptionFunction
      * @return dataManager
      */
-    <#if !multipleManagers>
     public static DataManager getManager(<#if encryption?has_content>
     <#assign a=addImportStatement("javax.sql.DataSource")>
      final Function<String, String> encryptionFunction,
@@ -73,7 +70,7 @@ public final class DataManager {
         }
         return dataManager;
     }
-</#if>
+
 
     <#assign a=addImportStatement("javax.sql.DataSource")>
     <#list orm.entities as entity>
