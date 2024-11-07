@@ -82,7 +82,8 @@ class MovieStoreTest {
 
         movies = movieStore
                 .select()
-                    .where(directedBy().eq("Christopher Nolan"))
+                    .where(directedBy().eq("Christopher Nolan")
+                            .and().directedBy().eq("David Fincher"))
                 .execute(dataSource);
 
         movies = movieStore

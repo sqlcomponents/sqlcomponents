@@ -15,7 +15,7 @@
                     .execute(connection);
         }
 
-        public DataManager.Sql<Integer> where(final WhereClause<?> whereClause) {
+        public DataManager.Sql<Integer> where(final WhereClause whereClause) {
             final String query = this.sql
                     + ( whereClause == null ? "" : (" WHERE " + whereClause.asSql()) );
             return dataManager.sql(query);
