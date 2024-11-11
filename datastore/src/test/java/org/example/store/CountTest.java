@@ -46,7 +46,7 @@ class CountTest {
     void testSql() throws SQLException {
 
         // No Primary Key (Code Table)
-        this.cacheStore.insert().values(new Cache("a","b")).execute(dataSource);
+        this.cacheStore.insert().values(new Cache("a","b", null, null, null, null)).execute(dataSource);
         Assertions.assertEquals(1, this.cacheStore.select().count(dataSource));
 
         // Single Primary Key
