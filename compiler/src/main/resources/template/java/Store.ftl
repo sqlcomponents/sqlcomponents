@@ -84,9 +84,20 @@ import java.util.stream.Collectors;
 
     }
 
-    <#list orm.methodSpecification as method>
-        <#include "method/${method}.ftl">
-    </#list>
+ 
+    <#include "method/InsertStatement.ftl">
+    <#include "method/UpdateStatement.ftl">
+    <#include "method/SelectStatement.ftl">
+    <#include "method/MViewRefresh.ftl">
+
+    <#if table.tableType == 'TABLE' >
+
+    public DataManager.DeleteStatement delete() {
+        return new DataManager.DeleteStatement("DELETE FROM ${table.escapedName?j_string}");
+    }
+
+    </#if>
+ 
 
     <#if (returningProperties?size > 0) >
     /**
@@ -163,20 +174,21 @@ import java.util.stream.Collectors;
         * @return The column for ${property.name}.
         */
         public static Column.${property.name?cap_first}Column ${property.name}() {
-        return new WhereClause().${property.name}();
+            return new WhereClause().${property.name}();
         }
 
     </#list>
-    
-     /**
+
+    /**
      * Class for building the SQL WhereClause.
      */
-    public static class WhereClause extends PartialWhereClause {
+    public static class WhereClause extends PartialWhereClause implements DataManager.WhereClause {
         private WhereClause() {
             super();
         }
 
-        private String asSql() {
+        @Override
+        public String asSql() {
             return nodes.isEmpty() ? null : nodes.stream().map(node -> {
                 if (node instanceof Column) {
                     return ((Column) node).asSql();
@@ -419,6 +431,8 @@ import java.util.stream.Collectors;
     </#list>
 
     }
+
+    <#include "ConvenienceMethods.ftl">
 
 
     }<#assign a=addImportStatement("java.util.ArrayList")><#assign a=addImportStatement("java.time.LocalDate")>

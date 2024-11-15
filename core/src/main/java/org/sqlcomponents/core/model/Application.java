@@ -26,10 +26,7 @@ public final class Application {
      * The Name.
      */
     private String name;
-    /**
-     * Support Multiple Managers.
-     */
-    private boolean multipleManagers;
+
     /**
      * The Location.
      */
@@ -551,19 +548,5 @@ public final class Application {
         aCompiler.compile(this);
     }
 
-    /**
-     * multipleManagers.
-     * @return multipleManagers
-     */
-    public boolean isMultipleManagers() {
-        return multipleManagers;
-    }
 
-    /**
-     * Sets multipleManagers.
-     * @param aMultipleManagers
-     */
-    public void setMultipleManagers(final boolean aMultipleManagers) {
-        this.multipleManagers = aMultipleManagers;
-    }
 }

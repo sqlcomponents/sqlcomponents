@@ -66,6 +66,30 @@
 	<#return pkAsParameterStr>
 </#function>
 
+<#function getPrimaryKeysAsSetters>
+	<#local pkAsParameterStr="">
+	<#local index=0>
+	<#list properties as property>
+		<#if property.column.primaryKeyIndex != 0>
+			<#local pkAsParameterStr = pkAsParameterStr + "this." + property.name + " = "+ property.name + ";\n" >
+			<#local a=addImportStatement(property.dataType)>
+		</#if>
+	</#list>
+	<#return pkAsParameterStr> 
+</#function>
+
+<#function getPrimaryKeysAsObjectInstances>
+	<#local pkAsParameterStr="">
+	<#local index=0>
+	<#list properties as property>
+		<#if property.column.primaryKeyIndex != 0>
+			<#local pkAsParameterStr = pkAsParameterStr + "private final " +  getClassName(property.dataType) + " " +property.name + ";\n" >
+			<#local a=addImportStatement(property.dataType)>
+		</#if>
+	</#list>
+	<#return pkAsParameterStr> 
+</#function>
+
 <#function getPrimaryKeysAsParameterString>
 	<#local pkAsParameterStr="">
 	<#local index=0>

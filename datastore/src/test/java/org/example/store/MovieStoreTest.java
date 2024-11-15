@@ -49,6 +49,17 @@ class MovieStoreTest {
 
         Assertions.assertTrue(movieStore.exists(dataSource,movie.id()));
 
+        movie = movieStore
+                .select(movie.id())
+                .execute(dataSource);
+
+        movie = movieStore
+                .select(movie.id())
+                    .where(directedBy().eq("Christopher Nolan"))
+                .execute(dataSource);
+
+        Assertions.assertNotNull(movie);
+
         List<Movie> movies = movieStore
                 .insert()
                 .values(new Movie(null, "Pulp Fiction", "Quentin Tarantino"),
@@ -71,7 +82,8 @@ class MovieStoreTest {
 
         movies = movieStore
                 .select()
-                    .where(directedBy().eq("Christopher Nolan"))
+                    .where(directedBy().eq("Christopher Nolan")
+                            .and().directedBy().eq("David Fincher"))
                 .execute(dataSource);
 
         movies = movieStore
@@ -100,5 +112,15 @@ class MovieStoreTest {
                 .where(title().eq("Fight Club")).execute(dataSource);
 
         Assertions.assertEquals("Martyn Scorsese", movies.get(0).directedBy());
+
+        // Delete directed By "Martyn Scorsese"
+
+        int updatedRows = this.movieStore
+                .delete()
+                    .where(directedBy().eq("Martyn Scorsese"))
+                .execute(dataSource);
+
+        Assertions.assertEquals(1, updatedRows);
+
     }
 }

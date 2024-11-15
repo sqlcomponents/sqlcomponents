@@ -178,38 +178,10 @@
             
         }
         
-    public UpdateQuery sql(final String sql) {
-        return new UpdateQuery(sql);
+    public DataManager.Statement<Value<?,?>> sql(final String sql) {
+        return new DataManager.Statement<>(sql);
     }
 
-    public final class UpdateQuery  {
-
-        private final String sql;
-        private final List<Value<?,?>> values;
-
-        public UpdateQuery(final String sql) {
-            this.sql = sql;
-            this.values = new ArrayList<>();
-        }
-
-
-        public UpdateQuery param(final Value<?,?> value) {
-            this.values.add(value);
-            return this;
-        }
-
-        public int execute(final DataSource dataSource) throws SQLException {
-            DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
-
-            for (Value<?,?> value:values) {
-                value.set(sqlBuilder);
-            }
-            
-            return sqlBuilder.execute(dataSource);
-        }
-
-
-    }
 
 
     }	
