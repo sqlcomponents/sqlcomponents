@@ -578,7 +578,7 @@ public final class Crawler {
         if (bColumn.getDataType() == VARCHAR_DATA_TYPE
                 && !("VARCHAR".equalsIgnoreCase(bColumn.getTypeName())
                 || "TEXT".equalsIgnoreCase(bColumn.getTypeName()))) {
-            bColumn.setColumnType(ColumnType.ENUM);
+            bColumn.setColumnType(ColumnType.VARCHAR);
         } else {
             lColumnType = ColumnType.value(
                     JDBCType.valueOf(lColumnResultSet.getInt("DATA_TYPE")));
