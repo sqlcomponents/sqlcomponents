@@ -56,7 +56,7 @@ class CrawlerTest {
         // tablePatterns.add("kafk\\w+");
         // application.setTablePatterns(tablePatterns);
 
-        Database database = new Crawler(application).getDatabase();
+        Database database = new Crawler().getDatabase(application);
         Assertions.assertNotNull(application, "Database is not crawled");
     }
 }

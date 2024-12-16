@@ -1,5 +1,6 @@
 package org.sqlcomponents.core.crawler;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.sqlcomponents.core.crawler.util.DataSourceUtil;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.Column;
@@ -17,7 +18,6 @@ import org.sqlcomponents.core.model.relational.enums.Order;
 import org.sqlcomponents.core.model.relational.enums.TableType;
 import org.sqlcomponents.core.model.relational.enums.TypeType;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.JDBCType;
@@ -87,57 +87,35 @@ public final class Crawler {
      * The constant for varchar data type.
      */
     public static final int VARCHAR_DATA_TYPE = 12;
-    /**
-     * The Database.
-     */
-    private final Database database = new Database();
-    /**
-     * The Application.
-     */
-    private final Application application;
-
-
-    /**
-     * Instantiates a new Crawler.
-     *
-     * @param aApplication the a application
-     * @throws SQLException the sql exception
-     */
-    public Crawler(final Application aApplication) throws SQLException {
-        application = aApplication;
-
-
-    }
 
     /**
      * Gets database.
-     *
+     * @param application
      * @return the database
      * @throws SQLException the sql exception
      */
-    public Database getDatabase()
+    public Database getDatabase(final Application application)
             throws SQLException {
-        DataSource lDataSource =
-                DataSourceUtil.getDataSource(application);
 
+        Database database = null;
+        HikariDataSource lDataSource =
+                DataSourceUtil.getDataSource(application);
         try (Connection lConnection = lDataSource.getConnection()) {
             DatabaseMetaData databaseMetaData = lConnection.getMetaData();
-            setDatabaseType(databaseMetaData);
-            setDatabaseVersion(databaseMetaData);
+            database = new Database();
+            setDatabaseType(database, databaseMetaData);
+            setDatabaseVersion(database, databaseMetaData);
             database.setDriverName(databaseMetaData.getDriverName());
             database.setDriverVersion(databaseMetaData.getDriverVersion());
             database.setExtraNameCharacters(
                     databaseMetaData.getExtraNameCharacters());
             database.setIdentifierQuoteString(
                     databaseMetaData.getIdentifierQuoteString());
-            database
-                    .setJdbcMajorVersion(
+            database.setJdbcMajorVersion(
                             databaseMetaData.getJDBCMajorVersion());
-            database
-                    .setJdbcMinorVersion(
+            database.setJdbcMinorVersion(
                             databaseMetaData.getJDBCMinorVersion());
-            database
-                    .setMaxBinaryLiteralLength(
+            database.setMaxBinaryLiteralLength(
                     databaseMetaData.getMaxBinaryLiteralLength());
             database.setMaxCharLiteralLength(
                     databaseMetaData.getMaxCharLiteralLength());
@@ -147,8 +125,7 @@ public final class Crawler {
                     databaseMetaData.getMaxColumnNameLength());
             database.setMaxColumnsInGroupBy(
                     databaseMetaData.getMaxColumnsInGroupBy());
-            database
-                    .setMaxColumnsInIndex(
+            database.setMaxColumnsInIndex(
                             databaseMetaData.getMaxColumnsInIndex());
             database.setMaxColumnsInOrderBy(
                     databaseMetaData.getMaxColumnsInOrderBy());
@@ -253,20 +230,23 @@ public final class Crawler {
                     databaseMetaData.storesUpperCaseQuotedIdentifiers());
             database.setSupportsBatchUpdates(
                     databaseMetaData.supportsBatchUpdates());
-            setSupportedFeatures(databaseMetaData);
-            setCatelog(databaseMetaData);
+            setSupportedFeatures(database, databaseMetaData);
+            setCatelog(database, databaseMetaData);
             database.setTableTypes(getTableTypes(databaseMetaData));
             database.setSequences(getSequences(databaseMetaData));
-            database.setTables(getTables(application.getSchemaName(),
+            database.setTables(getTables(database,
+                    application.getSchemaName(),
                     tableName -> matches(application.getTablePatterns(),
                             tableName), databaseMetaData));
             database.setFunctions(getProcedures(databaseMetaData));
-            repair(databaseMetaData);
+            repair(database, databaseMetaData);
+            lDataSource.close();
         }
         return database;
     }
 
     private void setSupportedFeatures(
+            final Database database,
             final DatabaseMetaData databaseMetaData)
             throws SQLException {
         database.setSupportsSavePoint(
@@ -292,6 +272,7 @@ public final class Crawler {
     }
 
     private void setDatabaseVersion(
+            final Database database,
             final DatabaseMetaData databaseMetaData) throws SQLException {
         database.setDatabaseMajorVersion(
                 databaseMetaData.getDatabaseMajorVersion());
@@ -308,6 +289,7 @@ public final class Crawler {
     }
 
     private void setCatelog(
+            final Database database,
             final DatabaseMetaData databaseMetaData) throws SQLException {
         database.setCatalogTerm(databaseMetaData.getCatalogTerm());
         database.setCatalogSeperator(databaseMetaData.getCatalogSeparator());
@@ -326,6 +308,7 @@ public final class Crawler {
     }
 
     private void setDatabaseType(
+            final Database database,
             final DatabaseMetaData databaseMetaData)
             throws SQLException {
         switch (databaseMetaData.getDatabaseProductName().toLowerCase()
@@ -391,8 +374,6 @@ public final class Crawler {
             }
         }
 
-
-
         return tableTypes;
     }
 
@@ -417,14 +398,16 @@ public final class Crawler {
 
     /**
      * Gets tables.
-     *
+     * @param database         the data base
      * @param aSchemeName      the a scheme name
      * @param aTableFilter     the a table filter
      * @param databaseMetaData
      * @return the tables
      * @throws SQLException the sql exception
      */
-    private List<Table> getTables(final String aSchemeName,
+    private List<Table> getTables(
+            final Database database,
+            final String aSchemeName,
                                   final Predicate<String> aTableFilter,
                                   final DatabaseMetaData databaseMetaData)
             throws SQLException {
@@ -746,9 +729,6 @@ public final class Crawler {
         try (ResultSet res = databaseMetaData
                 .getProcedureColumns(null, null,
                 procedure.getFunctionName(), "%")) {
-            ResultSetMetaData rsmd = res.getMetaData();
-            int columnsCount = rsmd.getColumnCount();
-
             while (res.next()) {
                 Column bColumn = new Column(procedure);
 
@@ -765,10 +745,6 @@ public final class Crawler {
                 }
             }
         }
-
-
-
-
 
         procedure.setInputParameters(inputParameters);
         procedure.setOutputParameters(outputParameters);
@@ -812,16 +788,19 @@ public final class Crawler {
 
     /**
      * Repair.
+     * @param database
      * @param databaseMetaData
      */
-    private void repair(final DatabaseMetaData databaseMetaData) {
+    private void repair(
+            final Database database,
+            final DatabaseMetaData databaseMetaData) {
         switch (database.getDbType()) {
             case MARIADB:
             case MYSQL:
-                repairMySQL(databaseMetaData);
+                repairMySQL(database, databaseMetaData);
                 break;
             case POSTGRES:
-                loadTypes(databaseMetaData);
+                loadTypes(database, databaseMetaData);
                 break;
             default:
                 break;
@@ -878,9 +857,12 @@ public final class Crawler {
 
     /**
      * Repair my sql.
+     * @param database
      * @param databaseMetaData
      */
-    private void repairMySQL(final DatabaseMetaData databaseMetaData) {
+    private void repairMySQL(
+            final Database database,
+            final DatabaseMetaData databaseMetaData) {
         database.getTables().forEach(table -> {
             try (PreparedStatement preparedStatement =
                          databaseMetaData.getConnection()
@@ -933,22 +915,27 @@ public final class Crawler {
 
     /**
      * load the type details from db.
+     * @param database
      * @param databaseMetaData
      */
-    public void loadTypes(final DatabaseMetaData databaseMetaData) {
+    public void loadTypes(
+            final Database database,
+            final DatabaseMetaData databaseMetaData) {
 
         try (PreparedStatement preparedStatement
                      = databaseMetaData.getConnection()
                     .prepareStatement(
-                " select n.nspname as enum_schema,  \n"
-                        + "    t.typname as enum_name,\n"
-                        + "    string_agg(e.enumlabel, ', ') "
-                        + "  as enum_value\n"
-                        + "  from pg_type t \n"
-                        + "  join pg_enum e on t.oid = e.enumtypid "
-                        + "  join pg_catalog.pg_namespace n ON "
-                        + "n.oid = t.typnamespace\n"
-                        + "group by enum_schema, enum_name;")) {
+                """
+                        select n.nspname as enum_schema,
+                        t.typname as enum_name,
+                       string_agg(e.enumlabel, ', ')
+                        as enum_value
+                        from pg_type t
+                        join pg_enum e on t.oid = e.enumtypid
+                      join pg_catalog.pg_namespace n ON
+                        n.oid = t.typnamespace
+                     group by enum_schema, enum_name
+                     """)) {
             ResultSet lResultSet = preparedStatement.executeQuery();
             if (!lResultSet.wasNull()) {
                 List<Type> types = new ArrayList<>();
