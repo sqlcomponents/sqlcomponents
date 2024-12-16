@@ -778,10 +778,7 @@ public final class Crawler {
                     outputParameters.add(bColumn);
                 }
             }
-
         }
-
-
 
         procedure.setInputParameters(inputParameters);
         procedure.setOutputParameters(outputParameters);
@@ -874,41 +871,47 @@ public final class Crawler {
                                          + ".COLUMNS where\n"
                                          + " table_name = ?")) {
                 preparedStatement.setString(1, table.getTableName());
-                ResultSet lResultSet = preparedStatement.executeQuery();
 
-                Column bColumn;
-                String bColumnType;
-                while (lResultSet.next()) {
-                    bColumn = table.getColumns().stream().filter(column1 -> {
-                        try {
-                            return column1.getColumnName()
-                                    .equals(lResultSet.getString(
-                                            "COLUMN_NAME"));
-                        } catch (SQLException throwables) {
-                            throwables.printStackTrace();
+                try (ResultSet lResultSet = preparedStatement.executeQuery()) {
+                    Column bColumn;
+                    String bColumnType;
+                    while (lResultSet.next()) {
+                        bColumn = table.getColumns().stream()
+                                .filter(column1 -> {
+                            try {
+                                return column1.getColumnName()
+                                        .equals(lResultSet.getString(
+                                                "COLUMN_NAME"));
+                            } catch (SQLException throwables) {
+                                throwables.printStackTrace();
+                            }
+                            return false;
+                        }).findFirst().get();
+                        bColumnType = lResultSet.getString("COLUMN_TYPE");
+                        String[] s = bColumnType.split(START_BR_REGX);
+                        bColumn.setTypeName(s[0].trim());
+
+                        ColumnType columnType1 = ColumnType.value(
+                                bColumn.getTypeName().toUpperCase());
+                        if (columnType1 != null) {
+                            bColumn.setColumnType(columnType1);
                         }
-                        return false;
-                    }).findFirst().get();
-                    bColumnType = lResultSet.getString("COLUMN_TYPE");
-                    String[] s = bColumnType.split(START_BR_REGX);
-                    bColumn.setTypeName(s[0].trim());
-
-                    ColumnType columnType1 = ColumnType.value(
-                            bColumn.getTypeName().toUpperCase());
-                    if (columnType1 != null) {
-                        bColumn.setColumnType(columnType1);
-                    }
-                    if (s.length == 2) {
-                        String grp = s[1].trim()
-                                .replaceAll(END_BR_REGX, "");
-
-                        s = grp.split(COMMA_STR);
-                        bColumn.setSize(Integer.parseInt(s[0]));
                         if (s.length == 2) {
-                            bColumn.setDecimalDigits(Integer.parseInt(s[1]));
+                            String grp = s[1].trim()
+                                    .replaceAll(END_BR_REGX, "");
+
+                            s = grp.split(COMMA_STR);
+                            bColumn.setSize(Integer.parseInt(s[0]));
+                            if (s.length == 2) {
+                                bColumn
+                                    .setDecimalDigits(Integer.parseInt(s[1]));
+                            }
                         }
                     }
                 }
+
+
+
             } catch (final SQLException aSQLException) {
                 aSQLException.printStackTrace();
             }
@@ -939,22 +942,25 @@ public final class Crawler {
                         n.oid = t.typnamespace
                      group by enum_schema, enum_name
                      """)) {
-            ResultSet lResultSet = preparedStatement.executeQuery();
-            if (!lResultSet.wasNull()) {
-                List<Type> types = new ArrayList<>();
-                while (lResultSet.next()) {
-                    Type type = new Type();
-                    type.setTypeName(lResultSet.getString("ENUM_NAME"));
-                    type.setTypeType(TypeType.e);
-                    String value = lResultSet.getString("enum_value");
-                    if (value != null) {
-                        String[] values = value.split(",");
-                        type.setValues(Arrays.asList(values));
+            try (ResultSet lResultSet = preparedStatement.executeQuery()) {
+                if (!lResultSet.wasNull()) {
+                    List<Type> types = new ArrayList<>();
+                    while (lResultSet.next()) {
+                        Type type = new Type();
+                        type.setTypeName(lResultSet.getString("ENUM_NAME"));
+                        type.setTypeType(TypeType.e);
+                        String value = lResultSet.getString("enum_value");
+                        if (value != null) {
+                            String[] values = value.split(",");
+                            type.setValues(Arrays.asList(values));
+                        }
+                        types.add(type);
                     }
-                    types.add(type);
+                    database.setTypes(types);
                 }
-                database.setTypes(types);
             }
+
+
 
         } catch (SQLException exception) {
             exception.printStackTrace();
