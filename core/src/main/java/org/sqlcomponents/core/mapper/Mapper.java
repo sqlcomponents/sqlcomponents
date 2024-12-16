@@ -60,7 +60,7 @@ public abstract class Mapper {
     public ORM getOrm() throws SQLException {
         ORM orm = application.getOrm();
 
-        Database database = new Crawler(application).getDatabase();
+        Database database = new Crawler().getDatabase(application);
         application.getOrm().setDatabase(database);
 
         orm.setEntities(getEntities());

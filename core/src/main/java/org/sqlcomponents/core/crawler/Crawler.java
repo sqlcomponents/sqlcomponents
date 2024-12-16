@@ -89,27 +89,12 @@ public final class Crawler {
     public static final int VARCHAR_DATA_TYPE = 12;
 
     /**
-     * The Application.
-     */
-    private final Application application;
-
-    /**
-     * Instantiates a new Crawler.
-     *
-     * @param aApplication the a application
-     * @throws SQLException the sql exception
-     */
-    public Crawler(final Application aApplication)  {
-        application = aApplication;
-    }
-
-    /**
      * Gets database.
-     *
+     * @param application
      * @return the database
      * @throws SQLException the sql exception
      */
-    public Database getDatabase()
+    public Database getDatabase(final Application application)
             throws SQLException {
 
         Database database = null;
@@ -387,8 +372,6 @@ public final class Crawler {
                 tableTypes.add(lTableType);
             }
         }
-
-
 
         return tableTypes;
     }
@@ -945,15 +928,17 @@ public final class Crawler {
         try (PreparedStatement preparedStatement
                      = databaseMetaData.getConnection()
                     .prepareStatement(
-                " select n.nspname as enum_schema,  \n"
-                        + "    t.typname as enum_name,\n"
-                        + "    string_agg(e.enumlabel, ', ') "
-                        + "  as enum_value\n"
-                        + "  from pg_type t \n"
-                        + "  join pg_enum e on t.oid = e.enumtypid "
-                        + "  join pg_catalog.pg_namespace n ON "
-                        + "n.oid = t.typnamespace\n"
-                        + "group by enum_schema, enum_name;")) {
+                """
+                        select n.nspname as enum_schema,
+                        t.typname as enum_name,
+                       string_agg(e.enumlabel, ', ')
+                        as enum_value
+                        from pg_type t
+                        join pg_enum e on t.oid = e.enumtypid
+                      join pg_catalog.pg_namespace n ON
+                        n.oid = t.typnamespace
+                     group by enum_schema, enum_name
+                     """)) {
             ResultSet lResultSet = preparedStatement.executeQuery();
             if (!lResultSet.wasNull()) {
                 List<Type> types = new ArrayList<>();
