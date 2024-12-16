@@ -240,6 +240,7 @@ public final class Crawler {
                             tableName), databaseMetaData));
             database.setFunctions(getProcedures(databaseMetaData));
             repair(database, databaseMetaData);
+        } finally {
             lDataSource.close();
         }
         return database;
@@ -864,8 +865,9 @@ public final class Crawler {
             final Database database,
             final DatabaseMetaData databaseMetaData) {
         database.getTables().forEach(table -> {
-            try (PreparedStatement preparedStatement =
-                         databaseMetaData.getConnection()
+            try (Connection connection = databaseMetaData.getConnection();
+                    PreparedStatement preparedStatement =
+                            connection
                                  .prepareStatement("SELECT "
                                          + "COLUMN_NAME,COLUMN_TYPE  "
                                          + "from INFORMATION_SCHEMA"
@@ -922,8 +924,9 @@ public final class Crawler {
             final Database database,
             final DatabaseMetaData databaseMetaData) {
 
-        try (PreparedStatement preparedStatement
-                     = databaseMetaData.getConnection()
+        try (Connection connection = databaseMetaData.getConnection();
+             PreparedStatement preparedStatement
+                     = connection
                     .prepareStatement(
                 """
                         select n.nspname as enum_schema,
