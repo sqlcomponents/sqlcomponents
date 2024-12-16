@@ -1,5 +1,6 @@
 package org.sqlcomponents.core.crawler;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.sqlcomponents.core.crawler.util.DataSourceUtil;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.Column;
@@ -17,7 +18,6 @@ import org.sqlcomponents.core.model.relational.enums.Order;
 import org.sqlcomponents.core.model.relational.enums.TableType;
 import org.sqlcomponents.core.model.relational.enums.TypeType;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.JDBCType;
@@ -98,7 +98,7 @@ public final class Crawler {
             throws SQLException {
 
         Database database = null;
-        DataSource lDataSource =
+        HikariDataSource lDataSource =
                 DataSourceUtil.getDataSource(application);
         try (Connection lConnection = lDataSource.getConnection()) {
             DatabaseMetaData databaseMetaData = lConnection.getMetaData();
@@ -240,6 +240,7 @@ public final class Crawler {
                             tableName), databaseMetaData));
             database.setFunctions(getProcedures(databaseMetaData));
             repair(database, databaseMetaData);
+            lDataSource.close();
         }
         return database;
     }
@@ -744,10 +745,6 @@ public final class Crawler {
                 }
             }
         }
-
-
-
-
 
         procedure.setInputParameters(inputParameters);
         procedure.setOutputParameters(outputParameters);
