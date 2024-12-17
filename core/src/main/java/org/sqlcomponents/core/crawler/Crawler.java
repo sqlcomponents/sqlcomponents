@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
 /**
  * The type Crawler.
  */
-public final class Crawler {
+public class Crawler {
     /**
      * Constant for input parameter type.
      */
@@ -74,36 +74,75 @@ public final class Crawler {
     /**
      * The constant COMMA_STR.
      */
-    private static final String COMMA_STR = ",";
+    protected static final String COMMA_STR = ",";
     /**
      * The constant END_BR_REGX.
      */
-    private static final String END_BR_REGX = "\\)";
+    protected static final String END_BR_REGX = "\\)";
     /**
      * The constant START_BR_REGX.
      */
-    private static final String START_BR_REGX = "\\(";
+    protected static final String START_BR_REGX = "\\(";
     /**
      * The constant for varchar data type.
      */
     public static final int VARCHAR_DATA_TYPE = 12;
 
-    /**
-     * Gets database.
-     * @param application
-     * @return the database
-     * @throws SQLException the sql exception
-     */
-    public Database getDatabase(final Application application)
-            throws SQLException {
+    protected Crawler() {
 
+    }
+
+    /**
+     * Gets Database for application.
+     * @param application
+     * @return database
+     * @throws SQLException
+     */
+    public static Database getDatabase(final Application application)
+            throws SQLException {
         Database database = null;
         HikariDataSource lDataSource =
                 DataSourceUtil.getDataSource(application);
         try (Connection lConnection = lDataSource.getConnection()) {
             DatabaseMetaData databaseMetaData = lConnection.getMetaData();
+            DBType dbType = getDatabaseType(databaseMetaData);
+
+            switch (dbType) {
+                case POSTGRES
+                        -> {
+                    database = new PostgresCrawler()
+                            .getDatabase(dbType, application, databaseMetaData);
+                }
+                case MYSQL -> {
+                    database = new MysqlCrawler()
+                            .getDatabase(dbType, application, databaseMetaData);
+                }
+                default -> {
+                    database = new Crawler()
+                            .getDatabase(dbType, application, databaseMetaData);
+                }
+            }
+        } finally {
+            lDataSource.close();
+        }
+        return database;
+    }
+
+    /**
+     * Gets database.
+     * @param dbType
+     * @param application
+     * @param databaseMetaData
+     * @return the database
+     * @throws SQLException the sql exception
+     */
+    public Database getDatabase(final DBType dbType,
+                                final Application application,
+                                 final DatabaseMetaData databaseMetaData)
+            throws SQLException {
+        Database database = null;
             database = new Database();
-            setDatabaseType(database, databaseMetaData);
+            database.setDbType(dbType);
             setDatabaseVersion(database, databaseMetaData);
             database.setDriverName(databaseMetaData.getDriverName());
             database.setDriverVersion(databaseMetaData.getDriverVersion());
@@ -240,9 +279,7 @@ public final class Crawler {
                             tableName), databaseMetaData));
             database.setFunctions(getProcedures(databaseMetaData));
             repair(database, databaseMetaData);
-        } finally {
-            lDataSource.close();
-        }
+
         return database;
     }
 
@@ -308,29 +345,23 @@ public final class Crawler {
                 databaseMetaData.supportsColumnAliasing());
     }
 
-    private void setDatabaseType(
-            final Database database,
+    private static DBType getDatabaseType(
             final DatabaseMetaData databaseMetaData)
             throws SQLException {
         switch (databaseMetaData.getDatabaseProductName().toLowerCase()
                 .trim()) {
             case POSTGRES_DB:
-                database.setDbType(DBType.POSTGRES);
-                break;
+                return DBType.POSTGRES;
             case H2_DB:
-                database.setDbType(DBType.H2);
-                break;
+                return DBType.H2;
             case ORACLE_DB:
-                database.setDbType(DBType.ORACLE);
-                break;
+                return DBType.ORACLE;
             case MYSQL_DB:
-                database.setDbType(DBType.MYSQL);
-                break;
+                return DBType.MYSQL;
             case MARIA_DB:
-                database.setDbType(DBType.MARIADB);
-                break;
+                return DBType.MARIADB;
             default:
-                break;
+                throw new IllegalArgumentException("Database Not Supported");
         }
     }
 
@@ -789,20 +820,10 @@ public final class Crawler {
      * @param database
      * @param databaseMetaData
      */
-    private void repair(
+    protected void repair(
             final Database database,
             final DatabaseMetaData databaseMetaData) {
-        switch (database.getDbType()) {
-            case MARIADB:
-            case MYSQL:
-                repairMySQL(database, databaseMetaData);
-                break;
-            case POSTGRES:
-                loadTypes(database, databaseMetaData);
-                break;
-            default:
-                break;
-        }
+
     }
 
     /**
