@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
 /**
  * The type Crawler.
  */
-public final class Crawler {
+public class Crawler {
     /**
      * Constant for input parameter type.
      */
@@ -74,36 +74,76 @@ public final class Crawler {
     /**
      * The constant COMMA_STR.
      */
-    private static final String COMMA_STR = ",";
+    protected static final String COMMA_STR = ",";
     /**
      * The constant END_BR_REGX.
      */
-    private static final String END_BR_REGX = "\\)";
+    protected static final String END_BR_REGX = "\\)";
     /**
      * The constant START_BR_REGX.
      */
-    private static final String START_BR_REGX = "\\(";
+    protected static final String START_BR_REGX = "\\(";
     /**
      * The constant for varchar data type.
      */
     public static final int VARCHAR_DATA_TYPE = 12;
 
-    /**
-     * Gets database.
-     * @param application
-     * @return the database
-     * @throws SQLException the sql exception
-     */
-    public Database getDatabase(final Application application)
-            throws SQLException {
+    protected Crawler() {
 
+    }
+
+    /**
+     * Gets Database for application.
+     * @param application
+     * @return database
+     * @throws SQLException
+     */
+    public static Database getDatabase(final Application application)
+            throws SQLException {
         Database database = null;
         HikariDataSource lDataSource =
                 DataSourceUtil.getDataSource(application);
         try (Connection lConnection = lDataSource.getConnection()) {
             DatabaseMetaData databaseMetaData = lConnection.getMetaData();
+            DBType dbType = getDatabaseType(databaseMetaData);
+
+            switch (dbType) {
+                case POSTGRES
+                        -> {
+                    database = new PostgresCrawler()
+                            .getDatabase(dbType, application, databaseMetaData);
+                }
+                case MYSQL -> {
+                    database = new MysqlCrawler()
+                            .getDatabase(dbType, application, databaseMetaData);
+                }
+                default -> {
+                    database = new Crawler()
+                            .getDatabase(dbType, application, databaseMetaData);
+                }
+            }
+            lDataSource.evictConnection(lConnection);
+        } finally {
+            lDataSource.close();
+        }
+        return database;
+    }
+
+    /**
+     * Gets database.
+     * @param dbType
+     * @param application
+     * @param databaseMetaData
+     * @return the database
+     * @throws SQLException the sql exception
+     */
+    public Database getDatabase(final DBType dbType,
+                                final Application application,
+                                 final DatabaseMetaData databaseMetaData)
+            throws SQLException {
+        Database database = null;
             database = new Database();
-            setDatabaseType(database, databaseMetaData);
+            database.setDbType(dbType);
             setDatabaseVersion(database, databaseMetaData);
             database.setDriverName(databaseMetaData.getDriverName());
             database.setDriverVersion(databaseMetaData.getDriverVersion());
@@ -240,8 +280,7 @@ public final class Crawler {
                             tableName), databaseMetaData));
             database.setFunctions(getProcedures(databaseMetaData));
             repair(database, databaseMetaData);
-            lDataSource.close();
-        }
+
         return database;
     }
 
@@ -307,29 +346,23 @@ public final class Crawler {
                 databaseMetaData.supportsColumnAliasing());
     }
 
-    private void setDatabaseType(
-            final Database database,
+    private static DBType getDatabaseType(
             final DatabaseMetaData databaseMetaData)
             throws SQLException {
         switch (databaseMetaData.getDatabaseProductName().toLowerCase()
                 .trim()) {
             case POSTGRES_DB:
-                database.setDbType(DBType.POSTGRES);
-                break;
+                return DBType.POSTGRES;
             case H2_DB:
-                database.setDbType(DBType.H2);
-                break;
+                return DBType.H2;
             case ORACLE_DB:
-                database.setDbType(DBType.ORACLE);
-                break;
+                return DBType.ORACLE;
             case MYSQL_DB:
-                database.setDbType(DBType.MYSQL);
-                break;
+                return DBType.MYSQL;
             case MARIA_DB:
-                database.setDbType(DBType.MARIADB);
-                break;
+                return DBType.MARIADB;
             default:
-                break;
+                throw new IllegalArgumentException("Database Not Supported");
         }
     }
 
@@ -777,10 +810,7 @@ public final class Crawler {
                     outputParameters.add(bColumn);
                 }
             }
-
         }
-
-
 
         procedure.setInputParameters(inputParameters);
         procedure.setOutputParameters(outputParameters);
@@ -791,20 +821,10 @@ public final class Crawler {
      * @param database
      * @param databaseMetaData
      */
-    private void repair(
+    protected void repair(
             final Database database,
             final DatabaseMetaData databaseMetaData) {
-        switch (database.getDbType()) {
-            case MARIADB:
-            case MYSQL:
-                repairMySQL(database, databaseMetaData);
-                break;
-            case POSTGRES:
-                loadTypes(database, databaseMetaData);
-                break;
-            default:
-                break;
-        }
+
     }
 
     /**
@@ -864,49 +884,56 @@ public final class Crawler {
             final Database database,
             final DatabaseMetaData databaseMetaData) {
         database.getTables().forEach(table -> {
-            try (PreparedStatement preparedStatement =
-                         databaseMetaData.getConnection()
+            try (Connection connection = databaseMetaData.getConnection();
+                    PreparedStatement preparedStatement =
+                            connection
                                  .prepareStatement("SELECT "
                                          + "COLUMN_NAME,COLUMN_TYPE  "
                                          + "from INFORMATION_SCHEMA"
                                          + ".COLUMNS where\n"
                                          + " table_name = ?")) {
                 preparedStatement.setString(1, table.getTableName());
-                ResultSet lResultSet = preparedStatement.executeQuery();
 
-                Column bColumn;
-                String bColumnType;
-                while (lResultSet.next()) {
-                    bColumn = table.getColumns().stream().filter(column1 -> {
-                        try {
-                            return column1.getColumnName()
-                                    .equals(lResultSet.getString(
-                                            "COLUMN_NAME"));
-                        } catch (SQLException throwables) {
-                            throwables.printStackTrace();
+                try (ResultSet lResultSet = preparedStatement.executeQuery()) {
+                    Column bColumn;
+                    String bColumnType;
+                    while (lResultSet.next()) {
+                        bColumn = table.getColumns().stream()
+                                .filter(column1 -> {
+                            try {
+                                return column1.getColumnName()
+                                        .equals(lResultSet.getString(
+                                                "COLUMN_NAME"));
+                            } catch (SQLException throwables) {
+                                throwables.printStackTrace();
+                            }
+                            return false;
+                        }).findFirst().get();
+                        bColumnType = lResultSet.getString("COLUMN_TYPE");
+                        String[] s = bColumnType.split(START_BR_REGX);
+                        bColumn.setTypeName(s[0].trim());
+
+                        ColumnType columnType1 = ColumnType.value(
+                                bColumn.getTypeName().toUpperCase());
+                        if (columnType1 != null) {
+                            bColumn.setColumnType(columnType1);
                         }
-                        return false;
-                    }).findFirst().get();
-                    bColumnType = lResultSet.getString("COLUMN_TYPE");
-                    String[] s = bColumnType.split(START_BR_REGX);
-                    bColumn.setTypeName(s[0].trim());
-
-                    ColumnType columnType1 = ColumnType.value(
-                            bColumn.getTypeName().toUpperCase());
-                    if (columnType1 != null) {
-                        bColumn.setColumnType(columnType1);
-                    }
-                    if (s.length == 2) {
-                        String grp = s[1].trim()
-                                .replaceAll(END_BR_REGX, "");
-
-                        s = grp.split(COMMA_STR);
-                        bColumn.setSize(Integer.parseInt(s[0]));
                         if (s.length == 2) {
-                            bColumn.setDecimalDigits(Integer.parseInt(s[1]));
+                            String grp = s[1].trim()
+                                    .replaceAll(END_BR_REGX, "");
+
+                            s = grp.split(COMMA_STR);
+                            bColumn.setSize(Integer.parseInt(s[0]));
+                            if (s.length == 2) {
+                                bColumn
+                                    .setDecimalDigits(Integer.parseInt(s[1]));
+                            }
                         }
                     }
                 }
+
+
+
             } catch (final SQLException aSQLException) {
                 aSQLException.printStackTrace();
             }
@@ -922,8 +949,9 @@ public final class Crawler {
             final Database database,
             final DatabaseMetaData databaseMetaData) {
 
-        try (PreparedStatement preparedStatement
-                     = databaseMetaData.getConnection()
+        try (Connection connection = databaseMetaData.getConnection();
+             PreparedStatement preparedStatement
+                     = connection
                     .prepareStatement(
                 """
                         select n.nspname as enum_schema,
@@ -936,22 +964,25 @@ public final class Crawler {
                         n.oid = t.typnamespace
                      group by enum_schema, enum_name
                      """)) {
-            ResultSet lResultSet = preparedStatement.executeQuery();
-            if (!lResultSet.wasNull()) {
-                List<Type> types = new ArrayList<>();
-                while (lResultSet.next()) {
-                    Type type = new Type();
-                    type.setTypeName(lResultSet.getString("ENUM_NAME"));
-                    type.setTypeType(TypeType.e);
-                    String value = lResultSet.getString("enum_value");
-                    if (value != null) {
-                        String[] values = value.split(",");
-                        type.setValues(Arrays.asList(values));
+            try (ResultSet lResultSet = preparedStatement.executeQuery()) {
+                if (!lResultSet.wasNull()) {
+                    List<Type> types = new ArrayList<>();
+                    while (lResultSet.next()) {
+                        Type type = new Type();
+                        type.setTypeName(lResultSet.getString("ENUM_NAME"));
+                        type.setTypeType(TypeType.e);
+                        String value = lResultSet.getString("enum_value");
+                        if (value != null) {
+                            String[] values = value.split(",");
+                            type.setValues(Arrays.asList(values));
+                        }
+                        types.add(type);
                     }
-                    types.add(type);
+                    database.setTypes(types);
                 }
-                database.setTypes(types);
             }
+
+
 
         } catch (SQLException exception) {
             exception.printStackTrace();
