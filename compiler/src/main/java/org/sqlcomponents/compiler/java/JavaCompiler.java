@@ -1,5 +1,6 @@
 package org.sqlcomponents.compiler.java;
 
+import com.zaxxer.hikari.HikariDataSource;
 import freemarker.template.TemplateException;
 import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.sqlcomponents.compiler.template.FTLTemplate;
@@ -129,9 +130,13 @@ public final class JavaCompiler implements Compiler {
                 fluentConfiguration
                         .locations("filesystem:" + filePath);
 
+                HikariDataSource dataSource = DataSourceUtil
+                        .getDataSource(application);
                 fluentConfiguration
-                        .dataSource(DataSourceUtil.getDataSource(application))
+                        .dataSource(dataSource)
                         .load().migrate();
+
+                dataSource.close();
             }
 
 

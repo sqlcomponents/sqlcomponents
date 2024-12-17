@@ -122,6 +122,7 @@ public class Crawler {
                             .getDatabase(dbType, application, databaseMetaData);
                 }
             }
+            lDataSource.evictConnection(lConnection);
         } finally {
             lDataSource.close();
         }
