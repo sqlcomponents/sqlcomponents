@@ -134,13 +134,16 @@ public class Entity {
      * @param map      the map
      * @return the boolean
      */
-    public boolean containsProperty(final Property property,
+    private boolean containsProperty(final Property property,
                                     final Map<String, String> map) {
+        if (map == null || map.isEmpty()) {
+            return false;
+        }
+
         String combinedKey = property.getColumn().getTableName() + "#"
                 + property.getColumn().getColumnName();
-        return !(map == null
-                || map.containsKey(property.getColumn().getColumnName())
-                || map.containsKey(combinedKey));
+        return map.containsKey(property.getColumn().getColumnName())
+                || map.containsKey(combinedKey);
     }
 
     /**
@@ -204,7 +207,7 @@ public class Entity {
      */
     public List<Property> getInsertableProperties() {
         return this.getProperties().stream().filter(property -> {
-            if (isFilteredIn(this.getOrm().getInsertMap(), property)) {
+            if (containsProperty(property, this.getOrm().getInsertMap())) {
                 return false;
             }
             return property.getColumn().isInsertable();
@@ -218,29 +221,11 @@ public class Entity {
      */
     public List<Property> getUpdatableProperties() {
         return this.getProperties().stream().filter(property -> {
-            if (isFilteredIn(this.getOrm().getUpdateMap(), property)) {
+            if (containsProperty(property, this.getOrm().getUpdateMap())) {
                 return false;
             }
             return property.getColumn().isInsertable();
         }).collect(Collectors.toList());
-    }
-
-    /**
-     * Is filtered in boolean.
-     *
-     * @param map      the map
-     * @param property the property
-     * @return the boolean
-     */
-    private boolean isFilteredIn(final Map<String, String> map,
-                                 final Property property) {
-        String combinedKey = property.getColumn().getTableName() + "#"
-                + property.getColumn().getColumnName();
-        return map != null
-                && ((map.containsKey(property.getColumn().getColumnName())
-                && map.get(property.getColumn().getColumnName()) == null)
-                || (map.containsKey(combinedKey)
-                && map.get(combinedKey) == null));
     }
 
     /**

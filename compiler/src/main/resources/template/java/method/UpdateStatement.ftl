@@ -57,12 +57,12 @@
             <#assign index=0>
             <#assign column_index=1>
             <#list updatableProperties as property>
-                <#if containsProperty(property,orm.updateMap)>
+                
                     <#if property.column.primaryKeyIndex == 0>
                     <#if index == 0><#assign index=1><#else></#if>${property.name?uncap_first}(${name?uncap_first+"."+property.name + "()"}).set(sqlBuilder);
                                                                                 <#assign column_index = column_index + 1>
                     </#if>
-                </#if>
+                
             </#list>
         }
 
