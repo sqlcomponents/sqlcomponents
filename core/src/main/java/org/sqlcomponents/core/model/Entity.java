@@ -6,11 +6,10 @@ import org.sqlcomponents.core.model.relational.enums.ColumnType;
 import org.sqlcomponents.core.model.relational.enums.DBType;
 import org.sqlcomponents.core.model.relational.enums.Flag;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.SortedSet;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
@@ -263,28 +262,6 @@ public class Entity {
         }).collect(Collectors.toList());
     }
 
-    /**
-     * Gets sample distinct custom column type properties.
-     *
-     * @return the sample distinct custom column type properties
-     */
-    public List<Property> getSampleDistinctCustomColumnTypeProperties() {
-        SortedSet<String> distinctColumnTypeNames =
-                table.getDistinctCustomColumnTypeNames();
-
-        List<Property> sampleDistinctCustomColumnTypeProperties =
-                new ArrayList<>(distinctColumnTypeNames.size());
-
-        distinctColumnTypeNames.stream().forEach(typeName -> {
-            sampleDistinctCustomColumnTypeProperties.add(
-                    this.getProperties().stream()
-                            .filter(property -> property.getColumn()
-                                    .getTypeName().equals(typeName)).findFirst()
-                            .get());
-        });
-
-        return sampleDistinctCustomColumnTypeProperties;
-    }
 
     public Table getTable() {
         return table;
