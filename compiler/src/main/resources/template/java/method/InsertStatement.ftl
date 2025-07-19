@@ -82,7 +82,7 @@
             <#assign index=0>
             <#assign column_index=1>
             <#list insertableProperties as property>
-            <#if containsProperty(property,orm.insertMap)>
+            
                 <#if index == 0>
                 <#if sequenceName?? && property.column.primaryKeyIndex == 1>
                 <#else>
@@ -94,7 +94,7 @@
                 ${property.name +"("+ name?uncap_first+"."+property.name + "())"}.set(sqlBuilder);
                 <#assign column_index = column_index + 1>
                 </#if>
-            </#if>
+          
             </#list>
         }
 

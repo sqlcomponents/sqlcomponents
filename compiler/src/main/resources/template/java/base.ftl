@@ -126,23 +126,6 @@
 	<#return pkAsParameterStr>
 </#function>
 
-<#function getGeneratedPrimaryKeysFromRS>
-	<#local pkAsParameterStr="">
-	<#local index=0>
-	<#list generatedPrimaryKeyProperties as property>
-
-			<#if index == 0>
-				<#local index=1>
-			<#else>
-				<#local pkAsParameterStr = pkAsParameterStr + "," >
-			</#if>
-
-			<#local pkAsParameterStr = pkAsParameterStr + property.name + "().get(res, " +index+ ")" >
-            <#local a=addImportStatement(property.dataType)>
-
-	</#list>
-	<#return pkAsParameterStr>
-</#function>
 
 <#function addImportStatement importStatement>
 <#if importStatement?contains(".") 
