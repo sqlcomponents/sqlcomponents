@@ -6,7 +6,10 @@ import java.sql.JDBCType;
  * The enum Column type.
  */
 public enum ColumnType {
-
+    /**
+     * Box column type.
+     */
+    VOID("void"),
     /**
      * Box column type.
      */
@@ -61,6 +64,10 @@ public enum ColumnType {
      * Bit column type.
      */
     BIT("BIT"),
+    /**
+     * Bit column with varying length.
+     */
+    VARBIT("VARBIT"),
     /**
      * Path column type.
      */
@@ -250,7 +257,11 @@ public enum ColumnType {
     /**
      * Text column type.
      */
-    TEXT("TEXT");
+    TEXT("TEXT"),
+    /**
+     * Enum column type.
+     */
+    ENUM("ENUM"),;
 
     /**
      * The Value.

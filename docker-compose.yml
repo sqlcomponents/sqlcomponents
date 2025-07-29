@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.8'
 
 services:
   postgresdb:
@@ -10,19 +10,9 @@ services:
       POSTGRES_PASSWORD: moviedb
     ports:
       - "5432:5432"
+#    command: postgres -c 'max_connections=1000'
     volumes:
       - ${PWD}/init.db/postgres:/docker-entrypoint-initdb.d
-#  h2db:
-#    image: oscarfonts/h2:latest
-#    container_name: h2db
-#    environment:
-#      - H2_DATABASE_NAME=moviedb
-#      - H2_USER=moviedb
-#      - H2_PASSWORD=moviedb
-#    ports:
-#      - "1521:1521"
-#    volumes:
-#      - ./init.db/h2:/docker-entrypoint-initdb.d
 
 #  mariadb:
 #    image: mariadb:10.5

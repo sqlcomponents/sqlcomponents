@@ -23,9 +23,19 @@ public final class ${name} {
      * holds value of the column ${property.column.columnName}.
      */
 	</#if>
-    private ${getClassName(property.dataType)} ${property.name};
+    private final ${getClassName(property.dataType)} ${property.name};
 	<#assign a=addImportStatement(property.dataType)>
 </#list>
+
+    public ${name}(<#list properties as property
+        >final ${getClassName(property.dataType)} ${property.name}<#if !property?is_last>,</#if>
+        </#list>
+    ) {
+        <#list properties as property>
+        this.${property.name} = ${property.name};
+        </#list>
+    }
+
 <#list properties as property>
     /**
      * gets value of column - ${property.column.columnName}.
@@ -36,14 +46,25 @@ public final class ${name} {
         return ${property.name};
 	}
 
-	/**
-	 * sets value of column - ${property.column.columnName}.
-	 *
-	 * @param the${property.name?cap_first}
-	 */
-	public void set${property.name?cap_first}(final ${getClassName(property.dataType)} the${property.name?cap_first}) {
-		this.${property.name} = the${property.name?cap_first};
-	}
+    public ${name} with${property.name?cap_first}(final ${getClassName(property.dataType)} the${property.name?cap_first}) {
+        return new ${name}(
+            
+            <#assign index=1>
+            <#list properties as iProperty>
+                <#if index != 1>
+                    ,
+                </#if>
+                <#if property.name == iProperty.name>
+                    the${property.name?cap_first}
+                <#else>
+                    ${iProperty.name}
+                </#if>
+                <#assign index = index + 1>
+            </#list>
+
+        );
+    }
+
 </#list>
 
 }

@@ -4,54 +4,15 @@
 	<#return str?split(".")?last>
 </#function>
 
-<#function getJDBCClassName str> 
-	<#local pkAsParameterStr="${getClassName(str)}">
-	<#if pkAsParameterStr == "Integer">
-			<#local pkAsParameterStr="Int">
-	<#elseif pkAsParameterStr == "Character">
-	    <#local pkAsParameterStr="String">
-	<#elseif pkAsParameterStr == "LocalDate">
-    	<#local pkAsParameterStr="Date">
-    <#elseif pkAsParameterStr == "LocalTime">
-        <#local pkAsParameterStr="Time">
-	<#elseif pkAsParameterStr == "LocalDateTime">
-		<#local pkAsParameterStr="Timestamp">
-	<#elseif pkAsParameterStr == "ByteBuffer">
-		<#local pkAsParameterStr="Bytes">
-	<#elseif pkAsParameterStr == "JsonNode">
-	<#local pkAsParameterStr="Object">
-	<#elseif pkAsParameterStr == "UUID">
-	<#local pkAsParameterStr="Object">
-	<#elseif pkAsParameterStr == "Duration">
-	<#local pkAsParameterStr="Object">
+<#function getColumnType str>
+	<#local columnTypePrefix="java.sql.Types.">
+	<#if str == "JSON">
+	    <#local columnType = columnTypePrefix + "VARCHAR">
+	<#else>
+		<#local columnType = columnTypePrefix + str>
 	</#if>
-	<#return pkAsParameterStr>
+	<#return columnType>
 </#function>
-
-<#function wrapSet wText property >
-<#switch property.dataType>
-  <#case "java.time.LocalDate">
-	 <#return "${wText} == null ? null : java.sql.Date.valueOf(${wText})">
-  <#case "java.time.LocalTime">
-  	 <#return "${wText} == null ? null : java.sql.Time.valueOf(${wText})">
-  <#case "java.time.LocalDateTime">
-  	 <#return "${wText} == null ? null : java.sql.Timestamp.valueOf(${wText})">
-  <#case "java.lang.Character">
-  	 <#return "${wText} == null ? null : String.valueOf(${wText})">
-<#case "java.nio.ByteBuffer">
-  	 <#return "${wText} == null ? null : ${wText}.array()">
-  <#case "com.fasterxml.jackson.databind.JsonNode">
-  	 <#return "convert${property.column.typeName?cap_first}(${wText})">
-    <#case "java.util.UUID">
-  	 <#return "convert${property.column.typeName?cap_first}(${wText})">
-	<#case "java.time.Duration">
-	<#return "convert${property.column.typeName?cap_first}(${wText})">
-  <#default>
-  <#return "${wText}">
-
-</#switch>
-</#function>
-
 
 <#function getProperty propertyName> 
 	<#list properties as property>
@@ -105,6 +66,30 @@
 	<#return pkAsParameterStr>
 </#function>
 
+<#function getPrimaryKeysAsSetters>
+	<#local pkAsParameterStr="">
+	<#local index=0>
+	<#list properties as property>
+		<#if property.column.primaryKeyIndex != 0>
+			<#local pkAsParameterStr = pkAsParameterStr + "this." + property.name + " = "+ property.name + ";\n" >
+			<#local a=addImportStatement(property.dataType)>
+		</#if>
+	</#list>
+	<#return pkAsParameterStr> 
+</#function>
+
+<#function getPrimaryKeysAsObjectInstances>
+	<#local pkAsParameterStr="">
+	<#local index=0>
+	<#list properties as property>
+		<#if property.column.primaryKeyIndex != 0>
+			<#local pkAsParameterStr = pkAsParameterStr + "private final " +  getClassName(property.dataType) + " " +property.name + ";\n" >
+			<#local a=addImportStatement(property.dataType)>
+		</#if>
+	</#list>
+	<#return pkAsParameterStr> 
+</#function>
+
 <#function getPrimaryKeysAsParameterString>
 	<#local pkAsParameterStr="">
 	<#local index=0>
@@ -134,68 +119,11 @@
 				<#local pkAsParameterStr = pkAsParameterStr + "," >
 			</#if>
 
-			<#local pkAsParameterStr = pkAsParameterStr + nameOfObject + ".get"+ property.name?cap_first + "()" >
+			<#local pkAsParameterStr = pkAsParameterStr + nameOfObject + "."+ property.name + "()" >
             <#local a=addImportStatement(property.dataType)>
 		</#if>
 	</#list>
 	<#return pkAsParameterStr>
-</#function>
-
-<#function getGeneratedPrimaryKeysFromRS>
-	<#local pkAsParameterStr="">
-	<#local index=0>
-	<#list generatedPrimaryKeyProperties as property>
-
-			<#if index == 0>
-				<#local index=1>
-			<#else>
-				<#local pkAsParameterStr = pkAsParameterStr + "," >
-			</#if>
-
-			<#local pkAsParameterStr = pkAsParameterStr + "res.get"+ getJDBCClassName(property.dataType) + "(" +index + ")" >
-            <#local a=addImportStatement(property.dataType)>
-
-	</#list>
-	<#return pkAsParameterStr>
-</#function>
-
-<#function getPrimaryKeysFromRS>
-	<#local pkAsParameterStr="">
-	<#local index=0>
-	<#list properties as property>
-		<#if property.column.primaryKeyIndex != 0>
-			<#if index == 0>
-				<#local index=1>
-			<#else>
-				<#local pkAsParameterStr = pkAsParameterStr + "," >
-			</#if>
-
-			<#local pkAsParameterStr = pkAsParameterStr + "res.get"+ getJDBCClassName(property.dataType) + "(\"" +property.column.columnName + "\")" >
-            <#local a=addImportStatement(property.dataType)>
-		</#if>
-	</#list>
-	<#return pkAsParameterStr>
-</#function>
-
-
-<#function getPrimaryKeysAsParameterStringExceptHighest>
-	<#local pkAsParameterStr="">
-	<#local index=0>
-	<#list properties as property>
-		<#if property.column.primaryKeyIndex != 0>
-			<#if property.column.primaryKeyIndex != table.highestPKIndex>
-				<#if index == 0>
-					<#local index=1>
-				<#else>
-					<#local pkAsParameterStr = pkAsParameterStr + ",">
-				</#if>
-	
-				<#local pkAsParameterStr = pkAsParameterStr + getClassName(property.dataType) + " " +property.name >
-				<#local a=addImportStatement(property.dataType)>
-			</#if>
-		</#if>
-	</#list>
-	<#return pkAsParameterStr> 
 </#function>
 
 
@@ -207,6 +135,10 @@
 </#if>
 <#return "">
 </#function>
+
+
+
+
 
 <#macro importStatements>
 <#list importStatementsList?sort as importStatement>

@@ -2,14 +2,14 @@ package org.sqlcomponents.core.model;
 
 
 import org.sqlcomponents.core.model.relational.Table;
+import org.sqlcomponents.core.model.relational.enums.ColumnType;
 import org.sqlcomponents.core.model.relational.enums.DBType;
 import org.sqlcomponents.core.model.relational.enums.Flag;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.SortedSet;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
@@ -52,6 +52,15 @@ public class Entity {
     private List<Property> properties;
 
     /**
+     * The Properties.
+     */
+    private List<String> values;
+
+    /**
+     * String type.
+     */
+    private String type;
+    /**
      * Instantiates a new Entity.
      *
      * @param paramOrm   the orm
@@ -60,6 +69,15 @@ public class Entity {
     public Entity(final ORM paramOrm, final Table paramTable) {
         setOrm(paramOrm);
         setTable(paramTable);
+    }
+
+    /**
+     * Instantiates a new Entity.
+     *
+     * @param paramOrm   the orm
+     */
+    public Entity(final ORM paramOrm) {
+        setOrm(paramOrm);
     }
 
     /**
@@ -75,12 +93,12 @@ public class Entity {
     /**
      * Has java type boolean.
      *
-     * @param type the class name
+     * @param aType the class name
      * @return the boolean
      */
-    public boolean hasJavaType(final String type) {
+    public boolean hasJavaType(final String aType) {
         return this.getProperties().stream()
-                .filter(property -> property.getDataType().equals(type))
+                .filter(property -> property.getDataType().equals(aType))
                 .findFirst().isPresent();
     }
 
@@ -115,12 +133,16 @@ public class Entity {
      * @param map      the map
      * @return the boolean
      */
-    public boolean containsProperty(final Property property,
+    private boolean containsProperty(final Property property,
                                     final Map<String, String> map) {
+        if (map == null || map.isEmpty()) {
+            return false;
+        }
+
         String combinedKey = property.getColumn().getTableName() + "#"
                 + property.getColumn().getColumnName();
-        return !(map.containsKey(property.getColumn().getColumnName())
-                || map.containsKey(combinedKey));
+        return map.containsKey(property.getColumn().getColumnName())
+                || map.containsKey(combinedKey);
     }
 
     /**
@@ -139,21 +161,28 @@ public class Entity {
         String typeName = property.getColumn().getTypeName();
         DBType dbType =
                 property.getEntity().getTable().getDatabase().getDbType();
-
-        preparedValue = map.get(columnName);
+        if (map != null) {
+            preparedValue = map.get(columnName);
+        }
+        if (Objects.nonNull(preparedValue)) {
+            return preparedValue.replaceAll("\"",
+                    Matcher.quoteReplacement("\\\""));
+        }
+        if (map != null) {
+            preparedValue = map.get(tableNameColumnName);
+        }
         if (Objects.nonNull(preparedValue)) {
             return preparedValue.replaceAll("\"",
                     Matcher.quoteReplacement("\\\""));
         }
 
-        preparedValue = map.get(tableNameColumnName);
-        if (Objects.nonNull(preparedValue)) {
-            return preparedValue.replaceAll("\"",
-                    Matcher.quoteReplacement("\\\""));
-        }
-
-        if (dbType == DBType.POSTGRES && typeName.equals("xml")) {
-            preparedValue = "XMLPARSE(document ?)";
+        if (dbType == DBType.POSTGRES) {
+                if (typeName.equals("xml")) {
+                    preparedValue = "XMLPARSE(document ?)";
+                }
+                if (property.getColumn().getColumnType() == ColumnType.ENUM) {
+                    preparedValue = "?::" + typeName;
+                }
         }
 
         return preparedValue == null ? "?" : preparedValue;
@@ -165,46 +194,8 @@ public class Entity {
      * @return the returning properties
      */
     public List<Property> getReturningProperties() {
-        return this.getProperties().stream().filter(Entity::isReturning)
+        return this.getProperties().stream().filter(Property::isReturning)
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * Gets non returning properties.
-     *
-     * @return the non returning properties
-     */
-    public List<Property> getNonReturningProperties() {
-        return this.getProperties().stream()
-                .filter(property -> !isReturning(property))
-                .collect(Collectors.toList());
-    }
-
-
-    /**
-     * Is returning boolean.
-     *
-     * @param property the property
-     * @return the boolean
-     */
-    private static boolean isReturning(final Property property) {
-        boolean isReturning =
-                property.getColumn().getAutoIncrement() == Flag.YES
-                        || property.getColumn().getGeneratedColumn()
-                        == Flag.YES;
-        Map<String, String> insertMap =
-                property.getEntity().getOrm().getApplication()
-                        .getInsertMap();
-        String mapped = insertMap
-                .get(property.getColumn().getColumnName());
-        String specificTableMapped =
-                insertMap.get(String.format("%s#%s",
-                        property.getEntity().getTable().getTableName(),
-                        property.getColumn().getColumnName()));
-        if (mapped != null || specificTableMapped != null) {
-            isReturning = true;
-        }
-        return isReturning;
     }
 
 
@@ -215,7 +206,7 @@ public class Entity {
      */
     public List<Property> getInsertableProperties() {
         return this.getProperties().stream().filter(property -> {
-            if (isFilteredIn(this.getOrm().getInsertMap(), property)) {
+            if (containsProperty(property, this.getOrm().getInsertMap())) {
                 return false;
             }
             return property.getColumn().isInsertable();
@@ -229,29 +220,11 @@ public class Entity {
      */
     public List<Property> getUpdatableProperties() {
         return this.getProperties().stream().filter(property -> {
-            if (isFilteredIn(this.getOrm().getUpdateMap(), property)) {
+            if (containsProperty(property, this.getOrm().getUpdateMap())) {
                 return false;
             }
             return property.getColumn().isInsertable();
         }).collect(Collectors.toList());
-    }
-
-    /**
-     * Is filtered in boolean.
-     *
-     * @param map      the map
-     * @param property the property
-     * @return the boolean
-     */
-    private boolean isFilteredIn(final Map<String, String> map,
-                                 final Property property) {
-        String combinedKey = property.getColumn().getTableName() + "#"
-                + property.getColumn().getColumnName();
-        return map != null
-                && ((map.containsKey(property.getColumn().getColumnName())
-                && map.get(property.getColumn().getColumnName()) == null)
-                || (map.containsKey(combinedKey)
-                && map.get(combinedKey) == null));
     }
 
     /**
@@ -289,28 +262,6 @@ public class Entity {
         }).collect(Collectors.toList());
     }
 
-    /**
-     * Gets sample distinct custom column type properties.
-     *
-     * @return the sample distinct custom column type properties
-     */
-    public List<Property> getSampleDistinctCustomColumnTypeProperties() {
-        SortedSet<String> distinctColumnTypeNames =
-                table.getDistinctCustomColumnTypeNames();
-
-        List<Property> sampleDistinctCustomColumnTypeProperties =
-                new ArrayList<>(distinctColumnTypeNames.size());
-
-        distinctColumnTypeNames.stream().forEach(typeName -> {
-            sampleDistinctCustomColumnTypeProperties.add(
-                    this.getProperties().stream()
-                            .filter(property -> property.getColumn()
-                                    .getTypeName().equals(typeName)).findFirst()
-                            .get());
-        });
-
-        return sampleDistinctCustomColumnTypeProperties;
-    }
 
     public Table getTable() {
         return table;
@@ -366,5 +317,21 @@ public class Entity {
 
     public void setProperties(final List<Property> theProperties) {
         this.properties = theProperties;
+    }
+
+    public List<String> getValues() {
+        return values;
+    }
+
+    public void setValues(final List<String> aValues) {
+        this.values = aValues;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(final String aType) {
+        this.type = aType;
     }
 }

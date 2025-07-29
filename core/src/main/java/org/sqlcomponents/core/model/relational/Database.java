@@ -220,6 +220,10 @@ public class Database {
      */
     private SortedSet<String> timeDateFunctions;
     /**
+     * The Types from the DB.
+     */
+    private List<Type> types;
+    /**
      * The Supports transactions.
      */
     private boolean supportsTransactions;
@@ -1079,6 +1083,13 @@ public class Database {
         this.timeDateFunctions = theTimeDateFunctions;
     }
 
+    public List<Type> getTypes() {
+        return types;
+    }
+
+    public void setTypes(final List<Type> theTypes) {
+        this.types = theTypes;
+    }
     public boolean isSupportsTransactions() {
         return supportsTransactions;
     }

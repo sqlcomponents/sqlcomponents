@@ -20,7 +20,7 @@ public class Method {
     /**
      * The Output property.
      */
-    private Property outputProperty;
+    private List<Property> outputParameters;
     /**
      * The Function.
      */
@@ -112,8 +112,8 @@ public class Method {
      *
      * @return the output property
      */
-    public Property getOutputProperty() {
-        return outputProperty;
+    public List<Property> getOutputParameters() {
+        return outputParameters;
     }
 
     /**
@@ -121,8 +121,8 @@ public class Method {
      *
      * @param paramOutputProperty the output property
      */
-    public void setOutputProperty(final Property paramOutputProperty) {
-        this.outputProperty = paramOutputProperty;
+    public void setOutputParameters(final List<Property> paramOutputProperty) {
+        this.outputParameters = paramOutputProperty;
     }
 
     /**
@@ -148,8 +148,8 @@ public class Method {
      *
      * @return the output
      */
-    public Column getOutput() {
-        return function.getOutput();
+    public List<Column> getOutput() {
+        return function.getOutputParameters();
     }
 
     /**
@@ -157,8 +157,8 @@ public class Method {
      *
      * @param paramOutput the output
      */
-    public void setOutput(final Column paramOutput) {
-        function.setOutput(paramOutput);
+    public void setOutput(final List<Column> paramOutput) {
+        function.setOutputParameters(paramOutput);
     }
 
     /**
@@ -167,7 +167,7 @@ public class Method {
      * @return the parameters
      */
     public List<Column> getParameters() {
-        return function.getParameters();
+        return function.getInputParameters();
     }
 
     /**
@@ -176,7 +176,7 @@ public class Method {
      * @param paramParameters the parameters
      */
     public void setParametes(final List<Column> paramParameters) {
-        function.setParameters(paramParameters);
+        function.setInputParameters(paramParameters);
     }
 
     /**

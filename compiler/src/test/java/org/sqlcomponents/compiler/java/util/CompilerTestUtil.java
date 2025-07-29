@@ -1,7 +1,6 @@
 package org.sqlcomponents.compiler.java.util;
 
-import org.sqlcomponents.compiler.java.mapper.JavaMapper;
-import org.sqlcomponents.core.crawler.Crawler;
+import org.sqlcomponents.compiler.mapper.JavaMapper;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.relational.Database;
 import org.sqlcomponents.core.utils.CoreConsts;
@@ -9,7 +8,6 @@ import org.sqlcomponents.core.utils.CoreConsts;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,14 +15,14 @@ import java.util.Properties;
 
 public class CompilerTestUtil {
 
-    private static Application application;;
     private static Database database;
     private static JavaMapper javaMapper;
 
     public static Application getApplication() throws IOException {
-        if (application == null) {
+        Application application = new Application();
+
             if ( System.getenv("SQLCOMPONENTS_CONFIG") == null) {
-                application = new Application();
+
                 Properties props = new Properties();
                 File dbPropertiesFile = new File("../database.properties");
 
@@ -87,19 +85,10 @@ public class CompilerTestUtil {
                 }
                 application.setSrcFolder(System.getenv("SOURCE_FOLDER"));
             }
-        }
+
 
         return application;
     }
 
-    public static  String getDataType(final String columnName) throws SQLException, IOException {
-        if(javaMapper == null) {
-            database = new Crawler(getApplication()).getDatabase();
-            javaMapper = new JavaMapper(getApplication());
-        }
-        return javaMapper.getDataType(database.getTables().stream()
-                .filter(table -> table.getTableName().equals("raja")).findFirst()
-                .get().getColumns().stream()
-                .filter(column -> column.getColumnName().equals(columnName)).findFirst().get());
-    }
+
 }
