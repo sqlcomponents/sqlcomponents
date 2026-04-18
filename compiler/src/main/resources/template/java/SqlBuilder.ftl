@@ -1,24 +1,25 @@
-<#if rootPackage?? && rootPackage?length != 0>package ${rootPackage};</#if>
+<#-- SqlBuilder: macros for Manager.ftl (nested static class). Regenerate via vendor-sql-builder-ftl.sh. -->
 
-import ${rootPackage}.sql.ParamMapper;
-import ${rootPackage}.sql.RowMapper;
-import ${rootPackage}.sql.Sql;
-import ${rootPackage}.sql.StatementMapper;
+<#macro sqlBuilderRegisterImports>
+<#assign a=addImportStatement(rootPackage + ".sql.RowMapper")>
+<#assign a=addImportStatement(rootPackage + ".sql.Sql")>
+<#assign a=addImportStatement(rootPackage + ".sql.ParamMapper")>
+<#assign a=addImportStatement(rootPackage + ".sql.StatementMapper")>
+<#assign a=addImportStatement("javax.sql.DataSource")>
+<#assign a=addImportStatement("java.math.BigDecimal")>
+<#assign a=addImportStatement("java.net.URL")>
+<#assign a=addImportStatement("java.sql.CallableStatement")>
+<#assign a=addImportStatement("java.sql.Date")>
+<#assign a=addImportStatement("java.sql.PreparedStatement")>
+<#assign a=addImportStatement("java.sql.ResultSet")>
+<#assign a=addImportStatement("java.sql.SQLException")>
+<#assign a=addImportStatement("java.sql.Statement")>
+<#assign a=addImportStatement("java.sql.Time")>
+<#assign a=addImportStatement("java.sql.Timestamp")>
+<#assign a=addImportStatement("java.util.List")>
+</#macro>
 
-import javax.sql.DataSource;
-import java.math.BigDecimal;
-import java.net.URL;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+<#macro sqlBuilderNestedClass>
 
 /**
  * Utility class for building and executing SQL queries with dynamic
@@ -26,7 +27,7 @@ import java.util.List;
  * boilerplate and supporting both query execution and parameterized
  * updates.
  */
-public sealed class SqlBuilder implements Sql<Integer> {
+public static sealed class SqlBuilder implements Sql<Integer> {
 
     /**
      * The SQL query to be executed.
@@ -87,7 +88,7 @@ public sealed class SqlBuilder implements Sql<Integer> {
     @Override
     public Integer execute(final Connection connection) throws SQLException {
         int updatedRows;
-        try (Statement stmt = connection.createStatement()) {
+        try (java.sql.Statement stmt = connection.createStatement()) {
             updatedRows = stmt.executeUpdate(getSql());
         }
         return updatedRows;
@@ -418,7 +419,7 @@ public sealed class SqlBuilder implements Sql<Integer> {
             final RowMapper<T> rowMapper) {
         return connection -> {
             T result = null;
-            try (Statement stmt = connection.createStatement()) {
+            try (java.sql.Statement stmt = connection.createStatement()) {
                 try (ResultSet rs = stmt.executeQuery(getSql())) {
                     if (rs.next()) {
                         result = rowMapper.get(rs);
@@ -443,7 +444,7 @@ public sealed class SqlBuilder implements Sql<Integer> {
             final RowMapper<T> rowMapper) {
         return connection -> {
             List<T> result = new ArrayList<>();
-            try (Statement stmt = connection.createStatement()) {
+            try (java.sql.Statement stmt = connection.createStatement()) {
                 try (ResultSet rs = stmt.executeQuery(getSql())) {
                     while (rs.next()) {
                         result.add(rowMapper.get(rs));
@@ -463,7 +464,7 @@ public sealed class SqlBuilder implements Sql<Integer> {
      */
     protected boolean exists(final Connection connection) throws SQLException {
         boolean exists;
-        try (Statement stmt = connection.createStatement()) {
+        try (java.sql.Statement stmt = connection.createStatement()) {
             try (ResultSet rs = stmt.executeQuery(getSql())) {
                 exists = rs.next();
             }
@@ -796,8 +797,8 @@ public sealed class SqlBuilder implements Sql<Integer> {
     public <T> Sql<T> queryGeneratedKeys(final RowMapper<T> rowMapper) {
         return connection -> {
             T result = null;
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(getSql(), Statement.RETURN_GENERATED_KEYS);
+            try (java.sql.Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(getSql(), java.sql.Statement.RETURN_GENERATED_KEYS);
                 try (ResultSet rs = stmt.getGeneratedKeys()) {
                     if (rs.next()) {
                         result = rowMapper.get(rs);
@@ -820,8 +821,8 @@ public sealed class SqlBuilder implements Sql<Integer> {
     queryGeneratedKeysAsList(final RowMapper<T> rowMapper) {
         return connection -> {
             List<T> result = new ArrayList<>();
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate(getSql(), Statement.RETURN_GENERATED_KEYS);
+            try (java.sql.Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(getSql(), java.sql.Statement.RETURN_GENERATED_KEYS);
                 try (ResultSet rs = stmt.getGeneratedKeys()) {
                     while (rs.next()) {
                         result.add(rowMapper.get(rs));
@@ -1159,7 +1160,7 @@ public sealed class SqlBuilder implements Sql<Integer> {
             return connection -> {
                 T result = null;
                 try (PreparedStatement ps = getStatement(connection,
-                        this.getSql(), Statement.RETURN_GENERATED_KEYS)) {
+                        this.getSql(), java.sql.Statement.RETURN_GENERATED_KEYS)) {
                     ps.executeUpdate();
                     try (ResultSet rs = ps.getGeneratedKeys()) {
                         if (rs.next()) {
@@ -1180,7 +1181,7 @@ public sealed class SqlBuilder implements Sql<Integer> {
             return connection -> {
                 List<T> result = new ArrayList<>();
                 try (PreparedStatement ps = getStatement(connection,
-                        this.getSql(), Statement.RETURN_GENERATED_KEYS)) {
+                        this.getSql(), java.sql.Statement.RETURN_GENERATED_KEYS)) {
                     ps.executeUpdate();
                     try (ResultSet rs = ps.getGeneratedKeys()) {
                         while (rs.next()) {
@@ -2695,7 +2696,7 @@ public sealed class SqlBuilder implements Sql<Integer> {
                 throws SQLException {
             int[] updatedRows;
             try (Connection connection = dataSource.getConnection();
-                 Statement statement = connection.createStatement()) {
+                 java.sql.Statement statement = connection.createStatement()) {
                 statement.addBatch(SqlBuilder.this.getSql());
                 for (String batchSql : this.sqls) {
                     statement.addBatch(batchSql);
@@ -2706,3 +2707,4 @@ public sealed class SqlBuilder implements Sql<Integer> {
         }
     }
 }
+</#macro>

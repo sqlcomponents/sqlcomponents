@@ -96,8 +96,9 @@ public final class JavaCompiler implements Compiler {
     }
 
     /**
-     * Emits vendored sql-builder templates (same {@code rootPackage} as
-     * {@code DataManager}; {@code *.sql} under {@code rootPackage + ".sql"}).
+     * Emits sql-builder templates not inlined into {@code DataManager}:
+     * {@code Transaction} and {@code sql.*} under {@code rootPackage + ".sql"}.
+     * Nested {@code SqlBuilder}: {@code Manager.ftl}.
      *
      * @param application the application (FTL root model; exposes rootPackage)
      */
@@ -106,8 +107,6 @@ public final class JavaCompiler implements Compiler {
         final String srcFolder = application.getSrcFolder();
         final String root = application.getRootPackage();
         final String sqlPkg = root + ".sql";
-        writeSqlBuilderUnit(application, srcFolder, root,
-                "template/java/SqlBuilder.ftl", "SqlBuilder");
         writeSqlBuilderUnit(application, srcFolder, root,
                 "template/java/Transaction.ftl", "Transaction");
         writeSqlBuilderUnit(application, srcFolder, sqlPkg,

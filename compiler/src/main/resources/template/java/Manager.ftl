@@ -6,9 +6,8 @@
 <#if rootPackage?? && rootPackage?length != 0 >package ${rootPackage};</#if>
 
 <#assign capturedOutput>
-<#assign a=addImportStatement(rootPackage + ".SqlBuilder")>
-<#assign a=addImportStatement(rootPackage + ".sql.RowMapper")>
-<#assign a=addImportStatement(rootPackage + ".sql.Sql")>
+<#include "SqlBuilder.ftl">
+<@sqlBuilderRegisterImports/>
 public final class DataManager {
     /**
     * dataManager variable.
@@ -245,6 +244,8 @@ public final class DataManager {
     <#include "clause/WhereClause.ftl">
 
     <#include "method/DeleteStatement.ftl">
+
+    <@sqlBuilderNestedClass/>
 
 }
 </#assign>
