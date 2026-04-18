@@ -44,11 +44,5 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.tamilnadujug</groupId>
-            <artifactId>sql-builder</artifactId>
-            <version>1.0</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 </project>
