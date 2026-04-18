@@ -1,6 +1,6 @@
 <#macro BooleanColumn property>
     <@columnheader property=property/>
-    public void set(final DataManager.SqlBuilder preparedStatement, final Boolean value) {
+    public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final Boolean value) {
     <#if property.column.typeName == "bit" >
         if(value == null) {
             preparedStatement.paramNull(${property.column.dataType},"${property.column.typeName}" );

@@ -1,6 +1,6 @@
 <#macro PolygonColumn property>
     <@columnheader property=property/>
-     public void set(final DataManager.SqlBuilder preparedStatement, final Polygon polygon) throws SQLException {
+     public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final Polygon polygon) throws SQLException {
     if(polygon == null) {
             preparedStatement.paramNull();
         } else {

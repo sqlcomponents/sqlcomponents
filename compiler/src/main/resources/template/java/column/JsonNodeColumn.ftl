@@ -1,7 +1,7 @@
 <#macro JsonNodeColumn property>
     <@columnheader property=property/>
 
-    public void set(final DataManager.SqlBuilder preparedStatement, final  JsonNode jsonNode) {
+    public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final  JsonNode jsonNode) {
     final String jsonText  = (jsonNode == null) ? null : jsonNode.toString() ;
     preparedStatement.param(jsonText, java.sql.Types.OTHER);
     }

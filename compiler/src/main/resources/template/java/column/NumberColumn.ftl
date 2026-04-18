@@ -1,6 +1,6 @@
 <#macro numbercolumn type property>
 
-    public void set(final DataManager.SqlBuilder preparedStatement, final ${type} value) {
+    public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final ${type} value) {
     if(value == null) {
         preparedStatement.paramNull(${property.column.dataType},"${property.column.typeName}" );
     } else {

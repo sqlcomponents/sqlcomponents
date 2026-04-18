@@ -16,7 +16,7 @@ public static final class Statement<T extends Value<?, ?>>  implements Sql<Integ
 
     @Override
     public Integer execute(final Connection connection) throws SQLException {
-        DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
+        SqlBuilder.PreparedSqlBuilder sqlBuilder = SqlBuilder.prepareSql(sql);
 
         for (Value<?, ?> value : values) {
             value.set(sqlBuilder);

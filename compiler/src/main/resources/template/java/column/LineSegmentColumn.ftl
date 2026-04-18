@@ -1,6 +1,6 @@
 <#macro LineSegmentColumn property>
     <@columnheader property=property/>
-    public void set(final DataManager.SqlBuilder preparedStatement, final LineSegment lineSegment) throws SQLException {
+    public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final LineSegment lineSegment) throws SQLException {
     if(lineSegment == null) {
             preparedStatement.paramNull();
         } else {

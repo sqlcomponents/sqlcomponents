@@ -1,7 +1,6 @@
 
 
-
-    public static final class DeleteStatement implements DataManager.Sql<Integer> {
+    public static final class DeleteStatement implements Sql<Integer> {
 
         private final String sql;
 
@@ -11,14 +10,14 @@
 
         @Override
         public Integer execute(final Connection connection) throws SQLException  {
-            return dataManager.sql(this.sql)
+            return SqlBuilder.sql(this.sql)
                     .execute(connection);
         }
 
-        public DataManager.Sql<Integer> where(final WhereClause whereClause) {
+        public Sql<Integer> where(final WhereClause whereClause) {
             final String query = this.sql
                     + ( whereClause == null ? "" : (" WHERE " + whereClause.asSql()) );
-            return dataManager.sql(query);
+            return SqlBuilder.sql(query);
         }
 
         public DataManager.Statement<Value<?,?>> sql(final String sql) {

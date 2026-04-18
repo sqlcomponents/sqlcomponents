@@ -1,6 +1,6 @@
 <#macro LineColumn property>
     <@columnheader property=property/>
-     public void set(final DataManager.SqlBuilder preparedStatement, final LineString line) throws SQLException {
+     public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final LineString line) throws SQLException {
     if(line == null) {
             preparedStatement.paramNull();
         } else {

@@ -34,11 +34,11 @@ We use similar to JPA syntax for all the convinient methods.
 
                 + ( whereClause == null ? "" : (" AND " + whereClause.asSql()) );
 
-        DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
+        SqlBuilder.PreparedSqlBuilder sqlBuilder = SqlBuilder.prepareSql(query);
     
         ${getPrimaryKeysAsPreparedStatements()}
 
-        return Optional.ofNullable(sqlBuilder.queryForOne(this::rowMapper).execute(dataSource));
+        return Optional.ofNullable(sqlBuilder.queryForOne(rs -> this.rowMapper(rs)).execute(dataSource));
             
     }
         
@@ -54,7 +54,7 @@ We use similar to JPA syntax for all the convinient methods.
 			</#if>
 		</#list>
                 </@compress>";
-        DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
+        SqlBuilder.PreparedSqlBuilder sqlBuilder = SqlBuilder.prepareSql(query);
 
         ${getPrimaryKeysAsPreparedStatements()}
 
@@ -71,7 +71,7 @@ public int delete(final DataSource dataSource,${getPrimaryKeysAsParameterString(
 						<#if index == 0><#assign index=1><#else>,</#if>${property.column.escapedName?j_string} = ?
 						</#if>
 					</#list></@compress>";
-        DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
+        SqlBuilder.PreparedSqlBuilder sqlBuilder = SqlBuilder.prepareSql(query);
         ${getPrimaryKeysAsPreparedStatements()}
         return sqlBuilder.execute(dataSource);
 }
@@ -93,11 +93,11 @@ public int delete(final DataSource dataSource,${getPrimaryKeysAsParameterString(
 
                     </@compress>";
 
-        DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
+        SqlBuilder.PreparedSqlBuilder sqlBuilder = SqlBuilder.prepareSql(query);
     
         ${getUniqueKeysAsPreparedStatements(uniqueColumn.name)}
 
-        return Optional.ofNullable(sqlBuilder.queryForOne(this::rowMapper).execute(dataSource));
+        return Optional.ofNullable(sqlBuilder.queryForOne(rs -> this.rowMapper(rs)).execute(dataSource));
 
             
     }
@@ -112,7 +112,7 @@ public int delete(final DataSource dataSource,${getPrimaryKeysAsParameterString(
             ${getUniqueKeysAsWhereClause(uniqueColumn.name)}
 
                     </@compress>";
-            DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
+            SqlBuilder.PreparedSqlBuilder sqlBuilder = SqlBuilder.prepareSql(query);
     
         ${getUniqueKeysAsPreparedStatements(uniqueColumn.name)}
 

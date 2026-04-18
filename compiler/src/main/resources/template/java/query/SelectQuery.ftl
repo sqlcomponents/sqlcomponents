@@ -1,11 +1,11 @@
     public static final class SelectQuery<T extends Value<?, ?>, V>  {
 
         private final String sql;
-        private final SqlBuilder.RowMapper<V> rowMapper;
+        private final RowMapper<V> rowMapper;
 
         private final List<T> values;
 
-        public SelectQuery(final String sql,final SqlBuilder.RowMapper<V> rowMapper) {
+        public SelectQuery(final String sql,final RowMapper<V> rowMapper) {
             this.sql = sql;
             this.rowMapper = rowMapper;
             this.values = new ArrayList<>();
@@ -18,23 +18,23 @@
         }
 
         public Optional<V> optional(final DataSource dataSource) throws SQLException {
-            DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
+            SqlBuilder.PreparedSqlBuilder sqlBuilder = SqlBuilder.prepareSql(sql);
 
             for (T value:values) {
                 value.set(sqlBuilder);
             }
             
-            return Optional.ofNullable(sqlBuilder.queryForOne(this.rowMapper).execute(dataSource));
+            return Optional.ofNullable(sqlBuilder.queryForOne(rowMapper).execute(dataSource));
         }
 
         public List<V> list(final DataSource dataSource) throws SQLException {
-            DataManager.SqlBuilder sqlBuilder = dataManager.sql(sql);
+            SqlBuilder.PreparedSqlBuilder sqlBuilder = SqlBuilder.prepareSql(sql);
 
             for (T value:values) {
                 value.set(sqlBuilder);
             }
             
-            return sqlBuilder.queryForList(this.rowMapper).execute(dataSource);
+            return sqlBuilder.queryForList(rowMapper).execute(dataSource);
         }
     }
 

@@ -1,6 +1,6 @@
 <#macro ByteBuffer property>
     <@columnheader property=property/>
-    public void set(final DataManager.SqlBuilder preparedStatement, final ByteBuffer value) {
+    public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final ByteBuffer value) {
     preparedStatement.param(value == null ? null : value.array());
     }
     @Override

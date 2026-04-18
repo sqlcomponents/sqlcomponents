@@ -16,6 +16,12 @@ public static final class Procedure {
     }
 
     <#list orm.methods as method>
+    <#assign inCount = 0>
+    <#list method.inputParameters as parameter>
+        <#if getClassName(parameter.dataType) != "Void">
+            <#assign inCount = inCount + 1>
+        </#if>
+    </#list>
     /**
     * ${method.name} Method.
     <#list method.inputParameters as parameter>
@@ -37,8 +43,9 @@ public static final class Procedure {
     <#if getClassName(parameter.dataType) != "Void">${getClassName(parameter.dataType)} ${parameter.name}<#if parameter?index <  method.outputParameters?size-1>,</#if></#if>
     </#list>
     ) throws SQLException {
+    <#if method.outputParameters?? && (method.outputParameters?size > 0)>
         try (CallableStatement callableStatement = dbDataSource.getConnection()
-        .prepareCall("call ${method.functionName}(<#list 0..< method.inputParameters?size-1 as i>?,</#list>?)")) {
+        .prepareCall("call ${method.functionName}(<#assign sep=""><#list 1..inCount as i>${sep}?<#assign sep=","></#list>)")) {
             <#list method.inputParameters as parameter>
                <#if getClassName(parameter.dataType) != "Void">
                <#switch parameter.dataType>
@@ -50,7 +57,7 @@ public static final class Procedure {
                  <#case "java.util.UUID">
                  <#case "java.time.Duration">
                  <#case "java.util.BitSet">
-                      callableStatement.setObject(${parameter?index}, ${parameter.name});
+                      callableStatement.setObject(${parameter?index+1}, ${parameter.name});
                       <#break>
 
                  <#default>
@@ -68,9 +75,33 @@ public static final class Procedure {
             <#list method.outputParameters as oParameter>
                   ${oParameter.name} = callableStatement.get${getClassName(oParameter.dataType)}(${method.inputParameters?size+1 + oParameter?index} );
             </#list>
-        } catch (SQLException e) {
-            throw e;
         }
+    <#else>
+        SqlBuilder.prepareCall("call ${method.functionName}(<#assign sep2=""><#list 1..inCount as i>${sep2}?<#assign sep2=","></#list>)")
+            <#list method.inputParameters as parameter>
+               <#if getClassName(parameter.dataType) != "Void">
+               <#switch parameter.dataType>
+                 <#case "java.time.LocalDate">
+                 <#case "java.time.LocalTime">
+                 <#case "java.time.LocalDateTime">
+                 <#case "java.nio.ByteBuffer">
+                 <#case "com.fasterxml.jackson.databind.JsonNode">
+                 <#case "java.util.UUID">
+                 <#case "java.time.Duration">
+                 <#case "java.util.BitSet">
+                    .param((Object) ${parameter.name})
+                      <#break>
+                 <#case "java.lang.Byte">
+                    .param((Object) ${parameter.name})
+                      <#break>
+                 <#default>
+                    .param(${parameter.name})
+               </#switch>
+               	<#assign a=addImportStatement(parameter.dataType)>
+               </#if>
+            </#list>
+            .execute(dbDataSource);
+    </#if>
     }
     </#list>
 }

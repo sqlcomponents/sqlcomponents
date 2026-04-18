@@ -6,6 +6,9 @@
 <#if rootPackage?? && rootPackage?length != 0 >package ${rootPackage};</#if>
 
 <#assign capturedOutput>
+<#assign a=addImportStatement("org.tamilnadujug.SqlBuilder")>
+<#assign a=addImportStatement("org.tamilnadujug.sql.RowMapper")>
+<#assign a=addImportStatement("org.tamilnadujug.sql.Sql")>
 public final class DataManager {
     /**
     * dataManager variable.
@@ -101,7 +104,6 @@ public final class DataManager {
   
      </#switch>
 </#list>
-    <#assign a=addImportStatement("java.sql.PreparedStatement")>
     public interface Column<T> {
       /**
        * String name.
@@ -125,7 +127,7 @@ public final class DataManager {
         * @param value
         * @throws SQLException
         */
-        void set(SqlBuilder preparedStatement,
+        void set(SqlBuilder.PreparedSqlBuilder preparedStatement,
         T value) ;
         /**
          *  T get method.
@@ -173,7 +175,7 @@ public final class DataManager {
           * @param preparedStatement
           * @throws SQLException
           */
-        public void set(final DataManager.SqlBuilder preparedStatement) {
+        public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement) {
             column.set(preparedStatement, value);
         }
     }
@@ -184,36 +186,6 @@ public final class DataManager {
         private Observer() {
 
         }
-    }
-
-    @FunctionalInterface
-    public interface ConvertFunction<T, Object> {
-
-        /**
-         * apply method.
-         * @param t
-         * @return apply
-         * @throws SQLException
-         */
-        Object apply(T t) throws SQLException;
-    }
-         /**
-          * GetFunction method.
-          * @param <ResultSet>
-          * @param <Integer>
-          * @param <R>
-          */
-    @FunctionalInterface
-    public interface GetFunction<ResultSet, Integer, R> {
-           /**
-            * R apply interface.
-            * @param t
-            * @param u
-            * @return apply
-            * @throws SQLException
-            */
-
-        R apply(ResultSet t, Integer u) throws SQLException;
     }
     <#assign a=addImportStatement("java.sql.ResultSet")>
     <#assign a=addImportStatement("java.sql.SQLException")>
@@ -231,7 +203,7 @@ public final class DataManager {
      */
     public static <T> Page<T> page(final List<T> content,
     final int totalElements) {
-        return new Page(content, totalElements);
+        return new Page<>(content, totalElements);
     }
 
     public static final class Page<T> {
@@ -266,28 +238,6 @@ public final class DataManager {
     </#if>
 
     <#include "Procedures.ftl">
-
-    /**
-    * Static factory method to create a new SqlBuilder instance.
-    *
-    * @param sql the SQL query to be prepared
-    * @return an instance of SqlBuilder
-    */
-    public SqlBuilder sql(final String sql) {
-        return new SqlBuilder(sql);
-    }
-
-    <#include "SqlBuilder.ftl">
-
-    /**
-     * Begins new Transaction.
-     * @return transaction
-     */
-    public Transaction begin() {
-        return new Transaction();
-    }
-
-    <#include "Transaction.ftl">
 
     <#include "query/SelectQuery.ftl">
     <#include "query/Statement.ftl">

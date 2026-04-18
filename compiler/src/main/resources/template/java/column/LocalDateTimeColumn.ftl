@@ -1,7 +1,7 @@
 <#macro LocalDateTimeColumn property>
     <@columnheader property=property/>
 
-    public void set(final DataManager.SqlBuilder preparedStatement, final LocalDateTime value) {
+    public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final LocalDateTime value) {
     preparedStatement.param(value == null ? null : java.sql.Timestamp.valueOf(value));
     }
 
