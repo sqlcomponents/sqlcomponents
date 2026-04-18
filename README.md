@@ -1,3 +1,15 @@
+# SQL Components
+SQL Components is an open source persistenace framework for moden java apps which helps to build the robust and high performing applications.
+
+## High lights of SQL Components
+* Compile time ORM
+* Write less, do more - Autometic code generation
+* Supports major RDBMS and adding many more
+* Type Safety - Captures the defects at as you write code with compile time type safety.
+* SQL knowledge is the only requirement to use this. 
+ 
+
+
 #sqlbridge
 
 Large
