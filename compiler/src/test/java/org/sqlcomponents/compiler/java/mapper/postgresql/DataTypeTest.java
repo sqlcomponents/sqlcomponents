@@ -12,7 +12,6 @@ import org.sqlcomponents.compiler.java.JavaCompiler;
 import org.sqlcomponents.compiler.java.util.CompilerTestUtil;
 import org.sqlcomponents.core.crawler.util.DataSourceUtil;
 import org.sqlcomponents.core.model.Application;
-import org.tamilnadujug.SqlBuilder;
 
 import javax.sql.DataSource;
 import javax.tools.DiagnosticCollector;
@@ -23,14 +22,12 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -40,13 +37,23 @@ import java.util.function.Function;
 abstract class DataTypeTest<T> {
 
     private static String javacClasspath() {
-        final String base = System.getProperty("java.class.path");
-        try {
-            final URI loc = SqlBuilder.class.getProtectionDomain().getCodeSource().getLocation().toURI();
-            return base + File.pathSeparator + new File(loc).getAbsolutePath();
-        } catch (Exception e) {
-            return base;
+        return System.getProperty("java.class.path");
+    }
+
+    private static List<File> listJavaFilesRecursively(final File root) {
+        final List<File> out = new ArrayList<>();
+        final File[] files = root.listFiles();
+        if (files == null) {
+            return out;
         }
+        for (File f : files) {
+            if (f.isDirectory()) {
+                out.addAll(listJavaFilesRecursively(f));
+            } else if (f.getName().endsWith(".java")) {
+                out.add(f);
+            }
+        }
+        return out;
     }
 
     private final Class<?> myTableStoreClass;
@@ -88,7 +95,10 @@ abstract class DataTypeTest<T> {
             DiagnosticCollector<JavaFileObject> ds = new DiagnosticCollector<>();
 
             try (StandardJavaFileManager mgr = compiler.getStandardFileManager(ds, null, null)) {
-                Iterable<? extends JavaFileObject> sources = mgr.getJavaFileObjectsFromFiles(Arrays.asList(new File(application.getSrcFolder(), "org/example/DataManager.java"), new File(application.getSrcFolder(), "org/example/store/MyTableStore.java"), new File(application.getSrcFolder(), "org/example/model/MyTable.java")));
+                Iterable<? extends JavaFileObject> sources =
+                        mgr.getJavaFileObjectsFromFiles(
+                                listJavaFilesRecursively(
+                                        new File(application.getSrcFolder())));
                 final List<String> options = new ArrayList<>();
                 options.add("-classpath");
                 options.add(javacClasspath());

@@ -76,6 +76,7 @@ public final class JavaCompiler implements Compiler {
                             + DOT_JAVA).toPath(),
                     getJavaContent(managerFTLTemplate.getContent(
                             aApplication)).getBytes());
+            writeSqlBuilderTemplates(aApplication);
         } catch (IOException | TemplateException e) {
             e.printStackTrace();
         }
@@ -92,6 +93,49 @@ public final class JavaCompiler implements Compiler {
                 e.printStackTrace();
             }
         });
+    }
+
+    /**
+     * Emits vendored sql-builder templates (same {@code rootPackage} as
+     * {@code DataManager}; {@code *.sql} under {@code rootPackage + ".sql"}).
+     *
+     * @param application the application (FTL root model; exposes rootPackage)
+     */
+    private void writeSqlBuilderTemplates(final Application application)
+            throws IOException, TemplateException {
+        final String srcFolder = application.getSrcFolder();
+        final String root = application.getRootPackage();
+        final String sqlPkg = root + ".sql";
+        writeSqlBuilderUnit(application, srcFolder, root,
+                "template/java/SqlBuilder.ftl", "SqlBuilder");
+        writeSqlBuilderUnit(application, srcFolder, root,
+                "template/java/Transaction.ftl", "Transaction");
+        writeSqlBuilderUnit(application, srcFolder, sqlPkg,
+                "template/java/sql/Sql.ftl", "Sql");
+        writeSqlBuilderUnit(application, srcFolder, sqlPkg,
+                "template/java/sql/RowMapper.ftl", "RowMapper");
+        writeSqlBuilderUnit(application, srcFolder, sqlPkg,
+                "template/java/sql/ParamMapper.ftl", "ParamMapper");
+        writeSqlBuilderUnit(application, srcFolder, sqlPkg,
+                "template/java/sql/StatementMapper.ftl", "StatementMapper");
+    }
+
+    private void writeSqlBuilderUnit(
+            final Application application,
+            final String srcFolder,
+            final String javaPackage,
+            final String templateClasspath,
+            final String simpleClassName)
+            throws IOException, TemplateException {
+        String folder = getPackageAsFolder(srcFolder, javaPackage);
+        new File(folder).mkdirs();
+        createPackageInfoFile(javaPackage, folder);
+        FTLTemplate<Application> template =
+                new FTLTemplate<>(templateClasspath);
+        Files.write(
+                new File(folder + File.separator + simpleClassName + DOT_JAVA)
+                        .toPath(),
+                getJavaContent(template.getContent(application)).getBytes());
     }
 
     private void writeTypesBean(final Entity entity, final String srcFolder)

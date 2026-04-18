@@ -23,7 +23,7 @@ public final class SingleSelectStatementWithWhere extends SingleSelectStatement{
         }
 }
 
-public sealed class SingleSelectStatement implements org.tamilnadujug.sql.Sql<${name}> permits SingleSelectStatementWithWhere {
+public sealed class SingleSelectStatement implements ${orm.application.rootPackage}.sql.Sql<${name}> permits SingleSelectStatementWithWhere {
 
 
         ${getPrimaryKeysAsObjectInstances()}
@@ -85,7 +85,7 @@ public final class SelectStatementWithWhere extends SelectStatement{
         }
 }
 
-public sealed class SelectStatement implements org.tamilnadujug.sql.Sql<List<${name}>> permits SelectStatementWithWhere {
+public sealed class SelectStatement implements ${orm.application.rootPackage}.sql.Sql<List<${name}>> permits SelectStatementWithWhere {
 
         private final WhereClause whereClause;
 

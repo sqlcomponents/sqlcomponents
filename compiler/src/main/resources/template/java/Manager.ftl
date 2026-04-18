@@ -6,9 +6,9 @@
 <#if rootPackage?? && rootPackage?length != 0 >package ${rootPackage};</#if>
 
 <#assign capturedOutput>
-<#assign a=addImportStatement("org.tamilnadujug.SqlBuilder")>
-<#assign a=addImportStatement("org.tamilnadujug.sql.RowMapper")>
-<#assign a=addImportStatement("org.tamilnadujug.sql.Sql")>
+<#assign a=addImportStatement(rootPackage + ".SqlBuilder")>
+<#assign a=addImportStatement(rootPackage + ".sql.RowMapper")>
+<#assign a=addImportStatement(rootPackage + ".sql.Sql")>
 public final class DataManager {
     /**
     * dataManager variable.

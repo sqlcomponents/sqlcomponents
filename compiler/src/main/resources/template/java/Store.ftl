@@ -1,7 +1,7 @@
 <#include "jdbcbase.ftl">
 <#import "Column.ftl" as columns>
-<#assign _sqlBuilderImport = addImportStatement("org.tamilnadujug.SqlBuilder")>
-<#assign _sqlImport = addImportStatement("org.tamilnadujug.sql.Sql")>
+<#assign _sqlBuilderImport = addImportStatement(orm.application.rootPackage + ".SqlBuilder")>
+<#assign _sqlImport = addImportStatement(orm.application.rootPackage + ".sql.Sql")>
 package <#if daoPackage?? && daoPackage?length != 0 >${daoPackage}</#if>;
 
 import java.sql.ResultSet;
