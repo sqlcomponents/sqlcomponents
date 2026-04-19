@@ -20,10 +20,7 @@ class StoredProcedureTest {
 
     StoredProcedureTest() {
         this.dataSource = DataSourceProvider.dataSource();
-        dataManager =
-                DataManager.getManager(
-                        EncryptionUtil::enAnDecrypt,
-                        EncryptionUtil::enAnDecrypt);
+        dataManager = DataManager.getManager(EncryptionUtil::enAnDecrypt, EncryptionUtil::enAnDecrypt);
         this.cacheStore = dataManager.getCacheStore();
     }
 
@@ -33,22 +30,21 @@ class StoredProcedureTest {
         this.cacheStore.delete().execute(dataSource);
     }
 
- //   @Test
-//    void basicCall() throws SQLException {
-//  //      dataManager.call().createCache("Name", "Raja");
-//        CacheStore.WhereClause whereClause= CacheStore.code().eq("Name");
-//        List<Cache> cacheList = dataManager.getCacheStore().select().where(whereClause).execute(dataSource);
-//   //     Assertions.assertEquals(1, cacheList.size());
-//    //    Assertions.assertEquals(cacheList.get(0).code(),"Name");
-//    //    Assertions.assertEquals(cacheList.get(0).getCache(),"Raja");
-//    }
+       @Test
+    void basicCall() throws SQLException {
+        dataManager.call().createCache(dataSource,"Name", "Raja");
+        CacheStore.WhereClause whereClause= CacheStore.code().eq("Name");
+        List<Cache> cacheList = dataManager.getCacheStore().select().where(whereClause).execute(dataSource);
+        Assertions.assertEquals(1, cacheList.size());
+        Assertions.assertEquals(cacheList.get(0).code(),"Name");
+        Assertions.assertEquals(cacheList.get(0).cache(),"Raja");
+    }
 
     @Test
     void addFunction() throws SQLException {
-        Byte result = null;
-//        dataManager.call().add((byte)1,(byte)3, result);
-//        Assertions.assertNotNull(result);
-//        Assertions.assertEquals((byte)4, result);
+        Byte sum = dataManager.call().add(dataSource, (byte) 1, (byte) 3);
+        Assertions.assertNotNull(sum);
+        Assertions.assertEquals((byte) 4, sum.byteValue());
     }
 
 
