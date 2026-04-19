@@ -2,7 +2,6 @@
 <#assign a=addImportStatement("java.util.List")>
 <#assign a=addImportStatement("java.util.ArrayList")>
 <#assign a=addImportStatement("java.util.Optional")>
-<#assign a=addImportStatement("java.sql.PreparedStatement")>
 <#assign a=addImportStatement("java.sql.Connection")>
 
 <#if table.hasPrimaryKey>
@@ -24,7 +23,7 @@ public final class SingleSelectStatementWithWhere extends SingleSelectStatement{
         }
 }
 
-public sealed class SingleSelectStatement implements DataManager.Sql<${name}> permits SingleSelectStatementWithWhere {
+public sealed class SingleSelectStatement implements ${orm.application.rootPackage}.sql.Sql<${name}> permits SingleSelectStatementWithWhere {
 
 
         ${getPrimaryKeysAsObjectInstances()}
@@ -56,11 +55,11 @@ public sealed class SingleSelectStatement implements DataManager.Sql<${name}> pe
                 </@compress>"
 
                 + ( whereClause == null ? "" : (" AND " + whereClause.asSql()) );
-                DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
+                SqlBuilder.PreparedSqlBuilder sqlBuilder = SqlBuilder.prepareSql(query);
     
         ${getPrimaryKeysAsPreparedStatements()}
 
-        return sqlBuilder.queryForOne(${name}Store.this::rowMapper).execute(connection);
+        return sqlBuilder.queryForOne(rs -> ${name}Store.this.rowMapper(rs)).execute(connection);
 	}
 
         
@@ -86,7 +85,7 @@ public final class SelectStatementWithWhere extends SelectStatement{
         }
 }
 
-public sealed class SelectStatement implements DataManager.Sql<List<${name}>> permits SelectStatementWithWhere {
+public sealed class SelectStatement implements ${orm.application.rootPackage}.sql.Sql<List<${name}>> permits SelectStatementWithWhere {
 
         private final WhereClause whereClause;
 
@@ -116,7 +115,7 @@ public sealed class SelectStatement implements DataManager.Sql<List<${name}>> pe
                 + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) )
                 + ( this.limitClause == null ? "" : this.limitClause.asSql() )
                 + ( this.offsetClause == null ? "" : this.offsetClause.asSql() );
-                return dataManager.sql(query).queryForList(${name}Store.this::rowMapper).execute(connection);
+                return SqlBuilder.sql(query).queryForList(rs -> ${name}Store.this.rowMapper(rs)).execute(connection);
 	}
 
         public final int count(final DataSource dataSource) throws SQLException {
@@ -128,7 +127,7 @@ public sealed class SelectStatement implements DataManager.Sql<List<${name}>> pe
 		FROM ${table.escapedName?j_string}
                 </@compress>" 
                 + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
-                return dataManager.sql(query).queryForInt().execute(dataSource);
+                return SqlBuilder.sql(query).queryForInt().execute(dataSource);
 	}
 
 
@@ -163,7 +162,9 @@ public sealed class SelectStatement implements DataManager.Sql<List<${name}>> pe
                 }
                 <#else>
                 public DataManager.Page<${name}> execute(final DataSource dataSource) throws <@throwsblock/> {
-                    return DataManager.page(SelectStatement.this.execute(dataSource), count(dataSource));
+                    try (Connection connection = dataSource.getConnection()) {
+                        return DataManager.page(SelectStatement.this.execute(connection), count(dataSource));
+                    }
                 }
                 </#if>
 
@@ -199,7 +200,7 @@ public sealed class SelectStatement implements DataManager.Sql<List<${name}>> pe
 
 
 public final DataManager.SelectQuery<Value<?,?>,${name}> sql(final String sql) {
-            return new DataManager.SelectQuery<>(sql, ${name}Store.this::rowMapper);
+            return new DataManager.SelectQuery<>(sql, rs -> ${name}Store.this.rowMapper(rs));
     }
 
 

@@ -1,7 +1,7 @@
 <#macro BoxColumn property>
 <@columnheader property=property/>
  
-    public void set(final DataManager.SqlBuilder preparedStatement, final Envelope box) throws SQLException {
+    public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final Envelope box) throws SQLException {
     PGbox pgbox = (box == null) ? null : new PGbox(box.getMinX(), box.getMinY(),
                                                                              box.getMaxX(), box.getMaxY());
     preparedStatement.param(pgbox,java.sql.Types.OTHER);

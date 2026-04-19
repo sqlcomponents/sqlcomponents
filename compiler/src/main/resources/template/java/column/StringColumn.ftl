@@ -1,7 +1,7 @@
 <#macro StringColumn property>
     <@columnheader property=property/>
 
-    public void set(final DataManager.SqlBuilder preparedStatement, final String value) {
+    public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final String value) {
     <#if property.column.typeName == "macaddr8" >
     PGobject pgObject = new PGobject();
      pgObject.setType("macaddr8");

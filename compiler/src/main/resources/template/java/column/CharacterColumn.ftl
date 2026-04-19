@@ -2,7 +2,7 @@
     <@columnheader property=property/>
     
     @Override
-    public void set(final DataManager.SqlBuilder preparedStatement, final Character value) {
+    public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final Character value) {
     preparedStatement.param(value == null ? null : String.valueOf(value));
     }
 

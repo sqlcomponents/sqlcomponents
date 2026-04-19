@@ -1,6 +1,6 @@
 <#macro DurationColumn property>
     <@columnheader property=property/>
-    public void set(final DataManager.SqlBuilder preparedStatement, final Duration duration) {
+    public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final Duration duration) {
     
     if(duration == null) {
         preparedStatement.paramNull();

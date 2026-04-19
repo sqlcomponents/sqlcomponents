@@ -1,7 +1,7 @@
 <#macro LocalTimeColumn property>
     <@columnheader property=property/>
 
-    public void set(final DataManager.SqlBuilder preparedStatement, final LocalTime value) {
+    public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final LocalTime value) {
     preparedStatement.param(value == null ? null : java.sql.Time.valueOf(value));
     }
 

@@ -1,6 +1,6 @@
 <#macro CidrColumn property>
     <@columnheader property=property/>
-     public void set(final DataManager.SqlBuilder preparedStatement, final SubnetUtils cidrAddress) {
+     public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final SubnetUtils cidrAddress) {
     PGobject pgObject = null ;
         if(cidrAddress != null) {
             pgObject = new PGobject();

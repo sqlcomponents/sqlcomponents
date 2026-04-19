@@ -53,7 +53,7 @@
             </#if>
         }
 
-        private void prepare(final DataManager.SqlBuilder sqlBuilder,final ${name} ${name?uncap_first}) throws SQLException {
+        private void prepare(final SqlBuilder.PreparedSqlBuilder sqlBuilder,final ${name} ${name?uncap_first}) throws SQLException {
             <#assign index=0>
             <#assign column_index=1>
             <#list updatableProperties as property>
@@ -90,7 +90,7 @@
                 
                     <@updatetquery/>
 
-                    DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
+                    SqlBuilder.PreparedSqlBuilder sqlBuilder = SqlBuilder.prepareSql(query);
                     prepare(sqlBuilder,${name?uncap_first});
                     return sqlBuilder.execute(dataSource);
                 }
@@ -100,7 +100,7 @@
                 public final ${name} returning(final DataSource dataSource) throws <@throwsblock/>  {
                     ${name} updated${name} = null ;
                     <@updatetquery/>
-                    DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
+                    SqlBuilder.PreparedSqlBuilder sqlBuilder = SqlBuilder.prepareSql(query);
                     prepare(sqlBuilder,${name?uncap_first});
          
                         
@@ -162,7 +162,7 @@
                     
                     <@updatewithsetquery/>
 
-                    DataManager.SqlBuilder sqlBuilder = dataManager.sql(query);
+                    SqlBuilder.PreparedSqlBuilder sqlBuilder = SqlBuilder.prepareSql(query);
 
                     for (Value<?,?> value:values) {
                         value.set(sqlBuilder);

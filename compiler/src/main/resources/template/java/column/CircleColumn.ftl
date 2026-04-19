@@ -1,6 +1,6 @@
 <#macro CircleColumn property>
     <@columnheader property=property/>
-     public void set(final DataManager.SqlBuilder preparedStatement, final Circle circle) throws SQLException {
+     public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final Circle circle) throws SQLException {
    if(circle == null) {
             preparedStatement.paramNull();
         } else {

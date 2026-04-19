@@ -1,7 +1,7 @@
 <#macro TypeColumn property>
 <@columnheader property=property/>
 
-    public void set(final DataManager.SqlBuilder preparedStatement, final ${getClassName(property.dataType)} value) {
+    public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final ${getClassName(property.dataType)} value) {
 
 preparedStatement.param( value.name(), java.sql.Types.VARCHAR);
 }

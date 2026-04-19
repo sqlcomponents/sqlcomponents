@@ -1,6 +1,6 @@
 <#macro BitSetColumn property>
     <@columnheader property=property/>
-    public void set(final DataManager.SqlBuilder preparedStatement, final BitSet value) {
+    public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final BitSet value) {
 
 
         if(value == null) {

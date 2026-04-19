@@ -1,6 +1,6 @@
 <#macro InetAddressColumn property>
     <@columnheader property=property/>
-     public void set(final DataManager.SqlBuilder preparedStatement, final  InetAddress inetAddress) {
+     public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final  InetAddress inetAddress) {
     if(inetAddress == null) {
     preparedStatement.paramNull();
     } else {

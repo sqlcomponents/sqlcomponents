@@ -1,6 +1,6 @@
 <#macro UUIDColumn property>
     <@columnheader property=property/>
-    public void set(final DataManager.SqlBuilder preparedStatement, final UUID uuid) {
+    public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final UUID uuid) {
     preparedStatement.param((uuid == null) ? null : uuid.toString(), java.sql.Types.OTHER);
     }
 

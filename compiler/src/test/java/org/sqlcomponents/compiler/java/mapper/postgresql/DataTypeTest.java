@@ -27,7 +27,7 @@ import java.net.URLClassLoader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -35,6 +35,26 @@ import java.util.function.Function;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class DataTypeTest<T> {
+
+    private static String javacClasspath() {
+        return System.getProperty("java.class.path");
+    }
+
+    private static List<File> listJavaFilesRecursively(final File root) {
+        final List<File> out = new ArrayList<>();
+        final File[] files = root.listFiles();
+        if (files == null) {
+            return out;
+        }
+        for (File f : files) {
+            if (f.isDirectory()) {
+                out.addAll(listJavaFilesRecursively(f));
+            } else if (f.getName().endsWith(".java")) {
+                out.add(f);
+            }
+        }
+        return out;
+    }
 
     private final Class<?> myTableStoreClass;
     private final Class<?> myTableClass;
@@ -75,11 +95,23 @@ abstract class DataTypeTest<T> {
             DiagnosticCollector<JavaFileObject> ds = new DiagnosticCollector<>();
 
             try (StandardJavaFileManager mgr = compiler.getStandardFileManager(ds, null, null)) {
-                Iterable<? extends JavaFileObject> sources = mgr.getJavaFileObjectsFromFiles(Arrays.asList(new File(application.getSrcFolder(), "org/example/DataManager.java"), new File(application.getSrcFolder(), "org/example/store/MyTableStore.java"), new File(application.getSrcFolder(), "org/example/model/MyTable.java")));
-                javax.tools.JavaCompiler.CompilationTask task = compiler.getTask(null, mgr, ds, null, null, sources);
-                task.call();
+                Iterable<? extends JavaFileObject> sources =
+                        mgr.getJavaFileObjectsFromFiles(
+                                listJavaFilesRecursively(
+                                        new File(application.getSrcFolder())));
+                final List<String> options = new ArrayList<>();
+                options.add("-classpath");
+                options.add(javacClasspath());
+                javax.tools.JavaCompiler.CompilationTask task = compiler.getTask(null, mgr, ds, options, null, sources);
+                if (!task.call()) {
+                    ds.getDiagnostics().forEach(d -> System.err.println(d));
+                    throw new IllegalStateException("javac failed for generated sources under " + application.getSrcFolder());
+                }
 
-                URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(application.getSrcFolder()).toURI().toURL()});
+                final ClassLoader parent = Thread.currentThread().getContextClassLoader();
+                URLClassLoader classLoader = new URLClassLoader(
+                        new URL[]{new File(application.getSrcFolder()).toURI().toURL()},
+                        parent);
                 // Load the class from the classloader by name....
                 Class<?> loadedClass = classLoader.loadClass("org.example.DataManager");
 

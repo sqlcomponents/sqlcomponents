@@ -1,7 +1,7 @@
 <#macro PointColumn property>
     <@columnheader property=property/>
 
-    public void set(final DataManager.SqlBuilder preparedStatement, final Point point) throws SQLException {
+    public void set(final SqlBuilder.PreparedSqlBuilder preparedStatement, final Point point) throws SQLException {
     preparedStatement.param((point == null) ? null : new PGpoint(point.getX(),point.getY()),java.sql.Types.OTHER);
     }
 
