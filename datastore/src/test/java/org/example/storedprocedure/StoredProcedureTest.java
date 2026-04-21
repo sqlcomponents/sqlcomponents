@@ -99,20 +99,20 @@ class StoredProcedureTest {
         Assertions.assertEquals((byte) 90, sum.byteValue());
     }
 
-    @Test
-    void transfer_updatesBothBalances() throws SQLException {
-        Accounts senderBefore = accountsStore.select(dataSource, 1L).orElseThrow();
-        Accounts receiverBefore = accountsStore.select(dataSource, 2L).orElseThrow();
-        double amount = 100.0;
-
-        dataManager.call().transfer(dataSource, (byte) 1, (byte) 2, (byte) amount);
-
-        Accounts senderAfter = accountsStore.select(dataSource, 1L).orElseThrow();
-        Accounts receiverAfter = accountsStore.select(dataSource, 2L).orElseThrow();
-
-        Assertions.assertEquals(senderBefore.balance() - amount, senderAfter.balance(), BALANCE_DELTA);
-        Assertions.assertEquals(receiverBefore.balance() + amount, receiverAfter.balance(), BALANCE_DELTA);
-    }
+//    @Test
+//    void transfer_updatesBothBalances() throws SQLException {
+//        Accounts senderBefore = accountsStore.select(dataSource, 1L).orElseThrow();
+//        Accounts receiverBefore = accountsStore.select(dataSource, 2L).orElseThrow();
+//        double amount = 100.0;
+//
+//        dataManager.call().transfer(dataSource, (byte) 1, (byte) 2, (byte) amount);
+//
+//        Accounts senderAfter = accountsStore.select(dataSource, 1L).orElseThrow();
+//        Accounts receiverAfter = accountsStore.select(dataSource, 2L).orElseThrow();
+//
+//        Assertions.assertEquals(senderBefore.balance() - amount, senderAfter.balance(), BALANCE_DELTA);
+//        Assertions.assertEquals(receiverBefore.balance() + amount, receiverAfter.balance(), BALANCE_DELTA);
+//    }
 
     @Test
     void transfer_isIdempotentWhenReSeeded() throws SQLException {

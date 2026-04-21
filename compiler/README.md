@@ -1,9 +1,7 @@
 # Java Compiler
 
 This is Java Compiler
-
-# Features
-
+# Features 
 1. Native High Performance JDBC Code
 2. Type Safe Query Builders
 3. Fluent API
