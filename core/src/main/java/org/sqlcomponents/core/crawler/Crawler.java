@@ -775,6 +775,9 @@ public class Crawler {
                 } else if (parameterType == (short) INOUT) {
                     inputParameters.add(bColumn);
                     outputParameters.add(bColumn);
+                } else if (parameterType
+                        == DatabaseMetaData.procedureColumnReturn) {
+                    outputParameters.add(bColumn);
                 }
             }
         }
@@ -807,6 +810,9 @@ public class Crawler {
                     outputParameters.add(bColumn);
                 } else if (parameterType == (short) INOUT) {
                     inputParameters.add(bColumn);
+                    outputParameters.add(bColumn);
+                } else if (parameterType
+                        == DatabaseMetaData.procedureColumnReturn) {
                     outputParameters.add(bColumn);
                 }
             }

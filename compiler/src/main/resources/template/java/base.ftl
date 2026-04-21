@@ -14,6 +14,23 @@
 	<#return columnType>
 </#function>
 
+<#-- Reads OUT using JDBC getters compatible with registerOutParameter(sqlTypes from metadata). -->
+<#function callableOutScalarExpression indexStr dataTypeFqn>
+	<#local n = getClassName(dataTypeFqn)>
+	<#switch n>
+		<#case "Byte"><#return "((byte) callableStatement.getInt("+indexStr+"))">
+		<#case "Short"><#return "((short) callableStatement.getInt("+indexStr+"))">
+		<#case "Integer"><#return "callableStatement.getInt("+indexStr+")">
+		<#case "Long"><#return "callableStatement.getLong("+indexStr+")">
+		<#case "Float"><#return "callableStatement.getFloat("+indexStr+")">
+		<#case "Double"><#return "callableStatement.getDouble("+indexStr+")">
+		<#case "Boolean"><#return "callableStatement.getBoolean("+indexStr+")">
+		<#case "String"><#return "callableStatement.getString("+indexStr+")">
+		<#case "BigDecimal"><#return "callableStatement.getBigDecimal("+indexStr+")">
+		<#default><#return "callableStatement.getObject("+indexStr+", "+dataTypeFqn+".class)">
+	</#switch>
+</#function>
+
 <#function getProperty propertyName> 
 	<#list properties as property>
 		<#if property.name == propertyName>
