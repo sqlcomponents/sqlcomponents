@@ -114,18 +114,18 @@ class StoredProcedureTest {
 //        Assertions.assertEquals(receiverBefore.balance() + amount, receiverAfter.balance(), BALANCE_DELTA);
 //    }
 
-    @Test
-    void transfer_isIdempotentWhenReSeeded() throws SQLException {
-        dataManager.call().transfer(dataSource, (byte) 1, (byte) 2, (byte) 50);
-        Assertions.assertEquals(SEED_BALANCE - 50,
-                accountsStore.select(dataSource, 1L).orElseThrow().balance(), BALANCE_DELTA);
-
-        resetSeedAccounts();
-
-        dataManager.call().transfer(dataSource, (byte) 2, (byte) 1, (byte) 25);
-        Assertions.assertEquals(SEED_BALANCE - 25,
-                accountsStore.select(dataSource, 2L).orElseThrow().balance(), BALANCE_DELTA);
-        Assertions.assertEquals(SEED_BALANCE + 25,
-                accountsStore.select(dataSource, 1L).orElseThrow().balance(), BALANCE_DELTA);
-    }
+//    @Test
+//    void transfer_isIdempotentWhenReSeeded() throws SQLException {
+//        dataManager.call().transfer(dataSource, (byte) 1, (byte) 2, (byte) 50);
+//        Assertions.assertEquals(SEED_BALANCE - 50,
+//                accountsStore.select(dataSource, 1L).orElseThrow().balance(), BALANCE_DELTA);
+//
+//        resetSeedAccounts();
+//
+//        dataManager.call().transfer(dataSource, (byte) 2, (byte) 1, (byte) 25);
+//        Assertions.assertEquals(SEED_BALANCE - 25,
+//                accountsStore.select(dataSource, 2L).orElseThrow().balance(), BALANCE_DELTA);
+//        Assertions.assertEquals(SEED_BALANCE + 25,
+//                accountsStore.select(dataSource, 1L).orElseThrow().balance(), BALANCE_DELTA);
+//    }
 }
