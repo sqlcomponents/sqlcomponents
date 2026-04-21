@@ -7,8 +7,8 @@ SQL Components is an open source persistenace framework for moden java apps whic
 * Supports major RDBMS and adding many more
 * Type Safety - Captures the defects at as you write code with compile time type safety.
 * SQL knowledge is the only requirement to use this. 
- 
 
+**Use in other Maven projects:** add the `org.sqlcomponents:maven-plugin` plugin and a `sql-component.yml`; see [docs/maven-plugin.md](docs/maven-plugin.md). **Publish to Maven Central:** [docs/maven-central-hosting.md](docs/maven-central-hosting.md).
 
 #sqlbridge
 

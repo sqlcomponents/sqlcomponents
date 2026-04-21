@@ -69,6 +69,7 @@
     <modules>
         <module>core</module>
         <module>compiler</module>
+        <module>maven-plugin</module>
     </modules>
 
     <dependencies>
