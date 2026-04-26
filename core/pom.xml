@@ -10,7 +10,7 @@
     <parent>
         <groupId>org.sqlcomponents</groupId>
         <artifactId>sqlcomponents</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <dependencies>
