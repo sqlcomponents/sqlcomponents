@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.sqlcomponents</groupId>
     <artifactId>sqlcomponents</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <name>SQL Components</name>
@@ -19,6 +19,31 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <name>Rajadurai Krishnamoorthy</name>
+            <organization>TamilNaduJug</organization>
+            <email>rajadurai@ourkadai.com</email>
+            <organizationUrl>https://www.tamilnadujug.org</organizationUrl>
+        </developer>
+        <developer>
+            <name>Sathish Kumar Thiyagarajan</name>
+            <organization>Tamil Nadu Jug</organization>
+            <email>sathish@ourkadai.com</email>
+            <organizationUrl>https://www.tamilnadujug.org</organizationUrl>
+        </developer>
+        <developer>
+            <name>Hari Nikesh Rajkumar</name>
+            <organization>TamilNaduJug</organization>
+            <organizationUrl>https://www.tamilnadujug.org</organizationUrl>
+        </developer>
+        <developer>
+            <name>Rohan Jagadeeswaran</name>
+            <organization>TamilnaduJug</organization>
+            <organizationUrl>https://www.tamilnadujug.org</organizationUrl>
+        </developer>
+    </developers>
+
     <scm>
         <url>https://github.com/sqlcomponents/sqlcomponents</url>
     </scm>
@@ -27,7 +52,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
-
+        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+        <maven-javadoc.version>3.3.1</maven-javadoc.version>
+        <maven-gpg.version>3.0.1</maven-gpg.version>
+        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.plugin.validation>brief</maven.plugin.validation>
@@ -69,6 +97,7 @@
     <modules>
         <module>core</module>
         <module>compiler</module>
+<!--        <module>maven-plugin</module>-->
     </modules>
 
     <dependencies>
@@ -301,4 +330,69 @@
             <url>https://maven.pkg.github.com/sqlcomponents/sqlcomponents</url>
         </repository>
     </distributionManagement>
+
+
+    <profiles>
+        <profile>
+            <id>release</id>
+
+
+            <build>
+                <plugins>
+
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.8.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${maven-source-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven-javadoc.version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Sign artifacts for uploading to maven central -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

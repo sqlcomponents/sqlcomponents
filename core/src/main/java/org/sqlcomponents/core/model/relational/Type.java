@@ -52,7 +52,7 @@ public class Type {
 
     /**
      * Get Values.
-     * @return List<String>
+     * @return {@code List<String>} type values
      */
     public List<String> getValues() {
         return values;

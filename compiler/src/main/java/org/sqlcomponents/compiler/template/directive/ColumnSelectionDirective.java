@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * FreeMarker user-defined directive for repeating a section of a template,
  * optionally with separating the output of the repetations with
- * <tt>&lt;hr></tt>-s.
+ * {@code <hr>} elements.
  *
  *
  * <p><b>Directive info</b></p>
@@ -55,7 +55,7 @@ public class ColumnSelectionDirective implements TemplateDirectiveModel {
      * @param params Map
      * @param loopVars TemplateModel[]
      * @param body TemplateDirectiveBody
-     * @throws TemplateException
+     * @throws TemplateException if template execution fails
      */
     public void execute(final Environment env,
                         final Map params,

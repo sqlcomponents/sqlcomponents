@@ -9,6 +9,7 @@ This document describes the repository layout, Maven modules, and where generate
 | `pom.xml` | Parent POM for `org.sqlcomponents:sqlcomponents`; dependency versions, Checkstyle, Surefire/Failsafe, JaCoCo, distribution management. |
 | `core/` | Library: JDBC metadata crawling and shared domain model. |
 | `compiler/` | Library: Java code generation from the model (FreeMarker templates). Depends on `core`. |
+| `maven-plugin/` | Maven plugin (`org.sqlcomponents:maven-plugin`): runs generation from `sql-component.yml` in the `generate-sources` phase. Depends on `compiler`. |
 | `datastore/` | Separate Maven project (example/integration): tests against PostgreSQL; expects generated Java under `src/main/java` when you run the compiler. |
 | `init.db/` | SQL seed scripts per engine (`postgres/`, `h2db/`, `sqlserver/`, etc.) used by Docker or local DB setup. |
 | `database.properties` | Local JDBC URLs and credentials (used by compiler tests via `CompilerTestUtil`). |
@@ -26,6 +27,7 @@ The parent [`pom.xml`](../pom.xml) lists only these modules:
 
 - `core`
 - `compiler`
+- `maven-plugin`
 
 The [`datastore`](../datastore/pom.xml) module **inherits** the same parent but is **not** listed in `<modules>`. Running `mvn clean install` from the repository root builds `core` and `compiler` only. To build or test `datastore`, run Maven against that POM explicitly, for example:
 
@@ -38,7 +40,7 @@ Alternatively, add `<module>datastore</module>` to the parent `pom.xml` if you w
 ## Module dependency direction
 
 ```text
-compiler  -->  core
+maven-plugin  -->  compiler  -->  core
 datastore -->  (no compile dependency on core/compiler in POM; uses generated code and JDBC/Spring Data Commons at test time)
 ```
 

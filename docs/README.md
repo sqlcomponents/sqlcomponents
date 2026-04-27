@@ -52,7 +52,9 @@ Read in this order if you are onboarding to the codebase:
 | 1 | [Project structure](project-structure.md) | Directories, which Maven modules build from the root reactor, dependency direction, where templates and generated files live. |
 | 2 | [Core module](core.md) | `Crawler`, relational model types, `Application`, `Compiler` SPI, YAML loading via `CoreConsts`. |
 | 3 | [Compiler module](compiler.md) | `JavaCompiler` pipeline, `JavaMapper`, FreeMarker template layout, how tests configure output paths. |
-| 4 | [Datastore module](datastore.md) | Example/integration tests, dependency on generated `org.example` code, building with `mvn -f datastore/pom.xml`. |
+| 4 | [Maven plugin](maven-plugin.md) | `org.sqlcomponents:maven-plugin`, `sql-component.yml`, `generate` goal, JDBC driver under `<plugin><dependencies>`. |
+| 5 | [Maven Central hosting](maven-central-hosting.md) | Publishing `core`, `compiler`, `maven-plugin`, and parent POM to Maven Central; prerequisites, POM checklist, signing, CI. |
+| 6 | [Datastore module](datastore.md) | Example/integration tests, dependency on generated `org.example` code, building with `mvn -f datastore/pom.xml`. |
 
 ---
 
