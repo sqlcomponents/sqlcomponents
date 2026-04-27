@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.sqlcomponents</groupId>
     <artifactId>sqlcomponents</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
 
     <name>SQL Components</name>
@@ -97,7 +97,7 @@
     <modules>
         <module>core</module>
         <module>compiler</module>
-<!--        <module>maven-plugin</module>-->
+        <module>maven-plugin</module>
     </modules>
 
     <dependencies>
@@ -335,7 +335,6 @@
     <profiles>
         <profile>
             <id>release</id>
-
 
             <build>
                 <plugins>
