@@ -32,7 +32,7 @@ public final class GenerateMojo extends AbstractMojo {
      * {@link CoreConsts#buildApplication(File)}).
      */
     @Parameter(property = "sqlcomponents.configFile",
-            defaultValue = "${project.basedir}/sql-component.yml")
+            defaultValue = "${project.basedir}/sql-components.yml")
     private File configFile;
 
     /**
