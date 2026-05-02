@@ -144,6 +144,16 @@ public class Method {
     }
 
     /**
+     * Qualified SQL invocation target (see
+     * {@link Procedure#getSqlInvocationName()}).
+     *
+     * @return schema-qualified routine name when applicable
+     */
+    public String getSqlInvocationName() {
+        return function.getSqlInvocationName();
+    }
+
+    /**
      * Gets output.
      *
      * @return the output

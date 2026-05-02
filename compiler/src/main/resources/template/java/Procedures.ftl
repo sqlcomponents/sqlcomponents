@@ -1,5 +1,64 @@
 <#assign a=addImportStatement("java.sql.CallableStatement")>
+<#assign a=addImportStatement("java.sql.Connection")>
 <#assign a=addImportStatement("java.sql.SQLException")>
+
+<#-- PostgreSQL JDBC: TYPE_NAME for arrays is often "_int4"; createArrayOf expects the element type (e.g. int4). -->
+<#function pgProcedureArrayElementType typeName>
+    <#local tn = (typeName!"")?trim>
+    <#if (tn?length gt 0) && tn?starts_with("_")>
+        <#return tn?substring(1)>
+    <#else>
+        <#return tn>
+    </#if>
+</#function>
+
+<#-- Binds one IN / INOUT input at the JDBC 1-based parameter index. -->
+<#macro emitCallableInBind parameter ord>
+               <#switch parameter.dataType>
+                 <#case "java.time.LocalDate">
+                 <#case "java.time.LocalTime">
+                 <#case "java.time.LocalDateTime">
+                 <#case "java.nio.ByteBuffer">
+                 <#case "com.fasterxml.jackson.databind.JsonNode">
+                 <#case "java.util.UUID">
+                 <#case "java.time.Duration">
+                 <#case "java.util.BitSet">
+                      callableStatement.setObject(${ord}, ${parameter.name});
+                      <#break>
+                 <#case "java.sql.Array">
+                      <#if parameter.column??>
+                      {
+                          final Object[] __sqlElems${ord} = (Object[]) ${parameter.name}.getArray();
+                          final java.sql.Array __sqlArr${ord} = connection.createArrayOf(
+                                  "${pgProcedureArrayElementType(parameter.column.typeName)}",
+                                  __sqlElems${ord});
+                          callableStatement.setArray(${ord}, __sqlArr${ord});
+                      }
+                      <#else>
+                      callableStatement.setArray(${ord}, ${parameter.name});
+                      </#if>
+                      <#break>
+                 <#case "java.sql.Struct">
+                      callableStatement.setObject(${ord}, ${parameter.name});
+                      <#break>
+                 <#case "java.lang.Object">
+                      callableStatement.setObject(${ord}, ${parameter.name});
+                      <#break>
+                 <#case "java.lang.Integer[]">
+                 <#case "java.lang.Long[]">
+                 <#case "java.lang.Short[]">
+                 <#case "java.lang.Float[]">
+                 <#case "java.lang.Double[]">
+                 <#case "java.lang.String[]">
+                      callableStatement.setArray(${ord}, connection.createArrayOf(
+                              "${pgProcedureArrayElementType(parameter.column.typeName)}",
+                              ${parameter.name}));
+                      <#break>
+                 <#default>
+                      callableStatement.set${getClassName(parameter.dataType)}(${ord}, ${parameter.name});
+               </#switch>
+               	<#assign a=addImportStatement(parameter.dataType)>
+</#macro>
 
 /**
 * Calls a stored procedure.
@@ -15,9 +74,21 @@ public static final class Procedure {
     private Procedure() {
     }
 
-    <#list orm.methods as method>
+    private static java.sql.ResultSet detachRefCursorResultSet(
+            final java.sql.ResultSet rawRs) throws java.sql.SQLException {
+        if (rawRs == null) {
+            return null;
+        }
+        final javax.sql.rowset.CachedRowSet crs =
+                javax.sql.rowset.RowSetProvider.newFactory().createCachedRowSet();
+        crs.populate(rawRs);
+        rawRs.close();
+        return crs;
+    }
+
+    <#list orm.methods as procMethod>
     <#assign inCount = 0>
-    <#list method.inputParameters as parameter>
+    <#list procMethod.inputParameters as parameter>
         <#if getClassName(parameter.dataType) != "Void">
             <#assign inCount = inCount + 1>
         </#if>
@@ -25,8 +96,8 @@ public static final class Procedure {
     <#assign outNonVoidCount = 0>
     <#assign firstNonVoidOut = "">
     <#assign firstOutResolved = false>
-    <#if method.outputParameters??>
-    <#list method.outputParameters as op>
+    <#if procMethod.outputParameters??>
+    <#list procMethod.outputParameters as op>
         <#if getClassName(op.dataType) != "Void">
             <#assign outNonVoidCount = outNonVoidCount + 1>
             <#if !firstOutResolved>
@@ -36,60 +107,66 @@ public static final class Procedure {
         </#if>
     </#list>
     </#if>
-    <#-- PostgreSQL scalar SQL functions use JDBC {? = call fn(?,...)}; first ? is the return value. -->
-    <#assign usePgFunctionReturnSyntax = (orm.database.dbType == 'POSTGRES') && (outNonVoidCount == 1)>
-    <#assign paramTotal = inCount + outNonVoidCount>
+    <#assign maxOrd = 0>
+    <#list procMethod.inputParameters as parameter>
+        <#if parameter.column?? && getClassName(parameter.dataType) != "Void" && parameter.column.ordinalPosition gte 1 && parameter.column.ordinalPosition gt maxOrd>
+            <#assign maxOrd = parameter.column.ordinalPosition>
+        </#if>
+    </#list>
+    <#list procMethod.outputParameters as parameter>
+        <#if parameter.column?? && getClassName(parameter.dataType) != "Void" && parameter.column.ordinalPosition gte 1 && parameter.column.ordinalPosition gt maxOrd>
+            <#assign maxOrd = parameter.column.ordinalPosition>
+        </#if>
+    </#list>
+    <#-- PostgreSQL SQL functions: JDBC {? = call fn(?,...)} — first ? is the scalar return (metadata ordinal 0). -->
+    <#assign usePgFunctionReturnSyntax = (orm.database.dbType == 'POSTGRES') && (outNonVoidCount == 1)
+        && firstNonVoidOut?has_content && firstNonVoidOut.column?? && (firstNonVoidOut.column.ordinalPosition == 0)>
+    <#-- PostgreSQL CREATE PROCEDURE and MySQL/MariaDB procedures: SQL CALL keyword (not JDBC {call ...} only). -->
+    <#assign pgRefCursorSingleOut = (orm.database.dbType == 'POSTGRES') && (outNonVoidCount == 1)
+        && (!usePgFunctionReturnSyntax) && firstNonVoidOut?has_content
+        && (getClassName(firstNonVoidOut.dataType) == "ResultSet")>
+    <#assign useSqlCallKeyword = procMethod.function.catalogProcedure!false &&
+        (orm.database.dbType == 'POSTGRES'
+        || orm.database.dbType == 'MYSQL'
+        || orm.database.dbType == 'MARIADB')>
     /**
-    * ${method.name} Method.
-    <#list method.inputParameters as parameter>
+    * ${procMethod.name} Method.
+    <#list procMethod.inputParameters as parameter>
     * @param ${parameter.name}
     </#list>
     <#if outNonVoidCount == 1>
-    * @return ${method.name} output value
+    * @return ${procMethod.name} output value
     <#elseif outNonVoidCount gt 1>
-    <#list method.outputParameters as parameter>
+    <#list procMethod.outputParameters as parameter>
     <#if getClassName(parameter.dataType) != "Void">
     * @param ${parameter.name} single-element array; element 0 receives the output value
     </#if>
     </#list>
     </#if>
-    <#if method.exceptions?? && (method.exceptions?size > 0)>
-    <#list method.exceptions as exception>
+    <#if procMethod.exceptions?? && (procMethod.exceptions?size > 0)>
+    <#list procMethod.exceptions as exception>
     * @throws ${exception}
     </#list>
     </#if>
     */
     <#if outNonVoidCount == 1>
-    public ${getClassName(firstNonVoidOut.dataType)} ${method.name}(
+    public ${getClassName(firstNonVoidOut.dataType)} ${procMethod.name}(
         final DataSource dbDataSource
-    <#list method.inputParameters as parameter>
+    <#list procMethod.inputParameters as parameter>
         <#if getClassName(parameter.dataType) != "Void">
         , final ${getClassName(parameter.dataType)} ${parameter.name}
         </#if>
     </#list>
     ) throws SQLException {
         <#if usePgFunctionReturnSyntax>
-        try (CallableStatement callableStatement = dbDataSource.getConnection()
-                .prepareCall("{? = call ${method.functionName}(<#assign sep=""><#list 1..inCount as i>${sep}?<#assign sep=","></#list>)}")) {
+        try (Connection connection = dbDataSource.getConnection();
+                CallableStatement callableStatement = connection
+                .prepareCall("{? = call ${procMethod.sqlInvocationName}(<#assign sep=""><#list 1..inCount as i>${sep}?<#assign sep=","></#list>)}")) {
             callableStatement.registerOutParameter(1, ${getColumnType(firstNonVoidOut.column.columnType)} );
             <#assign inSlot = 2>
-            <#list method.inputParameters as parameter>
+            <#list procMethod.inputParameters as parameter>
                <#if getClassName(parameter.dataType) != "Void">
-               <#switch parameter.dataType>
-                 <#case "java.time.LocalDate">
-                 <#case "java.time.LocalTime">
-                 <#case "java.time.LocalDateTime">
-                 <#case "java.nio.ByteBuffer">
-                 <#case "com.fasterxml.jackson.databind.JsonNode">
-                 <#case "java.util.UUID">
-                 <#case "java.time.Duration">
-                 <#case "java.util.BitSet">
-                      callableStatement.setObject(${inSlot}, ${parameter.name});
-                      <#break>
-                 <#default>
-                      callableStatement.set${getClassName(parameter.dataType)}(${inSlot}, ${parameter.name});
-               </#switch>
-               	<#assign a=addImportStatement(parameter.dataType)>
+               <@emitCallableInBind parameter=parameter ord=inSlot/>
                 <#assign inSlot = inSlot + 1>
                </#if>
             </#list>
@@ -97,106 +174,105 @@ public static final class Procedure {
             return ${callableOutScalarExpression("1", firstNonVoidOut.dataType)};
         }
         <#else>
-        try (CallableStatement callableStatement = dbDataSource.getConnection()
-                .prepareCall("{call ${method.functionName}(<#assign sep2=""><#list 1..paramTotal as i>${sep2}?<#assign sep2=","></#list>)}")) {
-            <#assign inSlot = 1>
-            <#list method.inputParameters as parameter>
-               <#if getClassName(parameter.dataType) != "Void">
-               <#switch parameter.dataType>
-                 <#case "java.time.LocalDate">
-                 <#case "java.time.LocalTime">
-                 <#case "java.time.LocalDateTime">
-                 <#case "java.nio.ByteBuffer">
-                 <#case "com.fasterxml.jackson.databind.JsonNode">
-                 <#case "java.util.UUID">
-                 <#case "java.time.Duration">
-                 <#case "java.util.BitSet">
-                      callableStatement.setObject(${inSlot}, ${parameter.name});
-                      <#break>
-                 <#default>
-                      callableStatement.set${getClassName(parameter.dataType)}(${inSlot}, ${parameter.name});
-               </#switch>
-               	<#assign a=addImportStatement(parameter.dataType)>
-                <#assign inSlot = inSlot + 1>
+        <#if pgRefCursorSingleOut>
+        try (Connection connection = dbDataSource.getConnection()) {
+            final boolean __refCursorTxAutoCommit = connection.getAutoCommit();
+            connection.setAutoCommit(false);
+            try (CallableStatement callableStatement = connection
+                .prepareCall("CALL ${procMethod.sqlInvocationName}(<#assign sep2=""><#list 1..maxOrd as i>${sep2}?<#assign sep2=","></#list>)")) {
+            <#list 1..maxOrd as ord>
+            <#list procMethod.inputParameters as parameter>
+               <#if getClassName(parameter.dataType) != "Void" && parameter.column?? && parameter.column.ordinalPosition == ord>
+               <@emitCallableInBind parameter=parameter ord=ord/>
                </#if>
             </#list>
-            <#assign outIdx = 0>
-            <#list method.outputParameters as oParameter>
-                <#if getClassName(oParameter.dataType) != "Void">
-                      callableStatement.registerOutParameter(${inCount + 1 + outIdx}, ${getColumnType(oParameter.column.columnType)} );
-                    <#assign outIdx = outIdx + 1>
+            <#list procMethod.outputParameters as oParameter>
+                <#if getClassName(oParameter.dataType) != "Void" && oParameter.column?? && oParameter.column.ordinalPosition == ord>
+                      callableStatement.registerOutParameter(${ord}, ${getColumnType(oParameter.column.columnType)} );
                 </#if>
             </#list>
-            callableStatement.execute();
-            return ${callableOutScalarExpression((inCount + 1)?string, firstNonVoidOut.dataType)};
+            </#list>
+                callableStatement.execute();
+                final java.sql.ResultSet __refCursorRows = detachRefCursorResultSet((java.sql.ResultSet) callableStatement.getObject(${firstNonVoidOut.column.ordinalPosition?string}, java.sql.ResultSet.class));
+                connection.commit();
+                return __refCursorRows;
+            } catch (java.sql.SQLException __refCursorEx) {
+                connection.rollback();
+                throw __refCursorEx;
+            } finally {
+                connection.setAutoCommit(__refCursorTxAutoCommit);
+            }
         }
+        <#else>
+        try (Connection connection = dbDataSource.getConnection();
+                CallableStatement callableStatement = connection
+                .prepareCall(<#if useSqlCallKeyword>"CALL ${procMethod.sqlInvocationName}(<#assign sep2=""><#list 1..maxOrd as i>${sep2}?<#assign sep2=","></#list>)"<#else>"{call ${procMethod.sqlInvocationName}(<#assign sep2=""><#list 1..maxOrd as i>${sep2}?<#assign sep2=","></#list>)}"</#if>)) {
+            <#list 1..maxOrd as ord>
+            <#list procMethod.inputParameters as parameter>
+               <#if getClassName(parameter.dataType) != "Void" && parameter.column?? && parameter.column.ordinalPosition == ord>
+               <@emitCallableInBind parameter=parameter ord=ord/>
+               </#if>
+            </#list>
+            <#list procMethod.outputParameters as oParameter>
+                <#if getClassName(oParameter.dataType) != "Void" && oParameter.column?? && oParameter.column.ordinalPosition == ord>
+                      callableStatement.registerOutParameter(${ord}, ${getColumnType(oParameter.column.columnType)} );
+                </#if>
+            </#list>
+            </#list>
+            callableStatement.execute();
+            return ${callableOutScalarExpression(firstNonVoidOut.column.ordinalPosition?string, firstNonVoidOut.dataType)};
+        }
+        </#if>
         </#if>
     }
     <#elseif outNonVoidCount gt 1>
-    public void ${method.name}(
+    public void ${procMethod.name}(
         final DataSource dbDataSource
-    <#list method.inputParameters as parameter>
+    <#list procMethod.inputParameters as parameter>
         <#if getClassName(parameter.dataType) != "Void">
         , final ${getClassName(parameter.dataType)} ${parameter.name}
         </#if>
     </#list>
-    <#list method.outputParameters as parameter>
+    <#list procMethod.outputParameters as parameter>
         <#if getClassName(parameter.dataType) != "Void">
         , final ${getClassName(parameter.dataType)}[] ${parameter.name}
         </#if>
     </#list>
     ) throws SQLException {
-        try (CallableStatement callableStatement = dbDataSource.getConnection()
-                .prepareCall("{call ${method.functionName}(<#assign sep3=""><#list 1..paramTotal as i>${sep3}?<#assign sep3=","></#list>)}")) {
-            <#assign inSlot = 1>
-            <#list method.inputParameters as parameter>
-               <#if getClassName(parameter.dataType) != "Void">
-               <#switch parameter.dataType>
-                 <#case "java.time.LocalDate">
-                 <#case "java.time.LocalTime">
-                 <#case "java.time.LocalDateTime">
-                 <#case "java.nio.ByteBuffer">
-                 <#case "com.fasterxml.jackson.databind.JsonNode">
-                 <#case "java.util.UUID">
-                 <#case "java.time.Duration">
-                 <#case "java.util.BitSet">
-                      callableStatement.setObject(${inSlot}, ${parameter.name});
-                      <#break>
-                 <#default>
-                      callableStatement.set${getClassName(parameter.dataType)}(${inSlot}, ${parameter.name});
-               </#switch>
-               	<#assign a=addImportStatement(parameter.dataType)>
-                <#assign inSlot = inSlot + 1>
+        try (Connection connection = dbDataSource.getConnection();
+                CallableStatement callableStatement = connection
+                .prepareCall(<#if useSqlCallKeyword>"CALL ${procMethod.sqlInvocationName}(<#assign sep3=""><#list 1..maxOrd as i>${sep3}?<#assign sep3=","></#list>)"<#else>"{call ${procMethod.sqlInvocationName}(<#assign sep3=""><#list 1..maxOrd as i>${sep3}?<#assign sep3=","></#list>)}"</#if>)) {
+            <#list 1..maxOrd as ord>
+            <#list procMethod.inputParameters as parameter>
+               <#if getClassName(parameter.dataType) != "Void" && parameter.column?? && parameter.column.ordinalPosition == ord>
+               <@emitCallableInBind parameter=parameter ord=ord/>
                </#if>
             </#list>
-            <#assign outIdx = 0>
-            <#list method.outputParameters as oParameter>
-                <#if getClassName(oParameter.dataType) != "Void">
-                      callableStatement.registerOutParameter(${inCount + 1 + outIdx}, ${getColumnType(oParameter.column.columnType)} );
-                    <#assign outIdx = outIdx + 1>
+            <#list procMethod.outputParameters as oParameter>
+                <#if getClassName(oParameter.dataType) != "Void" && oParameter.column?? && oParameter.column.ordinalPosition == ord>
+                      callableStatement.registerOutParameter(${ord}, ${getColumnType(oParameter.column.columnType)} );
                 </#if>
             </#list>
+            </#list>
             callableStatement.execute();
-            <#assign outIdx = 0>
-            <#list method.outputParameters as oParameter>
-                <#if getClassName(oParameter.dataType) != "Void">
-                  ${oParameter.name}[0] = ${callableOutScalarExpression((inCount + 1 + outIdx)?string, oParameter.dataType)};
-                    <#assign outIdx = outIdx + 1>
+            <#list procMethod.outputParameters as oParameter>
+                <#if getClassName(oParameter.dataType) != "Void" && oParameter.column??>
+                  ${oParameter.name}[0] = ${callableOutScalarExpression(oParameter.column.ordinalPosition?string, oParameter.dataType)};
                 </#if>
             </#list>
         }
     }
     <#else>
-    public void ${method.name}(
+    public void ${procMethod.name}(
         final DataSource dbDataSource
-    <#list method.inputParameters as parameter>
+    <#list procMethod.inputParameters as parameter>
         <#if getClassName(parameter.dataType) != "Void">
         , final ${getClassName(parameter.dataType)} ${parameter.name}
         </#if>
     </#list>
     ) throws SQLException {
-        SqlBuilder.prepareCall("call ${method.functionName}(<#assign sep2=""><#list 1..inCount as i>${sep2}?<#assign sep2=","></#list>)")
-            <#list method.inputParameters as parameter>
+        SqlBuilder.prepareCall(<#if useSqlCallKeyword>"CALL ${procMethod.sqlInvocationName}(<#assign sep2=""><#list 1..inCount as i>${sep2}?<#assign sep2=","></#list>)"<#else>"call ${procMethod.sqlInvocationName}(<#assign sep2=""><#list 1..inCount as i>${sep2}?<#assign sep2=","></#list>)"</#if>)
+            <#list procMethod.inputParameters as parameter>
                <#if getClassName(parameter.dataType) != "Void">
                <#switch parameter.dataType>
                  <#case "java.time.LocalDate">
@@ -207,6 +283,15 @@ public static final class Procedure {
                  <#case "java.util.UUID">
                  <#case "java.time.Duration">
                  <#case "java.util.BitSet">
+                 <#case "java.sql.Array">
+                 <#case "java.sql.Struct">
+                 <#case "java.lang.Object">
+                 <#case "java.lang.Integer[]">
+                 <#case "java.lang.Long[]">
+                 <#case "java.lang.Short[]">
+                 <#case "java.lang.Float[]">
+                 <#case "java.lang.Double[]">
+                 <#case "java.lang.String[]">
                     .param((Object) ${parameter.name})
                       <#break>
                  <#case "java.lang.Byte">

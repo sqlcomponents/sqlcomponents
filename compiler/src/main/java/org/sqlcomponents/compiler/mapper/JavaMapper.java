@@ -5,8 +5,12 @@ import org.sqlcomponents.core.mapper.Mapper;
 import org.sqlcomponents.core.model.Application;
 import org.sqlcomponents.core.model.Entity;
 import org.sqlcomponents.core.model.relational.Column;
+
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
+import java.sql.Array;
+import java.sql.Clob;
+import java.sql.ResultSet;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -96,9 +100,14 @@ public final class JavaMapper extends Mapper {
                 return aEntity.getBeanPackage() + ".types."
                         + getEntityName(aColumn.getTypeName()) + "Type";
             default:
-                return Objects.requireNonNull(getDataTypeClass(aColumn))
-                        .getName();
+                return canonicalOrBinaryName(
+                        Objects.requireNonNull(getDataTypeClass(aColumn)));
         }
+    }
+
+    private static String canonicalOrBinaryName(final Class<?> clazz) {
+        final String canonical = clazz.getCanonicalName();
+        return canonical != null ? canonical : clazz.getName();
     }
 
     /**
@@ -153,6 +162,17 @@ public final class JavaMapper extends Mapper {
             case LONGVARBINARY:
             case BINARY:
                 return ByteBuffer.class;
+            case ARRAY:
+                return preferredJavaClassForSqlArray(aColumn);
+            case STRUCT:
+                // Portable composite IN: Object so PG callers can pass PGobject
+                // (#createStruct is not implemented on PostgreSQL JDBC).
+                return Object.class;
+            case CLOB:
+            case NCLOB:
+                return Clob.class;
+            case REF_CURSOR:
+                return ResultSet.class;
             case VOID:
                 return Void.class;
             case OTHER:
@@ -172,7 +192,46 @@ public final class JavaMapper extends Mapper {
         if (aColumn.getTypeName().equalsIgnoreCase(INTERVAL_STR)) {
             return Duration.class;
         }
+        final String typeName = aColumn.getTypeName();
+        if (typeName != null && "refcursor".equalsIgnoreCase(typeName.trim())) {
+            return ResultSet.class;
+        }
         throw new RuntimeException(createMessage(aColumn));
+    }
+
+    /**
+     * Maps PostgreSQL {@code ARRAY} (often {@code _int4}) to a boxed Java array
+     * class when the element type is known; otherwise {@link Array}.
+     *
+     * @param aColumn column metadata (uses {@code typeName})
+     * @return boxed array type or {@link Array}
+     */
+    private Class<?> preferredJavaClassForSqlArray(final Column aColumn) {
+        final String tn = aColumn.getTypeName();
+        if (tn == null || !tn.startsWith("_")) {
+            return Array.class;
+        }
+        switch (tn.substring(1).toLowerCase()) {
+            case "int4":
+            case "integer":
+                return Integer[].class;
+            case "int8":
+            case "bigint":
+                return Long[].class;
+            case "int2":
+            case "smallint":
+                return Short[].class;
+            case "float4":
+            case "real":
+                return Float[].class;
+            case "float8":
+                return Double[].class;
+            case "text":
+            case "varchar":
+                return String[].class;
+            default:
+                return Array.class;
+        }
     }
 
     /**
@@ -183,9 +242,16 @@ public final class JavaMapper extends Mapper {
      */
     @NotNull
     private String createMessage(final Column aColumn) {
+        final String location;
+        if (aColumn.getTable() != null) {
+            location = "table " + aColumn.getTable().getTableName();
+        } else if (aColumn.getProcedure() != null) {
+            location = "routine " + aColumn.getProcedure().getFunctionName();
+        } else {
+            location = "unknown";
+        }
         return "Datatype not found for column " + aColumn.getColumnName()
-                + " of table "
-                + aColumn.getTable().getTableName() + " of type name "
+                + " of " + location + " of type name "
                 + aColumn.getTypeName() + " of column type "
                 + aColumn.getColumnType();
     }

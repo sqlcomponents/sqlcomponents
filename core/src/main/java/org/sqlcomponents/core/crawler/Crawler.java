@@ -712,6 +712,7 @@ public class Crawler {
                 .getProcedures(null, null, null)) {
             while (lResultSet.next()) {
                 Procedure function = new Procedure();
+                function.setCatalogProcedure(true);
                 function.setFunctionName(
                         lResultSet.getString("PROCEDURE_NAME"));
                 function.setFunctionCategory(
@@ -733,6 +734,7 @@ public class Crawler {
                 .getFunctions(null, "public", null)) {
             while (lResultSet.next()) {
                 Procedure function = new Procedure();
+                function.setCatalogProcedure(false);
                 function.setFunctionName(
                         lResultSet.getString("FUNCTION_NAME"));
                 function.setFunctionCategory(

@@ -53,6 +53,10 @@ Represents one generated unit (typically aligned with a table, view, or enum typ
 
 Types under `org.sqlcomponents.core.model.relational` mirror JDBC catalog concepts so the compiler can emit Java without re-querying the database during generation.
 
+### `Procedure` and routine cataloging
+
+[`Procedure`](../core/src/main/java/org/sqlcomponents/core/model/relational/Procedure.java) represents one JDBC routine. Input and output parameters use the relational [`Column`](../core/src/main/java/org/sqlcomponents/core/model/relational/Column.java) model (including **`ARRAY`**, **`STRUCT`**, **`REF_CURSOR`**, … as surfaced by the driver). **`getSqlInvocationName()`** supplies **schema-qualified** SQL when **`functionSchema`** is set. The crawler sets **`catalogProcedure`** to **`true`** for rows from **`getProcedures`** and **`false`** for **`getFunctions`**, so the compiler can emit **PostgreSQL `CALL …`** for **`CREATE PROCEDURE`** objects while keeping **`{call …}`** / **`{? = call …}`** behaviour appropriate for functions. When several overloads share a **`functionName`**, [`Mapper`](../core/src/main/java/org/sqlcomponents/core/mapper/Mapper.java) may set the Java method name from JDBC **`specificName`**. See [Stored procedures and functions](stored-procedures.md).
+
 ## Configuration loading (YAML)
 
 [`CoreConsts.buildApplication(File)`](../core/src/main/java/org/sqlcomponents/core/utils/CoreConsts.java) loads an `Application` from a YAML file using SnakeYAML’s `Constructor(Application.class)`, then sets `methodSpecification` to `Application.METHOD_SPECIFICATION` by default.
@@ -74,5 +78,6 @@ The compiler module depends on **core** only. Core does **not** reference FreeMa
 
 - [Compiler module](compiler.md)
 - [Datastore module](datastore.md)
+- [Stored procedures and functions](stored-procedures.md)
 - [Project structure](project-structure.md)
 - [Documentation index](README.md)

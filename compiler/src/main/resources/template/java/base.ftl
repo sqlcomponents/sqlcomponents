@@ -27,6 +27,10 @@
 		<#case "Boolean"><#return "callableStatement.getBoolean("+indexStr+")">
 		<#case "String"><#return "callableStatement.getString("+indexStr+")">
 		<#case "BigDecimal"><#return "callableStatement.getBigDecimal("+indexStr+")">
+		<#case "Array"><#return "callableStatement.getArray("+indexStr+")">
+		<#case "Struct"><#return "callableStatement.getObject("+indexStr+", java.sql.Struct.class)">
+		<#case "ResultSet"><#return "detachRefCursorResultSet((java.sql.ResultSet) callableStatement.getObject("+indexStr+", java.sql.ResultSet.class))">
+		<#case "Clob"><#return "callableStatement.getClob("+indexStr+")">
 		<#default><#return "callableStatement.getObject("+indexStr+", "+dataTypeFqn+".class)">
 	</#switch>
 </#function>

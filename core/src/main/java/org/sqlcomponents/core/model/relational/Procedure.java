@@ -41,6 +41,16 @@ public class Procedure {
     private String specificName;
 
     /**
+     * {@code true} when this routine came from
+     * {@link java.sql.DatabaseMetaData#getProcedures}
+     * (e.g. PG {@code CREATE PROCEDURE}),
+     * {@code false} from {@code getFunctions}.
+     * PG procedures use SQL {@code CALL}.
+     * JDBC callable escape targets functions.
+     */
+    private boolean catalogProcedure;
+
+    /**
      * The Parameters.
      */
     private List<Column> inputParameters;
@@ -74,6 +84,19 @@ public class Procedure {
         this.functionSchema = theFunctionSchema;
     }
 
+    /**
+     * SQL routine name for {@code CALL} / JDBC escaped calls:
+     * {@code schema.name} when schema is present.
+     *
+     * @return qualified name, or bare {@link #functionName}
+     */
+    public String getSqlInvocationName() {
+        if (functionSchema == null || functionSchema.isBlank()) {
+            return functionName;
+        }
+        return functionSchema + "." + functionName;
+    }
+
     public String getRemarks() {
         return remarks;
     }
@@ -96,6 +119,14 @@ public class Procedure {
 
     public void setSpecificName(final String theSpecificName) {
         this.specificName = theSpecificName;
+    }
+
+    public boolean isCatalogProcedure() {
+        return catalogProcedure;
+    }
+
+    public void setCatalogProcedure(final boolean theCatalogProcedure) {
+        this.catalogProcedure = theCatalogProcedure;
     }
 
     public List<Column> getInputParameters() {

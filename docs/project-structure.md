@@ -11,7 +11,7 @@ This document describes the repository layout, Maven modules, and where generate
 | `compiler/` | Library: Java code generation from the model (FreeMarker templates). Depends on `core`. |
 | `maven-plugin/` | Maven plugin (`org.sqlcomponents:maven-plugin`): runs generation from `sql-component.yml` in the `generate-sources` phase. Depends on `compiler`. |
 | `datastore/` | Separate Maven project (example/integration): tests against PostgreSQL; expects generated Java under `src/main/java` when you run the compiler. |
-| `init.db/` | SQL seed scripts per engine (`postgres/`, `h2db/`, `sqlserver/`, etc.) used by Docker or local DB setup. |
+| `init.db/` | SQL seed scripts per engine (`postgres/`, `h2db/`, `sqlserver/`, …) for Docker or local DB setup. See [Stored procedures and functions](stored-procedures.md) for PostgreSQL `procedures.sql` (including `integer[]` routine examples) and routine tests. |
 | `database.properties` | Local JDBC URLs and credentials (used by compiler tests via `CompilerTestUtil`). |
 | `docker-compose.yml` | Local PostgreSQL (`moviedb` on port 5432) with `init.db/postgres` mounted as init scripts. |
 | `.mvn/` | Maven wrapper support. |

@@ -22,7 +22,7 @@ Entity processing uses a **parallel stream** over `orm.getEntities()` for throug
 
 ## `JavaMapper`
 
-[`JavaMapper`](../compiler/src/main/java/org/sqlcomponents/compiler/mapper/JavaMapper.java) is responsible for mapping SQL column semantics (via core’s `Column` / `ColumnType`) to Java types—for example primitives, `String`, `UUID`, `BigDecimal`, JTS geometry types, JSON node types, and time API classes. The mapper feeds the templates so generated fields and method signatures match the database.
+[`JavaMapper`](../compiler/src/main/java/org/sqlcomponents/compiler/mapper/JavaMapper.java) maps SQL column semantics (via core’s `Column` / `ColumnType`) to Java types—including boxed **SQL array** types (`Integer[]`, … when PostgreSQL reports `_int4`, …), **`java.sql.Struct`**, **`java.sql.ResultSet`** for **`REF_CURSOR`**, **`Clob`**, and the existing geometry/JSON/time mappings. See [Stored procedures and functions](stored-procedures.md).
 
 ## FreeMarker templates
 
@@ -37,6 +37,7 @@ Notable groups:
 | `method/*.ftl` | Statement builders: `SelectStatement`, `InsertStatement`, `UpdateStatement`, `DeleteStatement`, `MViewRefresh`. |
 | `query/*.ftl`, `clause/*.ftl` | Query and WHERE composition. |
 | `base.ftl`, `jdbcbase.ftl`, `SqlBuilder.ftl`, … | Shared includes. |
+| [`Procedures.ftl`](../compiler/src/main/resources/template/java/Procedures.ftl) | `DataManager.Procedure`: JDBC callable / `CALL` for PostgreSQL procedures, ordinals for IN/OUT/INOUT, **`java.sql.Array`** rebind via **`createArrayOf`**, **`java.sql.Struct`** via **`setObject`**. |
 | `template/directive/` | Custom FreeMarker directives (e.g. column selection). |
 
 Generated `package-info.java` files are also written with a minimal `package …;` declaration for each output package.
@@ -90,5 +91,6 @@ Other implementations could target different languages or layouts as long as the
 
 - [Core module](core.md)
 - [Datastore module](datastore.md)
+- [Stored procedures and functions](stored-procedures.md)
 - [Project structure](project-structure.md)
 - [Documentation index](README.md)

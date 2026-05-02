@@ -11,23 +11,20 @@ INSERT INTO accounts(name, balance) VALUES('Nikhil', 10000);
 CREATE OR REPLACE PROCEDURE transfer(
    sender INT,
    receiver INT,
-   amount dec
+   amount DECIMAL(15, 2)
 )
 LANGUAGE plpgsql
 AS $$
 BEGIN
-    -- Subtracting the amount from the sender's account
     UPDATE accounts
     SET balance = balance - amount
-    WHERE id = sendeAr;
+    WHERE id = sender;
 
-    -- Adding the amount to the receiver's account
     UPDATE accounts
     SET balance = balance + amount
     WHERE id = receiver;
-
-    COMMIT;
-END; $$;
+END;
+$$;
 
 
 
@@ -48,3 +45,105 @@ CREATE FUNCTION add(a integer, b integer) RETURNS integer
     IMMUTABLE
     RETURNS NULL ON NULL INPUT
     RETURN a + b;
+
+-- IN + single OUT (procedure): output length of the message.
+CREATE OR REPLACE PROCEDURE sp_echo_len(IN p_msg text, OUT p_len int)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  p_len := length(p_msg);
+END;
+$$;
+
+-- IN + multiple OUT: quotient and remainder when dividing by 3.
+CREATE OR REPLACE PROCEDURE sp_divmod(IN p_n int, OUT p_q int, OUT p_r int)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  p_q := p_n / 3;
+  p_r := p_n % 3;
+END;
+$$;
+
+-- Two IN + two OUT (no INOUT): sum and product — exercises multiple IN with multiple OUT.
+CREATE OR REPLACE PROCEDURE sp_sum_product(
+  IN p_a int,
+  IN p_b int,
+  OUT p_sum int,
+  OUT p_product int
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  p_sum := p_a + p_b;
+  p_product := p_a * p_b;
+END;
+$$;
+
+-- INOUT only: doubles the passed value in place.
+CREATE OR REPLACE PROCEDURE sp_double_inout(INOUT p_value int)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  p_value := p_value * 2;
+END;
+$$;
+
+-- OUT only: fixed values (tests OUT without IN).
+CREATE OR REPLACE PROCEDURE sp_fixed_pair(OUT p_a int, OUT p_b int)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  p_a := 21;
+  p_b := 22;
+END;
+$$;
+
+-- Pure IN combination (three IN parameters, scalar return).
+CREATE OR REPLACE FUNCTION fn_sum_three(a integer, b integer, c integer) RETURNS integer
+    LANGUAGE SQL
+    IMMUTABLE
+    AS $$ SELECT a + b + c $$;
+
+-- Single array-typed IN (JDBC ARRAY / metadata TYPE_NAME often "_int4"); scalar return.
+CREATE OR REPLACE FUNCTION fn_array_sum(p_values integer[]) RETURNS integer
+    LANGUAGE sql
+    IMMUTABLE
+    AS $$ SELECT COALESCE((SELECT SUM(x) FROM unnest(p_values) AS u(x)), 0) $$;
+
+-- Second scalar routine with the same JDBC shape as fn_array_sum (one integer[] IN).
+-- A true PostgreSQL VARIADIC parameter cannot be invoked as fn(integer[]) from JDBC:
+-- the server expects either expanded arguments (1, 2, 3) or SQL
+-- fn_name(VARIADIC array_expr), which generated {? = call fn(?)} does not emit.
+CREATE OR REPLACE FUNCTION fn_variadic_sum(p_values integer[]) RETURNS integer
+    LANGUAGE sql
+    IMMUTABLE
+    AS $$ SELECT COALESCE((SELECT SUM(x) FROM unnest(p_values) AS u(x)), 0) $$;
+
+-- Composite type IN (maps to java.sql.Struct in generated API).
+CREATE TYPE proc_num_pair AS (a int, b int);
+
+CREATE OR REPLACE FUNCTION fn_struct_pair_sum(p proc_num_pair) RETURNS integer
+    LANGUAGE sql
+    IMMUTABLE
+    AS $$ SELECT (p).a + (p).b $$;
+
+-- INOUT + additional OUT: exercises output-parameter renaming when names collide.
+CREATE OR REPLACE PROCEDURE sp_inout_plus_extra(
+    INOUT p_value int,
+    OUT p_extra int
+)
+LANGUAGE plpgsql AS $$
+BEGIN
+    p_value := p_value + 1;
+    p_extra := p_value * 2;
+END;
+$$;
+
+-- OUT refcursor: ResultSet is detached in generated code (CachedRowSet) before the connection closes.
+CREATE OR REPLACE PROCEDURE sp_account_ids_cursor(OUT c refcursor)
+LANGUAGE plpgsql AS $$
+BEGIN
+    OPEN c FOR SELECT id FROM accounts ORDER BY id;
+END;
+$$;
