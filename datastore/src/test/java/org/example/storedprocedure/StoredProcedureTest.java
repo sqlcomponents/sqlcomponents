@@ -17,9 +17,11 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import org.postgresql.util.PGobject;
+
 import javax.sql.DataSource;
-import java.sql.Array;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -38,18 +40,22 @@ import java.util.List;
  *       {@link java.sql.DatabaseMetaData#getProcedureColumns} / {@code getFunctionColumns} ordinals.</li>
  *   <li><b>Multiple OUT/INOUT</b> (or mixed with IN): {@code void} and each output is a
  *       single-element array argument (element {@code [0]} is filled after execute).</li>
- *   <li><b>Array-typed IN, scalar return</b> (PostgreSQL {@code integer[]}): after codegen,
- *       {@code call().fnArraySum(dataSource, array)} and {@code call().fnVariadicSum(dataSource, array)}
- *       — SQL {@code fn_array_sum} / {@code fn_variadic_sum} in {@code procedures.sql} (both one
- *       {@code integer[]} parameter; {@code fn_variadic_sum} is not {@code VARIADIC} in SQL because JDBC
- *       {@code {? = call fn(?)} } does not emit PostgreSQL’s {@code VARIADIC} call syntax).</li>
+ *   <li><b>Array-typed IN, scalar return</b>: {@code Integer[]} (PostgreSQL {@code _int4[]}) for
+ *       {@code fnArraySum} / {@code fnVariadicSum}.</li>
+ *   <li><b>Composite {@code STRUCT} IN</b> — {@link Object} parameter (PostgreSQL {@link PGobject}); tests use
+ *       {@code fnStructPairSum}.</li>
+ *   <li><b>{@code REF CURSOR} OUT</b> — {@code spAccountIdsCursor} returns a detached {@link ResultSet}.</li>
+ *   <li><b>INOUT + second OUT</b> — {@code spInoutPlusExtra}; output holder for the INOUT slot is renamed in Java
+ *       (e.g. {@code pValueOut}) when it would collide with the IN parameter name.</li>
  * </ul>
  * <p>
  * <b>SQL coverage</b> (see {@code init.db/postgres/procedures.sql}; apply DDL then regenerate sources):
  * IN-only procedures, scalar SQL functions, procedures with one or more OUT parameters, INOUT-only procedure,
  * OUT-only procedure, multi-IN scalar functions, and {@code integer[]} scalar
- * functions ({@code java.sql.Array} via {@code Connection#createArrayOf}; generated
- * {@code fnArraySum} / {@code fnVariadicSum} on {@link org.example.DataManager.Procedure}).
+ * functions ({@code Integer[]} for {@code _int4} arrays from {@code org.sqlcomponents.compiler.mapper.JavaMapper};
+ * generated {@code fnArraySum} / {@code fnVariadicSum} on {@link org.example.DataManager.Procedure};
+ * composite {@code fnStructPairSum} / {@link PGobject}; {@code spAccountIdsCursor} / detached {@link ResultSet};
+ * {@code spInoutPlusExtra} / INOUT + OUT renaming).
  * <p>
  * Tests run in a <b>single thread</b> so one shared Hikari pool is not exhausted when JUnit
  * schedules nested and parameterized methods concurrently. {@code @BeforeEach} is scoped per
@@ -90,6 +96,16 @@ class StoredProcedureTest {
 
     private static int byteOrInt(final Number n) {
         return n.intValue();
+    }
+
+    /**
+     * PostgreSQL JDBC does not implement {@link Connection#createStruct}; composite arguments use {@link PGobject}.
+     */
+    private static PGobject procNumPair(final int a, final int b) throws SQLException {
+        final PGobject p = new PGobject();
+        p.setType("proc_num_pair");
+        p.setValue("(" + a + "," + b + ")");
+        return p;
     }
 
     /**
@@ -240,11 +256,8 @@ class StoredProcedureTest {
     }
 
     /**
-     * <b>Array-typed IN</b>: PostgreSQL {@code integer[]} appears as JDBC {@code ARRAY};
-     * {@code org.sqlcomponents.compiler.mapper.JavaMapper} maps it to {@link java.sql.Array}.
-     * Generated callables re-bind
-     * elements with the connection used for {@code CallableStatement} so callers may build the argument
-     * {@link Array} from any connection.
+     * <b>Array-typed IN</b>: PostgreSQL {@code integer[]} with element metadata {@code _int4} maps to
+     * {@code Integer[]} in generated {@link org.example.DataManager.Procedure} signatures.
      * <p>
      * <b>Generated {@link org.example.DataManager.Procedure} methods</b> (not defined in this test source;
      * they appear after compiling templates into {@code datastore/src/main/java}): {@code fnArraySum},
@@ -257,34 +270,127 @@ class StoredProcedureTest {
         @Test
         @DisplayName("fnArraySum (SQL fn_array_sum): non-empty integer[] → sum")
         void fnArraySum_nonEmpty() throws SQLException {
-            try (Connection c = dataSource.getConnection()) {
-                Array arr = c.createArrayOf("int4", new Integer[]{1, 2, 3});
-                Byte sum = dataManager.call().fnArraySum(dataSource, arr);
-                Assertions.assertNotNull(sum);
-                Assertions.assertEquals((byte) 6, sum.byteValue());
-            }
+            Byte sum = dataManager.call().fnArraySum(dataSource, new Integer[]{1, 2, 3});
+            Assertions.assertNotNull(sum);
+            Assertions.assertEquals((byte) 6, sum.byteValue());
         }
 
         @Test
         @DisplayName("fnArraySum (SQL fn_array_sum): empty array → 0")
         void fnArraySum_empty() throws SQLException {
-            try (Connection c = dataSource.getConnection()) {
-                Array arr = c.createArrayOf("int4", new Integer[]{});
-                Byte sum = dataManager.call().fnArraySum(dataSource, arr);
-                Assertions.assertNotNull(sum);
-                Assertions.assertEquals((byte) 0, sum.byteValue());
+            Byte sum = dataManager.call().fnArraySum(dataSource, new Integer[]{});
+            Assertions.assertNotNull(sum);
+            Assertions.assertEquals((byte) 0, sum.byteValue());
+        }
+
+        @Test
+        @DisplayName("fnArraySum: single element")
+        void fnArraySum_singleElement() throws SQLException {
+            Byte sum = dataManager.call().fnArraySum(dataSource, new Integer[]{42});
+            Assertions.assertEquals((byte) 42, sum.byteValue());
+        }
+
+        @Test
+        @DisplayName("fnArraySum: includes negative elements")
+        void fnArraySum_withNegatives() throws SQLException {
+            Byte sum = dataManager.call().fnArraySum(dataSource, new Integer[]{-4, 1, 3});
+            Assertions.assertEquals((byte) 0, sum.byteValue());
+        }
+
+        @ParameterizedTest(name = "({0},{1},{2}) → {3}")
+        @CsvSource({"1, 2, 3, 6", "10, -3, 0, 7", "0, 0, 0, 0"})
+        @DisplayName("fnArraySum: parameterized triples (Integer[])")
+        void fnArraySum_parameterizedTriple(
+                final int a, final int b, final int c, final int expected)
+                throws SQLException {
+            Byte sum =
+                    dataManager.call().fnArraySum(dataSource, new Integer[]{a, b, c});
+            Assertions.assertEquals((byte) expected, sum.byteValue());
+        }
+
+        @Test
+        @DisplayName("fnVariadicSum (SQL fn_variadic_sum): same shape as fnArraySum")
+        void fnVariadicSum_matchesArrayForm() throws SQLException {
+            Integer[] values = new Integer[]{5, 5, 5};
+            Byte v = dataManager.call().fnVariadicSum(dataSource, values);
+            Byte a = dataManager.call().fnArraySum(dataSource, values);
+            Assertions.assertEquals(v, a);
+            Assertions.assertEquals((byte) 15, v.byteValue());
+        }
+
+        @Test
+        @DisplayName("fnVariadicSum: distinct array instance same numeric result as fnArraySum")
+        void fnVariadicSum_agreesWithArraySumForCopy() throws SQLException {
+            Integer[] original = new Integer[]{2, 2, 2, 2};
+            Integer[] copy = java.util.Arrays.copyOf(original, original.length);
+            Byte v = dataManager.call().fnVariadicSum(dataSource, original);
+            Byte a = dataManager.call().fnArraySum(dataSource, copy);
+            Assertions.assertEquals(a, v);
+            Assertions.assertEquals((byte) 8, v.byteValue());
+        }
+    }
+
+    /**
+     * <b>Composite IN</b> and <b>OUT refcursor</b>: {@link PGobject} value and detached {@link ResultSet}.
+     */
+    @Nested
+    @DisplayName("STRUCT IN and REF_CURSOR OUT")
+    class StructAndRefCursor {
+
+        @Test
+        @DisplayName("fnStructPairSum: Struct proc_num_pair → sum")
+        void fnStructPairSum_addsFields() throws SQLException {
+            Byte sum = dataManager.call().fnStructPairSum(dataSource, procNumPair(7, 8));
+            Assertions.assertNotNull(sum);
+            Assertions.assertEquals((byte) 15, sum.byteValue());
+        }
+
+        @Test
+        @DisplayName("fnStructPairSum: zero fields")
+        void fnStructPairSum_zeros() throws SQLException {
+            Byte sum = dataManager.call().fnStructPairSum(dataSource, procNumPair(0, 0));
+            Assertions.assertEquals((byte) 0, sum.byteValue());
+        }
+
+        @Test
+        @DisplayName("fnStructPairSum: negative first component")
+        void fnStructPairSum_negativeComponent() throws SQLException {
+            Byte sum = dataManager.call().fnStructPairSum(dataSource, procNumPair(-3, 9));
+            Assertions.assertEquals((byte) 6, sum.byteValue());
+        }
+
+        @Test
+        @DisplayName("spAccountIdsCursor: exactly two seed rows then end of cursor")
+        void spAccountIdsCursor_exhaustsAfterSeedRows() throws SQLException {
+            try (ResultSet rs = dataManager.call().spAccountIdsCursor(dataSource)) {
+                int count = 0;
+                while (rs.next()) {
+                    count++;
+                    Assertions.assertTrue(rs.getLong(1) >= 1L && rs.getLong(1) <= 2L);
+                }
+                Assertions.assertEquals(2, count);
             }
         }
 
         @Test
-        @DisplayName("fnVariadicSum (SQL fn_variadic_sum): same JDBC ARRAY shape as fnArraySum")
-        void fnVariadicSum_matchesArrayForm() throws SQLException {
-            try (Connection c = dataSource.getConnection()) {
-                Array arr = c.createArrayOf("int4", new Integer[]{5, 5, 5});
-                Byte v = dataManager.call().fnVariadicSum(dataSource, arr);
-                Byte a = dataManager.call().fnArraySum(dataSource, arr);
-                Assertions.assertEquals(v, a);
-                Assertions.assertEquals((byte) 15, v.byteValue());
+        @DisplayName("spAccountIdsCursor: second invocation yields fresh ResultSet")
+        void spAccountIdsCursor_repeatableInvocation() throws SQLException {
+            try (ResultSet r1 = dataManager.call().spAccountIdsCursor(dataSource);
+                    ResultSet r2 = dataManager.call().spAccountIdsCursor(dataSource)) {
+                Assertions.assertTrue(r1.next() && r2.next());
+                Assertions.assertEquals(r1.getLong(1), r2.getLong(1));
+            }
+        }
+
+        @Test
+        @DisplayName("spAccountIdsCursor: OUT refcursor → ResultSet over account ids")
+        void spAccountIdsCursor_returnsRows() throws SQLException {
+            try (ResultSet rs = dataManager.call().spAccountIdsCursor(dataSource)) {
+                Assertions.assertNotNull(rs);
+                Assertions.assertTrue(rs.next());
+                Assertions.assertEquals(1L, rs.getLong(1));
+                Assertions.assertTrue(rs.next());
+                Assertions.assertEquals(2L, rs.getLong(1));
             }
         }
     }
@@ -444,6 +550,30 @@ class StoredProcedureTest {
         void spDoubleInout_smallPositive() throws SQLException {
             Byte doubled = dataManager.call().spDoubleInout(dataSource, (byte) 1);
             Assertions.assertEquals(2, byteOrInt(doubled));
+        }
+
+        @ParameterizedTest(name = "in={0} → inout_after={1}, extra={2}")
+        @CsvSource({"0, 1, 2", "4, 5, 10", "-5, -4, -8"})
+        @DisplayName("sp_inout_plus_extra: INOUT then OUT (parameterized)")
+        void spInoutPlusExtra_parameterized(
+                final int input,
+                final int expectedInout,
+                final int expectedExtra) throws SQLException {
+            Byte[] valueAfter = new Byte[1];
+            Byte[] extraOut = new Byte[1];
+            dataManager.call().spInoutPlusExtra(dataSource, (byte) input, valueAfter, extraOut);
+            Assertions.assertEquals(expectedInout, byteOrInt(valueAfter[0]));
+            Assertions.assertEquals(expectedExtra, byteOrInt(extraOut[0]));
+        }
+
+        @Test
+        @DisplayName("sp_inout_plus_extra: INOUT p_value + OUT p_extra (output slot renamed p_valueOut)")
+        void spInoutPlusExtra_inoutAndSecondOut() throws SQLException {
+            Byte[] valueAfter = new Byte[1];
+            Byte[] extraOut = new Byte[1];
+            dataManager.call().spInoutPlusExtra(dataSource, (byte) 4, valueAfter, extraOut);
+            Assertions.assertEquals(5, byteOrInt(valueAfter[0]));
+            Assertions.assertEquals(10, byteOrInt(extraOut[0]));
         }
     }
 

@@ -17,8 +17,11 @@ import org.sqlcomponents.core.model.relational.Package;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The type Mapper.
@@ -88,11 +91,54 @@ public abstract class Mapper {
             lProperties.add(getProperty(null, column));
         }
         lMethod.setInputParameters(lProperties);
+        final Set<String> takenNames = new HashSet<>();
+        for (Property ip : lProperties) {
+            takenNames.add(ip.getName());
+        }
         for (Column column : aProcedure.getOutputParameters()) {
-            outputProperties.add(getProperty(null, column));
+            Property op = getProperty(null, column);
+            String candidate = op.getName();
+            if (takenNames.contains(candidate)) {
+                op.setName(uniqueJavaIdentifier(candidate + "Out", takenNames));
+            }
+            takenNames.add(op.getName());
+            outputProperties.add(op);
         }
         lMethod.setOutputParameters(outputProperties);
         return lMethod;
+    }
+
+    private String uniqueJavaIdentifier(final String base,
+            final Set<String> taken) {
+        String candidate = base;
+        int i = 0;
+        while (taken.contains(candidate)) {
+            i++;
+            candidate = base + i;
+        }
+        return candidate;
+    }
+
+    private List<Method> buildMethods(final List<Procedure> procedures) {
+        if (procedures == null || procedures.isEmpty()) {
+            return new ArrayList<>();
+        }
+        final Map<String, Long> fnCounts = new HashMap<>();
+        for (Procedure p : procedures) {
+            fnCounts.merge(p.getFunctionName(), 1L, Long::sum);
+        }
+        final List<Method> methods = new ArrayList<>(procedures.size());
+        for (Procedure p : procedures) {
+            Method m = getMethod(p);
+            if (fnCounts.get(p.getFunctionName()) > 1L) {
+                final String spec = p.getSpecificName();
+                if (spec != null && !spec.isBlank()) {
+                    m.setName(getPropertyName(spec));
+                }
+            }
+            methods.add(m);
+        }
+        return methods;
     }
 
     /**
@@ -102,13 +148,10 @@ public abstract class Mapper {
      */
     private List<Method> getMethods() {
         Database database = application.getOrm().getDatabase();
-        ArrayList<Method> methods = new ArrayList<>();
-        if (database.getFunctions() != null) {
-            for (Procedure function : database.getFunctions()) {
-                methods.add(getMethod(function));
-            }
+        if (database.getFunctions() == null) {
+            return new ArrayList<>();
         }
-        return methods;
+        return buildMethods(database.getFunctions());
     }
 
     /**
@@ -127,8 +170,9 @@ public abstract class Mapper {
                 service.setServiceName(getServiceName(service.getName()));
                 service.setDaoPackage(getDaoPackage(service.getName()));
                 service.setMethods(new ArrayList<>());
-                for (Procedure function : package1.getFunctions()) {
-                    service.getMethods().add(getMethod(function));
+                if (package1.getFunctions() != null) {
+                    service.getMethods().addAll(
+                            buildMethods(package1.getFunctions()));
                 }
                 services.add(service);
             }

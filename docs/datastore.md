@@ -48,7 +48,7 @@ There is **no** direct Maven dependency from `datastore` onto `core` or `compile
 
 ## Stored procedures and functions
 
-Integration coverage for **`DataManager.call()`** (IN/OUT/INOUT, scalar functions, **`integer[]`** array parameters as **`java.sql.Array`**, PostgreSQL **`CALL`** semantics) lives in [`StoredProcedureTest`](../datastore/src/test/java/org/example/storedprocedure/StoredProcedureTest.java). DDL examples are in [`init.db/postgres/procedures.sql`](../init.db/postgres/procedures.sql).
+Integration coverage for **`DataManager.call()`** (IN/OUT/INOUT including **INOUT + extra OUT**, scalar functions, **`Integer[]`** array parameters, **`Struct`**, OUT **`refcursor`** as detached **`ResultSet`**, PostgreSQL **`CALL`** semantics) lives in [`StoredProcedureTest`](../datastore/src/test/java/org/example/storedprocedure/StoredProcedureTest.java). DDL examples are in [`init.db/postgres/procedures.sql`](../init.db/postgres/procedures.sql).
 
 See **[Stored procedures and functions](stored-procedures.md)** for how **`Procedure.catalogProcedure`**, **`JavaMapper`**, and **`Procedures.ftl`** map JDBC metadata to Java, and for the workflow after changing seed SQL or templates.
 

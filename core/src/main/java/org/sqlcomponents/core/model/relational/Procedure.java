@@ -84,6 +84,19 @@ public class Procedure {
         this.functionSchema = theFunctionSchema;
     }
 
+    /**
+     * SQL routine name for {@code CALL} / JDBC escaped calls:
+     * {@code schema.name} when schema is present.
+     *
+     * @return qualified name, or bare {@link #functionName}
+     */
+    public String getSqlInvocationName() {
+        if (functionSchema == null || functionSchema.isBlank()) {
+            return functionName;
+        }
+        return functionSchema + "." + functionName;
+    }
+
     public String getRemarks() {
         return remarks;
     }

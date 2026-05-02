@@ -119,3 +119,31 @@ CREATE OR REPLACE FUNCTION fn_variadic_sum(p_values integer[]) RETURNS integer
     LANGUAGE sql
     IMMUTABLE
     AS $$ SELECT COALESCE((SELECT SUM(x) FROM unnest(p_values) AS u(x)), 0) $$;
+
+-- Composite type IN (maps to java.sql.Struct in generated API).
+CREATE TYPE proc_num_pair AS (a int, b int);
+
+CREATE OR REPLACE FUNCTION fn_struct_pair_sum(p proc_num_pair) RETURNS integer
+    LANGUAGE sql
+    IMMUTABLE
+    AS $$ SELECT (p).a + (p).b $$;
+
+-- INOUT + additional OUT: exercises output-parameter renaming when names collide.
+CREATE OR REPLACE PROCEDURE sp_inout_plus_extra(
+    INOUT p_value int,
+    OUT p_extra int
+)
+LANGUAGE plpgsql AS $$
+BEGIN
+    p_value := p_value + 1;
+    p_extra := p_value * 2;
+END;
+$$;
+
+-- OUT refcursor: ResultSet is detached in generated code (CachedRowSet) before the connection closes.
+CREATE OR REPLACE PROCEDURE sp_account_ids_cursor(OUT c refcursor)
+LANGUAGE plpgsql AS $$
+BEGIN
+    OPEN c FOR SELECT id FROM accounts ORDER BY id;
+END;
+$$;

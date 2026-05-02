@@ -52,7 +52,7 @@ Read in this order if you are onboarding to the codebase:
 | 1 | [Project structure](project-structure.md) | Directories, which Maven modules build from the root reactor, dependency direction, where templates and generated files live. |
 | 2 | [Core module](core.md) | `Crawler`, relational model types, `Application`, `Compiler` SPI, YAML loading via `CoreConsts`. |
 | 3 | [Compiler module](compiler.md) | `JavaCompiler` pipeline, `JavaMapper`, FreeMarker template layout, how tests configure output paths. |
-| 4 | [Stored procedures and functions](stored-procedures.md) | `Procedure.catalogProcedure`, PostgreSQL `CALL` vs `{call}`, `JavaMapper` ARRAY/STRUCT → `java.sql.Array` / `Struct`, `Procedures.ftl`, `init.db/postgres/procedures.sql`, datastore tests. |
+| 4 | [Stored procedures and functions](stored-procedures.md) | Qualified **`CALL`**, schema-qualified names, overloads via **`specificName`**, **`Integer[]`** / **`REF_CURSOR`**, composite **`STRUCT`**, MySQL/MariaDB **`CALL`; remaining gaps (e.g. **`RETURNS TABLE`**, named params). |
 | 5 | [Maven plugin](maven-plugin.md) | `org.sqlcomponents:maven-plugin`, `sql-component.yml`, `generate` goal, JDBC driver under `<plugin><dependencies>`. |
 | 6 | [Maven Central hosting](maven-central-hosting.md) | Publishing `core`, `compiler`, `maven-plugin`, and parent POM to Maven Central; prerequisites, POM checklist, signing, CI. |
 | 7 | [Datastore module](datastore.md) | Example/integration tests, dependency on generated `org.example` code, building with `mvn -f datastore/pom.xml`. |
