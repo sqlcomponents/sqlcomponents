@@ -6,6 +6,38 @@ For the example module that runs these tests, see [Datastore module](datastore.m
 
 ---
 
+## What is covered vs not covered
+
+This section tracks **behaviour that exists in source today** (core + compiler + seed SQL + datastore tests) versus **gaps** that are not implemented, not in seed SQL, or not exercised.
+
+### Covered in source (today)
+
+| Area | What exists |
+|------|----------------|
+| **Metadata** | `getProcedures` / `getFunctions` merged into one list; [`Procedure.catalogProcedure`](../core/src/main/java/org/sqlcomponents/core/model/relational/Procedure.java) tells PostgreSQL **`CALL`** apart from function-style calls. |
+| **JDBC layout** | `Procedures.ftl` builds placeholders from **`ordinalPosition`** (≥ 1), so **IN**, **OUT**, **INOUT** on the same index, and **multiple OUT** align with `CallableStatement` indices. |
+| **Resource handling** | Generated callables use **`try (Connection; CallableStatement)`** so connections return to the pool (see template in [Procedures.ftl](../compiler/src/main/resources/template/java/Procedures.ftl)). |
+| **PostgreSQL syntax** | **`CALL`** for `CREATE PROCEDURE`; **`{? = call …}`** for scalar **`CREATE FUNCTION`** return (ordinal **0**); IN-only procedures use **`SqlBuilder.prepareCall`** with `CALL` / `call` as appropriate. |
+| **Seed + examples** | [`init.db/postgres/procedures.sql`](../init.db/postgres/procedures.sql): `transfer`, `create_cache`, `add`, `sp_echo_len`, `sp_divmod`, `sp_sum_product`, `sp_double_inout`, `sp_fixed_pair`, `fn_sum_three`. |
+| **Integration tests** | [`StoredProcedureTest`](../datastore/src/test/java/org/example/storedprocedure/StoredProcedureTest.java): IN-only (`create_cache` variants), scalar functions (`add`, `fn_sum_three`), IN + single OUT, IN + multi OUT, OUT-only, INOUT-only, `transfer` side effects; shared `DataSource`, scoped `@BeforeEach`, `@Execution(SAME_THREAD)` to reduce pool pressure. |
+
+### Not covered (or only partially) in source
+
+| Gap | Notes |
+|-----|--------|
+| **VARIADIC / SQL `ARRAY` parameters** | PostgreSQL often exposes **one array-typed** parameter; **`JavaMapper`** / procedure templates do not define a first-class story for **`ARRAY` / composite** routine parameters in this repo. No VARIADIC routine in [`procedures.sql`](../init.db/postgres/procedures.sql). |
+| **`RETURNS TABLE` / set-returning functions** | No crawler + template path here for **result-set-shaped** function returns; only **scalar** return (`{? = call …}`) and **OUT/INOUT** via `CallableStatement`. |
+| **`REF CURSOR` / OUT refcursor** | Not modelled in `Procedures.ftl`; no seed routines. |
+| **INOUT + extra OUT in one routine** | JDBC metadata lists INOUT on both input and output sides; the **multi-OUT Java API** uses **arrays per OUT name**. A routine that mixes **INOUT** with **another OUT** can produce **duplicate Java parameter names** or awkward signatures—**not** in current seed SQL by design. |
+| **Non-PostgreSQL procedure calling** | **`CALL`** vs **`{call …}`** branching is tied to **`DBType.POSTGRES`** and **`catalogProcedure`**. Other engines may need their own rules (e.g. SQL dialects, `EXEC`, packages). |
+| **Qualified names in generated SQL** | Emitted SQL uses **`${method.functionName}`** (typically **unqualified**). Routines outside the default **`search_path`** are not handled explicitly. |
+| **Overloaded routine names** | One `Method` per `Procedure` name from the crawler list; **same SQL name, different arity** is not addressed as a separate feature. |
+| **Named JDBC parameters** | Only **positional** `?` / `registerOutParameter` generation; no `SqlBuilder` / `CallableStatement` named-parameter API. |
+| **Rich OUT types** | `callableOutScalarExpression` in [`base.ftl`](../compiler/src/main/resources/template/java/base.ftl) covers common scalars; **exotic or driver-specific OUT types** may fall through to **`getObject`** or need template work. |
+| **Procedure `COMMIT` / autonomous transactions** | Not part of codegen; behaviour depends on the SQL body. `transfer` in seed SQL avoids an internal **`COMMIT`**. |
+
+---
+
 ## Catalog sources (`core`)
 
 [`Crawler.getProcedures`](../core/src/main/java/org/sqlcomponents/core/crawler/Crawler.java) merges two JDBC catalogs into one list on `Database.setFunctions` (historical name; entries are not all “functions”):
@@ -35,6 +67,8 @@ Routines become `public static final class DataManager.Procedure` methods via [`
 
 When **`orm.database.dbType == 'POSTGRES'`** and **`method.function.catalogProcedure`** is true, the template emits **`prepareCall("CALL …")`** instead of **`prepareCall("{call …}")`**. The IN-only path (no OUT parameters) uses the same distinction for the `SqlBuilder.prepareCall(...)` SQL string (`CALL` vs `call`).
 
+Callable paths use **`try (Connection c = …; CallableStatement cs = c.prepareCall(…))`** so both resources close; chaining **`try (CallableStatement cs = ds.getConnection().prepareCall(…))`** would only close the statement and **leak** the connection back to the pool.
+
 Other databases keep the existing **`{call …}`** behavior unless extended similarly.
 
 ### Shapes of generated Java API
@@ -60,9 +94,7 @@ Example DDL and routines for PostgreSQL live under [`init.db/postgres/`](../init
 
 ## Datastore tests
 
-[`StoredProcedureTest`](../datastore/src/test/java/org/example/storedprocedure/StoredProcedureTest.java) documents the **generated API** in class-level Javadoc and groups tests by **IN-only**, **scalar functions**, **IN/OUT combinations**, **INOUT**, and **`transfer`**.
-
-Some tests use **reflection** plus **`Assumptions`** so the module can compile **before** you regenerate `org.example` after adding routines; once **`DataManager.Procedure`** includes the new methods, those tests execute normally.
+[`StoredProcedureTest`](../datastore/src/test/java/org/example/storedprocedure/StoredProcedureTest.java) documents the **generated API** in class-level Javadoc and groups tests by **IN-only**, **scalar functions**, **IN/OUT combinations**, **INOUT**, and **`transfer`**. Tests call **`DataManager.Procedure`** methods directly (they must exist after codegen).
 
 After changing **`init.db/postgres/procedures.sql`** or **`Procedures.ftl`**, apply DDL (or recreate the Docker volume), **regenerate** sources into `datastore/src/main/java`, then run:
 

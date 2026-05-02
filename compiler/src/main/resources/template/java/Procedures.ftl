@@ -1,4 +1,5 @@
 <#assign a=addImportStatement("java.sql.CallableStatement")>
+<#assign a=addImportStatement("java.sql.Connection")>
 <#assign a=addImportStatement("java.sql.SQLException")>
 
 <#-- Binds one IN / INOUT input at the JDBC 1-based parameter index. -->
@@ -101,7 +102,8 @@ public static final class Procedure {
     </#list>
     ) throws SQLException {
         <#if usePgFunctionReturnSyntax>
-        try (CallableStatement callableStatement = dbDataSource.getConnection()
+        try (Connection connection = dbDataSource.getConnection();
+                CallableStatement callableStatement = connection
                 .prepareCall("{? = call ${method.functionName}(<#assign sep=""><#list 1..inCount as i>${sep}?<#assign sep=","></#list>)}")) {
             callableStatement.registerOutParameter(1, ${getColumnType(firstNonVoidOut.column.columnType)} );
             <#assign inSlot = 2>
@@ -115,7 +117,8 @@ public static final class Procedure {
             return ${callableOutScalarExpression("1", firstNonVoidOut.dataType)};
         }
         <#else>
-        try (CallableStatement callableStatement = dbDataSource.getConnection()
+        try (Connection connection = dbDataSource.getConnection();
+                CallableStatement callableStatement = connection
                 .prepareCall(<#if pgUseCallKeyword>"CALL ${method.functionName}(<#assign sep2=""><#list 1..maxOrd as i>${sep2}?<#assign sep2=","></#list>)"<#else>"{call ${method.functionName}(<#assign sep2=""><#list 1..maxOrd as i>${sep2}?<#assign sep2=","></#list>)}"</#if>)) {
             <#list 1..maxOrd as ord>
             <#list method.inputParameters as parameter>
@@ -148,7 +151,8 @@ public static final class Procedure {
         </#if>
     </#list>
     ) throws SQLException {
-        try (CallableStatement callableStatement = dbDataSource.getConnection()
+        try (Connection connection = dbDataSource.getConnection();
+                CallableStatement callableStatement = connection
                 .prepareCall(<#if pgUseCallKeyword>"CALL ${method.functionName}(<#assign sep3=""><#list 1..maxOrd as i>${sep3}?<#assign sep3=","></#list>)"<#else>"{call ${method.functionName}(<#assign sep3=""><#list 1..maxOrd as i>${sep3}?<#assign sep3=","></#list>)}"</#if>)) {
             <#list 1..maxOrd as ord>
             <#list method.inputParameters as parameter>
