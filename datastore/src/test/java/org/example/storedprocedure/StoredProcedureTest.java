@@ -23,6 +23,8 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -96,6 +98,29 @@ class StoredProcedureTest {
 
     private static int byteOrInt(final Number n) {
         return n.intValue();
+    }
+
+    /**
+     * Matches {@code sp_account_ids_cursor}: {@code SELECT id FROM accounts ORDER BY id}.
+     */
+    private static List<Long> accountIdsOrderedById(final DataSource ds) throws SQLException {
+        try (Connection c = ds.getConnection();
+                Statement st = c.createStatement();
+                ResultSet rs = st.executeQuery("SELECT id FROM accounts ORDER BY id")) {
+            List<Long> ids = new ArrayList<>();
+            while (rs.next()) {
+                ids.add(rs.getLong(1));
+            }
+            return ids;
+        }
+    }
+
+    private static List<Long> readCursorIds(final ResultSet rs) throws SQLException {
+        List<Long> ids = new ArrayList<>();
+        while (rs.next()) {
+            ids.add(rs.getLong(1));
+        }
+        return ids;
     }
 
     /**
@@ -360,37 +385,40 @@ class StoredProcedureTest {
         }
 
         @Test
-        @DisplayName("spAccountIdsCursor: exactly two seed rows then end of cursor")
+        @DisplayName("spAccountIdsCursor: full iteration matches accounts table (ORDER BY id)")
         void spAccountIdsCursor_exhaustsAfterSeedRows() throws SQLException {
+            List<Long> expected = accountIdsOrderedById(dataSource);
+            Assertions.assertFalse(expected.isEmpty(), "seed tests need at least one account row");
             try (ResultSet rs = dataManager.call().spAccountIdsCursor(dataSource)) {
-                int count = 0;
-                while (rs.next()) {
-                    count++;
-                    Assertions.assertTrue(rs.getLong(1) >= 1L && rs.getLong(1) <= 2L);
-                }
-                Assertions.assertEquals(2, count);
+                Assertions.assertEquals(expected, readCursorIds(rs));
             }
         }
 
         @Test
         @DisplayName("spAccountIdsCursor: second invocation yields fresh ResultSet")
         void spAccountIdsCursor_repeatableInvocation() throws SQLException {
+            List<Long> expectedFirst = accountIdsOrderedById(dataSource);
+            Assertions.assertFalse(expectedFirst.isEmpty());
             try (ResultSet r1 = dataManager.call().spAccountIdsCursor(dataSource);
                     ResultSet r2 = dataManager.call().spAccountIdsCursor(dataSource)) {
                 Assertions.assertTrue(r1.next() && r2.next());
                 Assertions.assertEquals(r1.getLong(1), r2.getLong(1));
+                Assertions.assertEquals(expectedFirst.get(0).longValue(), r1.getLong(1));
             }
         }
 
         @Test
         @DisplayName("spAccountIdsCursor: OUT refcursor → ResultSet over account ids")
         void spAccountIdsCursor_returnsRows() throws SQLException {
+            List<Long> expected = accountIdsOrderedById(dataSource);
+            Assertions.assertFalse(expected.isEmpty());
             try (ResultSet rs = dataManager.call().spAccountIdsCursor(dataSource)) {
                 Assertions.assertNotNull(rs);
-                Assertions.assertTrue(rs.next());
-                Assertions.assertEquals(1L, rs.getLong(1));
-                Assertions.assertTrue(rs.next());
-                Assertions.assertEquals(2L, rs.getLong(1));
+                for (int i = 0; i < expected.size(); i++) {
+                    Assertions.assertTrue(rs.next(), "row " + i);
+                    Assertions.assertEquals(expected.get(i).longValue(), rs.getLong(1));
+                }
+                Assertions.assertFalse(rs.next());
             }
         }
     }
