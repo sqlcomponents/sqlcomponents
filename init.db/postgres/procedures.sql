@@ -104,3 +104,18 @@ CREATE OR REPLACE FUNCTION fn_sum_three(a integer, b integer, c integer) RETURNS
     LANGUAGE SQL
     IMMUTABLE
     AS $$ SELECT a + b + c $$;
+
+-- Single array-typed IN (JDBC ARRAY / metadata TYPE_NAME often "_int4"); scalar return.
+CREATE OR REPLACE FUNCTION fn_array_sum(p_values integer[]) RETURNS integer
+    LANGUAGE sql
+    IMMUTABLE
+    AS $$ SELECT COALESCE((SELECT SUM(x) FROM unnest(p_values) AS u(x)), 0) $$;
+
+-- Second scalar routine with the same JDBC shape as fn_array_sum (one integer[] IN).
+-- A true PostgreSQL VARIADIC parameter cannot be invoked as fn(integer[]) from JDBC:
+-- the server expects either expanded arguments (1, 2, 3) or SQL
+-- fn_name(VARIADIC array_expr), which generated {? = call fn(?)} does not emit.
+CREATE OR REPLACE FUNCTION fn_variadic_sum(p_values integer[]) RETURNS integer
+    LANGUAGE sql
+    IMMUTABLE
+    AS $$ SELECT COALESCE((SELECT SUM(x) FROM unnest(p_values) AS u(x)), 0) $$;

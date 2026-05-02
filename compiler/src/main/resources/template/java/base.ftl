@@ -27,6 +27,8 @@
 		<#case "Boolean"><#return "callableStatement.getBoolean("+indexStr+")">
 		<#case "String"><#return "callableStatement.getString("+indexStr+")">
 		<#case "BigDecimal"><#return "callableStatement.getBigDecimal("+indexStr+")">
+		<#case "Array"><#return "callableStatement.getArray("+indexStr+")">
+		<#case "Struct"><#return "callableStatement.getObject("+indexStr+", java.sql.Struct.class)">
 		<#default><#return "callableStatement.getObject("+indexStr+", "+dataTypeFqn+".class)">
 	</#switch>
 </#function>

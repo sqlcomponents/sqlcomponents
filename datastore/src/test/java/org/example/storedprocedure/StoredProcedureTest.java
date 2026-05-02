@@ -18,6 +18,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import javax.sql.DataSource;
+import java.sql.Array;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -36,15 +38,18 @@ import java.util.List;
  *       {@link java.sql.DatabaseMetaData#getProcedureColumns} / {@code getFunctionColumns} ordinals.</li>
  *   <li><b>Multiple OUT/INOUT</b> (or mixed with IN): {@code void} and each output is a
  *       single-element array argument (element {@code [0]} is filled after execute).</li>
+ *   <li><b>Array-typed IN, scalar return</b> (PostgreSQL {@code integer[]}): after codegen,
+ *       {@code call().fnArraySum(dataSource, array)} and {@code call().fnVariadicSum(dataSource, array)}
+ *       — SQL {@code fn_array_sum} / {@code fn_variadic_sum} in {@code procedures.sql} (both one
+ *       {@code integer[]} parameter; {@code fn_variadic_sum} is not {@code VARIADIC} in SQL because JDBC
+ *       {@code {? = call fn(?)} } does not emit PostgreSQL’s {@code VARIADIC} call syntax).</li>
  * </ul>
  * <p>
  * <b>SQL coverage</b> (see {@code init.db/postgres/procedures.sql}; apply DDL then regenerate sources):
  * IN-only procedures, scalar SQL functions, procedures with one or more OUT parameters, INOUT-only procedure,
- * OUT-only procedure, and multi-IN scalar functions.
- * <p>
- * <b>Note on “VARDICT” / VARIADIC</b>: PostgreSQL {@code VARIADIC} is typically surfaced in JDBC metadata as a
- * single array-typed parameter; full coverage depends on array type mapping in the compiler. This suite
- * documents that contract; scalar and non-array signatures are asserted here.
+ * OUT-only procedure, multi-IN scalar functions, and {@code integer[]} scalar
+ * functions ({@code java.sql.Array} via {@code Connection#createArrayOf}; generated
+ * {@code fnArraySum} / {@code fnVariadicSum} on {@link org.example.DataManager.Procedure}).
  * <p>
  * Tests run in a <b>single thread</b> so one shared Hikari pool is not exhausted when JUnit
  * schedules nested and parameterized methods concurrently. {@code @BeforeEach} is scoped per
@@ -231,6 +236,56 @@ class StoredProcedureTest {
         void fnSum_threeNearByteRange() throws SQLException {
             Byte sum = dataManager.call().fnSumThree(dataSource, (byte) 40, (byte) 41, (byte) 42);
             Assertions.assertEquals((byte) 123, sum.byteValue());
+        }
+    }
+
+    /**
+     * <b>Array-typed IN</b>: PostgreSQL {@code integer[]} appears as JDBC {@code ARRAY};
+     * {@code org.sqlcomponents.compiler.mapper.JavaMapper} maps it to {@link java.sql.Array}.
+     * Generated callables re-bind
+     * elements with the connection used for {@code CallableStatement} so callers may build the argument
+     * {@link Array} from any connection.
+     * <p>
+     * <b>Generated {@link org.example.DataManager.Procedure} methods</b> (not defined in this test source;
+     * they appear after compiling templates into {@code datastore/src/main/java}): {@code fnArraySum},
+     * {@code fnVariadicSum}, matching SQL {@code fn_array_sum} / {@code fn_variadic_sum}.
+     */
+    @Nested
+    @DisplayName("PostgreSQL ARRAY IN (Procedure.fnArraySum, Procedure.fnVariadicSum)")
+    class ArrayAndVariadicFunctions {
+
+        @Test
+        @DisplayName("fnArraySum (SQL fn_array_sum): non-empty integer[] → sum")
+        void fnArraySum_nonEmpty() throws SQLException {
+            try (Connection c = dataSource.getConnection()) {
+                Array arr = c.createArrayOf("int4", new Integer[]{1, 2, 3});
+                Byte sum = dataManager.call().fnArraySum(dataSource, arr);
+                Assertions.assertNotNull(sum);
+                Assertions.assertEquals((byte) 6, sum.byteValue());
+            }
+        }
+
+        @Test
+        @DisplayName("fnArraySum (SQL fn_array_sum): empty array → 0")
+        void fnArraySum_empty() throws SQLException {
+            try (Connection c = dataSource.getConnection()) {
+                Array arr = c.createArrayOf("int4", new Integer[]{});
+                Byte sum = dataManager.call().fnArraySum(dataSource, arr);
+                Assertions.assertNotNull(sum);
+                Assertions.assertEquals((byte) 0, sum.byteValue());
+            }
+        }
+
+        @Test
+        @DisplayName("fnVariadicSum (SQL fn_variadic_sum): same JDBC ARRAY shape as fnArraySum")
+        void fnVariadicSum_matchesArrayForm() throws SQLException {
+            try (Connection c = dataSource.getConnection()) {
+                Array arr = c.createArrayOf("int4", new Integer[]{5, 5, 5});
+                Byte v = dataManager.call().fnVariadicSum(dataSource, arr);
+                Byte a = dataManager.call().fnArraySum(dataSource, arr);
+                Assertions.assertEquals(v, a);
+                Assertions.assertEquals((byte) 15, v.byteValue());
+            }
         }
     }
 

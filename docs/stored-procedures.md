@@ -18,14 +18,17 @@ This section tracks **behaviour that exists in source today** (core + compiler +
 | **JDBC layout** | `Procedures.ftl` builds placeholders from **`ordinalPosition`** (≥ 1), so **IN**, **OUT**, **INOUT** on the same index, and **multiple OUT** align with `CallableStatement` indices. |
 | **Resource handling** | Generated callables use **`try (Connection; CallableStatement)`** so connections return to the pool (see template in [Procedures.ftl](../compiler/src/main/resources/template/java/Procedures.ftl)). |
 | **PostgreSQL syntax** | **`CALL`** for `CREATE PROCEDURE`; **`{? = call …}`** for scalar **`CREATE FUNCTION`** return (ordinal **0**); IN-only procedures use **`SqlBuilder.prepareCall`** with `CALL` / `call` as appropriate. |
-| **Seed + examples** | [`init.db/postgres/procedures.sql`](../init.db/postgres/procedures.sql): `transfer`, `create_cache`, `add`, `sp_echo_len`, `sp_divmod`, `sp_sum_product`, `sp_double_inout`, `sp_fixed_pair`, `fn_sum_three`. |
-| **Integration tests** | [`StoredProcedureTest`](../datastore/src/test/java/org/example/storedprocedure/StoredProcedureTest.java): IN-only (`create_cache` variants), scalar functions (`add`, `fn_sum_three`), IN + single OUT, IN + multi OUT, OUT-only, INOUT-only, `transfer` side effects; shared `DataSource`, scoped `@BeforeEach`, `@Execution(SAME_THREAD)` to reduce pool pressure. |
+| **ARRAY / STRUCT parameters** | [`JavaMapper`](../compiler/src/main/java/org/sqlcomponents/compiler/mapper/JavaMapper.java) maps JDBC **`ARRAY`** → **`java.sql.Array`**, **`STRUCT`** → **`java.sql.Struct`**. [`Procedures.ftl`](../compiler/src/main/resources/template/java/Procedures.ftl) binds **`java.sql.Array`** by copying **`getArray()`** into **`Connection#createArrayOf`** using the metadata **`TYPE_NAME`** (PostgreSQL often **`_int4`**; the leading **`_`** is stripped for the element type passed to **`createArrayOf`**), then **`CallableStatement#setArray`**, so the bound value uses the **same** connection as the statement. [`base.ftl`](../compiler/src/main/resources/template/java/base.ftl) reads **`Array`** / **`Struct`** OUT values via **`getArray`** / **`getObject(..., Struct.class)`**. |
+| **Seed + examples** | [`init.db/postgres/procedures.sql`](../init.db/postgres/procedures.sql): `transfer`, `create_cache`, `add`, `sp_echo_len`, `sp_divmod`, `sp_sum_product`, `sp_double_inout`, `sp_fixed_pair`, `fn_sum_three`, **`fn_array_sum`**, **`fn_variadic_sum`** (both **`integer[]` IN** — two names for the same JDBC call shape; see VARIADIC note below). |
+| **Integration tests** | [`StoredProcedureTest`](../datastore/src/test/java/org/example/storedprocedure/StoredProcedureTest.java): IN-only (`create_cache` variants), scalar functions (`add`, `fn_sum_three`), **array IN scalars** (`fn_array_sum`, `fn_variadic_sum` via **`Connection#createArrayOf`**), IN + single OUT, IN + multi OUT, OUT-only, INOUT-only, `transfer` side effects; shared `DataSource`, scoped `@BeforeEach`, `@Execution(SAME_THREAD)` to reduce pool pressure. Compiler unit coverage: [`JavaMapperArrayTest`](../compiler/src/test/java/org/sqlcomponents/compiler/mapper/JavaMapperArrayTest.java). |
 
 ### Not covered (or only partially) in source
 
 | Gap | Notes |
 |-----|--------|
-| **VARIADIC / SQL `ARRAY` parameters** | PostgreSQL often exposes **one array-typed** parameter; **`JavaMapper`** / procedure templates do not define a first-class story for **`ARRAY` / composite** routine parameters in this repo. No VARIADIC routine in [`procedures.sql`](../init.db/postgres/procedures.sql). |
+| **PostgreSQL `VARIADIC` + JDBC** | A routine declared **`VARIADIC integer[]`** is **not** the same as **`integer[]`** at call resolution: passing one bound array issues **`fn_name(integer[])`**, which PostgreSQL does **not** match to the variadic form unless the SQL uses **`VARIADIC`** (e.g. **`fn_name(VARIADIC $1::integer[])`**). Generated **`{? = call fn(?)}`** does not emit that, so seed SQL uses plain **`integer[]`** for **`fn_variadic_sum`**. |
+| **Per-element Java types for `ARRAY`** | Signatures use **`java.sql.Array`** (not `Integer[]`, `String[]`, …). Element typing is opaque to the mapper; **`createArrayOf`** in generated code relies on JDBC **`TYPE_NAME`** (with **`_`** stripped for PostgreSQL). **Multi-dimensional** or unusual element types are not specially handled. |
+| **Composite (`STRUCT`) routines in seed SQL** | **`JavaMapper`** and templates support **`Struct`** for bind/read paths, but [`procedures.sql`](../init.db/postgres/procedures.sql) does **not** yet include a composite-typed routine for integration tests. |
 | **`RETURNS TABLE` / set-returning functions** | No crawler + template path here for **result-set-shaped** function returns; only **scalar** return (`{? = call …}`) and **OUT/INOUT** via `CallableStatement`. |
 | **`REF CURSOR` / OUT refcursor** | Not modelled in `Procedures.ftl`; no seed routines. |
 | **INOUT + extra OUT in one routine** | JDBC metadata lists INOUT on both input and output sides; the **multi-OUT Java API** uses **arrays per OUT name**. A routine that mixes **INOUT** with **another OUT** can produce **duplicate Java parameter names** or awkward signatures—**not** in current seed SQL by design. |
@@ -33,7 +36,7 @@ This section tracks **behaviour that exists in source today** (core + compiler +
 | **Qualified names in generated SQL** | Emitted SQL uses **`${method.functionName}`** (typically **unqualified**). Routines outside the default **`search_path`** are not handled explicitly. |
 | **Overloaded routine names** | One `Method` per `Procedure` name from the crawler list; **same SQL name, different arity** is not addressed as a separate feature. |
 | **Named JDBC parameters** | Only **positional** `?` / `registerOutParameter` generation; no `SqlBuilder` / `CallableStatement` named-parameter API. |
-| **Rich OUT types** | `callableOutScalarExpression` in [`base.ftl`](../compiler/src/main/resources/template/java/base.ftl) covers common scalars; **exotic or driver-specific OUT types** may fall through to **`getObject`** or need template work. |
+| **Rich OUT types** | `callableOutScalarExpression` in [`base.ftl`](../compiler/src/main/resources/template/java/base.ftl) covers common scalars plus **`Array`** / **`Struct`**; other **exotic or driver-specific OUT types** may fall through to **`getObject`** or need template work. |
 | **Procedure `COMMIT` / autonomous transactions** | Not part of codegen; behaviour depends on the SQL body. `transfer` in seed SQL avoids an internal **`COMMIT`**. |
 
 ---
@@ -77,16 +80,17 @@ Other databases keep the existing **`{call …}`** behavior unless extended simi
 |----------------|-------------------|
 | IN only, no OUT | `void name(DataSource, …)` using `SqlBuilder.prepareCall`. |
 | Single scalar **function** return (ordinal 0) + IN list | Return type + `{? = call …}` on PostgreSQL. |
+| Scalar return + IN includes **`ARRAY`** (e.g. `integer[]`) | Same as scalar function path; IN parameters typed **`java.sql.Array`**; binding uses **`createArrayOf`** on the active connection (see [`Procedures.ftl`](../compiler/src/main/resources/template/java/Procedures.ftl) macro **`emitCallableInBind`**). PostgreSQL **`VARIADIC`**-only signatures need different SQL than **`{? = call …(?)`**; see the coverage matrix gap above. |
 | Single OUT/INOUT at JDBC ordinals, not PG return row | Return type + `CallableStatement`; placeholders **`1 … maxOrdinal`** from metadata. |
 | Multiple OUT/INOUT | `void name(DataSource, …, T[] out1, …)`; each holder is a **single-element array** filled after `execute`. |
 
-[`base.ftl`](../compiler/src/main/resources/template/java/base.ftl) supplies helpers such as `callableOutScalarExpression` for reading OUT values with the right JDBC getter.
+[`base.ftl`](../compiler/src/main/resources/template/java/base.ftl) supplies helpers such as `callableOutScalarExpression` for reading OUT values with the right JDBC getter (including **`java.sql.Array`** and **`java.sql.Struct`**).
 
 ---
 
 ## Seed SQL and Docker
 
-Example DDL and routines for PostgreSQL live under [`init.db/postgres/`](../init.db/postgres/), including [`procedures.sql`](../init.db/postgres/procedures.sql) (accounts seed, `create_cache`, `transfer`, and additional routines used by datastore tests).
+Example DDL and routines for PostgreSQL live under [`init.db/postgres/`](../init.db/postgres/), including [`procedures.sql`](../init.db/postgres/procedures.sql) (accounts seed, `create_cache`, `transfer`, scalar functions with **`integer[]`** parameters, and procedures with OUT / INOUT used by datastore tests).
 
 [`docker-compose.yml`](../docker-compose.yml) mounts **`init.db/postgres`** on **`/docker-entrypoint-initdb.d`**. Scripts run **only on first database initialization** for that volume; see the root [README.md](../README.md) for resetting volumes when DDL changes.
 
@@ -94,7 +98,7 @@ Example DDL and routines for PostgreSQL live under [`init.db/postgres/`](../init
 
 ## Datastore tests
 
-[`StoredProcedureTest`](../datastore/src/test/java/org/example/storedprocedure/StoredProcedureTest.java) documents the **generated API** in class-level Javadoc and groups tests by **IN-only**, **scalar functions**, **IN/OUT combinations**, **INOUT**, and **`transfer`**. Tests call **`DataManager.Procedure`** methods directly (they must exist after codegen).
+[`StoredProcedureTest`](../datastore/src/test/java/org/example/storedprocedure/StoredProcedureTest.java) documents the **generated API** in class-level Javadoc and groups tests by **IN-only**, **scalar functions**, **scalar functions with `integer[]` IN** (`fn_array_sum`, `fn_variadic_sum`), **IN/OUT combinations**, **INOUT**, and **`transfer`**. Tests call **`DataManager.Procedure`** methods directly (they must exist after codegen). Generated names follow the usual property naming (e.g. **`fn_array_sum`** → **`fnArraySum`**).
 
 After changing **`init.db/postgres/procedures.sql`** or **`Procedures.ftl`**, apply DDL (or recreate the Docker volume), **regenerate** sources into `datastore/src/main/java`, then run:
 

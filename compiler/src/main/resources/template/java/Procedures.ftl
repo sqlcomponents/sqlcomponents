@@ -2,6 +2,16 @@
 <#assign a=addImportStatement("java.sql.Connection")>
 <#assign a=addImportStatement("java.sql.SQLException")>
 
+<#-- PostgreSQL JDBC: TYPE_NAME for arrays is often "_int4"; createArrayOf expects the element type (e.g. int4). -->
+<#function pgProcedureArrayElementType typeName>
+    <#local tn = (typeName!"")?trim>
+    <#if (tn?length gt 0) && tn?starts_with("_")>
+        <#return tn?substring(1)>
+    <#else>
+        <#return tn>
+    </#if>
+</#function>
+
 <#-- Binds one IN / INOUT input at the JDBC 1-based parameter index. -->
 <#macro emitCallableInBind parameter ord>
                <#switch parameter.dataType>
@@ -13,6 +23,22 @@
                  <#case "java.util.UUID">
                  <#case "java.time.Duration">
                  <#case "java.util.BitSet">
+                      callableStatement.setObject(${ord}, ${parameter.name});
+                      <#break>
+                 <#case "java.sql.Array">
+                      <#if parameter.column??>
+                      {
+                          final Object[] __sqlElems${ord} = (Object[]) ${parameter.name}.getArray();
+                          final java.sql.Array __sqlArr${ord} = connection.createArrayOf(
+                                  "${pgProcedureArrayElementType(parameter.column.typeName)}",
+                                  __sqlElems${ord});
+                          callableStatement.setArray(${ord}, __sqlArr${ord});
+                      }
+                      <#else>
+                      callableStatement.setArray(${ord}, ${parameter.name});
+                      </#if>
+                      <#break>
+                 <#case "java.sql.Struct">
                       callableStatement.setObject(${ord}, ${parameter.name});
                       <#break>
                  <#default>
@@ -195,6 +221,8 @@ public static final class Procedure {
                  <#case "java.util.UUID">
                  <#case "java.time.Duration">
                  <#case "java.util.BitSet">
+                 <#case "java.sql.Array">
+                 <#case "java.sql.Struct">
                     .param((Object) ${parameter.name})
                       <#break>
                  <#case "java.lang.Byte">

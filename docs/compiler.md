@@ -22,7 +22,7 @@ Entity processing uses a **parallel stream** over `orm.getEntities()` for throug
 
 ## `JavaMapper`
 
-[`JavaMapper`](../compiler/src/main/java/org/sqlcomponents/compiler/mapper/JavaMapper.java) is responsible for mapping SQL column semantics (via core’s `Column` / `ColumnType`) to Java types—for example primitives, `String`, `UUID`, `BigDecimal`, JTS geometry types, JSON node types, and time API classes. The mapper feeds the templates so generated fields and method signatures match the database.
+[`JavaMapper`](../compiler/src/main/java/org/sqlcomponents/compiler/mapper/JavaMapper.java) is responsible for mapping SQL column semantics (via core’s `Column` / `ColumnType`) to Java types—for example primitives, `String`, `UUID`, `BigDecimal`, JTS geometry types, JSON node types, and time API classes. For JDBC routine parameters it also maps **`ColumnType.ARRAY`** → **`java.sql.Array`** and **`ColumnType.STRUCT`** → **`java.sql.Struct`**, which [`Procedures.ftl`](../compiler/src/main/resources/template/java/Procedures.ftl) uses for **`CallableStatement`** bind and OUT read paths (see [Stored procedures and functions](stored-procedures.md)). The mapper feeds the templates so generated fields and method signatures match the database.
 
 ## FreeMarker templates
 
@@ -37,7 +37,7 @@ Notable groups:
 | `method/*.ftl` | Statement builders: `SelectStatement`, `InsertStatement`, `UpdateStatement`, `DeleteStatement`, `MViewRefresh`. |
 | `query/*.ftl`, `clause/*.ftl` | Query and WHERE composition. |
 | `base.ftl`, `jdbcbase.ftl`, `SqlBuilder.ftl`, … | Shared includes. |
-| [`Procedures.ftl`](../compiler/src/main/resources/template/java/Procedures.ftl) | `DataManager.Procedure`: JDBC callable / `CALL` for PostgreSQL procedures, ordinals for IN/OUT/INOUT. |
+| [`Procedures.ftl`](../compiler/src/main/resources/template/java/Procedures.ftl) | `DataManager.Procedure`: JDBC callable / `CALL` for PostgreSQL procedures, ordinals for IN/OUT/INOUT, **`java.sql.Array`** rebind via **`createArrayOf`**, **`java.sql.Struct`** via **`setObject`**. |
 | `template/directive/` | Custom FreeMarker directives (e.g. column selection). |
 
 Generated `package-info.java` files are also written with a minimal `package …;` declaration for each output package.

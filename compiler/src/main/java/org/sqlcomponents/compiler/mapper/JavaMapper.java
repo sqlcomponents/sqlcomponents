@@ -7,6 +7,8 @@ import org.sqlcomponents.core.model.Entity;
 import org.sqlcomponents.core.model.relational.Column;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
+import java.sql.Array;
+import java.sql.Struct;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -153,6 +155,10 @@ public final class JavaMapper extends Mapper {
             case LONGVARBINARY:
             case BINARY:
                 return ByteBuffer.class;
+            case ARRAY:
+                return Array.class;
+            case STRUCT:
+                return Struct.class;
             case VOID:
                 return Void.class;
             case OTHER:

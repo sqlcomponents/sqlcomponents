@@ -55,7 +55,7 @@ Types under `org.sqlcomponents.core.model.relational` mirror JDBC catalog concep
 
 ### `Procedure` and routine cataloging
 
-[`Procedure`](../core/src/main/java/org/sqlcomponents/core/model/relational/Procedure.java) represents one JDBC routine. The crawler sets **`catalogProcedure`** to **`true`** for rows from **`getProcedures`** and **`false`** for **`getFunctions`**, so the Java compiler can emit **PostgreSQL `CALL …`** for **`CREATE PROCEDURE`** objects while keeping **`{call …}`** / **`{? = call …}`** behavior appropriate for functions. See [Stored procedures and functions](stored-procedures.md).
+[`Procedure`](../core/src/main/java/org/sqlcomponents/core/model/relational/Procedure.java) represents one JDBC routine. Input and output parameters are the same relational [`Column`](../core/src/main/java/org/sqlcomponents/core/model/relational/Column.java) model as table columns (including **`ColumnType.ARRAY`** and **`ColumnType.STRUCT`** when the driver reports them). The crawler sets **`catalogProcedure`** to **`true`** for rows from **`getProcedures`** and **`false`** for **`getFunctions`**, so the Java compiler can emit **PostgreSQL `CALL …`** for **`CREATE PROCEDURE`** objects while keeping **`{call …}`** / **`{? = call …}`** behavior appropriate for functions. See [Stored procedures and functions](stored-procedures.md).
 
 ## Configuration loading (YAML)
 

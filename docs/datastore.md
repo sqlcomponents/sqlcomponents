@@ -48,14 +48,14 @@ There is **no** direct Maven dependency from `datastore` onto `core` or `compile
 
 ## Stored procedures and functions
 
-Integration coverage for **`DataManager.call()`** (IN/OUT/INOUT, scalar functions, PostgreSQL `CALL` semantics) lives in [`StoredProcedureTest`](../datastore/src/test/java/org/example/storedprocedure/StoredProcedureTest.java). DDL examples are in [`init.db/postgres/procedures.sql`](../init.db/postgres/procedures.sql).
+Integration coverage for **`DataManager.call()`** (IN/OUT/INOUT, scalar functions, **`integer[]`** array parameters as **`java.sql.Array`**, PostgreSQL **`CALL`** semantics) lives in [`StoredProcedureTest`](../datastore/src/test/java/org/example/storedprocedure/StoredProcedureTest.java). DDL examples are in [`init.db/postgres/procedures.sql`](../init.db/postgres/procedures.sql).
 
-See **[Stored procedures and functions](stored-procedures.md)** for how **`Procedure.catalogProcedure`** and **`Procedures.ftl`** map JDBC metadata to Java, and for the workflow after changing seed SQL or templates.
+See **[Stored procedures and functions](stored-procedures.md)** for how **`Procedure.catalogProcedure`**, **`JavaMapper`**, and **`Procedures.ftl`** map JDBC metadata to Java, and for the workflow after changing seed SQL or templates.
 
 ## Related documentation
 
 - [Compiler module](compiler.md) — How `srcFolder` and `rootPackage` are set for `org.example` output.
 - [Core module](core.md) — What `Application` carries before compile.
-- [Stored procedures and functions](stored-procedures.md) — Procedure catalog flag, PostgreSQL `CALL`, templates, seed SQL.
+- [Stored procedures and functions](stored-procedures.md) — Procedure catalog flag, PostgreSQL `CALL`, ARRAY/STRUCT mapping, templates, seed SQL.
 - [Project structure](project-structure.md)
 - [Documentation index](README.md)
