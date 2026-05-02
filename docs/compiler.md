@@ -37,6 +37,7 @@ Notable groups:
 | `method/*.ftl` | Statement builders: `SelectStatement`, `InsertStatement`, `UpdateStatement`, `DeleteStatement`, `MViewRefresh`. |
 | `query/*.ftl`, `clause/*.ftl` | Query and WHERE composition. |
 | `base.ftl`, `jdbcbase.ftl`, `SqlBuilder.ftl`, … | Shared includes. |
+| [`Procedures.ftl`](../compiler/src/main/resources/template/java/Procedures.ftl) | `DataManager.Procedure`: JDBC callable / `CALL` for PostgreSQL procedures, ordinals for IN/OUT/INOUT. |
 | `template/directive/` | Custom FreeMarker directives (e.g. column selection). |
 
 Generated `package-info.java` files are also written with a minimal `package …;` declaration for each output package.
@@ -90,5 +91,6 @@ Other implementations could target different languages or layouts as long as the
 
 - [Core module](core.md)
 - [Datastore module](datastore.md)
+- [Stored procedures and functions](stored-procedures.md)
 - [Project structure](project-structure.md)
 - [Documentation index](README.md)

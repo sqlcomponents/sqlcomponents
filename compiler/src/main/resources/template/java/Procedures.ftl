@@ -1,6 +1,25 @@
 <#assign a=addImportStatement("java.sql.CallableStatement")>
 <#assign a=addImportStatement("java.sql.SQLException")>
 
+<#-- Binds one IN / INOUT input at the JDBC 1-based parameter index. -->
+<#macro emitCallableInBind parameter ord>
+               <#switch parameter.dataType>
+                 <#case "java.time.LocalDate">
+                 <#case "java.time.LocalTime">
+                 <#case "java.time.LocalDateTime">
+                 <#case "java.nio.ByteBuffer">
+                 <#case "com.fasterxml.jackson.databind.JsonNode">
+                 <#case "java.util.UUID">
+                 <#case "java.time.Duration">
+                 <#case "java.util.BitSet">
+                      callableStatement.setObject(${ord}, ${parameter.name});
+                      <#break>
+                 <#default>
+                      callableStatement.set${getClassName(parameter.dataType)}(${ord}, ${parameter.name});
+               </#switch>
+               	<#assign a=addImportStatement(parameter.dataType)>
+</#macro>
+
 /**
 * Calls a stored procedure.
 * @return procedure
@@ -36,9 +55,22 @@ public static final class Procedure {
         </#if>
     </#list>
     </#if>
-    <#-- PostgreSQL scalar SQL functions use JDBC {? = call fn(?,...)}; first ? is the return value. -->
-    <#assign usePgFunctionReturnSyntax = (orm.database.dbType == 'POSTGRES') && (outNonVoidCount == 1)>
-    <#assign paramTotal = inCount + outNonVoidCount>
+    <#assign maxOrd = 0>
+    <#list method.inputParameters as parameter>
+        <#if parameter.column?? && getClassName(parameter.dataType) != "Void" && parameter.column.ordinalPosition gte 1 && parameter.column.ordinalPosition gt maxOrd>
+            <#assign maxOrd = parameter.column.ordinalPosition>
+        </#if>
+    </#list>
+    <#list method.outputParameters as parameter>
+        <#if parameter.column?? && getClassName(parameter.dataType) != "Void" && parameter.column.ordinalPosition gte 1 && parameter.column.ordinalPosition gt maxOrd>
+            <#assign maxOrd = parameter.column.ordinalPosition>
+        </#if>
+    </#list>
+    <#-- PostgreSQL SQL functions: JDBC {? = call fn(?,...)} — first ? is the scalar return (metadata ordinal 0). -->
+    <#assign usePgFunctionReturnSyntax = (orm.database.dbType == 'POSTGRES') && (outNonVoidCount == 1)
+        && firstNonVoidOut?has_content && firstNonVoidOut.column?? && (firstNonVoidOut.column.ordinalPosition == 0)>
+    <#-- PostgreSQL CREATE PROCEDURE must use CALL, not JDBC {call ...} (driver treats that as a function call). -->
+    <#assign pgUseCallKeyword = (orm.database.dbType == 'POSTGRES') && (method.function.catalogProcedure!false)>
     /**
     * ${method.name} Method.
     <#list method.inputParameters as parameter>
@@ -75,21 +107,7 @@ public static final class Procedure {
             <#assign inSlot = 2>
             <#list method.inputParameters as parameter>
                <#if getClassName(parameter.dataType) != "Void">
-               <#switch parameter.dataType>
-                 <#case "java.time.LocalDate">
-                 <#case "java.time.LocalTime">
-                 <#case "java.time.LocalDateTime">
-                 <#case "java.nio.ByteBuffer">
-                 <#case "com.fasterxml.jackson.databind.JsonNode">
-                 <#case "java.util.UUID">
-                 <#case "java.time.Duration">
-                 <#case "java.util.BitSet">
-                      callableStatement.setObject(${inSlot}, ${parameter.name});
-                      <#break>
-                 <#default>
-                      callableStatement.set${getClassName(parameter.dataType)}(${inSlot}, ${parameter.name});
-               </#switch>
-               	<#assign a=addImportStatement(parameter.dataType)>
+               <@emitCallableInBind parameter=parameter ord=inSlot/>
                 <#assign inSlot = inSlot + 1>
                </#if>
             </#list>
@@ -98,37 +116,21 @@ public static final class Procedure {
         }
         <#else>
         try (CallableStatement callableStatement = dbDataSource.getConnection()
-                .prepareCall("{call ${method.functionName}(<#assign sep2=""><#list 1..paramTotal as i>${sep2}?<#assign sep2=","></#list>)}")) {
-            <#assign inSlot = 1>
+                .prepareCall(<#if pgUseCallKeyword>"CALL ${method.functionName}(<#assign sep2=""><#list 1..maxOrd as i>${sep2}?<#assign sep2=","></#list>)"<#else>"{call ${method.functionName}(<#assign sep2=""><#list 1..maxOrd as i>${sep2}?<#assign sep2=","></#list>)}"</#if>)) {
+            <#list 1..maxOrd as ord>
             <#list method.inputParameters as parameter>
-               <#if getClassName(parameter.dataType) != "Void">
-               <#switch parameter.dataType>
-                 <#case "java.time.LocalDate">
-                 <#case "java.time.LocalTime">
-                 <#case "java.time.LocalDateTime">
-                 <#case "java.nio.ByteBuffer">
-                 <#case "com.fasterxml.jackson.databind.JsonNode">
-                 <#case "java.util.UUID">
-                 <#case "java.time.Duration">
-                 <#case "java.util.BitSet">
-                      callableStatement.setObject(${inSlot}, ${parameter.name});
-                      <#break>
-                 <#default>
-                      callableStatement.set${getClassName(parameter.dataType)}(${inSlot}, ${parameter.name});
-               </#switch>
-               	<#assign a=addImportStatement(parameter.dataType)>
-                <#assign inSlot = inSlot + 1>
+               <#if getClassName(parameter.dataType) != "Void" && parameter.column?? && parameter.column.ordinalPosition == ord>
+               <@emitCallableInBind parameter=parameter ord=ord/>
                </#if>
             </#list>
-            <#assign outIdx = 0>
             <#list method.outputParameters as oParameter>
-                <#if getClassName(oParameter.dataType) != "Void">
-                      callableStatement.registerOutParameter(${inCount + 1 + outIdx}, ${getColumnType(oParameter.column.columnType)} );
-                    <#assign outIdx = outIdx + 1>
+                <#if getClassName(oParameter.dataType) != "Void" && oParameter.column?? && oParameter.column.ordinalPosition == ord>
+                      callableStatement.registerOutParameter(${ord}, ${getColumnType(oParameter.column.columnType)} );
                 </#if>
             </#list>
+            </#list>
             callableStatement.execute();
-            return ${callableOutScalarExpression((inCount + 1)?string, firstNonVoidOut.dataType)};
+            return ${callableOutScalarExpression(firstNonVoidOut.column.ordinalPosition?string, firstNonVoidOut.dataType)};
         }
         </#if>
     }
@@ -147,41 +149,23 @@ public static final class Procedure {
     </#list>
     ) throws SQLException {
         try (CallableStatement callableStatement = dbDataSource.getConnection()
-                .prepareCall("{call ${method.functionName}(<#assign sep3=""><#list 1..paramTotal as i>${sep3}?<#assign sep3=","></#list>)}")) {
-            <#assign inSlot = 1>
+                .prepareCall(<#if pgUseCallKeyword>"CALL ${method.functionName}(<#assign sep3=""><#list 1..maxOrd as i>${sep3}?<#assign sep3=","></#list>)"<#else>"{call ${method.functionName}(<#assign sep3=""><#list 1..maxOrd as i>${sep3}?<#assign sep3=","></#list>)}"</#if>)) {
+            <#list 1..maxOrd as ord>
             <#list method.inputParameters as parameter>
-               <#if getClassName(parameter.dataType) != "Void">
-               <#switch parameter.dataType>
-                 <#case "java.time.LocalDate">
-                 <#case "java.time.LocalTime">
-                 <#case "java.time.LocalDateTime">
-                 <#case "java.nio.ByteBuffer">
-                 <#case "com.fasterxml.jackson.databind.JsonNode">
-                 <#case "java.util.UUID">
-                 <#case "java.time.Duration">
-                 <#case "java.util.BitSet">
-                      callableStatement.setObject(${inSlot}, ${parameter.name});
-                      <#break>
-                 <#default>
-                      callableStatement.set${getClassName(parameter.dataType)}(${inSlot}, ${parameter.name});
-               </#switch>
-               	<#assign a=addImportStatement(parameter.dataType)>
-                <#assign inSlot = inSlot + 1>
+               <#if getClassName(parameter.dataType) != "Void" && parameter.column?? && parameter.column.ordinalPosition == ord>
+               <@emitCallableInBind parameter=parameter ord=ord/>
                </#if>
             </#list>
-            <#assign outIdx = 0>
             <#list method.outputParameters as oParameter>
-                <#if getClassName(oParameter.dataType) != "Void">
-                      callableStatement.registerOutParameter(${inCount + 1 + outIdx}, ${getColumnType(oParameter.column.columnType)} );
-                    <#assign outIdx = outIdx + 1>
+                <#if getClassName(oParameter.dataType) != "Void" && oParameter.column?? && oParameter.column.ordinalPosition == ord>
+                      callableStatement.registerOutParameter(${ord}, ${getColumnType(oParameter.column.columnType)} );
                 </#if>
             </#list>
+            </#list>
             callableStatement.execute();
-            <#assign outIdx = 0>
             <#list method.outputParameters as oParameter>
-                <#if getClassName(oParameter.dataType) != "Void">
-                  ${oParameter.name}[0] = ${callableOutScalarExpression((inCount + 1 + outIdx)?string, oParameter.dataType)};
-                    <#assign outIdx = outIdx + 1>
+                <#if getClassName(oParameter.dataType) != "Void" && oParameter.column??>
+                  ${oParameter.name}[0] = ${callableOutScalarExpression(oParameter.column.ordinalPosition?string, oParameter.dataType)};
                 </#if>
             </#list>
         }
@@ -195,7 +179,7 @@ public static final class Procedure {
         </#if>
     </#list>
     ) throws SQLException {
-        SqlBuilder.prepareCall("call ${method.functionName}(<#assign sep2=""><#list 1..inCount as i>${sep2}?<#assign sep2=","></#list>)")
+        SqlBuilder.prepareCall(<#if pgUseCallKeyword>"CALL ${method.functionName}(<#assign sep2=""><#list 1..inCount as i>${sep2}?<#assign sep2=","></#list>)"<#else>"call ${method.functionName}(<#assign sep2=""><#list 1..inCount as i>${sep2}?<#assign sep2=","></#list>)"</#if>)
             <#list method.inputParameters as parameter>
                <#if getClassName(parameter.dataType) != "Void">
                <#switch parameter.dataType>

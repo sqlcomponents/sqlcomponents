@@ -46,9 +46,16 @@ There is **no** direct Maven dependency from `datastore` onto `core` or `compile
 - The parent and datastore POMs declare **Java 17** for compilation.
 - The root [README.md](../README.md) mentions broader JDK support historically (minimum 11, tested up to 18). Treat the **POM** as the authoritative build level for this tree; use README for informal compatibility notes.
 
+## Stored procedures and functions
+
+Integration coverage for **`DataManager.call()`** (IN/OUT/INOUT, scalar functions, PostgreSQL `CALL` semantics) lives in [`StoredProcedureTest`](../datastore/src/test/java/org/example/storedprocedure/StoredProcedureTest.java). DDL examples are in [`init.db/postgres/procedures.sql`](../init.db/postgres/procedures.sql).
+
+See **[Stored procedures and functions](stored-procedures.md)** for how **`Procedure.catalogProcedure`** and **`Procedures.ftl`** map JDBC metadata to Java, and for the workflow after changing seed SQL or templates.
+
 ## Related documentation
 
 - [Compiler module](compiler.md) — How `srcFolder` and `rootPackage` are set for `org.example` output.
 - [Core module](core.md) — What `Application` carries before compile.
+- [Stored procedures and functions](stored-procedures.md) — Procedure catalog flag, PostgreSQL `CALL`, templates, seed SQL.
 - [Project structure](project-structure.md)
 - [Documentation index](README.md)
