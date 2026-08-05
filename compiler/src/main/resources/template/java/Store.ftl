@@ -86,6 +86,14 @@ import java.util.stream.Collectors;
 
     }
 
+    /**
+    * Retrieves default DataSource from DataManager.
+    * @return dataSource
+    */
+    public DataSource getDataSource() {
+        return this.dataManager.getDataSource();
+    }
+
  
     <#include "method/InsertStatement.ftl">
     <#include "method/UpdateStatement.ftl">
@@ -95,7 +103,7 @@ import java.util.stream.Collectors;
     <#if table.tableType == 'TABLE' >
 
     public DataManager.DeleteStatement delete() {
-        return new DataManager.DeleteStatement("DELETE FROM ${table.escapedName?j_string}");
+        return new DataManager.DeleteStatement("DELETE FROM ${table.escapedName?j_string}", getDataSource());
     }
 
     </#if>

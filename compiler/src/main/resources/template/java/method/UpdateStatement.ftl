@@ -86,6 +86,10 @@
                 }
 
 
+                public int execute() throws SQLException  {
+                    return execute(${name}Store.this.getDataSource());
+                }
+
                 public int execute(final DataSource dataSource) throws SQLException  {
                 
                     <@updatetquery/>
@@ -96,6 +100,10 @@
                 }
 
                 <#if table.hasPrimaryKey>
+
+                public final ${name} returning() throws <@throwsblock/>  {
+                    return returning(${name}Store.this.getDataSource());
+                }
 
                 public final ${name} returning(final DataSource dataSource) throws <@throwsblock/>  {
                     ${name} updated${name} = null ;
@@ -158,6 +166,10 @@
                     return stringBuilder.toString();
                 }
                 
+                public int execute() throws SQLException  {
+                    return execute(${name}Store.this.getDataSource());
+                }
+
                 public int execute(final DataSource dataSource) throws SQLException  {
                     
                     <@updatewithsetquery/>
@@ -169,6 +181,10 @@
                     }
 
                     return sqlBuilder.execute(dataSource);
+                }
+
+                public List<${name}> returning() throws <@throwsblock/>  {
+                    return returning(${name}Store.this.getDataSource());
                 }
 
                 public List<${name}> returning(final DataSource dataSource) throws <@throwsblock/>  {

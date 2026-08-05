@@ -39,6 +39,10 @@ public sealed class SingleSelectStatement implements ${orm.application.rootPacka
             ${getPrimaryKeysAsSetters()}
         }
 
+        public final ${name} execute() throws <@throwsblock/> {
+            return execute(${name}Store.this.getDataSource());
+        }
+
         @Override
         public final ${name} execute(final Connection connection) throws <@throwsblock/> {
             
@@ -61,11 +65,6 @@ public sealed class SingleSelectStatement implements ${orm.application.rootPacka
 
         return sqlBuilder.queryForOne(rs -> ${name}Store.this.rowMapper(rs)).execute(connection);
 	}
-
-        
-
-
-        
 }
 
 </#if>
@@ -105,6 +104,10 @@ public sealed class SelectStatement implements ${orm.application.rootPackage}.sq
             this.whereClause = whereClause;
         }
 
+        public final List<${name}> execute() throws <@throwsblock/> {
+            return execute(${name}Store.this.getDataSource());
+        }
+
         @Override
         public final List<${name}> execute(final Connection connection) throws <@throwsblock/> {
             
@@ -118,6 +121,10 @@ public sealed class SelectStatement implements ${orm.application.rootPackage}.sq
                 return SqlBuilder.sql(query).queryForList(rs -> ${name}Store.this.rowMapper(rs)).execute(connection);
 	}
 
+        public final int count() throws SQLException {
+            return count(${name}Store.this.getDataSource());
+        }
+
         public final int count(final DataSource dataSource) throws SQLException {
 		final String query = <@compress single_line=true>"SELECT
 		COUNT(<#if primaryKeyProperties?size == 0
@@ -129,10 +136,6 @@ public sealed class SelectStatement implements ${orm.application.rootPackage}.sq
                 + ( this.whereClause == null ? "" : (" WHERE " + this.whereClause.asSql()) );
                 return SqlBuilder.sql(query).queryForInt().execute(dataSource);
 	}
-
-
-    
-
 
         public final class LimitClause  {
 
@@ -157,10 +160,13 @@ public sealed class SelectStatement implements ${orm.application.rootPackage}.sq
                 <#assign a=addImportStatement("org.springframework.data.domain.PageImpl")>
                 <#assign a=addImportStatement("org.springframework.data.domain.Pageable")>
                 public Page<${name}> execute(final Pageable pageable) throws <@throwsblock/> {
-                    return new PageImpl(this.selectStatement.execute(dataSource), pageable,
+                    return new PageImpl(this.selectStatement.execute(${name}Store.this.getDataSource()), pageable,
                                 selectStatement.count());
                 }
                 <#else>
+                public DataManager.Page<${name}> execute() throws <@throwsblock/> {
+                    return execute(${name}Store.this.getDataSource());
+                }
                 public DataManager.Page<${name}> execute(final DataSource dataSource) throws <@throwsblock/> {
                     try (Connection connection = dataSource.getConnection()) {
                         return DataManager.page(SelectStatement.this.execute(connection), count(dataSource));
@@ -188,19 +194,20 @@ public sealed class SelectStatement implements ${orm.application.rootPackage}.sq
                                 return this.limitClause.execute(pageable);
                         }
                         <#else>
+                        public DataManager.Page<${name}> execute() throws <@throwsblock/> {
+                                return this.limitClause.execute(${name}Store.this.getDataSource());
+                        }
                         public DataManager.Page<${name}> execute(final DataSource dataSource) throws <@throwsblock/> {
                                 return this.limitClause.execute(dataSource);
                         }
                         </#if>
-
-
         }
 
         }
 
 
 public final DataManager.SelectQuery<Value<?,?>,${name}> sql(final String sql) {
-            return new DataManager.SelectQuery<>(sql, rs -> ${name}Store.this.rowMapper(rs));
+            return new DataManager.SelectQuery<>(sql, rs -> ${name}Store.this.rowMapper(rs), ${name}Store.this.getDataSource());
     }
 
 

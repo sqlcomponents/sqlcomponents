@@ -15,6 +15,11 @@ public final class DataManager {
     private static DataManager dataManager;
 
     /**
+    * dataSource variable.
+    */
+    private DataSource dataSource;
+
+    /**
     * observer variable.
     */
     private final Observer observer;
@@ -33,14 +38,17 @@ public final class DataManager {
     </#if>
     </#list>
 
-    private DataManager(<#if encryption?has_content >
-     final Function<String, String> encryptionFunction,
-     final Function<String, String> decryptionFunction
+    private DataManager(
+     final DataSource dataSource
+     <#if encryption?has_content >
+     , final Function<String, String> encryptionFunction
+     , final Function<String, String> decryptionFunction
       <#assign a=addImportStatement("java.util.function.Function")>
-    </#if>
+     </#if>
     ) {
+        this.dataSource = dataSource;
         this.observer = new Observer();
-        this.procedure = new Procedure();
+        this.procedure = new Procedure(this);
         <#list orm.entities as entity>
         <#if !entity.type?? >
         this.${entity.name?uncap_first}Store = ${entity.name}Store
@@ -51,26 +59,97 @@ public final class DataManager {
         </#if>
         </#list>
     }
-     /**
-     * getManager method.
+
+    /**
+     * getManager method with DataSource.
+     * @param dataSource
+     <#if encryption?has_content>
      * @param encryptionFunction
      * @param decryptionFunction
+     </#if>
      * @return dataManager
      */
-    public static DataManager getManager(<#if encryption?has_content>
-    <#assign a=addImportStatement("javax.sql.DataSource")>
-     final Function<String, String> encryptionFunction,
-     final Function<String, String> decryptionFunction
-    </#if>
-                                                            ) {
+    public static DataManager getManager(
+        final DataSource dataSource
+        <#if encryption?has_content>
+        , final Function<String, String> encryptionFunction
+        , final Function<String, String> decryptionFunction
+        </#if>
+    ) {
         if (dataManager == null) {
-            dataManager = new DataManager(<#if encryption?has_content>
-             encryptionFunction,
-             decryptionFunction
-            </#if>
+            dataManager = new DataManager(
+                dataSource
+                <#if encryption?has_content>
+                , encryptionFunction
+                , decryptionFunction
+                </#if>
             );
+        } else if (dataSource != null && dataManager.dataSource == null) {
+            dataManager.dataSource = dataSource;
         }
         return dataManager;
+    }
+
+    /**
+     * getManager method without DataSource.
+     <#if encryption?has_content>
+     * @param encryptionFunction
+     * @param decryptionFunction
+     </#if>
+     * @return dataManager
+     */
+    public static DataManager getManager(
+        <#if encryption?has_content>
+        final Function<String, String> encryptionFunction
+        , final Function<String, String> decryptionFunction
+        </#if>
+    ) {
+        return getManager(
+            null
+            <#if encryption?has_content>
+            , encryptionFunction
+            , decryptionFunction
+            </#if>
+        );
+    }
+
+    <#if encryption?has_content>
+    /**
+     * getManager method with DataSource only.
+     * @param dataSource
+     * @return dataManager
+     */
+    public static DataManager getManager(final DataSource dataSource) {
+        return getManager(dataSource, null, null);
+    }
+
+    /**
+     * getManager method with no arguments.
+     * @return dataManager
+     */
+    public static DataManager getManager() {
+        return getManager(null, null, null);
+    }
+    </#if>
+
+    /**
+     * Retrieves default DataSource.
+     * @return dataSource
+     * @throws IllegalStateException if dataSource is null
+     */
+    public DataSource getDataSource() {
+        if (this.dataSource == null) {
+            throw new IllegalStateException("Default DataSource is not configured in DataManager. Pass DataSource to DataManager.getManager(dataSource, ...) or invoke statement with explicit DataSource parameter.");
+        }
+        return this.dataSource;
+    }
+
+    /**
+     * Sets default DataSource.
+     * @param dataSource
+     */
+    public void setDataSource(final DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
 

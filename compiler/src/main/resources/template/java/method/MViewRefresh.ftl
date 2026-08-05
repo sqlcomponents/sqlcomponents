@@ -1,4 +1,8 @@
 <#if table.tableType == 'MATERIALIZED_VIEW' >
+    public void refresh() throws SQLException {
+      refresh(getDataSource());
+    }
+
     public void refresh(final DataSource dataSource) throws SQLException {
       final String query = "REFRESH MATERIALIZED VIEW ${table.escapedName?j_string}";
       SqlBuilder.sql(query).execute(dataSource);
