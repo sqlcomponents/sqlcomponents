@@ -19,6 +19,7 @@ class AccountsStoreTest {
         this.dataSource = DataSourceProvider.dataSource();
         DataManager dataManager =
                 DataManager.getManager(
+                        dataSource,
                         EncryptionUtil::enAnDecrypt,
                         EncryptionUtil::enAnDecrypt);
         // Stores used for testing

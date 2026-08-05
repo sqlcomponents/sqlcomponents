@@ -78,7 +78,7 @@ class StoredProcedureTest {
 
     private final DataSource dataSource = DATA_SOURCE;
     private final DataManager dataManager =
-            DataManager.getManager(EncryptionUtil::enAnDecrypt, EncryptionUtil::enAnDecrypt);
+            DataManager.getManager(DATA_SOURCE, EncryptionUtil::enAnDecrypt, EncryptionUtil::enAnDecrypt);
     private final CacheStore cacheStore = dataManager.getCacheStore();
     private final AccountsStore accountsStore = dataManager.getAccountsStore();
 

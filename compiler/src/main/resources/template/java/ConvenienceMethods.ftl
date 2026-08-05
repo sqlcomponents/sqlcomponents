@@ -42,6 +42,10 @@ We use similar to JPA syntax for all the convinient methods.
             
     }
         
+    public boolean exists(${getPrimaryKeysAsParameterString()}) throws SQLException {
+        return exists(getDataSource(),${getPrimaryKeysAsParameters()});
+    }
+
     public boolean exists(final DataSource dataSource,${getPrimaryKeysAsParameterString()}) throws SQLException {
         final String query = <@compress single_line=true>"SELECT
 		1
@@ -61,6 +65,9 @@ We use similar to JPA syntax for all the convinient methods.
 		return sqlBuilder.queryForExists().execute(dataSource);
 	}
 
+public int delete(${getPrimaryKeysAsParameterString()}) throws SQLException  {
+        return delete(getDataSource(),${getPrimaryKeysAsParameters()});
+}
 
 public int delete(final DataSource dataSource,${getPrimaryKeysAsParameterString()}) throws SQLException  {
 		final String query = <@compress single_line=true>"DELETE FROM ${table.escapedName?j_string}
@@ -82,6 +89,10 @@ public int delete(final DataSource dataSource,${getPrimaryKeysAsParameterString(
 <#assign a=addImportStatement(beanPackage+"."+name)>
 <#assign a=addImportStatement("java.util.Optional")>
     <#list table.uniqueColumns as uniqueColumn>
+    public Optional<${name}> selectBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws <@throwsblock/> {
+        return selectBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(getDataSource(),${getUniqueKeysAsParameters(uniqueColumn.name)});
+    }
+
     public Optional<${name}> selectBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(final DataSource dataSource,${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws <@throwsblock/> {
         
             final String query = <@compress single_line=true>"SELECT
@@ -100,6 +111,10 @@ public int delete(final DataSource dataSource,${getPrimaryKeysAsParameterString(
         return Optional.ofNullable(sqlBuilder.queryForOne(rs -> this.rowMapper(rs)).execute(dataSource));
 
             
+    }
+
+    public boolean existsBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws <@throwsblock/> {
+        return existsBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(getDataSource(),${getUniqueKeysAsParameters(uniqueColumn.name)});
     }
 
     public boolean existsBy${getUniqueKeysAsMethodSignature(uniqueColumn.name)}(final DataSource dataSource,${getUniqueKeysAsParameterString(uniqueColumn.name)}) throws <@throwsblock/> {
@@ -121,6 +136,25 @@ public int delete(final DataSource dataSource,${getPrimaryKeysAsParameterString(
 
     </#list>
 </#if>
+
+<#function getUniqueKeysAsParameters uniqueConstraintGroupName>
+	<#local pkAsParameterStr="">
+    <#local index=0>
+	<#list table.uniqueColumns as uniqueColumn>
+	    <#if uniqueColumn.name == uniqueConstraintGroupName>
+	        <#list uniqueColumn.columns as column>
+	            <#local property=getPropertyByColumnName(column.columnName)>
+	            <#if index == 0>
+                    <#local index=1>
+                <#else>
+                    <#local pkAsParameterStr = pkAsParameterStr + "," >
+                </#if>
+                <#local pkAsParameterStr = pkAsParameterStr + property.name >
+	        </#list>
+	    </#if>
+	</#list>
+	<#return pkAsParameterStr>
+</#function>
 
 
 <#function getUniqueKeysAsParameterString uniqueConstraintGroupName>

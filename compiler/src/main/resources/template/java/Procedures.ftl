@@ -71,7 +71,14 @@ public Procedure call() {
 public static final class Procedure {
 
 
+    private final DataManager dataManager;
+
     private Procedure() {
+        this(null);
+    }
+
+    private Procedure(final DataManager dataManager) {
+        this.dataManager = dataManager;
     }
 
     private static java.sql.ResultSet detachRefCursorResultSet(
@@ -151,6 +158,19 @@ public static final class Procedure {
     */
     <#if outNonVoidCount == 1>
     public ${getClassName(firstNonVoidOut.dataType)} ${procMethod.name}(
+    <#assign comma=false>
+    <#list procMethod.inputParameters as parameter>
+        <#if getClassName(parameter.dataType) != "Void">
+        <#if comma>, </#if>final ${getClassName(parameter.dataType)} ${parameter.name}<#assign comma=true>
+        </#if>
+    </#list>
+    ) throws SQLException {
+        if (this.dataManager == null) {
+            throw new IllegalStateException("Default DataSource is not configured in DataManager.");
+        }
+        return ${procMethod.name}(this.dataManager.getDataSource()<#list procMethod.inputParameters as parameter><#if getClassName(parameter.dataType) != "Void">, ${parameter.name}</#if></#list>);
+    }
+    public ${getClassName(firstNonVoidOut.dataType)} ${procMethod.name}(
         final DataSource dbDataSource
     <#list procMethod.inputParameters as parameter>
         <#if getClassName(parameter.dataType) != "Void">
@@ -227,6 +247,24 @@ public static final class Procedure {
     }
     <#elseif outNonVoidCount gt 1>
     public void ${procMethod.name}(
+    <#assign comma=false>
+    <#list procMethod.inputParameters as parameter>
+        <#if getClassName(parameter.dataType) != "Void">
+        <#if comma>, </#if>final ${getClassName(parameter.dataType)} ${parameter.name}<#assign comma=true>
+        </#if>
+    </#list>
+    <#list procMethod.outputParameters as parameter>
+        <#if getClassName(parameter.dataType) != "Void">
+        <#if comma>, </#if>final ${getClassName(parameter.dataType)}[] ${parameter.name}<#assign comma=true>
+        </#if>
+    </#list>
+    ) throws SQLException {
+        if (this.dataManager == null) {
+            throw new IllegalStateException("Default DataSource is not configured in DataManager.");
+        }
+        ${procMethod.name}(this.dataManager.getDataSource()<#list procMethod.inputParameters as parameter><#if getClassName(parameter.dataType) != "Void">, ${parameter.name}</#if></#list><#list procMethod.outputParameters as parameter><#if getClassName(parameter.dataType) != "Void">, ${parameter.name}</#if></#list>);
+    }
+    public void ${procMethod.name}(
         final DataSource dbDataSource
     <#list procMethod.inputParameters as parameter>
         <#if getClassName(parameter.dataType) != "Void">
@@ -263,6 +301,19 @@ public static final class Procedure {
         }
     }
     <#else>
+    public void ${procMethod.name}(
+    <#assign comma=false>
+    <#list procMethod.inputParameters as parameter>
+        <#if getClassName(parameter.dataType) != "Void">
+        <#if comma>, </#if>final ${getClassName(parameter.dataType)} ${parameter.name}<#assign comma=true>
+        </#if>
+    </#list>
+    ) throws SQLException {
+        if (this.dataManager == null) {
+            throw new IllegalStateException("Default DataSource is not configured in DataManager.");
+        }
+        ${procMethod.name}(this.dataManager.getDataSource()<#list procMethod.inputParameters as parameter><#if getClassName(parameter.dataType) != "Void">, ${parameter.name}</#if></#list>);
+    }
     public void ${procMethod.name}(
         final DataSource dbDataSource
     <#list procMethod.inputParameters as parameter>

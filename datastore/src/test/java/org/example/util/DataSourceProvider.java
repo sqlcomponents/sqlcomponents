@@ -12,7 +12,11 @@ public final class DataSourceProvider {
     public static DataSource dataSource() {
         Properties props = new Properties();
         try {
-            props.load(new FileReader("../database.properties"));
+            java.io.File propsFile = new java.io.File("database.properties");
+            if (!propsFile.exists()) {
+                propsFile = new java.io.File("../database.properties");
+            }
+            props.load(new FileReader(propsFile));
         } catch (IOException e) {
             // Unreachable
             e.printStackTrace();

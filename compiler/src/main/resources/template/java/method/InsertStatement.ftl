@@ -125,6 +125,10 @@
             }
             
 
+            public int execute() throws SQLException  {
+                return execute(${name}Store.this.getDataSource());
+            }
+
             public int execute(final DataSource dataSource) throws SQLException  {
                 final String query = "<@insertquery/>";
 
@@ -136,6 +140,10 @@
             }
 
             <#if table.hasPrimaryKey>
+
+            public ${name} returning() throws <@throwsblock/>  {
+                return returning(${name}Store.this.getDataSource());
+            }
 
             public ${name} returning(final DataSource dataSource) throws <@throwsblock/>  {
 
@@ -193,6 +201,10 @@
                 this.${name?uncap_first}s = ${name?uncap_first}s;
             }
 
+            public int execute() throws SQLException  {
+                return execute(${name}Store.this.getDataSource());
+            }
+
             public int execute(final DataSource dataSource) throws SQLException  {
                 String query = "<@insertquery/>";
 
@@ -210,6 +222,10 @@
             }
 
             <#if table.hasPrimaryKey>
+
+            public List<${name}> returning() throws <@throwsblock/>  {
+                return returning(${name}Store.this.getDataSource());
+            }
 
             public List<${name}> returning(final DataSource dataSource) throws <@throwsblock/>  {
                 List<${name}> inserted${name}s = null;

@@ -119,8 +119,8 @@ abstract class DataTypeTest<T> {
 
                 myTableClass = classLoader.loadClass("org.example.model.MyTable");
 
-                Method method = loadedClass.getMethod("getManager", Function.class, Function.class);
-                Object dataManager = method.invoke(null, null, null);
+                Method method = loadedClass.getMethod("getManager", DataSource.class, Function.class, Function.class);
+                Object dataManager = method.invoke(null, DATA_SOURCE, null, null);
 
                 this.myTableStoreClass = classLoader.loadClass("org.example.store.MyTableStore");
 
